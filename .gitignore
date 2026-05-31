@@ -1,0 +1,16 @@
+.env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local audio/test artifacts
+*.wav
+
+# Local OS/editor files
+.DS_Store
+.vscode/
+.idea/
+
+# Local environment files
+.env.*
+!.env.example
