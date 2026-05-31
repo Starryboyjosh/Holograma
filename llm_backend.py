@@ -1,5 +1,8 @@
+import json
 import os
 import re
+import urllib.error
+import urllib.request
 
 DEFAULT_OLLAMA_MODEL = "qwen3:8b"
 VALID_BACKENDS = {"auto", "nvidia", "openai", "ollama", "local_only"}
@@ -16,13 +19,77 @@ def _env(name, default=None):
     return value.strip()
 
 
-def _ollama_python_package_available():
+def _env_float(name, default):
+    value = _env(name)
+    if value is None:
+        return default
+
     try:
-        import ollama  # noqa: F401
-    except ImportError:
+        return float(value)
+    except ValueError:
+        return default
+
+
+def _ollama_base_url():
+    return _env("OLLAMA_BASE_URL", "http://127.0.0.1:11434").rstrip("/")
+
+
+def _ollama_model_name():
+    return _env("OLLAMA_MODEL", DEFAULT_OLLAMA_MODEL)
+
+
+def _ollama_request(path, payload=None, timeout=30.0):
+    url = f"{_ollama_base_url()}{path}"
+    data = None
+    method = "GET"
+
+    if payload is not None:
+        data = json.dumps(payload).encode("utf-8")
+        method = "POST"
+
+    request = urllib.request.Request(
+        url,
+        data=data,
+        method=method,
+        headers={"Content-Type": "application/json"},
+    )
+
+    with urllib.request.urlopen(request, timeout=timeout) as response:
+        body = response.read().decode("utf-8")
+
+    if not body.strip():
+        return {}
+
+    return json.loads(body)
+
+
+def _ollama_tags(timeout=1.5):
+    return _ollama_request("/api/tags", timeout=timeout)
+
+
+def _ollama_server_available():
+    try:
+        _ollama_tags(timeout=_env_float("OLLAMA_STATUS_TIMEOUT_SECONDS", 1.5))
+    except Exception:
         return False
 
     return True
+
+
+def _ollama_model_available(model=None):
+    model = model or _ollama_model_name()
+
+    try:
+        tags = _ollama_tags(timeout=_env_float("OLLAMA_STATUS_TIMEOUT_SECONDS", 1.5))
+    except Exception:
+        return False
+
+    model_names = [item.get("name") for item in tags.get("models", [])]
+    return model in model_names
+
+
+def _ollama_ready():
+    return _ollama_server_available() and _ollama_model_available()
 
 
 def get_selected_backend():
@@ -41,7 +108,7 @@ def get_selected_backend():
     if _env("OPENAI_API_KEY"):
         return "openai"
 
-    if _ollama_python_package_available():
+    if _ollama_ready():
         return "ollama"
 
     return "local_only"
@@ -59,7 +126,19 @@ def get_backend_status():
         return f"Backend activo: OpenAI API con modelo {model}."
 
     if backend == "ollama":
-        model = _env("OLLAMA_MODEL", DEFAULT_OLLAMA_MODEL)
+        model = _ollama_model_name()
+        if not _ollama_server_available():
+            return (
+                "Backend solicitado: Ollama, pero el servicio no está respondiendo. "
+                "Inicia Ollama o usa LLM_BACKEND=local_only."
+            )
+
+        if not _ollama_model_available(model):
+            return (
+                f"Backend solicitado: Ollama, pero no encontré el modelo {model}. "
+                f"Descárgalo con: ollama pull {model}"
+            )
+
         return f"Backend activo: Ollama local con modelo {model}."
 
     return "Backend activo: local_only. Solo se responderán skills locales."
@@ -132,19 +211,34 @@ def _strip_qwen_thinking(text):
 
 
 def _chat_with_ollama(messages):
-    import ollama
-
-    model = _env("OLLAMA_MODEL", DEFAULT_OLLAMA_MODEL)
-    response = ollama.chat(
-        model=model,
-        messages=messages,
-        options={
+    model = _ollama_model_name()
+    payload = {
+        "model": model,
+        "messages": messages,
+        "stream": False,
+        "options": {
             "temperature": 0.6,
             "top_p": 0.9,
             "num_predict": 350,
         },
-    )
-    return _strip_qwen_thinking(response["message"]["content"])
+    }
+
+    try:
+        response = _ollama_request(
+            "/api/chat",
+            payload=payload,
+            timeout=_env_float("OLLAMA_TIMEOUT_SECONDS", 120.0),
+        )
+    except urllib.error.HTTPError as error:
+        error_body = error.read().decode("utf-8", errors="replace")
+        raise LLMBackendError(f"Ollama respondió {error.code}: {error_body}") from error
+    except urllib.error.URLError as error:
+        raise LLMBackendError(
+            "No pude conectarme con Ollama. Verifica que el servicio esté iniciado."
+        ) from error
+
+    content = response.get("message", {}).get("content", "")
+    return _strip_qwen_thinking(content)
 
 
 def generate_reply(user_input, system_prompt, university_context):
@@ -155,7 +249,7 @@ def generate_reply(user_input, system_prompt, university_context):
         return (
             "Por ahora estoy en modo local. Puedo responder preguntas básicas sobre UNEV, "
             "sus carreras, admisiones, ubicación y aprobación oficial. Para conversación abierta, "
-            "configura NVIDIA_API_KEY, OPENAI_API_KEY o un modelo de Ollama."
+            "configura NVIDIA_API_KEY, OPENAI_API_KEY o instala Ollama con el modelo recomendado."
         )
 
     try:
