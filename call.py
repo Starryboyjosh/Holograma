@@ -1,6 +1,9 @@
+import base64
 import json
 import os
+import platform
 import re
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -78,6 +81,56 @@ def get_piper_sample_rate(model_path):
     return str(sample_rate)
 
 
+def speak_with_windows_voice(text):
+    """Use Windows built-in speech synthesis when Piper/aplay is unavailable."""
+    powershell = shutil.which("powershell") or shutil.which("powershell.exe")
+    if not powershell:
+        print("AVISO: No encontre PowerShell para reproducir voz en Windows.")
+        return False
+
+    encoded_text = base64.b64encode(text.encode("utf-8")).decode("ascii")
+    script = (
+        f"$text = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('{encoded_text}')); "
+        "Add-Type -AssemblyName System.Speech; "
+        "$speaker = New-Object System.Speech.Synthesis.SpeechSynthesizer; "
+        "$voices = @($speaker.GetInstalledVoices() | "
+        "Where-Object { $_.VoiceInfo.Culture.Name -like 'es-*' }); "
+        "if ($voices.Count -gt 0) { "
+        "$speaker.SelectVoice($voices[0].VoiceInfo.Name) "
+        "}; "
+        "$speaker.Volume = 100; "
+        "$speaker.Rate = 0; "
+        "$speaker.Speak($text); "
+        "$speaker.Dispose();"
+    )
+
+    try:
+        result = subprocess.run(
+            [
+                powershell,
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-Command",
+                script,
+            ],
+            capture_output=True,
+            encoding="utf-8",
+            errors="replace",
+            text=True,
+        )
+        if result.returncode != 0:
+            print(
+                "AVISO: No pude reproducir voz en Windows. Revisa el dispositivo de audio."
+            )
+            return False
+
+        return True
+    except Exception as error:
+        print(f"Error reproduciendo voz de Windows: {error}")
+        return False
+
+
 def speak(text):
     """Pipes text into the Piper TTS engine and outputs to speakers."""
     clean_text = clean_for_tts(text)
@@ -85,7 +138,11 @@ def speak(text):
     if not clean_text:
         return
 
-    print(f"\n🔊 Speaking: {clean_text}")
+    print(f"\nSpeaking: {clean_text}")
+
+    if platform.system() == "Windows":
+        speak_with_windows_voice(clean_text)
+        return
 
     model_path = get_piper_model_path()
 
