@@ -16,7 +16,6 @@ os.environ["QT_QPA_PLATFORM"] = "xcb"
 
 CURRENT_MODE = os.getenv("HOLOGRAM_MODE", "normal")
 DEFAULT_PIPER_MODEL = "es_ES-sharvard-medium.onnx"
-FALLBACK_PIPER_MODEL = "en_US-lessac-medium.onnx"
 presence_manager = PresenceManager(
     greeting_cooldown_seconds=30, absence_reset_seconds=8
 )
