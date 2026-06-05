@@ -1,3 +1,17 @@
+"""
+UNEV Hologram — Main entry point.
+
+Regla de Oro A: Todas las rutas usan pathlib.Path.
+Regla de Oro B: Micrófono con sounddevice (no pyaudio).
+Regla de Oro C: Dependencias centralizadas en requirements.txt.
+
+Usage:
+    python call.py              # Modo teclado (default)
+    python call.py --voice      # Modo voz (micrófono → Whisper → LLM → Piper)
+    python call.py --camera     # Detección de personas con YOLO
+    python call.py --voice --camera  # Voz + cámara
+"""
+
 import base64
 import importlib.util
 import json
@@ -8,6 +22,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import threading
 from pathlib import Path
 
 from llm_backend import generate_reply, get_backend_status
@@ -21,11 +36,30 @@ from skills.university import get_university_context, normalize_text
 os.environ["QT_QPA_PLATFORM"] = "xcb"
 
 BASE_DIR = Path(__file__).resolve().parent
+
+# Cargar configuración unificada desde config.json (Regla A: Path)
+CONFIG_FILE = BASE_DIR / "config.json"
+if CONFIG_FILE.exists():
+    try:
+        with CONFIG_FILE.open("r", encoding="utf-8") as f:
+            config_data = json.load(f)
+            for key, val in config_data.items():
+                if val is not None and key not in os.environ:
+                    os.environ[key] = str(val)
+    except Exception as e:
+        print(f"AVISO: No se pudo cargar {CONFIG_FILE.name}: {e}")
+
 CURRENT_MODE = os.getenv("HOLOGRAM_MODE", "normal")
 DEFAULT_PIPER_MODEL = "es_MX-claude-high.onnx"
 presence_manager = PresenceManager(
     greeting_cooldown_seconds=30, absence_reset_seconds=8
 )
+speak_lock = threading.Lock()
+
+
+# ======================================================================
+# TTS helpers
+# ======================================================================
 
 
 def clean_for_tts(text):
@@ -117,10 +151,10 @@ def get_piper_model_path():
 
 def get_piper_sample_rate(model_path):
     """Read Piper sample rate from the model JSON sidecar when available."""
-    config_path = f"{model_path}.json"
+    config_path = Path(f"{model_path}.json")  # Regla A
 
     try:
-        with open(config_path, "r", encoding="utf-8") as config_file:
+        with config_path.open("r", encoding="utf-8") as config_file:
             config = json.load(config_file)
     except FileNotFoundError:
         return "22050"
@@ -265,15 +299,16 @@ def speak_with_piper(text):
 
     model_path = get_piper_model_path()
 
-    if not os.path.exists(model_path):
+    # Regla A: pathlib for path checks
+    if not Path(model_path).exists():
         print(
             f"ERROR: No encontré la voz {model_path}. "
             "Descarga una voz de Piper en español o define PIPER_MODEL_PATH."
         )
         return False
 
-    config_path = f"{model_path}.json"
-    if not os.path.exists(config_path):
+    config_path = Path(f"{model_path}.json")
+    if not config_path.exists():
         print(
             f"ERROR: Falta {config_path}. "
             "Piper necesita el archivo .onnx y su .onnx.json correspondiente."
@@ -281,7 +316,7 @@ def speak_with_piper(text):
         return False
 
     temp_wav = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
-    wav_path = temp_wav.name
+    wav_path = Path(temp_wav.name)  # Regla A
     temp_wav.close()
 
     try:
@@ -291,7 +326,7 @@ def speak_with_piper(text):
 
     try:
         result = subprocess.run(
-            [*piper_command_args, "--model", model_path, "--output_file", wav_path],
+            [*piper_command_args, "--model", model_path, "--output_file", str(wav_path)],
             input=f"{text}\n",
             capture_output=True,
             encoding="utf-8",
@@ -306,7 +341,7 @@ def speak_with_piper(text):
                 print(result.stderr.strip())
             return False
 
-        return play_wav_file(wav_path)
+        return play_wav_file(str(wav_path))
     except subprocess.TimeoutExpired:
         print("AVISO: Piper tardó demasiado generando la voz.")
         return False
@@ -315,7 +350,7 @@ def speak_with_piper(text):
         return False
     finally:
         try:
-            os.remove(wav_path)
+            wav_path.unlink()  # Regla A
         except OSError:
             pass
 
@@ -387,40 +422,54 @@ def speak_with_linux_tts(text):
     return False
 
 
-def speak(text):
+def speak(text, blocking=True):
     """Speak text using Piper when possible, with OS-native fallbacks."""
     clean_text = clean_for_tts(text)
 
     if not clean_text:
         return
 
-    print(f"\nSpeaking: {clean_text}")
+    # Evitar reproducción superpuesta ( Regla B / Control de Hilos )
+    acquired = speak_lock.acquire(blocking=blocking)
+    if not acquired:
+        print(f"[TTS] Omitiendo habla para evitar traslape: {clean_text}")
+        return
 
-    tts_backend = os.getenv("TTS_BACKEND", "auto").lower().strip()
-    system_name = platform.system()
+    try:
+        print(f"\nSpeaking: {clean_text}")
 
-    if tts_backend in ["auto", "piper"]:
-        if speak_with_piper(clean_text):
-            return
-        if tts_backend == "piper":
-            return
+        tts_backend = os.getenv("TTS_BACKEND", "auto").lower().strip()
+        system_name = platform.system()
 
-    if system_name == "Windows" and tts_backend in ["auto", "windows", "native"]:
-        if speak_with_windows_voice(clean_text):
-            return
+        if tts_backend in ["auto", "piper"]:
+            if speak_with_piper(clean_text):
+                return
+            if tts_backend == "piper":
+                return
 
-    if is_wsl() and tts_backend in ["auto", "windows", "native"]:
-        if speak_with_windows_voice(clean_text):
-            return
+        if system_name == "Windows" and tts_backend in ["auto", "windows", "native"]:
+            if speak_with_windows_voice(clean_text):
+                return
 
-    if system_name == "Linux" and tts_backend in ["auto", "linux", "native", "espeak"]:
-        if speak_with_linux_tts(clean_text):
-            return
+        if is_wsl() and tts_backend in ["auto", "windows", "native"]:
+            if speak_with_windows_voice(clean_text):
+                return
 
-    print(
-        "AVISO: No pude reproducir voz. El texto sí fue generado; "
-        "revisa Piper, el modelo de voz o el dispositivo de audio."
-    )
+        if system_name == "Linux" and tts_backend in ["auto", "linux", "native", "espeak"]:
+            if speak_with_linux_tts(clean_text):
+                return
+
+        print(
+            "AVISO: No pude reproducir voz. El texto sí fue generado; "
+            "revisa Piper, el modelo de voz o el dispositivo de audio."
+        )
+    finally:
+        speak_lock.release()
+
+
+# ======================================================================
+# AI / LLM helpers
+# ======================================================================
 
 
 def ask_ai(user_input, mode=None):
@@ -435,6 +484,11 @@ def ask_ai(user_input, mode=None):
         system_prompt=get_system_prompt(mode),
         university_context=get_university_context(),
     )
+
+
+# ======================================================================
+# Command / mode handling
+# ======================================================================
 
 
 def set_mode(user_input):
@@ -510,15 +564,74 @@ def handle_command(user_input):
     return None
 
 
+# ======================================================================
+# YOLO camera detection (background thread)
+# ======================================================================
+
+
+def _camera_detection_callback(event, count):
+    """Handle YOLO detection events from the background camera thread."""
+    if event == "person_entered":
+        if presence_manager.should_greet(True):
+            greeting = get_greeting(CURRENT_MODE)
+            speak(greeting, blocking=False)
+
+    elif event == "group_detected":
+        presence_manager.should_greet(True)
+        observation = get_cordial_observation("grupo")
+        speak(observation, blocking=False)
+
+    elif event == "person_left":
+        presence_manager.force_person_left()
+        print("[Cámara] La persona se fue. Vuelvo a modo espera.")
+
+
+def start_camera_thread():
+    """Start YOLO person detection in a background daemon thread."""
+    try:
+        from vision.person_detector import YoloPersonDetector
+    except ImportError:
+        print(
+            "AVISO: No se pudo iniciar la cámara. "
+            "Instala las dependencias: pip install ultralytics opencv-python"
+        )
+        return None
+
+    if not YoloPersonDetector.is_available():
+        print(
+            "AVISO: ultralytics u opencv-python no están instalados. "
+            "La detección por cámara no estará activa."
+        )
+        return None
+
+    detector = YoloPersonDetector()
+
+    thread = threading.Thread(
+        target=detector.run_continuous,
+        args=(_camera_detection_callback,),
+        daemon=True,
+        name="yolo-camera",
+    )
+    thread.start()
+    print("[Cámara] Detección de personas con YOLO iniciada en segundo plano.")
+    return thread
+
+
+# ======================================================================
+# Main loops
+# ======================================================================
+
+
 def chat_to_voice():
-    print("--- UNEV Hologram Test ---")
+    """Text input loop: keyboard → LLM → TTS."""
+    print("--- UNEV Hologram (Teclado) ---")
     print("Type a message to the AI.")
     print(
         "Commands: 'quit', 'exit', 'ayuda', 'backend', 'saludar', 'persona', 'grupo', 'formal'."
     )
     print("Modes: 'modo jueces', 'modo expo', 'modo admisiones', 'modo normal'.")
     print(get_backend_status())
-    print("Ollama recomendado para este setup: qwen3:8b.")
+    print("Ollama recomendado para este setup: gemma4:e4b.")
 
     while True:
         user_input = input("\nYou: ").strip()
@@ -539,5 +652,79 @@ def chat_to_voice():
         speak(reply)
 
 
+def voice_loop():
+    """Voice input loop: microphone → Whisper → LLM → TTS (Regla B: sounddevice)."""
+    try:
+        from stt.listener import WhisperListener, get_stt_status
+    except ImportError:
+        print(
+            "ERROR: No se pudo iniciar el modo voz. "
+            "Instala las dependencias: pip install faster-whisper sounddevice numpy"
+        )
+        print("Iniciando en modo teclado como fallback...")
+        chat_to_voice()
+        return
+
+    if not WhisperListener.is_available():
+        print(
+            "ERROR: faster-whisper o sounddevice no están instalados. "
+            "Ejecuta: pip install faster-whisper sounddevice numpy"
+        )
+        print("Iniciando en modo teclado como fallback...")
+        chat_to_voice()
+        return
+
+    listener = WhisperListener()
+
+    print("--- UNEV Hologram (Voz) ---")
+    print("Habla al micrófono. Di 'salir' o 'exit' para terminar.")
+    print(get_stt_status())
+    print(get_backend_status())
+    print("Ollama recomendado para este setup: gemma4:e4b.")
+
+    # Pre-load the Whisper model so the first utterance is fast
+    print("[STT] Preparando modelo de voz...")
+    listener._load_model()
+
+    while True:
+        print("\n🎙️  Esperando tu voz...")
+        user_input = listener.listen_once()
+
+        if not user_input:
+            continue
+
+        if normalize_text(user_input) in ["quit", "exit", "salir"]:
+            print("¡Hasta pronto!")
+            break
+
+        command_response = handle_command(user_input)
+        if command_response:
+            speak(command_response)
+            continue
+
+        print("The AI is thinking...")
+        reply = ask_ai(user_input, CURRENT_MODE)
+        speak(reply)
+
+
+# ======================================================================
+# Entry point
+# ======================================================================
+
+
+def main():
+    """Parse flags and run the appropriate loop."""
+    use_voice = "--voice" in sys.argv or os.getenv("HOLOGRAM_INPUT", "").lower() == "voice"
+    use_camera = "--camera" in sys.argv or os.getenv("HOLOGRAM_CAMERA", "") == "1"
+
+    if use_camera:
+        start_camera_thread()
+
+    if use_voice:
+        voice_loop()
+    else:
+        chat_to_voice()
+
+
 if __name__ == "__main__":
-    chat_to_voice()
+    main()

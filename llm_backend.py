@@ -4,7 +4,7 @@ import re
 import urllib.error
 import urllib.request
 
-DEFAULT_OLLAMA_MODEL = "qwen3:8b"
+DEFAULT_OLLAMA_MODEL = "gemma4:e4b"
 VALID_BACKENDS = {"auto", "nvidia", "openai", "ollama", "local_only"}
 
 
