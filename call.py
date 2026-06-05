@@ -32,6 +32,17 @@ from skills.presence import PresenceManager
 from skills.router import route_local_skill
 from skills.university import get_university_context, normalize_text
 
+
+def configure_utf8_stdio():
+    """Keep Windows consoles from crashing on non-ASCII output."""
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if callable(reconfigure):
+            reconfigure(encoding="utf-8", errors="replace")
+
+
+configure_utf8_stdio()
+
 # Fix for Wayland/CachyOS.
 os.environ["QT_QPA_PLATFORM"] = "xcb"
 
@@ -113,8 +124,12 @@ def get_piper_command_args():
         if windows_piper.exists():
             return [str(windows_piper)]
 
-    if importlib.util.find_spec("piper") is not None:
-        return [sys.executable, "-m", "piper"]
+    piper_spec = importlib.util.find_spec("piper")
+    if piper_spec is not None and piper_spec.origin:
+        spec_path = Path(piper_spec.origin).resolve()
+        local_linux_bundle = (BASE_DIR / "piper").resolve()
+        if local_linux_bundle not in spec_path.parents:
+            return [sys.executable, "-m", "piper"]
 
     return None
 
@@ -788,7 +803,7 @@ def voice_loop():
     listener._load_model()
 
     while True:
-        print("\n🎙️  Esperando tu voz...")
+        print("\n[STT] Esperando tu voz...")
         user_input = listener.listen_once()
 
         if not user_input:

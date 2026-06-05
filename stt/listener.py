@@ -19,6 +19,17 @@ from pathlib import Path
 import numpy as np
 
 
+def configure_utf8_stdio():
+    """Keep Windows consoles from crashing on non-ASCII output."""
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if callable(reconfigure):
+            reconfigure(encoding="utf-8", errors="replace")
+
+
+configure_utf8_stdio()
+
+
 def _env(name, default=None):
     """Read a non-empty environment variable or return a default."""
     value = os.getenv(name)
@@ -165,7 +176,7 @@ class WhisperListener:
         silent_chunks = 0
         silence_chunks_needed = int(self.silence_duration / chunk_duration)
 
-        print("[STT] 🎙️  Escuchando... (habla y haré una pausa cuando termines)")
+        print("[STT] Escuchando... (habla y haré una pausa cuando termines)")
 
         for _ in range(max_chunks):
             try:
