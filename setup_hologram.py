@@ -78,38 +78,123 @@ def print_header():
     )
 
 
+def update_env_file(provider, model, keys):
+    env_path = BASE_DIR / ".env"
+    existing = {}
+    if env_path.exists():
+        try:
+            with env_path.open("r", encoding="utf-8") as f:
+                for line in f:
+                    if "=" in line and not line.strip().startswith("#"):
+                        parts = line.split("=", 1)
+                        key = parts[0].strip()
+                        val = parts[1].split("#", 1)[0].strip()
+                        existing[key] = val
+        except Exception as e:
+            console.print(
+                f"[warning]No se pudo leer el archivo .env existente: {e}[/warning]"
+            )
+
+    # Update values
+    existing["LLM_PROVIDER"] = provider
+    existing["LLM_MODEL"] = model
+    for k, v in keys.items():
+        if v:
+            existing[k] = v
+        elif k not in existing:
+            existing[k] = ""
+
+    # Write back
+    try:
+        with env_path.open("w", encoding="utf-8") as f:
+            f.write(f"LLM_PROVIDER={existing.get('LLM_PROVIDER', '')}\n")
+            f.write(f"LLM_MODEL={existing.get('LLM_MODEL', '')}\n")
+            f.write(f"OPENAI_API_KEY={existing.get('OPENAI_API_KEY', '')}\n")
+            f.write(f"ANTHROPIC_API_KEY={existing.get('ANTHROPIC_API_KEY', '')}\n")
+            f.write(f"OPENROUTER_API_KEY={existing.get('OPENROUTER_API_KEY', '')}\n")
+    except Exception as e:
+        console.print(f"[danger]Error escribiendo archivo .env: {e}[/danger]")
+
+
 def select_brain():
-    """Flujo interactivo para configurar el Cerebro (LLM)."""
+    """Flujo interactivo para configurar el Cerebro (LLM local o Cloud)."""
     console.print(
-        "\n[accent]1. CONFIGURACIÓN DEL CEREBRO (LLM local vía Ollama)[/accent]"
+        "\n[accent]1. CONFIGURACIÓN DEL CEREBRO (LLM local vía Ollama o Cloud API)[/accent]"
     )
     table = Table(show_header=True, header_style="cyan")
     table.add_column("Opción", style="bold green")
-    table.add_column("Modelo", style="bold white")
+    table.add_column("Tipo", style="bold white")
+    table.add_column("Cerebro / Modelo", style="bold yellow")
     table.add_column("VRAM Estimada", style="bold yellow")
     table.add_column("Descripción")
 
     table.add_row(
         "1",
+        "Ollama Local",
         "Gemma 4 E4B",
         "3.0 GB (3000 MB)",
         "Optimizado por Google, ideal para GPUs de 4GB.",
     )
     table.add_row(
         "2",
+        "Ollama Local",
         "Qwen 3:8B",
         "4.8 GB (4800 MB)",
         "Mayor precisión conversacional, mayor consumo de memoria.",
     )
+    table.add_row(
+        "3",
+        "Cloud API",
+        "OpenAI / Anthropic / OpenRouter",
+        "0 MB (0 GB)",
+        "Usa APIs en la nube. Requiere claves API de proveedor.",
+    )
 
     console.print(table)
 
-    choice = Prompt.ask("Selecciona el Cerebro", choices=["1", "2"], default="1")
+    choice = Prompt.ask("Selecciona el Cerebro", choices=["1", "2", "3"], default="1")
 
     if choice == "1":
+        update_env_file("ollama", "gemma4:e4b", {})
         return "gemma4:e4b", BRAINS_VRAM["gemma4:e4b"]
-    else:
+    elif choice == "2":
+        update_env_file("ollama", "qwen3:8b", {})
         return "qwen3:8b", BRAINS_VRAM["qwen3:8b"]
+    else:
+        console.print("\n[accent]Configuración de API de Nube (Cloud LLM)[/accent]")
+        provider = Prompt.ask(
+            "Selecciona el proveedor de LLM",
+            choices=["openai", "claude_native", "openrouter"],
+            default="openrouter",
+        )
+
+        default_model = "meta-llama/llama-3.3-70b-instruct"
+        if provider == "openai":
+            default_model = "gpt-4o-mini"
+        elif provider == "claude_native":
+            default_model = "claude-3-5-sonnet-20241022"
+
+        model = Prompt.ask(
+            f"Escribe el nombre del modelo (ej: {default_model})", default=default_model
+        )
+
+        api_keys = {}
+        if provider == "openai":
+            key = Prompt.ask("Introduce tu OPENAI_API_KEY", password=True)
+            api_keys["OPENAI_API_KEY"] = key
+        elif provider == "claude_native":
+            key = Prompt.ask("Introduce tu ANTHROPIC_API_KEY", password=True)
+            api_keys["ANTHROPIC_API_KEY"] = key
+        elif provider == "openrouter":
+            key = Prompt.ask("Introduce tu OPENROUTER_API_KEY", password=True)
+            api_keys["OPENROUTER_API_KEY"] = key
+
+        update_env_file(provider, model, api_keys)
+
+        console.print(
+            f"[success]✔ Configuración de API guardada en .env ({provider} -> {model})[/success]"
+        )
+        return f"Cloud ({provider}: {model})", 0
 
 
 def select_ears():

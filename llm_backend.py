@@ -3,9 +3,13 @@ import os
 import re
 import urllib.error
 import urllib.request
+from typing import AsyncGenerator
+from dotenv import load_dotenv
+
+load_dotenv()
 
 DEFAULT_OLLAMA_MODEL = "gemma4:e4b"
-VALID_BACKENDS = {"auto", "nvidia", "openai", "ollama", "local_only"}
+VALID_BACKENDS = {"auto", "nvidia", "openai", "ollama", "local_only", "openrouter", "claude_native"}
 
 
 class LLMBackendError(Exception):
@@ -102,11 +106,30 @@ def get_selected_backend():
     if requested_backend != "auto":
         return requested_backend
 
+    # Check LLM_PROVIDER first if configured
+    provider = _env("LLM_PROVIDER")
+    if provider:
+        provider = provider.lower()
+        if provider == "openrouter" and _env("OPENROUTER_API_KEY"):
+            return "openrouter"
+        if provider == "claude_native" and _env("ANTHROPIC_API_KEY"):
+            return "claude_native"
+        if provider == "openai" and _env("OPENAI_API_KEY"):
+            return "openai"
+        if provider == "nvidia" and _env("NVIDIA_API_KEY"):
+            return "nvidia"
+
+    if _env("OPENROUTER_API_KEY"):
+        return "openrouter"
+
     if _env("NVIDIA_API_KEY"):
         return "nvidia"
 
     if _env("OPENAI_API_KEY"):
         return "openai"
+
+    if _env("ANTHROPIC_API_KEY"):
+        return "claude_native"
 
     if _ollama_ready():
         return "ollama"
@@ -116,6 +139,14 @@ def get_selected_backend():
 
 def get_backend_status():
     backend = get_selected_backend()
+
+    if backend == "openrouter":
+        model = _env("LLM_MODEL", "meta-llama/llama-3.3-70b-instruct")
+        return f"Backend activo: OpenRouter API con modelo {model}."
+
+    if backend == "claude_native":
+        model = _env("LLM_MODEL", "claude-3-5-sonnet-latest")
+        return f"Backend activo: Anthropic API con modelo {model}."
 
     if backend == "nvidia":
         model = _env("NVIDIA_MODEL", "moonshotai/kimi-k2.6")
@@ -241,6 +272,58 @@ def _chat_with_ollama(messages):
     return _strip_qwen_thinking(content)
 
 
+def _chat_with_openrouter(messages):
+    from openai import OpenAI
+
+    api_key = _env("OPENROUTER_API_KEY")
+    if not api_key:
+        raise LLMBackendError("Falta OPENROUTER_API_KEY.")
+
+    model = _env("LLM_MODEL", "meta-llama/llama-3.3-70b-instruct")
+    base_url = "https://openrouter.ai/api/v1"
+
+    client = OpenAI(api_key=api_key, base_url=base_url)
+    response = client.chat.completions.create(
+        model=model,
+        messages=messages,
+        temperature=0.6,
+        max_tokens=450,
+    )
+
+    return (response.choices[0].message.content or "").strip()
+
+
+def _chat_with_claude_native(messages):
+    from anthropic import Anthropic
+
+    api_key = _env("ANTHROPIC_API_KEY")
+    if not api_key:
+        raise LLMBackendError("Falta ANTHROPIC_API_KEY.")
+
+    model = _env("LLM_MODEL", "claude-3-5-sonnet-latest")
+
+    client = Anthropic(api_key=api_key)
+
+    # Format messages for Anthropic
+    system_content = "\n".join([m["content"] for m in messages if m["role"] == "system"])
+    user_messages = [m for m in messages if m["role"] != "system"]
+
+    formatted_messages = []
+    for m in user_messages:
+        role = m["role"] if m["role"] in ["user", "assistant"] else "user"
+        formatted_messages.append({"role": role, "content": m["content"]})
+
+    response = client.messages.create(
+        model=model,
+        max_tokens=450,
+        system=system_content,
+        messages=formatted_messages,
+        temperature=0.6
+    )
+
+    return "".join([block.text for block in response.content if hasattr(block, 'text')]).strip()
+
+
 def generate_reply(user_input, system_prompt, university_context):
     backend = get_selected_backend()
     messages = _build_messages(user_input, system_prompt, university_context)
@@ -253,6 +336,12 @@ def generate_reply(user_input, system_prompt, university_context):
         )
 
     try:
+        if backend == "openrouter":
+            return _chat_with_openrouter(messages)
+
+        if backend == "claude_native":
+            return _chat_with_claude_native(messages)
+
         if backend == "nvidia":
             return _chat_with_nvidia(messages)
 
@@ -269,3 +358,88 @@ def generate_reply(user_input, system_prompt, university_context):
             "Tuve un problema conectándome con el modelo de lenguaje. "
             "Mientras tanto, puedes preguntarme por carreras, admisiones, ubicación o información oficial de UNEV."
         )
+
+
+async def stream_llm_response(prompt: str) -> AsyncGenerator[str, None]:
+    """Generador asíncrono para transmitir la respuesta del LLM en tiempo real."""
+    provider = os.getenv("LLM_PROVIDER", "openrouter").lower().strip()
+    model = os.getenv("LLM_MODEL", "meta-llama/llama-3.3-70b-instruct").strip()
+
+    try:
+        from skills.event_mode import get_system_prompt
+        from skills.university import get_university_context
+        system_prompt = get_system_prompt("normal")
+        university_context = get_university_context()
+    except ImportError:
+        system_prompt = "Eres un asistente de la UNEV."
+        university_context = ""
+
+    messages = _build_messages(prompt, system_prompt, university_context)
+
+    if provider == "openai":
+        from openai import AsyncOpenAI
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise LLMBackendError("Falta la variable de entorno OPENAI_API_KEY.")
+        client = AsyncOpenAI(api_key=api_key)
+        
+        response = await client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=0.6,
+            stream=True
+        )
+        async for chunk in response:
+            content = chunk.choices[0].delta.content
+            if content:
+                yield content
+
+    elif provider == "openrouter":
+        from openai import AsyncOpenAI
+        api_key = os.getenv("OPENROUTER_API_KEY")
+        if not api_key:
+            raise LLMBackendError("Falta la variable de entorno OPENROUTER_API_KEY.")
+        client = AsyncOpenAI(
+            api_key=api_key,
+            base_url="https://openrouter.ai/api/v1"
+        )
+        
+        response = await client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=0.6,
+            stream=True
+        )
+        async for chunk in response:
+            content = chunk.choices[0].delta.content
+            if content:
+                yield content
+
+    elif provider == "claude_native":
+        from anthropic import AsyncAnthropic
+        api_key = os.getenv("ANTHROPIC_API_KEY")
+        if not api_key:
+            raise LLMBackendError("Falta la variable de entorno ANTHROPIC_API_KEY.")
+        client = AsyncAnthropic(api_key=api_key)
+        
+        # Anthropic maneja el system prompt por separado
+        system_content = "\n".join([m["content"] for m in messages if m["role"] == "system"])
+        user_messages = [m for m in messages if m["role"] != "system"]
+        
+        formatted_messages = []
+        for m in user_messages:
+            role = m["role"] if m["role"] in ["user", "assistant"] else "user"
+            formatted_messages.append({"role": role, "content": m["content"]})
+            
+        async with client.messages.stream(
+            model=model,
+            max_tokens=1024,
+            system=system_content,
+            messages=formatted_messages,
+            temperature=0.6
+        ) as stream:
+            async for text in stream.text_stream:
+                yield text
+    else:
+        raise LLMBackendError(f"Proveedor no soportado: {provider}")
+
