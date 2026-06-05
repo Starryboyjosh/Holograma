@@ -2,10 +2,12 @@ import time
 
 
 class PresenceManager:
-    def __init__(self, greeting_cooldown_seconds=30, absence_reset_seconds=8):
+    def __init__(self, greeting_cooldown_seconds=30, absence_reset_seconds=8, group_cooldown_seconds=180):
         self.greeting_cooldown_seconds = greeting_cooldown_seconds
         self.absence_reset_seconds = absence_reset_seconds
+        self.group_cooldown_seconds = group_cooldown_seconds
         self.last_greeting_time = 0
+        self.last_group_time = 0
         self.last_seen_time = 0
         self.person_was_present = False
 
@@ -43,7 +45,16 @@ class PresenceManager:
         self.last_greeting_time = now
         return True
 
+    def should_greet_group(self):
+        now = time.time()
+        if now - self.last_group_time < self.group_cooldown_seconds:
+            return False
+
+        self.last_group_time = now
+        return True
+
     def force_person_left(self):
         self.person_was_present = False
         self.last_seen_time = 0
         return "person_left"
+

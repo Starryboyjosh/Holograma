@@ -4,12 +4,11 @@ Eres un holograma promocional de la UNEV.
 
 Tu objetivo es:
 - Dar la bienvenida de forma cordial.
-- Promover la universidad.
-- Responder preguntas sobre la UNEV, sus programas, admisiones, modalidad virtual y beneficios.
+- Promover la universidad de manera natural.
+- Responder preguntas sobre la UNEV, sus programas, admisiones, modalidad virtual y beneficios cuando se te consulte.
 - Mantener un tono profesional, amable y natural.
-- Evitar salirte demasiado del tema.
-- Si el usuario pregunta algo fuera del tema, responde brevemente y redirige la conversación hacia la UNEV.
-- No inventes datos. Si no sabes algo, dilo de forma amable y recomienda consultar la página oficial de UNEV.
+- Si el usuario hace preguntas generales o fuera del tema de la universidad, responde de manera directa, breve y cordial, sin forzar la redirección de la conversación hacia la UNEV si el usuario no la menciona.
+- No inventes datos. Si no sabes algo sobre la universidad, dilo de forma amable y recomienda consultar la página oficial de UNEV.
 - Responder de forma breve porque la respuesta será leída por voz.
 """
 
@@ -69,24 +68,20 @@ Debes:
 def get_greeting(mode="normal"):
     if mode == "judges":
         return (
-            "Bienvenidos, distinguidos jueces. Soy el holograma promocional de la UNEV. "
-            "Estoy diseñado para interactuar con visitantes, responder preguntas sobre la universidad "
-            "y presentar información académica de forma cordial e innovadora."
+            "Bienvenidos, distinguidos jueces. Soy el holograma promocional de la UNEV."
         )
 
     if mode == "expo":
         return (
-            "¡Hola! Bienvenido al espacio de la UNEV. Soy tu holograma guía. "
-            "¿Te gustaría conocer nuestras carreras virtuales?"
+            "¡Hola! Bienvenido al espacio de la UNEV. Soy tu holograma guía."
         )
 
     if mode == "admissions":
         return (
-            "¡Hola! Me alegra que estés interesado en la UNEV. "
-            "Puedo orientarte sobre carreras, admisiones y modalidad virtual."
+            "¡Hola! Me alegra que estés interesado en la UNEV."
         )
 
     return (
-        "¡Hola! Bienvenido a la UNEV. Soy tu holograma guía. "
-        "Puedo hablarte sobre nuestras carreras, admisiones y modalidad virtual."
+        "¡Hola! Bienvenido a la UNEV. Soy tu holograma guía."
     )
+

@@ -55,6 +55,7 @@ presence_manager = PresenceManager(
     greeting_cooldown_seconds=30, absence_reset_seconds=8
 )
 speak_lock = threading.Lock()
+ai_busy = False
 
 
 # ======================================================================
@@ -326,7 +327,13 @@ def speak_with_piper(text):
 
     try:
         result = subprocess.run(
-            [*piper_command_args, "--model", model_path, "--output_file", str(wav_path)],
+            [
+                *piper_command_args,
+                "--model",
+                model_path,
+                "--output_file",
+                str(wav_path),
+            ],
             input=f"{text}\n",
             capture_output=True,
             encoding="utf-8",
@@ -422,47 +429,128 @@ def speak_with_linux_tts(text):
     return False
 
 
-def speak(text, blocking=True):
-    """Speak text using Piper when possible, with OS-native fallbacks."""
-    clean_text = clean_for_tts(text)
+import queue
 
-    if not clean_text:
-        return
+# Configuración del pipeline de streaming TTS
+_MIN_FIRST_CHUNK_LEN = 23  # Latencia baja inicial (ej. "Hola, buenas tardes.")
+_MIN_SENTENCE_LEN = 30  # Oración promedio
+_CLAUSE_RE = re.compile(r"(?<=[.!?;:—])\s+")
+_SENTENCE_RE = re.compile(r"(?<=[.!?])\s+")
 
-    # Evitar reproducción superpuesta ( Regla B / Control de Hilos )
-    acquired = speak_lock.acquire(blocking=blocking)
-    if not acquired:
-        print(f"[TTS] Omitiendo habla para evitar traslape: {clean_text}")
-        return
 
-    try:
-        print(f"\nSpeaking: {clean_text}")
+def _split_into_chunks(text):
+    """
+    Divide el texto en fragmentos listos para TTS.
+    El primero usa cláusulas para salir rápido; el resto oraciones completas.
+    """
+    chunks = []
+    buf = ""
+    first_chunk_sent = False
+
+    # Limpieza previa de bloques problemáticos
+    text = clean_for_tts(text)
+    if not text:
+        return []
+
+    # Procesamos el texto de forma secuencial simulando la llegada de tokens
+    words = text.split(" ")
+    for i, word in enumerate(words):
+        buf += word + " "
+        sep = _SENTENCE_RE if first_chunk_sent else _CLAUSE_RE
+        min_len = _MIN_SENTENCE_LEN if first_chunk_sent else _MIN_FIRST_CHUNK_LEN
+
+        # Buscar límites
+        matches = list(sep.finditer(buf))
+        if matches:
+            last_match = matches[-1]
+            head = buf[: last_match.end()].strip()
+            if len(head) >= min_len:
+                chunks.append(head)
+                buf = buf[last_match.end() :]
+                first_chunk_sent = True
+
+    # El sobrante final
+    remainder = buf.strip()
+    if remainder:
+        chunks.append(remainder)
+
+    return chunks
+
+
+def speak_worker(q):
+    """Worker de hilo que consume y habla los fragmentos secuencialmente."""
+    while True:
+        chunk = q.get()
+        if chunk is None:
+            q.task_done()
+            break
 
         tts_backend = os.getenv("TTS_BACKEND", "auto").lower().strip()
         system_name = platform.system()
 
-        if tts_backend in ["auto", "piper"]:
-            if speak_with_piper(clean_text):
-                return
-            if tts_backend == "piper":
-                return
+        try:
+            print(f"\nSpeaking chunk: {chunk}")
+            if tts_backend in ["auto", "piper"]:
+                if speak_with_piper(chunk):
+                    continue
+                if tts_backend == "piper":
+                    continue
 
-        if system_name == "Windows" and tts_backend in ["auto", "windows", "native"]:
-            if speak_with_windows_voice(clean_text):
-                return
+            if system_name == "Windows" and tts_backend in [
+                "auto",
+                "windows",
+                "native",
+            ]:
+                if speak_with_windows_voice(chunk):
+                    continue
 
-        if is_wsl() and tts_backend in ["auto", "windows", "native"]:
-            if speak_with_windows_voice(clean_text):
-                return
+            if is_wsl() and tts_backend in ["auto", "windows", "native"]:
+                if speak_with_windows_voice(chunk):
+                    continue
 
-        if system_name == "Linux" and tts_backend in ["auto", "linux", "native", "espeak"]:
-            if speak_with_linux_tts(clean_text):
-                return
+            if system_name == "Linux" and tts_backend in [
+                "auto",
+                "linux",
+                "native",
+                "espeak",
+            ]:
+                if speak_with_linux_tts(chunk):
+                    continue
 
-        print(
-            "AVISO: No pude reproducir voz. El texto sí fue generado; "
-            "revisa Piper, el modelo de voz o el dispositivo de audio."
-        )
+            print(f"AVISO: No pude reproducir voz para el fragmento: {chunk}")
+        except Exception as e:
+            print(f"Error en el reproductor de voz: {e}")
+        finally:
+            q.task_done()
+
+
+def speak(text, blocking=True):
+    """Speak text using Piper when possible, with OS-native fallbacks.
+    Utiliza segmentación inteligente por cláusulas y oraciones para streaming de audio.
+    """
+    chunks = _split_into_chunks(text)
+    if not chunks:
+        return
+
+    # Evitar reproducción superpuesta usando el speak_lock
+    acquired = speak_lock.acquire(blocking=blocking)
+    if not acquired:
+        print(f"[TTS] Omitiendo habla para evitar traslape: {text[:60]}...")
+        return
+
+    try:
+        q = queue.Queue()
+        for chunk in chunks:
+            q.put(chunk)
+        q.put(None)  # Sentinel de finalización
+
+        # Iniciar hilo de reproducción para este mensaje
+        worker_thread = threading.Thread(target=speak_worker, args=(q,), daemon=True)
+        worker_thread.start()
+
+        # Si es bloqueante, esperamos a que termine todo el procesamiento de la cola
+        if blocking:
+            q.join()
     finally:
         speak_lock.release()
 
@@ -546,8 +634,9 @@ def handle_command(user_input):
         return "Ya detecté al visitante. Me mantendré atento sin repetir el saludo demasiado seguido."
 
     if text in ["grupo", "detectar grupo"]:
-        presence_manager.should_greet(True)
-        return get_cordial_observation("grupo")
+        if presence_manager.should_greet_group():
+            return get_cordial_observation("grupo")
+        return "Ya me presenté a un grupo recientemente."
 
     if text in ["formal", "vestimenta formal", "elegante"]:
         presence_manager.should_greet(True)
@@ -571,15 +660,22 @@ def handle_command(user_input):
 
 def _camera_detection_callback(event, count):
     """Handle YOLO detection events from the background camera thread."""
+    global ai_busy
+    if ai_busy or speak_lock.locked():
+        if event == "person_left":
+            presence_manager.force_person_left()
+            print("[Cámara] La persona se fue. Vuelvo a modo espera (sin interrumpir).")
+        return
+
     if event == "person_entered":
         if presence_manager.should_greet(True):
             greeting = get_greeting(CURRENT_MODE)
             speak(greeting, blocking=False)
 
     elif event == "group_detected":
-        presence_manager.should_greet(True)
-        observation = get_cordial_observation("grupo")
-        speak(observation, blocking=False)
+        if presence_manager.should_greet_group():
+            observation = get_cordial_observation("grupo")
+            speak(observation, blocking=False)
 
     elif event == "person_left":
         presence_manager.force_person_left()
@@ -642,14 +738,19 @@ def chat_to_voice():
         if normalize_text(user_input) in ["quit", "exit", "salir"]:
             break
 
-        command_response = handle_command(user_input)
-        if command_response:
-            speak(command_response)
-            continue
+        global ai_busy
+        ai_busy = True
+        try:
+            command_response = handle_command(user_input)
+            if command_response:
+                speak(command_response)
+                continue
 
-        print("The AI is thinking...")
-        reply = ask_ai(user_input, CURRENT_MODE)
-        speak(reply)
+            print("The AI is thinking...")
+            reply = ask_ai(user_input, CURRENT_MODE)
+            speak(reply)
+        finally:
+            ai_busy = False
 
 
 def voice_loop():
@@ -697,14 +798,19 @@ def voice_loop():
             print("¡Hasta pronto!")
             break
 
-        command_response = handle_command(user_input)
-        if command_response:
-            speak(command_response)
-            continue
+        global ai_busy
+        ai_busy = True
+        try:
+            command_response = handle_command(user_input)
+            if command_response:
+                speak(command_response)
+                continue
 
-        print("The AI is thinking...")
-        reply = ask_ai(user_input, CURRENT_MODE)
-        speak(reply)
+            print("The AI is thinking...")
+            reply = ask_ai(user_input, CURRENT_MODE)
+            speak(reply)
+        finally:
+            ai_busy = False
 
 
 # ======================================================================
@@ -714,7 +820,9 @@ def voice_loop():
 
 def main():
     """Parse flags and run the appropriate loop."""
-    use_voice = "--voice" in sys.argv or os.getenv("HOLOGRAM_INPUT", "").lower() == "voice"
+    use_voice = (
+        "--voice" in sys.argv or os.getenv("HOLOGRAM_INPUT", "").lower() == "voice"
+    )
     use_camera = "--camera" in sys.argv or os.getenv("HOLOGRAM_CAMERA", "") == "1"
 
     if use_camera:

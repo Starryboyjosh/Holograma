@@ -247,6 +247,7 @@ class WhisperListener:
             language=self.language,
             beam_size=5,
             vad_filter=True,
+            vad_parameters=dict(min_silence_duration_ms=500),
             initial_prompt=prompt,
         )
 

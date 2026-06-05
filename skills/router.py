@@ -54,7 +54,21 @@ def route_local_skill(user_input):
     ):
         return get_approval_info()
 
-    if any(word in text for word in ["que es unev", "universidad", "unev"]):
+    # Evitar secuestrar preguntas específicas que contengan "unev" o "universidad"
+    exact_matches = {"unev", "la unev", "universidad"}
+    presentation_phrases = [
+        "que es unev",
+        "que es la unev",
+        "que es la universidad",
+        "cuentame de unev",
+        "hablame de unev",
+        "quien eres",
+        "presentate",
+        "informacion de unev",
+        "informacion sobre unev",
+        "sobre unev",
+    ]
+    if text in exact_matches or any(phrase in text for phrase in presentation_phrases):
         return get_university_summary()
 
     return None
