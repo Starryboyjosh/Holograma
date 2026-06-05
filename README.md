@@ -1,6 +1,63 @@
 # Holograma UNEV
 
-Demo de holograma/guía interactivo para UNEV con IA avanzada: Gemma 4 E4B, YOLOv8/v11, Faster-Whisper y Piper TTS.
+Holograma y guía interactivo inteligente para la Universidad Virtual (UNEV) diseñado para funcionar de manera local o en la nube. Integra procesamiento de lenguaje natural (LLM), visión artificial para la detección de presencia, reconocimiento de voz (STT) y síntesis de habla (TTS).
+
+---
+
+## 📋 Resumen del Proyecto
+
+El **Holograma UNEV** es un asistente interactivo multimodal de última generación. Está diseñado para interactuar con los visitantes a través de múltiples canales:
+- **Visual**: Detecta la llegada de personas, grupos o vestimenta formal usando la cámara del dispositivo.
+- **Auditivo (Voz)**: Escucha preguntas mediante el micrófono, las transcribe en tiempo real y responde usando síntesis de voz natural en español.
+- **Digital (WebSockets/API)**: Proporciona una interfaz basada en FastAPI para streaming de texto y simulación de flujos de audio avanzados (XTTS).
+
+El sistema puede operar de manera 100% local (sin internet) mediante modelos eficientes optimizados para CPU/GPU locales, o conectarse a APIs externas si se prefiere.
+
+---
+
+## 🛠️ Componentes y Arquitectura
+
+El proyecto está estructurado de forma modular, dividiéndose en los siguientes componentes principales:
+
+### 1. Núcleo y Orquestador (`call.py`)
+- **Punto de Entrada**: Orquesta las interacciones del holograma unificando las entradas (teclado, micrófono, cámara) con las salidas (consola, voz TTS).
+- **Control de Estado**: Administra el hilo de reproducción de audio y bloquea llamadas superpuestas para evitar la interrupción de la voz.
+
+### 2. Backend de Lenguaje (`llm_backend.py`)
+Soporta múltiples proveedores de modelos de lenguaje, seleccionables por variables de entorno:
+- **Ollama (Local)**: Modelo por defecto `gemma4:e4b` o `qwen3:8b`.
+- **OpenRouter & Anthropic (Nube)**: Modelos como Llama 3.3 y Claude 3.5 Sonnet.
+- **OpenAI & NVIDIA NIM**: Integración con GPT-4o-mini y API de microservicios de Nvidia.
+- **Local Only (Sin LLM)**: Si no hay conexión a internet ni Ollama disponible, utiliza un enrutador local de expresiones regulares para responder a preguntas comunes usando la base de datos de la universidad.
+
+### 3. API y Servidor Web (`main.py`)
+- **FastAPI**: Ofrece una API REST y un servidor de WebSockets en `/ws/chat`.
+- **Streaming Asíncrono**: Transmite las respuestas del LLM al cliente en tiempo real (`text_chunk`).
+- **Simulación XTTS**: Integra un pipeline simulado para generación rápida de voz en formato web.
+
+### 4. Reconocimiento de Voz - STT (`stt/listener.py`)
+- **Faster-Whisper**: Motor de transcripción local rápido optimizado para español.
+- **Captura con `sounddevice`**: Graba del micrófono de forma nativa sin requerir compilar dependencias complejas.
+- **Detección de Silencio**: Mide la amplitud RMS en tiempo real para detener la grabación automáticamente al terminar de hablar.
+
+### 5. Síntesis de Voz - TTS (`call.py` - Sección TTS)
+- **Piper TTS**: Sintetizador de voz ultrarrápido y local que utiliza el modelo en español `es_MX-claude-high.onnx`.
+- **Segmentación Inteligente**: Divide el texto del LLM por cláusulas y oraciones para iniciar la reproducción de voz antes de que el LLM termine de generar toda la respuesta (baja latencia).
+- **Motores Alternativos**: Fallback automático a la voz nativa del sistema operativo (SAPI en Windows, `espeak-ng` o `spd-say` en Linux).
+
+### 6. Visión Artificial (`vision/`)
+Detección en tiempo real a través de OpenCV y modelos YOLO:
+- `vision/camera.py`: Captura y procesamiento cross-platform de la cámara.
+- `vision/person_detector.py`: Detector basado en **YOLOv8** / **YOLOv11** (`yolov8n.pt` o `yolo11n.pt`). Gatilla eventos automáticos cuando alguien se acerca (`person_entered`), cuando se detecta un grupo (`group_detected`), o cuando la persona se retira (`person_left`).
+
+### 7. Habilidades Locales y Datos (`skills/` & `data/`)
+Lógica personalizada para comportamientos específicos:
+- `skills/presence.py`: Gestiona los tiempos de espera (cooldowns) para no saludar repetitivamente a la misma persona.
+- `skills/event_mode.py`: Configura los prompts del sistema y saludos según el modo activo (`normal`, `judges`, `expo`, `admissions`).
+- `skills/appearance.py`: Genera observaciones cordiales sobre la vestimenta detected (por ejemplo, detectar si viste formal).
+- `skills/university.py` & `data/unev_info.json`: Base de conocimiento local estructurada sobre carreras, admisiones, campus e información institucional de UNEV.
+
+---
 
 ## 3 Reglas de Oro (Compatibilidad Linux ↔ Windows)
 
@@ -10,215 +67,68 @@ Demo de holograma/guía interactivo para UNEV con IA avanzada: Gemma 4 E4B, YOLO
 | **B. `sounddevice`** | Micrófono con `sounddevice` en vez de `pyaudio` | `stt/listener.py` |
 | **C. `requirements.txt`** | Todas las dependencias en un solo archivo | `requirements.txt` |
 
-## Requisitos principales
+---
 
-- Python 3.10+
-- Ollama con Gemma 4 E4B para conversación inteligente
-- Piper TTS para voz de alta calidad en español
-- Linux: `aplay`, `paplay`, `pw-play`, `ffplay` o `mpv` para reproducir audio
-- Windows: PowerShell incluido; si Piper no está, se usa la voz nativa de Windows
+## 🚀 Instalación y Configuración Rápida
 
-## Instalación y Configuración rápida (Regla C)
+1. **Clonar e instalar dependencias:**
 
-Linux/macOS:
+   Linux/macOS:
+   ```bash
+   python -m venv .venv
+   ./.venv/bin/pip install -r requirements.txt
+   ./.venv/bin/python setup_hologram.py  # Asistente de configuración interactiva
+   ```
 
-```bash
-python -m venv .venv
-./.venv/bin/pip install -r requirements.txt
-./.venv/bin/python setup_hologram.py  # Asistente interactivo de sentidos y VRAM
-./.venv/bin/python call.py
-```
+   Windows PowerShell:
+   ```powershell
+   py -m venv .venv
+   .\.venv\Scripts\pip install -r requirements.txt
+   .\.venv\Scripts\python setup_hologram.py  # Asistente de configuración interactiva
+   ```
 
-Windows PowerShell:
+2. **Descargar Modelo Ollama (Recomendado para uso local):**
+   ```bash
+   ollama pull gemma4:e4b
+   ```
 
-```powershell
-py -m venv .venv
-.\.venv\Scripts\pip install -r requirements.txt
-.\.venv\Scripts\python setup_hologram.py  # Asistente interactivo de sentidos y VRAM
-.\.venv\Scripts\python call.py
-```
+3. **Ejecutar:**
+   - **Modo Teclado (Consola):**
+     ```bash
+     python call.py
+     ```
+   - **Modo Completo (Voz + Cámara YOLO):**
+     ```bash
+     python call.py --voice --camera
+     ```
+   - **Modo Servidor Web API:**
+     ```bash
+     uvicorn main:app --reload
+     ```
 
-## Modelo LLM: Gemma 4 E4B
+---
 
-El backend local de Ollama está configurado por defecto para usar:
-
-```
-gemma4:e4b
-```
-
-Descarga el modelo con:
-
-```bash
-ollama pull gemma4:e4b
-```
-
-Luego ejecuta:
-
-```bash
-LLM_BACKEND=ollama python call.py
-```
-
-También puedes usar otros modelos cambiando la variable de entorno:
-
-```bash
-OLLAMA_MODEL=qwen3:8b python call.py
-```
-
-## Modos de ejecución
-
-### Modo teclado (default)
-
-```bash
-python call.py
-```
-
-### Modo voz (micrófono → Whisper → LLM → TTS)
-
-```bash
-python call.py --voice
-```
-
-O con variable de entorno:
-
-```bash
-HOLOGRAM_INPUT=voice python call.py
-```
-
-### Modo cámara (detección de personas con YOLO)
-
-```bash
-python call.py --camera
-```
-
-O con variable de entorno:
-
-```bash
-HOLOGRAM_CAMERA=1 python call.py
-```
-
-### Modo completo (voz + cámara)
-
-```bash
-python call.py --voice --camera
-```
-
-## Detección de personas (YOLOv8/v11 + OpenCV)
-
-El holograma puede detectar personas con la cámara usando YOLOv8 o YOLOv11:
-
-- Detecta cuando alguien llega y saluda automáticamente
-- Detecta grupos y ajusta el saludo
-- Detecta cuando la persona se fue y vuelve a modo espera
-
-Configura el modelo YOLO:
-
-```bash
-YOLO_MODEL=yolo11n.pt python call.py --camera    # YOLOv11
-YOLO_MODEL=yolov8n.pt python call.py --camera     # YOLOv8 (default)
-```
-
-## Speech-to-Text (Faster-Whisper + sounddevice)
-
-El modo voz usa Faster-Whisper para transcribir tu voz en español:
-
-- Graba desde el micrófono con `sounddevice` (Regla B: funciona en Linux y Windows sin compilar PortAudio)
-- Detecta silencio automáticamente para saber cuándo terminaste de hablar
-- Transcribe con el modelo Whisper `base` por defecto
-
-Configura el modelo Whisper:
-
-```bash
-WHISPER_MODEL=small python call.py --voice    # Más preciso (~500MB)
-WHISPER_MODEL=base python call.py --voice     # Más rápido (~150MB, default)
-```
-
-## Voz en español (Piper TTS)
-
-El proyecto intenta hablar así:
-
-1. Usa Piper si está instalado y encuentra una voz `es_*.onnx`.
-2. En Windows, si Piper no está disponible, usa la voz nativa de Windows.
-3. En Linux, si Piper no está, intenta usar `espeak-ng`, `espeak` o `spd-say`.
-
-La voz actual es:
-
-- `es_MX-claude-high.onnx`
-- `es_MX-claude-high.onnx.json`
-
-Forzar otra voz: `PIPER_MODEL_PATH=mi_voz.onnx python call.py`
-
-Forzar el motor de voz:
-
-- `TTS_BACKEND=piper python call.py`
-- `TTS_BACKEND=windows python call.py`
-- `TTS_BACKEND=linux python call.py`
-
-## Variables de entorno
+## ⚙️ Variables de Entorno y Configuración (`config.json` / `.env`)
 
 | Variable | Default | Descripción |
 |----------|---------|-------------|
 | `LLM_BACKEND` | `auto` | `auto`, `nvidia`, `openai`, `ollama`, `local_only` |
-| `OLLAMA_MODEL` | `gemma4:e4b` | Modelo de Ollama |
-| `HOLOGRAM_MODE` | `normal` | `normal`, `judges`, `expo`, `admissions` |
-| `HOLOGRAM_INPUT` | `keyboard` | `keyboard` o `voice` |
-| `HOLOGRAM_CAMERA` | `0` | `1` para activar detección de personas |
-| `HOLOGRAM_CAMERA_INDEX` | `0` | Índice de cámara |
-| `YOLO_MODEL` | `yolov8n.pt` | Modelo YOLO (v8 o v11) |
-| `YOLO_CONFIDENCE` | `0.5` | Confianza mínima de detección |
-| `WHISPER_MODEL` | `base` | Modelo Whisper (`tiny`, `base`, `small`, `medium`) |
-| `WHISPER_LANGUAGE` | `es` | Idioma de transcripción |
-| `WHISPER_DEVICE` | `auto` | `auto`, `cpu`, `cuda` |
-| `TTS_BACKEND` | `auto` | `auto`, `piper`, `windows`, `linux` |
-| `PIPER_MODEL_PATH` | - | Ruta al modelo de voz Piper |
+| `OLLAMA_MODEL` | `gemma4:e4b` | Modelo local a ejecutar en Ollama |
+| `HOLOGRAM_MODE` | `normal` | Modo activo: `normal`, `judges` (jueces), `expo`, `admissions` |
+| `HOLOGRAM_INPUT` | `keyboard` | Método de entrada: `keyboard` o `voice` |
+| `HOLOGRAM_CAMERA` | `0` | Poner en `1` para activar visión artificial |
+| `YOLO_MODEL` | `yolov8n.pt` | Modelo YOLO (`yolov8n.pt` o `yolo11n.pt`) |
+| `WHISPER_MODEL` | `base` | Modelo de STT (`tiny`, `base`, `small`, `medium`) |
+| `TTS_BACKEND` | `auto` | Backend de voz: `auto`, `piper`, `windows`, `linux` |
+| `PIPER_MODEL_PATH` | - | Ruta personalizada del modelo `.onnx` para Piper |
 
-## Modo sin Ollama
+---
 
-Si no tienes Ollama, el holograma responde preguntas básicas de UNEV usando skills locales:
+## 🗣️ Comandos del Chat / Sistema
 
-- ¿Qué es UNEV?
-- Carreras o programas
-- Admisiones
-- Ubicación
-- Página oficial
-- Aprobación oficial
-
-Para forzar ese modo: `LLM_BACKEND=local_only python call.py`
-
-## Comandos dentro del chat
-
-- `ayuda`
-- `backend`
-- `saludar`
-- `persona`
-- `grupo`
-- `formal`
-- `modo jueces`
-- `modo expo`
-- `modo admisiones`
-- `modo normal`
-- `salir`
-
-## Arquitectura
-
-```
-Holograma/
-├── call.py                  # Entry point (teclado + voz + cámara)
-├── llm_backend.py           # Ollama (Gemma 4 E4B), NVIDIA, OpenAI
-├── setup_hologram.py        # Configuración interactiva y estimación de VRAM
-├── requirements.txt         # Todas las dependencias (Regla C)
-├── stt/                     # Speech-to-Text
-│   ├── __init__.py
-│   └── listener.py          # sounddevice + faster-whisper (Regla B)
-├── vision/
-│   ├── __init__.py
-│   ├── camera.py            # Wrapper OpenCV cross-platform
-│   └── person_detector.py   # YOLOv8/v11 detección de personas
-├── skills/
-│   ├── appearance.py
-│   ├── event_mode.py
-│   ├── presence.py
-│   ├── router.py
-│   └── university.py
-└── data/
-    └── unev_info.json
-```
+Puedes interactuar con el holograma por voz o texto usando comandos del sistema para alterar su comportamiento en tiempo real:
+- `saludar`: Fuerza un saludo inicial.
+- `modo jueces`, `modo expo`, `modo admisiones`, `modo normal`: Cambia las directrices de personalidad y respuestas del asistente.
+- `persona` / `se fue`: Simula eventos de visión artificial (llegada y salida de personas).
+- `backend`: Muestra información del backend de IA seleccionado y su estado actual.
+- `ayuda`: Muestra la lista de comandos disponibles.

@@ -25,7 +25,7 @@ import tempfile
 import threading
 from pathlib import Path
 
-from llm_backend import generate_reply, get_backend_status
+from llm_backend import generate_reply, get_backend_status, get_selected_backend
 from skills.appearance import get_cordial_observation
 from skills.event_mode import get_greeting, get_system_prompt
 from skills.presence import PresenceManager
@@ -578,9 +578,10 @@ def speak(text, blocking=True):
 def ask_ai(user_input, mode=None):
     mode = mode or CURRENT_MODE
 
-    local_response = route_local_skill(user_input)
-    if local_response:
-        return local_response
+    if get_selected_backend() == "local_only":
+        local_response = route_local_skill(user_input)
+        if local_response:
+            return local_response
 
     return generate_reply(
         user_input=user_input,
