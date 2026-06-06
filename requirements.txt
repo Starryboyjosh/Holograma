@@ -12,19 +12,19 @@
 # ============================================================
 
 # === Core: cliente OpenAI (NVIDIA NIM, OpenAI, etc.) ===
-openai>=1.0
+openai>=2.40.0
 
 # === STT: Faster-Whisper + micrófono (Regla B: sounddevice, no pyaudio) ===
-faster-whisper>=1.1.0
-sounddevice>=0.5.0
-numpy>=1.24
+faster-whisper>=1.2.0
+sounddevice>=0.5.5
+numpy>=2.0.0
 # GPU NVIDIA opcional en Linux/Windows x86_64:
 #   pip install nvidia-cublas-cu12 nvidia-cudnn-cu12
 # No se incluyen por defecto para mantener compatibilidad con CPU y Raspberry Pi.
 
-# === Visión: YOLOv8/v11 + OpenCV (cross-platform) ===
-ultralytics>=8.3
-opencv-python>=4.10
+# === Visión: YOLOv26 + OpenCV (cross-platform) ===
+ultralytics>=8.4
+opencv-python>=4.13.0
 
 # === TTS: Piper (opcional — descomentar si se desea) ===
 piper-tts>=1.3.0; platform_machine == "x86_64" or platform_machine == "AMD64"
@@ -33,7 +33,7 @@ piper-tts>=1.3.0; platform_machine == "x86_64" or platform_machine == "AMD64"
 rich>=13.0
 
 # === API & WebSockets & LLM streaming ===
-anthropic>=0.18.0
-fastapi>=0.100.0
-uvicorn>=0.20.0
+anthropic>=0.105.0
+fastapi>=0.136.0
+uvicorn>=0.49.0
 python-dotenv>=1.0.0

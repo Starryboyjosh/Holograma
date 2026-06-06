@@ -55,7 +55,7 @@ EARS_VRAM = {
     "medium": 750,  # Whisper Medium INT8
 }
 
-VISION_VRAM = 80  # YOLOv11 Nano: ~80 MB
+VISION_VRAM = 80  # YOLOv26 Nano: ~80 MB
 BASE_SYSTEM_VRAM = 500  # Margen base del Sistema Operativo/Entorno Gráfico (500 MB)
 VRAM_LIMIT_MB = 4000  # Límite crítico (4.0 GB - Quadro T1000)
 
@@ -232,8 +232,8 @@ def select_ears():
 
 
 def configure_vision():
-    """Flujo interactivo para la Visión (YOLOv11 + OpenCV)."""
-    console.print("\n[accent]3. PARÁMETROS DE VISIÓN (YOLOv11 Nano + Cámara)[/accent]")
+    """Flujo interactivo para la Visión (YOLOv26 + OpenCV)."""
+    console.print("\n[accent]3. PARÁMETROS DE VISIÓN (YOLOv26 Nano + Cámara)[/accent]")
 
     activate = Confirm.ask(
         "¿Deseas activar el sentido de la visión en tiempo real (cámara)?", default=True
@@ -244,7 +244,7 @@ def configure_vision():
         return False, None, 0, 0
 
     console.print(
-        "[success]Visión activada con modelo predeterminado: yolo11n.pt (~80 MB VRAM)[/success]"
+        "[success]Visión activada con modelo predeterminado: yolo26n.pt (~80 MB VRAM)[/success]"
     )
 
     # Preguntar por el ratio de Frame Skipping para optimizar rendimiento
@@ -252,7 +252,7 @@ def configure_vision():
         "Ratio de 'Frame Skipping' (procesar 1 de cada X fotogramas)", default=5
     )
 
-    return True, "yolo11n.pt", frame_skipping, VISION_VRAM
+    return True, "yolo26n.pt", frame_skipping, VISION_VRAM
 
 
 def run_setup():
@@ -288,7 +288,7 @@ def run_setup():
         "Oído (Faster-Whisper)", f"{ear_model} (INT8)", f"{ear_vram} MB"
     )
     summary_table.add_row(
-        "Visión (YOLOv11)",
+        "Visión (YOLOv26)",
         f"Activa ({yolo_model}, skip={frame_skip})" if vision_active else "Inactiva",
         f"{vision_vram} MB",
     )
@@ -342,7 +342,7 @@ def run_setup():
             "WHISPER_MODEL": ear_model,
             "HOLOGRAM_INPUT": "voice",
             "HOLOGRAM_CAMERA": "1" if vision_active else "0",
-            "YOLO_MODEL": yolo_model if vision_active else "yolov8n.pt",
+            "YOLO_MODEL": yolo_model if vision_active else "yolo26n.pt",
             "YOLO_INTERVAL_SECONDS": str(frame_skip / 30.0) if vision_active else "1.0",
         }
 

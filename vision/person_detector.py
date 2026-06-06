@@ -38,20 +38,19 @@ def _env_float(name, default):
 
 
 class YoloPersonDetector:
-    """Detect people using YOLOv8 or YOLOv11 via the Ultralytics library.
+    """Detect people using YOLOv26 via the Ultralytics library.
 
     Parameters
     ----------
     model_name : str
-        Model file name or path.  Accepts both YOLOv8 (``yolov8n.pt``) and
-        YOLOv11 (``yolo11n.pt``) weights.  The environment variable
-        ``YOLO_MODEL`` overrides this value.
+        Model file name or path.  Accepts YOLOv26 (``yolo26n.pt``) weights.
+        The environment variable ``YOLO_MODEL`` overrides this value.
     confidence_threshold : float
         Minimum confidence to consider a detection valid.
     """
 
     def __init__(self, model_name=None, confidence_threshold=None):
-        self.model_name = model_name or _env("YOLO_MODEL", "yolov8n.pt")
+        self.model_name = model_name or _env("YOLO_MODEL", "yolo26n.pt")
         self.confidence_threshold = confidence_threshold or _env_float(
             "YOLO_CONFIDENCE", 0.5
         )
@@ -260,5 +259,5 @@ def get_vision_status():
     except ImportError:
         return "Visión no disponible: falta ultralytics. Ejecuta: pip install ultralytics"
 
-    model = _env("YOLO_MODEL", "yolov8n.pt")
+    model = _env("YOLO_MODEL", "yolo26n.pt")
     return f"Visión activa: OpenCV {cv_version}, modelo YOLO '{model}'."

@@ -3,6 +3,6 @@
     "WHISPER_MODEL": "medium",
     "HOLOGRAM_INPUT": "voice",
     "HOLOGRAM_CAMERA": "1",
-    "YOLO_MODEL": "yolo11n.pt",
+    "YOLO_MODEL": "yolo26n.pt",
     "YOLO_INTERVAL_SECONDS": "0.13333333333333333"
 }
