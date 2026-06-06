@@ -119,7 +119,7 @@ class WhisperListener:
                 "Ejecuta: pip install faster-whisper"
             ) from error
 
-        device = _env("WHISPER_DEVICE", "auto")
+        device = _env("WHISPER_DEVICE", "cpu")
         compute_type = _env("WHISPER_COMPUTE_TYPE", "int8")
 
         print(
@@ -253,16 +253,45 @@ class WhisperListener:
         )
         prompt = _env("WHISPER_PROMPT", default_prompt)
 
-        segments, info = model.transcribe(
-            str(audio_path),
-            language=self.language,
-            beam_size=5,
-            vad_filter=True,
-            vad_parameters=dict(min_silence_duration_ms=500),
-            initial_prompt=prompt,
-        )
+        transcribe_kwargs = {
+            "language": self.language,
+            "beam_size": 5,
+            "vad_filter": True,
+            "vad_parameters": dict(min_silence_duration_ms=500),
+            "initial_prompt": prompt,
+        }
 
-        text_parts = [segment.text.strip() for segment in segments]
+        try:
+            segments, info = model.transcribe(str(audio_path), **transcribe_kwargs)
+            text_parts = [segment.text.strip() for segment in segments]
+        except RuntimeError as error:
+            error_str = str(error).lower()
+            should_retry_cpu = (
+                _env("WHISPER_DEVICE", "cpu") != "cpu"
+                and (
+                    "cublas" in error_str
+                    or "cuda" in error_str
+                    or "cudnn" in error_str
+                    or "libcublas" in error_str
+                )
+            )
+            if not should_retry_cpu:
+                raise
+
+            print(
+                f"[STT] AVISO: CUDA falló durante transcripción ({error}). "
+                "Reintentando con CPU..."
+            )
+            from faster_whisper import WhisperModel
+
+            self._model = WhisperModel(
+                self.model_size,
+                device="cpu",
+                compute_type="int8",
+            )
+            segments, info = self._model.transcribe(str(audio_path), **transcribe_kwargs)
+            text_parts = [segment.text.strip() for segment in segments]
+
         return " ".join(text_parts).strip()
 
     def listen_once(self):

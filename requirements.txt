@@ -18,15 +18,16 @@ openai>=1.0
 faster-whisper>=1.1.0
 sounddevice>=0.5.0
 numpy>=1.24
-nvidia-cublas-cu12>=12.0
-nvidia-cudnn-cu12>=9.0
+# GPU NVIDIA opcional en Linux/Windows x86_64:
+#   pip install nvidia-cublas-cu12 nvidia-cudnn-cu12
+# No se incluyen por defecto para mantener compatibilidad con CPU y Raspberry Pi.
 
 # === Visión: YOLOv8/v11 + OpenCV (cross-platform) ===
 ultralytics>=8.3
 opencv-python>=4.10
 
 # === TTS: Piper (opcional — descomentar si se desea) ===
-# piper-tts
+piper-tts>=1.3.0; platform_machine == "x86_64" or platform_machine == "AMD64"
 
 # === Setup: herramientas interactivas ===
 rich>=13.0
@@ -36,4 +37,3 @@ anthropic>=0.18.0
 fastapi>=0.100.0
 uvicorn>=0.20.0
 python-dotenv>=1.0.0
-

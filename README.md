@@ -76,6 +76,8 @@ Lógica personalizada para comportamientos específicos:
    Linux/macOS:
    ```bash
    python -m venv .venv
+   ./.venv/bin/pip install --upgrade pip setuptools wheel
+   ./.venv/bin/pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
    ./.venv/bin/pip install -r requirements.txt
    ./.venv/bin/python setup_hologram.py  # Asistente de configuración interactiva
    ```
@@ -83,6 +85,8 @@ Lógica personalizada para comportamientos específicos:
    Windows PowerShell:
    ```powershell
    py -m venv .venv
+   .\.venv\Scripts\python -m pip install --upgrade pip setuptools wheel
+   .\.venv\Scripts\pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
    .\.venv\Scripts\pip install -r requirements.txt
    .\.venv\Scripts\python setup_hologram.py  # Asistente de configuración interactiva
    ```
@@ -118,9 +122,49 @@ Lógica personalizada para comportamientos específicos:
 | `HOLOGRAM_INPUT` | `keyboard` | Método de entrada: `keyboard` o `voice` |
 | `HOLOGRAM_CAMERA` | `0` | Poner en `1` para activar visión artificial |
 | `YOLO_MODEL` | `yolov8n.pt` | Modelo YOLO (`yolov8n.pt` o `yolo11n.pt`) |
+| `HOLOGRAM_FACE_ANALYSIS` | `0` | Poner en `1` para contar rostros visibles de forma segura con OpenCV |
 | `WHISPER_MODEL` | `base` | Modelo de STT (`tiny`, `base`, `small`, `medium`) |
 | `TTS_BACKEND` | `auto` | Backend de voz: `auto`, `piper`, `windows`, `linux` |
 | `PIPER_MODEL_PATH` | - | Ruta personalizada del modelo `.onnx` para Piper |
+
+---
+
+## 🧪 Pruebas recomendadas en laptop
+
+1. **Diagnóstico general de dependencias y audio:**
+   ```bash
+   ./.venv/bin/python diagnose_hologram.py
+   ```
+
+2. **Prueba de voz TTS en Linux/Windows:**
+   ```bash
+   ./.venv/bin/python diagnose_hologram.py --speak "Hola, prueba de audio del holograma."
+   ```
+
+3. **Prueba de cámara, YOLO y conteo seguro de rostros:**
+   ```bash
+   ./.venv/bin/python diagnose_hologram.py --camera --yolo --faces
+   ```
+
+4. **Modo completo con cámara de laptop:**
+   ```bash
+   HOLOGRAM_FACE_ANALYSIS=1 ./.venv/bin/python call.py --voice --camera
+   ```
+
+El análisis de rostro implementado solo cuenta rostros visibles. No identifica personas ni infiere edad, género, raza, emoción, salud u otros atributos sensibles.
+
+---
+
+## 🍓 Notas para Raspberry Pi 3/5
+
+- Raspberry Pi 5 es la opción práctica para cámara + YOLO nano; Raspberry Pi 3 puede quedarse solo en detección simple o procesamiento muy espaciado.
+- En Raspberry Pi usa modelos ligeros: `YOLO_MODEL=yolo11n.pt`, `WHISPER_MODEL=tiny` o `base`, `WHISPER_DEVICE=cpu`, `WHISPER_COMPUTE_TYPE=int8`.
+- Instala OpenCV y dependencias de audio desde el sistema cuando sea posible:
+  ```bash
+  sudo apt install python3-opencv portaudio19-dev alsa-utils pipewire-pulse
+  ```
+- Para cámara CSI usa libcamera/Picamera2 o expón la cámara como dispositivo compatible con OpenCV. Para USB normalmente `HOLOGRAM_CAMERA_INDEX=0` basta.
+- Mantén `YOLO_INTERVAL_SECONDS` entre `1.0` y `2.0` en Raspberry Pi para evitar saturar CPU.
 
 ---
 

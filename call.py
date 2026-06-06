@@ -25,6 +25,8 @@ import tempfile
 import threading
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 from llm_backend import generate_reply, get_backend_status, get_selected_backend
 from skills.appearance import get_cordial_observation
 from skills.event_mode import get_greeting, get_system_prompt
@@ -47,6 +49,7 @@ configure_utf8_stdio()
 os.environ["QT_QPA_PLATFORM"] = "xcb"
 
 BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(BASE_DIR / ".env")
 
 # Cargar configuración unificada desde config.json (Regla A: Path)
 CONFIG_FILE = BASE_DIR / "config.json"
@@ -102,7 +105,15 @@ def get_piper_command_args():
     """Return the command used to run Piper if it is available."""
     configured_command = os.getenv("PIPER_COMMAND")
     if configured_command:
-        return [configured_command]
+        return configured_command.split()
+
+    bundled_piper = BASE_DIR / "piper" / "piper"
+    bundled_espeak_data = BASE_DIR / "piper" / "espeak-ng-data"
+    if bundled_piper.exists():
+        args = [str(bundled_piper)]
+        if bundled_espeak_data.exists():
+            args.extend(["--espeak_data", str(bundled_espeak_data)])
+        return args
 
     for command in ["piper", "piper.exe"]:
         executable = shutil.which(command)
@@ -341,6 +352,15 @@ def speak_with_piper(text):
         timeout_seconds = 120
 
     try:
+        subprocess_env = os.environ.copy()
+        bundled_lib_dir = BASE_DIR / "piper"
+        if (bundled_lib_dir / "libpiper_phonemize.so").exists():
+            current_ld_path = subprocess_env.get("LD_LIBRARY_PATH", "")
+            paths = [str(bundled_lib_dir)]
+            if current_ld_path:
+                paths.append(current_ld_path)
+            subprocess_env["LD_LIBRARY_PATH"] = os.pathsep.join(paths)
+
         result = subprocess.run(
             [
                 *piper_command_args,
@@ -355,6 +375,7 @@ def speak_with_piper(text):
             errors="replace",
             text=True,
             timeout=timeout_seconds,
+            env=subprocess_env,
         )
 
         if result.returncode != 0:
@@ -674,9 +695,10 @@ def handle_command(user_input):
 # ======================================================================
 
 
-def _camera_detection_callback(event, count):
+def _camera_detection_callback(event, count, analysis=None):
     """Handle YOLO detection events from the background camera thread."""
     global ai_busy
+    analysis = analysis or {}
     if ai_busy or speak_lock.locked():
         if event == "person_left":
             presence_manager.force_person_left()
@@ -685,12 +707,18 @@ def _camera_detection_callback(event, count):
 
     if event == "person_entered":
         if presence_manager.should_greet(True):
+            face_description = analysis.get("face_description")
             greeting = get_greeting(CURRENT_MODE)
+            if face_description:
+                greeting = f"{face_description} {greeting}"
             speak(greeting, blocking=False)
 
     elif event == "group_detected":
         if presence_manager.should_greet_group():
+            face_description = analysis.get("face_description")
             observation = get_cordial_observation("grupo")
+            if face_description:
+                observation = f"{face_description} {observation}"
             speak(observation, blocking=False)
 
     elif event == "person_left":

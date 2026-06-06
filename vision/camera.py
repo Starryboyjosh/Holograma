@@ -11,6 +11,7 @@ Uso básico:
 """
 
 import os
+import platform
 from pathlib import Path
 
 
@@ -63,7 +64,24 @@ class Camera:
                 "Ejecuta: pip install opencv-python"
             ) from error
 
-        self._capture = cv2.VideoCapture(self.source)
+        backend = None
+        if isinstance(self.source, int):
+            configured_backend = os.getenv("HOLOGRAM_CAMERA_BACKEND", "").lower()
+            if configured_backend == "dshow":
+                backend = cv2.CAP_DSHOW
+            elif configured_backend == "msmf":
+                backend = cv2.CAP_MSMF
+            elif configured_backend == "v4l2":
+                backend = cv2.CAP_V4L2
+            elif platform.system() == "Windows":
+                backend = cv2.CAP_DSHOW
+            elif platform.system() == "Linux":
+                backend = cv2.CAP_V4L2
+
+        if backend is None:
+            self._capture = cv2.VideoCapture(self.source)
+        else:
+            self._capture = cv2.VideoCapture(self.source, backend)
 
         if not self._capture.isOpened():
             raise RuntimeError(

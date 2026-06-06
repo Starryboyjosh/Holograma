@@ -1,0 +1,30 @@
+.env
+.env.*
+!.env.example
+
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+*.wav
+*.mp3
+*.log
+
+.DS_Store
+.idea/
+.vscode/
+
+whisper_cache/
+models/
+
+# Local/generated model and binary artifacts.
+*.pt
+piper/
+piper_amd64.tar.gz
+piper_wrapper.sh
+
+# Local runtime configuration.
+config.json

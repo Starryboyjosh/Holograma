@@ -56,6 +56,7 @@ class YoloPersonDetector:
             "YOLO_CONFIDENCE", 0.5
         )
         self.model = None
+        self.face_analyzer = None
 
     def load(self):
         """Load the YOLO model.  Downloads weights automatically on first run."""
@@ -108,6 +109,29 @@ class YoloPersonDetector:
                     })
 
         return persons
+
+    def analyze_frame(self, frame):
+        """Return person detections plus optional safe face count."""
+        persons = self.detect_persons_in_frame(frame)
+        analysis = {
+            "person_count": len(persons),
+            "persons": persons,
+            "face_count": None,
+            "face_description": None,
+        }
+
+        if _env("HOLOGRAM_FACE_ANALYSIS", "0") == "1":
+            try:
+                if self.face_analyzer is None:
+                    from vision.face_analyzer import FaceAnalyzer
+                    self.face_analyzer = FaceAnalyzer().load()
+                face_result = self.face_analyzer.analyze_frame(frame)
+                analysis["face_count"] = face_result["face_count"]
+                analysis["face_description"] = face_result["description"]
+            except Exception as error:
+                analysis["face_description"] = f"Análisis de rostros no disponible: {error}"
+
+        return analysis
 
     def detect_person_in_frame(self, frame):
         """Return True if at least one person is detected in *frame*."""
@@ -184,7 +208,8 @@ class YoloPersonDetector:
                     time.sleep(interval_seconds)
                     continue
 
-                count = self.count_persons_in_frame(frame)
+                analysis = self.analyze_frame(frame)
+                count = analysis["person_count"]
                 is_present = count > 0
 
                 if is_present and not was_present:
@@ -200,7 +225,7 @@ class YoloPersonDetector:
                     event = "no_person"
 
                 if event != "no_person" and event != "person_still_present":
-                    callback(event, count)
+                    callback(event, count, analysis)
 
                 was_present = is_present
                 last_count = count
