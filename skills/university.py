@@ -287,8 +287,14 @@ def get_website_info():
 
 
 def get_university_context():
+    from skills.honduras import get_university_context as get_honduras_context
+    try:
+        honduras_ctx = get_honduras_context()
+    except Exception:
+        honduras_ctx = ""
+
     programs = ", ".join(program.title() for program in UNEV_INFO["programs"].keys())
-    return (
+    unev_ctx = (
         "Información institucional de UNEV:\n"
         f"- Nombre: {UNEV_INFO['name']} ({UNEV_INFO['full_name']})\n"
         f"- Descripción: {UNEV_INFO['description']}\n"
@@ -312,3 +318,4 @@ def get_university_context():
         "Si el visitante pregunta por datos no incluidos aquí, no inventes. "
         "Recomienda revisar la página oficial o contactar a UNEV."
     )
+    return unev_ctx + "\n\n" + honduras_ctx

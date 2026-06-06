@@ -1,10 +1,8 @@
 {
-    "OLLAMA_MODEL": "gemma4:e4b",
-    "WHISPER_MODEL": "base",
-    "WHISPER_DEVICE": "cpu",
-    "WHISPER_COMPUTE_TYPE": "int8",
-    "HOLOGRAM_INPUT": "keyboard",
-    "HOLOGRAM_CAMERA": "0",
+    "OLLAMA_MODEL": "Cloud (openrouter: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free)",
+    "WHISPER_MODEL": "medium",
+    "HOLOGRAM_INPUT": "voice",
+    "HOLOGRAM_CAMERA": "1",
     "YOLO_MODEL": "yolo11n.pt",
-    "YOLO_INTERVAL_SECONDS": "1.0"
+    "YOLO_INTERVAL_SECONDS": "0.13333333333333333"
 }

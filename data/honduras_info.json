@@ -1,0 +1,35 @@
+{
+  "name": "Honduras",
+  "description": "Honduras es una ecología de saberes donde convergen diversas cosmovisiones indígenas y afrohondureñas, conformando una identidad nacional definida por su naturaleza multiétnica, multicultural y una vasta riqueza ecológica y social.",
+  "main_claim": "República multiétnica y multicultural con 10 Pueblos Indígenas y Afrohondureños (PIAH) que conforman el corazón de su identidad nacional.",
+  "approval": "Hito fundacional: ratificación del Convenio 169 de la Organización Internacional del Trabajo (OIT), establecido el 27 de junio de 1989, ratificado por el Estado de Honduras en 1994 y con entrada en vigencia plena en 1995.",
+  "address": "República de Honduras, con capital en Tegucigalpa. Los 10 Pueblos Indígenas y Afrohondureños habitan regiones específicas: los Lenca en Intibucá; los Garífuna en la Costa Norte (incluyendo Omoa); los Negros de Habla Inglesa o Creoles en las Islas de la Bahía y Costa Norte; y los grupos Misquito, Tawahka, Maya-Chortí, Nahua, Nahualt, Tolupan y Pesh en sus respectivos asentamientos regionales.",
+  "website": "[https://www.presidencia.gob.hn/](https://www.presidencia.gob.hn/)",
+  "programs": {
+    "era precolombina y ancestral": "La configuración del tejido social hondureño encuentra su génesis en la profundidad temporal de las civilizaciones ancestrales. La presencia de los Mayas y la herencia de los pueblos originarios lenca, nahua y garífuna, entre otros, aportan una cosmovisión que se erige como el corazón del desarrollo sociocultural de la nación. Las lenguas maternas son reconocidas como vehículos esenciales de desarrollo cognitivo.",
+    "evolución lingüística y colonial": "El mestizaje en Honduras operó como un proceso de reconfiguración identitaria donde el español se impuso como lengua nacional. Según Van Wijk (1961), generó rasgos morfosintácticos singulares como el voseo generalizado, el leísmo, la pérdida de identidad del artículo definido (l'amor, l'arcalde), la adverbialización de adjetivos (canta bonito) y construcciones pleonásticas posesivas (mi casa mía), junto con influencias léxicas de los enclaves bananeros de la United Fruit Company.",
+    "periodo de investigación y reconocimiento (s. xix-xx)": "La institucionalización del estudio de la lengua legitimó el habla popular. En 1899 se publicó el primer diccionario de hondureñismos y se consolidó la Academia Hondureña de la Lengua. La edición de 1992 del Diccionario de la RAE incorporó 302 términos hondureños, cifra que ascendió a 1,950 en 2001 y actualmente alcanza 2,782 registros.",
+    "periodo contemporáneo y salvaguarda (2022-2035)": "La política estatal se fundamenta en la reparación histórica de los derechos lingüísticos. Bajo el Gobierno de la Refundación se impulsa el Plan Nacional 2025-2035 en consonancia con el Decenio Internacional de las Lenguas Indígenas (2022-2032), salvaguardando lenguas maternas frente a la globalización y la discriminación, mediante documentación de gramáticas y educación plurilingüe."
+  },
+  "proceres": {
+    "alberto de jesús membreño": "Destacado intelectual que publicó en 1899 el primer diccionario de hondureñismos bajo el título 'Vocabulario de los provincialismos de Honduras'. Su obra representó el primer esfuerzo sistemático por codificar el pensamiento popular y otorgar una fisonomía propia al castellano hablado en el territorio nacional.",
+    "francisco cruz castro": "Eminente figura cuya contribución a la preservación del patrimonio fue fundamental a través de su obra 'Botica del pueblo'. Su vocabulario médico, botánico y cotidiano sirvió de base empírica para que investigadores posteriores, especialmente Alberto de Jesús Membreño, pudieran estructurar el primer catálogo de términos hondureños.",
+    "annarella vélez osejo": "Historiadora y actual Secretaria de Estado en los Despachos de las Culturas, las Artes y los Patrimonios de los Pueblos de Honduras. Ejerce liderazgo estratégico en la implementación del Plan Nacional de Salvaguarda de las Lenguas, promoviendo el reconocimiento de la diversidad cultural como patrimonio común.",
+    "cintia marizel bernárdez": "Jefa de la Unidad de Educación Plurilingüe y Multicultural. Determinante en la creación del diagnóstico sociolingüístico conocido como el 'árbol de problemas', coordina la producción de materiales pedagógicos y recursos didácticos para fortalecer competencias comunicativas en lenguas maternas dentro de las comunidades de los 10 pueblos originarios."
+  },
+  "vulgarismos": {
+    "voseo generalizado": "Uso extendido del pronombre 'vos' en lugar de 'tú' como rasgo morfosintáctico característico del habla informal hondureña.",
+    "leísmo": "Uso del pronombre 'le' en lugar de 'lo' o 'la' como complemento directo, rasgo identificado por Van Wijk (1961) en el habla hondureña.",
+    "pérdida del artículo definido ante vocal": "Fenómeno de contracción que produce formas como 'l'amor' por 'el amor' o 'l'arcalde' por 'el alcalde' en el habla popular.",
+    "adverbialización de adjetivos": "Construcciones como 'canta bonito' donde el adjetivo funciona como adverbio, característico del español hondureño.",
+    "construcciones pleonásticas posesivas": "Expresiones redundantes como 'mi casa mía' que duplican la marca de posesión, propias del habla coloquial nacional.",
+    "mínimo": "Término léxico para referirse al banano, derivado de los estándares de exportación de los enclaves bananeros de los enclaves bananeros de la United Fruit Company."
+  },
+  "simbolos_patrios": {
+    "lenguas maternas": "Reconocidas en el Plan Nacional de Salvaguarda como vehículos esenciales de desarrollo cognitivo que permiten al individuo imaginar, crear y conceptualizar su realidad desde un entorno cultural propio.",
+    "convenio 169 de la oit": "Instrumento internacional ratificado por Honduras en 1994 que constituye el marco jurídico fundacional para el reconocimiento de los derechos de los Pueblos Indígenas y Afrohondureños.",
+    "los 10 pueblos indígenas y afrohondureños (piah)": "Lenca, Garífuna, Negros de Habla Inglesa o Creoles, Misquito, Tawahka, Maya-Chortí, Nahua, Nahualt, Tolupan y Pesh: corazón multiétnico y multicultural de la identidad nacional hondureña.",
+    "academia hondureña de la lengua": "Institución que consolidó la codificación del castellano hablado en Honduras, posicionándolo como un contribuyente mayoritario al léxico hispánico global con 2,782 registros en el DRAE.",
+    "plan nacional de salvaguarda 2025-2035": "Política estatal de reparación histórica de los derechos lingüísticos, alineada con el Decenio Internacional de las Lenguas Indígenas (2022-2032) impulsado por la UNESCO."
+  }
+}

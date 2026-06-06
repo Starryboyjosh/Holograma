@@ -213,9 +213,9 @@ class YoloPersonDetector:
                 is_present = count > 0
 
                 if is_present and not was_present:
-                    event = "group_detected" if count > 1 else "person_entered"
+                    event = "group_detected" if count > 3 else "person_entered"
                 elif is_present and was_present:
-                    if count > 1 and last_count <= 1:
+                    if count > 3 and last_count <= 3:
                         event = "group_detected"
                     else:
                         event = "person_still_present"
