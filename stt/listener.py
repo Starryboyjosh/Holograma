@@ -91,13 +91,13 @@ class WhisperListener:
         self.language = language or _env("WHISPER_LANGUAGE", "es")
         self.sample_rate = sample_rate or _env_int("WHISPER_SAMPLE_RATE", 16000)
         self.silence_threshold = silence_threshold or _env_float(
-            "WHISPER_SILENCE_THRESHOLD", 0.01
+            "WHISPER_SILENCE_THRESHOLD", 0.03
         )
         self.silence_duration = silence_duration or _env_float(
-            "WHISPER_SILENCE_DURATION", 1.5
+            "WHISPER_SILENCE_DURATION", 2.0
         )
         self.max_record_seconds = max_record_seconds or _env_float(
-            "WHISPER_MAX_RECORD_SECONDS", 15.0
+            "WHISPER_MAX_RECORD_SECONDS", 12.0
         )
 
         self._model = None

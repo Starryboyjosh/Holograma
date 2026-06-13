@@ -23,6 +23,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+import time
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -66,7 +67,7 @@ if CONFIG_FILE.exists():
 CURRENT_MODE = os.getenv("HOLOGRAM_MODE", "normal")
 DEFAULT_PIPER_MODEL = "es_MX-claude-high.onnx"
 presence_manager = PresenceManager(
-    greeting_cooldown_seconds=30, absence_reset_seconds=8
+    greeting_cooldown_seconds=120, absence_reset_seconds=20
 )
 speak_lock = threading.Lock()
 ai_busy = False
@@ -580,15 +581,30 @@ def speak(text, blocking=True):
             q.put(chunk)
         q.put(None)  # Sentinel de finalización
 
-        # Iniciar hilo de reproducción para este mensaje
-        worker_thread = threading.Thread(target=speak_worker, args=(q,), daemon=True)
-        worker_thread.start()
-
-        # Si es bloqueante, esperamos a que termine todo el procesamiento de la cola
         if blocking:
+            # Iniciar hilo de reproducción y esperar a que termine
+            worker_thread = threading.Thread(target=speak_worker, args=(q,), daemon=True)
+            worker_thread.start()
             q.join()
-    finally:
+            speak_lock.release()
+        else:
+            # En modo no-bloqueante, el worker libera el lock al terminar
+            def _non_blocking_worker(q, lock):
+                try:
+                    speak_worker(q)
+                    q.join()
+                finally:
+                    lock.release()
+
+            worker_thread = threading.Thread(
+                target=_non_blocking_worker, args=(q, speak_lock), daemon=True
+            )
+            worker_thread.start()
+            # NO liberar el lock aquí — el worker lo hará al terminar
+            return
+    except Exception:
         speak_lock.release()
+        raise
 
 
 # ======================================================================
@@ -831,9 +847,21 @@ def voice_loop():
     print("[STT] Preparando modelo de voz...")
     listener._load_model()
 
+    global ai_busy
+    ai_busy = True
+
     while True:
         print("\n[STT] Esperando tu voz...")
+        
+        # Esperar a que el TTS termine de hablar antes de escuchar al micrófono
+        speak_lock.acquire()
+        speak_lock.release()
+        # Pequeña pausa para que el eco de las bocinas se disipe
+        time.sleep(0.8)
+        
+        ai_busy = False  # El holograma está libre justo cuando empieza a escuchar
         user_input = listener.listen_once()
+        ai_busy = True   # El holograma vuelve a estar ocupado procesando el input
 
         if not user_input:
             continue
@@ -842,8 +870,6 @@ def voice_loop():
             print("¡Hasta pronto!")
             break
 
-        global ai_busy
-        ai_busy = True
         try:
             command_response = handle_command(user_input)
             if command_response:
@@ -854,7 +880,7 @@ def voice_loop():
             reply = ask_ai(user_input, CURRENT_MODE)
             speak(reply)
         finally:
-            ai_busy = False
+            pass  # ai_busy se controla al inicio del loop
 
 
 # ======================================================================

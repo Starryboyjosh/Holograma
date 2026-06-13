@@ -1,8 +1,8 @@
 {
-    "OLLAMA_MODEL": "Cloud (openrouter: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free)",
+    "OLLAMA_MODEL": null,
     "WHISPER_MODEL": "medium",
     "HOLOGRAM_INPUT": "voice",
     "HOLOGRAM_CAMERA": "1",
     "YOLO_MODEL": "yolo26n.pt",
-    "YOLO_INTERVAL_SECONDS": "0.13333333333333333"
+    "YOLO_INTERVAL_SECONDS": "1.0"
 }

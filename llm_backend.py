@@ -176,6 +176,8 @@ def get_backend_status():
 
 
 def _build_messages(user_input, system_prompt, university_context):
+    # Reforzar idioma español en el mensaje del usuario para modelos débiles
+    user_content = f"{user_input}\n\n[Instrucción: responde siempre en español.]"
     return [
         {
             "role": "system",
@@ -187,7 +189,7 @@ def _build_messages(user_input, system_prompt, university_context):
         },
         {
             "role": "user",
-            "content": user_input,
+            "content": user_content,
         },
     ]
 
@@ -287,7 +289,7 @@ def _chat_with_openrouter(messages):
         model=model,
         messages=messages,
         temperature=0.6,
-        max_tokens=450,
+        max_tokens=300,
     )
 
     return (response.choices[0].message.content or "").strip()
@@ -324,6 +326,48 @@ def _chat_with_claude_native(messages):
     return "".join([block.text for block in response.content if hasattr(block, 'text')]).strip()
 
 
+def _is_mostly_english(text):
+    """Heuristic: return True if text looks like it's mostly in English."""
+    english_markers = [
+        "welcome", "how can i help", "feel free", "let me know",
+        "i'm here", "happy to help", "what would you like",
+        "please let me", "don't hesitate", "i can help",
+        "our programs", "we offer", "thank you",
+    ]
+    lower = text.lower()
+    matches = sum(1 for marker in english_markers if marker in lower)
+    # Si tiene 2+ marcadores de inglés, probablemente es inglés
+    if matches >= 2:
+        return True
+    # Heurística por proporción de palabras con caracteres ASCII-only
+    words = text.split()
+    if not words:
+        return False
+    ascii_words = sum(1 for w in words if w.isascii())
+    # Si >85% de las palabras son puro ASCII y no tiene acentos españoles
+    spanish_chars = set("áéíóúñüÁÉÍÓÚÑÜ¿¡")
+    has_spanish = any(c in text for c in spanish_chars)
+    if not has_spanish and len(words) > 5 and ascii_words / len(words) > 0.85:
+        return True
+    return False
+
+
+def _postprocess_reply(text):
+    """Clean up LLM response: strip thinking blocks and handle language issues."""
+    # Limpiar bloques de razonamiento internos
+    text = _strip_qwen_thinking(text)
+    if not text.strip():
+        return "Lo siento, no pude generar una respuesta. ¿Podrías repetir tu pregunta?"
+    # Detectar respuestas en inglés y reemplazarlas
+    if _is_mostly_english(text):
+        print(f"[LLM] AVISO: Respuesta detectada en inglés, descartando: {text[:80]}...")
+        return (
+            "Disculpa, tuve un problema al generar mi respuesta. "
+            "¿Podrías repetir tu pregunta?"
+        )
+    return text
+
+
 def generate_reply(user_input, system_prompt, university_context):
     backend = get_selected_backend()
     messages = _build_messages(user_input, system_prompt, university_context)
@@ -337,21 +381,19 @@ def generate_reply(user_input, system_prompt, university_context):
 
     try:
         if backend == "openrouter":
-            return _chat_with_openrouter(messages)
+            reply = _chat_with_openrouter(messages)
+        elif backend == "claude_native":
+            reply = _chat_with_claude_native(messages)
+        elif backend == "nvidia":
+            reply = _chat_with_nvidia(messages)
+        elif backend == "openai":
+            reply = _chat_with_openai(messages)
+        elif backend == "ollama":
+            reply = _chat_with_ollama(messages)
+        else:
+            raise LLMBackendError(f"Backend no soportado: {backend}")
 
-        if backend == "claude_native":
-            return _chat_with_claude_native(messages)
-
-        if backend == "nvidia":
-            return _chat_with_nvidia(messages)
-
-        if backend == "openai":
-            return _chat_with_openai(messages)
-
-        if backend == "ollama":
-            return _chat_with_ollama(messages)
-
-        raise LLMBackendError(f"Backend no soportado: {backend}")
+        return _postprocess_reply(reply)
     except Exception as error:
         print(f"[LLM] Error usando backend '{backend}': {error}")
         return (
