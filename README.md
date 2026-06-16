@@ -52,7 +52,7 @@ Soporta múltiples proveedores de modelos de lenguaje, seleccionables por variab
 ### 6. Visión Artificial (`vision/`)
 Detección en tiempo real a través de OpenCV y modelos YOLO:
 - `vision/camera.py`: Captura y procesamiento cross-platform de la cámara (soporte para DSHOW en Windows, V4L2 en Linux).
-- `vision/person_detector.py`: Detector basado en **YOLOv26** (`yolo26n.pt`). Gatilla eventos automáticos cuando alguien se acerca (`person_entered`), cuando se detecta un grupo (`group_detected`), o cuando la persona se retira (`person_left`).
+- `vision/person_detector.py`: Detector basado en **YOLOe26** (`yoloe26.pt`). Gatilla eventos automáticos cuando alguien se acerca (`person_entered`), cuando se detecta un grupo (`group_detected`), o cuando la persona se retira (`person_left`).
 - `vision/face_analyzer.py`: Conteo seguro de rostros visibles usando Haar cascades de OpenCV. **No identifica personas ni infiere edad, género, raza, emoción, salud u otros atributos sensibles**.
 
 ### 7. Habilidades Locales y Datos (`skills/` & `data/`)
@@ -133,7 +133,7 @@ ollama pull gemma4:e4b
 | `HOLOGRAM_CAMERA` | `0` | Poner en `1` para activar visión artificial |
 | `HOLOGRAM_CAMERA_INDEX` | `0` | Índice de la cámara a usar |
 | `HOLOGRAM_CAMERA_BACKEND` | `auto` | Backend OpenCV: `dshow`, `msmf`, `v4l2` |
-| `YOLO_MODEL` | `yolo26n.pt` | Modelo YOLO (`yolo26n.pt`) |
+| `YOLO_MODEL` | `yoloe26.pt` | Modelo YOLO (`yoloe26.pt`) |
 | `YOLO_CONFIDENCE` | `0.5` | Umbral de confianza para detección |
 | `YOLO_INTERVAL_SECONDS` | `1.0` | Segundos entre ciclos de detección |
 | `HOLOGRAM_FACE_ANALYSIS` | `0` | Poner en `1` para contar rostros visibles de forma segura con OpenCV |
@@ -181,7 +181,7 @@ El análisis de rostro implementado solo cuenta rostros visibles. No identifica 
 ## 🍓 Notas para Raspberry Pi 3/5
 
 - Raspberry Pi 5 es la opción práctica para cámara + YOLO nano; Raspberry Pi 3 puede quedarse solo en detección simple o procesamiento muy espaciado.
-- En Raspberry Pi usa modelos ligeros: `YOLO_MODEL=yolo26n.pt`, `WHISPER_MODEL=tiny` o `base`, `WHISPER_DEVICE=cpu`, `WHISPER_COMPUTE_TYPE=int8`.
+- En Raspberry Pi usa modelos ligeros: `YOLO_MODEL=yoloe26.pt`, `WHISPER_MODEL=tiny` o `base`, `WHISPER_DEVICE=cpu`, `WHISPER_COMPUTE_TYPE=int8`.
 - Instala OpenCV y dependencias de audio desde el sistema cuando sea posible:
   ```bash
   sudo apt install python3-opencv portaudio19-dev alsa-utils pipewire-pulse
@@ -222,7 +222,7 @@ Holograma/
 ├── piper_wrapper.sh        # Wrapper para Piper TTS en Linux
 ├── es_MX-claude-high.onnx  # Modelo de voz Piper (español)
 ├── es_MX-claude-high.onnx.json
-├── yolo26n.pt              # Modelo YOLOv26 nano
+├── yoloe26.pt              # Modelo YOLOe26 nano
 ├── data/
 │   ├── unev_info.json      # Base de conocimiento UNEV
 │   └── honduras_info.json  # Contexto Honduras
@@ -241,7 +241,7 @@ Holograma/
 │   ├── __init__.py
 │   ├── camera.py           # Wrapper OpenCV cross-platform
 │   ├── face_analyzer.py    # Conteo seguro de rostros (Haar)
-│   └── person_detector.py  # YOLOv26 detección de personas
+│   └── person_detector.py  # YOLOe26 detección de personas
 └── piper/                  # Binarios Piper TTS (opcional, no versionado)
 ```
 

@@ -59,7 +59,7 @@ if CONFIG_FILE.exists():
         with CONFIG_FILE.open("r", encoding="utf-8") as f:
             config_data = json.load(f)
             for key, val in config_data.items():
-                if val is not None and key not in os.environ:
+                if val is not None:
                     os.environ[key] = str(val)
     except Exception as e:
         print(f"AVISO: No se pudo cargar {CONFIG_FILE.name}: {e}")
@@ -162,6 +162,14 @@ def get_piper_install_hint():
 
 def get_piper_model_path():
     """Return the Piper voice model to use, preferring Spanish voices."""
+    voice_env = os.getenv("PIPER_VOICE")
+    if voice_env:
+        voice_path = Path(voice_env)
+        if not voice_path.is_absolute():
+            voice_path = BASE_DIR / voice_path
+        if voice_path.exists():
+            return str(voice_path)
+
     configured_model = os.getenv("PIPER_MODEL_PATH")
     if configured_model:
         return str(Path(configured_model).expanduser())

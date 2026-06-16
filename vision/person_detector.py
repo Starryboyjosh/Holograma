@@ -38,19 +38,19 @@ def _env_float(name, default):
 
 
 class YoloPersonDetector:
-    """Detect people using YOLOv26 via the Ultralytics library.
+    """Detect people using YOLOe26 via the Ultralytics library.
 
     Parameters
     ----------
     model_name : str
-        Model file name or path.  Accepts YOLOv26 (``yolo26n.pt``) weights.
+        Model file name or path.  Accepts YOLOe26 (``yoloe26.pt``) weights.
         The environment variable ``YOLO_MODEL`` overrides this value.
     confidence_threshold : float
         Minimum confidence to consider a detection valid.
     """
 
     def __init__(self, model_name=None, confidence_threshold=None):
-        self.model_name = model_name or _env("YOLO_MODEL", "yolo26n.pt")
+        self.model_name = model_name or _env("YOLO_MODEL", "yoloe26.pt")
         self.confidence_threshold = confidence_threshold or _env_float(
             "YOLO_CONFIDENCE", 0.5
         )
@@ -69,6 +69,15 @@ class YoloPersonDetector:
 
         # Regla A: use pathlib for model path resolution
         model_path = Path(self.model_name)
+        if not model_path.is_absolute():
+            base_dir = Path(__file__).resolve().parent.parent
+            model_path = base_dir / model_path
+
+        if not model_path.exists():
+            fallback_path = model_path.parent / "yolo26n.pt"
+            if fallback_path.exists():
+                print(f"[YOLO] AVISO: {model_path.name} no existe. Usando fallback {fallback_path.name}.")
+                model_path = fallback_path
 
         print(f"[YOLO] Cargando modelo {model_path.name}...")
         self.model = YOLO(str(model_path))
@@ -259,5 +268,5 @@ def get_vision_status():
     except ImportError:
         return "Visión no disponible: falta ultralytics. Ejecuta: pip install ultralytics"
 
-    model = _env("YOLO_MODEL", "yolo26n.pt")
+    model = _env("YOLO_MODEL", "yoloe26.pt")
     return f"Visión activa: OpenCV {cv_version}, modelo YOLO '{model}'."
