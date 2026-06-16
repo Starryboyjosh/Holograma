@@ -1,0 +1,393 @@
+{
+  "communities": {
+    "0": [
+      "call",
+      "call_ask_ai",
+      "call_camera_detection_callback",
+      "call_chat_to_voice",
+      "call_clean_for_tts",
+      "call_configure_utf8_stdio",
+      "call_get_help_text",
+      "call_get_piper_command_args",
+      "call_get_piper_install_hint",
+      "call_get_piper_model_path",
+      "call_get_piper_sample_rate",
+      "call_get_powershell_command",
+      "call_handle_command",
+      "call_is_wsl",
+      "call_main",
+      "call_play_wav_file",
+      "call_play_wav_with_windows",
+      "call_rationale_1",
+      "call_rationale_105",
+      "call_rationale_149",
+      "call_rationale_163",
+      "call_rationale_180",
+      "call_rationale_197",
+      "call_rationale_204",
+      "call_rationale_220",
+      "call_rationale_257",
+      "call_rationale_273",
+      "call_rationale_320",
+      "call_rationale_39",
+      "call_rationale_402",
+      "call_rationale_427",
+      "call_rationale_478",
+      "call_rationale_517",
+      "call_rationale_564",
+      "call_rationale_699",
+      "call_rationale_730",
+      "call_rationale_766",
+      "call_rationale_801",
+      "call_rationale_81",
+      "call_rationale_866",
+      "call_run_powershell",
+      "call_set_mode",
+      "call_speak",
+      "call_speak_with_linux_tts",
+      "call_speak_with_piper",
+      "call_speak_with_windows_voice",
+      "call_speak_worker",
+      "call_split_into_chunks",
+      "call_start_camera_thread",
+      "call_voice_loop",
+      "skills_appearance",
+      "skills_appearance_get_cordial_observation",
+      "skills_appearance_get_visual_safety_rules",
+      "skills_appearance_safe_compliment",
+      "skills_event_mode",
+      "skills_event_mode_get_greeting",
+      "skills_event_mode_get_system_prompt",
+      "skills_university_get_university_context",
+      "skills_university_normalize_text"
+    ],
+    "1": [
+      "vision_camera",
+      "vision_camera_camera",
+      "vision_camera_camera_enter",
+      "vision_camera_camera_exit",
+      "vision_camera_camera_init",
+      "vision_camera_camera_is_available",
+      "vision_camera_camera_is_opened",
+      "vision_camera_camera_open",
+      "vision_camera_camera_read_frame",
+      "vision_camera_camera_release",
+      "vision_camera_camera_save_frame",
+      "vision_camera_env_int",
+      "vision_camera_rationale_1",
+      "vision_camera_rationale_110",
+      "vision_camera_rationale_117",
+      "vision_camera_rationale_137",
+      "vision_camera_rationale_163",
+      "vision_camera_rationale_19",
+      "vision_camera_rationale_30",
+      "vision_camera_rationale_58",
+      "vision_camera_rationale_99",
+      "vision_person_detector",
+      "vision_person_detector_env",
+      "vision_person_detector_env_float",
+      "vision_person_detector_get_vision_status",
+      "vision_person_detector_rationale_1",
+      "vision_person_detector_rationale_113",
+      "vision_person_detector_rationale_136",
+      "vision_person_detector_rationale_140",
+      "vision_person_detector_rationale_148",
+      "vision_person_detector_rationale_178",
+      "vision_person_detector_rationale_23",
+      "vision_person_detector_rationale_239",
+      "vision_person_detector_rationale_41",
+      "vision_person_detector_rationale_61",
+      "vision_person_detector_rationale_79",
+      "vision_person_detector_rationale_88",
+      "vision_person_detector_yolopersondetector",
+      "vision_person_detector_yolopersondetector_analyze_frame",
+      "vision_person_detector_yolopersondetector_count_persons_in_frame",
+      "vision_person_detector_yolopersondetector_count_persons_once",
+      "vision_person_detector_yolopersondetector_detect_person_in_frame",
+      "vision_person_detector_yolopersondetector_detect_person_once",
+      "vision_person_detector_yolopersondetector_detect_persons_in_frame",
+      "vision_person_detector_yolopersondetector_ensure_loaded",
+      "vision_person_detector_yolopersondetector_init",
+      "vision_person_detector_yolopersondetector_is_available",
+      "vision_person_detector_yolopersondetector_load",
+      "vision_person_detector_yolopersondetector_run_continuous"
+    ],
+    "2": [
+      "exception",
+      "llm_backend",
+      "llm_backend_build_messages",
+      "llm_backend_chat_with_claude_native",
+      "llm_backend_chat_with_nvidia",
+      "llm_backend_chat_with_ollama",
+      "llm_backend_chat_with_openai",
+      "llm_backend_chat_with_openrouter",
+      "llm_backend_env",
+      "llm_backend_env_float",
+      "llm_backend_generate_reply",
+      "llm_backend_get_backend_status",
+      "llm_backend_get_selected_backend",
+      "llm_backend_llmbackenderror",
+      "llm_backend_ollama_base_url",
+      "llm_backend_ollama_model_available",
+      "llm_backend_ollama_model_name",
+      "llm_backend_ollama_ready",
+      "llm_backend_ollama_request",
+      "llm_backend_ollama_server_available",
+      "llm_backend_ollama_tags",
+      "llm_backend_rationale_238",
+      "llm_backend_rationale_364",
+      "llm_backend_stream_llm_response",
+      "llm_backend_strip_qwen_thinking",
+      "main",
+      "main_rationale_35",
+      "main_read_root",
+      "main_simulate_xtts_pipeline",
+      "main_websocket_chat_endpoint",
+      "websocket"
+    ],
+    "3": [
+      "stt_listener",
+      "stt_listener_configure_utf8_stdio",
+      "stt_listener_env",
+      "stt_listener_env_float",
+      "stt_listener_env_int",
+      "stt_listener_get_stt_status",
+      "stt_listener_rationale_1",
+      "stt_listener_rationale_110",
+      "stt_listener_rationale_159",
+      "stt_listener_rationale_213",
+      "stt_listener_rationale_23",
+      "stt_listener_rationale_239",
+      "stt_listener_rationale_298",
+      "stt_listener_rationale_331",
+      "stt_listener_rationale_34",
+      "stt_listener_rationale_341",
+      "stt_listener_rationale_62",
+      "stt_listener_whisperlistener",
+      "stt_listener_whisperlistener_audio_to_wav_path",
+      "stt_listener_whisperlistener_init",
+      "stt_listener_whisperlistener_is_available",
+      "stt_listener_whisperlistener_listen_once",
+      "stt_listener_whisperlistener_load_model",
+      "stt_listener_whisperlistener_record_until_silence",
+      "stt_listener_whisperlistener_transcribe_file"
+    ],
+    "4": [
+      "skills_honduras",
+      "skills_honduras_get_admission_info",
+      "skills_honduras_get_approval_info",
+      "skills_honduras_get_location_info",
+      "skills_honduras_get_proceres_info",
+      "skills_honduras_get_program_info",
+      "skills_honduras_get_programs_summary",
+      "skills_honduras_get_simbolos_patrios_info",
+      "skills_honduras_get_university_context",
+      "skills_honduras_get_university_summary",
+      "skills_honduras_get_vulgarismos_info",
+      "skills_honduras_get_website_info",
+      "skills_honduras_normalize_text",
+      "skills_router",
+      "skills_router_route_local_skill",
+      "skills_university",
+      "skills_university_get_admission_info",
+      "skills_university_get_approval_info",
+      "skills_university_get_location_info",
+      "skills_university_get_program_info",
+      "skills_university_get_programs_summary",
+      "skills_university_get_university_summary",
+      "skills_university_get_website_info"
+    ],
+    "5": [
+      "diagnose_hologram",
+      "diagnose_hologram_check_audio_devices",
+      "diagnose_hologram_check_dependencies",
+      "diagnose_hologram_check_environment",
+      "diagnose_hologram_check_import",
+      "diagnose_hologram_fail",
+      "diagnose_hologram_main",
+      "diagnose_hologram_ok",
+      "diagnose_hologram_test_camera",
+      "diagnose_hologram_test_faces",
+      "diagnose_hologram_test_speak",
+      "diagnose_hologram_test_yolo",
+      "diagnose_hologram_warn"
+    ],
+    "6": [
+      "vision_face_analyzer",
+      "vision_face_analyzer_env_float",
+      "vision_face_analyzer_env_int",
+      "vision_face_analyzer_faceanalyzer",
+      "vision_face_analyzer_faceanalyzer_analyze_frame",
+      "vision_face_analyzer_faceanalyzer_describe_count",
+      "vision_face_analyzer_faceanalyzer_ensure_loaded",
+      "vision_face_analyzer_faceanalyzer_init",
+      "vision_face_analyzer_faceanalyzer_is_available",
+      "vision_face_analyzer_faceanalyzer_load",
+      "vision_face_analyzer_rationale_1",
+      "vision_face_analyzer_rationale_32",
+      "vision_face_analyzer_rationale_62"
+    ],
+    "7": [
+      "setup_hologram",
+      "setup_hologram_configure_vision",
+      "setup_hologram_print_header",
+      "setup_hologram_rationale_120",
+      "setup_hologram_rationale_201",
+      "setup_hologram_rationale_235",
+      "setup_hologram_rationale_259",
+      "setup_hologram_rationale_64",
+      "setup_hologram_run_setup",
+      "setup_hologram_select_brain",
+      "setup_hologram_select_ears",
+      "setup_hologram_update_env_file"
+    ],
+    "8": [
+      "skills_presence",
+      "skills_presence_presencemanager",
+      "skills_presence_presencemanager_force_person_left",
+      "skills_presence_presencemanager_init",
+      "skills_presence_presencemanager_should_greet",
+      "skills_presence_presencemanager_should_greet_group",
+      "skills_presence_presencemanager_update"
+    ],
+    "9": [
+      "skills_init",
+      "skills_init_rationale_1"
+    ],
+    "10": [
+      "stt_init",
+      "stt_init_rationale_1"
+    ],
+    "11": [
+      "vision_init",
+      "vision_init_rationale_1"
+    ]
+  },
+  "cohesion": {
+    "0": 0.05727644652250146,
+    "1": 0.06292517006802721,
+    "2": 0.16344086021505377,
+    "3": 0.12,
+    "4": 0.15019762845849802,
+    "5": 0.41025641025641024,
+    "6": 0.21794871794871795,
+    "7": 0.24242424242424243,
+    "8": 0.3333333333333333,
+    "9": 1.0,
+    "10": 1.0,
+    "11": 1.0
+  },
+  "gods": [
+    {
+      "id": "vision_person_detector_yolopersondetector",
+      "label": "YoloPersonDetector",
+      "degree": 19
+    },
+    {
+      "id": "vision_camera_camera",
+      "label": "Camera",
+      "degree": 18
+    },
+    {
+      "id": "vision_face_analyzer_faceanalyzer",
+      "label": "FaceAnalyzer",
+      "degree": 13
+    },
+    {
+      "id": "call_voice_loop",
+      "label": "voice_loop()",
+      "degree": 11
+    },
+    {
+      "id": "llm_backend_generate_reply",
+      "label": "generate_reply()",
+      "degree": 11
+    },
+    {
+      "id": "skills_router_route_local_skill",
+      "label": "route_local_skill()",
+      "degree": 11
+    },
+    {
+      "id": "stt_listener_whisperlistener",
+      "label": "WhisperListener",
+      "degree": 11
+    },
+    {
+      "id": "llm_backend_env",
+      "label": "_env()",
+      "degree": 10
+    },
+    {
+      "id": "llm_backend_get_backend_status",
+      "label": "get_backend_status()",
+      "degree": 10
+    },
+    {
+      "id": "call_handle_command",
+      "label": "handle_command()",
+      "degree": 9
+    }
+  ],
+  "surprises": [
+    {
+      "source": "test_speak()",
+      "target": "speak()",
+      "source_files": [
+        "diagnose_hologram.py",
+        "call.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "ask_ai()",
+      "target": "generate_reply()",
+      "source_files": [
+        "call.py",
+        "llm_backend.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "ask_ai()",
+      "target": "get_selected_backend()",
+      "source_files": [
+        "call.py",
+        "llm_backend.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "ask_ai()",
+      "target": "route_local_skill()",
+      "source_files": [
+        "call.py",
+        "skills/router.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "handle_command()",
+      "target": "get_backend_status()",
+      "source_files": [
+        "call.py",
+        "llm_backend.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    }
+  ],
+  "tokens": {
+    "input": 0,
+    "output": 0
+  }
+}

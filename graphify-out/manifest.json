@@ -1,0 +1,92 @@
+{
+  "call.py": {
+    "mtime": 1780709080.4771016,
+    "ast_hash": "b121f7874574e01ac0f306c627feb403",
+    "semantic_hash": "b121f7874574e01ac0f306c627feb403"
+  },
+  "diagnose_hologram.py": {
+    "mtime": 1780709114.6853342,
+    "ast_hash": "badfca852e40d7ef6fbffcc2dc31bd29",
+    "semantic_hash": "badfca852e40d7ef6fbffcc2dc31bd29"
+  },
+  "llm_backend.py": {
+    "mtime": 1780706265.347341,
+    "ast_hash": "4e2b68a093d19c453b10057e3fc3d878",
+    "semantic_hash": "4e2b68a093d19c453b10057e3fc3d878"
+  },
+  "main.py": {
+    "mtime": 1780706265.347341,
+    "ast_hash": "26d3b10e661ebecdcfe063430fd5659b",
+    "semantic_hash": "26d3b10e661ebecdcfe063430fd5659b"
+  },
+  "setup_hologram.py": {
+    "mtime": 1780793268.7519956,
+    "ast_hash": "61e6e5f0171ea210e8858bb6f8ea01ff",
+    "semantic_hash": "61e6e5f0171ea210e8858bb6f8ea01ff"
+  },
+  "skills/__init__.py": {
+    "mtime": 1780194828.7078183,
+    "ast_hash": "3628971568d6ebf76a10ba13e8c7ef79",
+    "semantic_hash": "3628971568d6ebf76a10ba13e8c7ef79"
+  },
+  "skills/appearance.py": {
+    "mtime": 1780194828.804485,
+    "ast_hash": "cbf6d26a0c1675f2bcd02e27da9be58c",
+    "semantic_hash": "cbf6d26a0c1675f2bcd02e27da9be58c"
+  },
+  "skills/event_mode.py": {
+    "mtime": 1780706265.9640324,
+    "ast_hash": "84940308b2c6d888d2c14f015d8d8fde",
+    "semantic_hash": "84940308b2c6d888d2c14f015d8d8fde"
+  },
+  "skills/honduras.py": {
+    "mtime": 1780793268.7519956,
+    "ast_hash": "22fd74ba864a8d3c3564ea4acb5930ca",
+    "semantic_hash": "22fd74ba864a8d3c3564ea4acb5930ca"
+  },
+  "skills/presence.py": {
+    "mtime": 1780706265.9640324,
+    "ast_hash": "142e2d24ef1081f7bbc0b9eddeddeec3",
+    "semantic_hash": "142e2d24ef1081f7bbc0b9eddeddeec3"
+  },
+  "skills/router.py": {
+    "mtime": 1780793268.7519956,
+    "ast_hash": "6675e7103fcb623eb58c595dcfe982a1",
+    "semantic_hash": "6675e7103fcb623eb58c595dcfe982a1"
+  },
+  "skills/university.py": {
+    "mtime": 1780793268.7519956,
+    "ast_hash": "8adefd0e1d4b149f73eae93c66d2996b",
+    "semantic_hash": "8adefd0e1d4b149f73eae93c66d2996b"
+  },
+  "stt/__init__.py": {
+    "mtime": 1780706265.9640324,
+    "ast_hash": "b0436582c4a8505d00db6acfde9d06c9",
+    "semantic_hash": "b0436582c4a8505d00db6acfde9d06c9"
+  },
+  "stt/listener.py": {
+    "mtime": 1780710521.9346304,
+    "ast_hash": "1706f16a875cb34f2443005443f55b70",
+    "semantic_hash": "1706f16a875cb34f2443005443f55b70"
+  },
+  "vision/__init__.py": {
+    "mtime": 1780194880.977873,
+    "ast_hash": "c3bc0db18424f006e8b162c48bcc4356",
+    "semantic_hash": "c3bc0db18424f006e8b162c48bcc4356"
+  },
+  "vision/camera.py": {
+    "mtime": 1780709045.245664,
+    "ast_hash": "cd663551d94ee1a5db5bff5031b174c1",
+    "semantic_hash": "cd663551d94ee1a5db5bff5031b174c1"
+  },
+  "vision/face_analyzer.py": {
+    "mtime": 1780709061.654771,
+    "ast_hash": "c0ca32c4fca6d43b00b7f9e0a8f8e163",
+    "semantic_hash": "c0ca32c4fca6d43b00b7f9e0a8f8e163"
+  },
+  "vision/person_detector.py": {
+    "mtime": 1780793268.7519956,
+    "ast_hash": "f695f525bc682e1e76b2fd53f74c1068",
+    "semantic_hash": "f695f525bc682e1e76b2fd53f74c1068"
+  }
+}
