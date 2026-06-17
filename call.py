@@ -34,15 +34,7 @@ from skills.event_mode import get_greeting, get_system_prompt
 from skills.presence import PresenceManager
 from skills.router import route_local_skill
 from skills.university import get_university_context, normalize_text
-
-
-def configure_utf8_stdio():
-    """Keep Windows consoles from crashing on non-ASCII output."""
-    for stream in (sys.stdout, sys.stderr):
-        reconfigure = getattr(stream, "reconfigure", None)
-        if callable(reconfigure):
-            reconfigure(encoding="utf-8", errors="replace")
-
+from utils import configure_utf8_stdio
 
 configure_utf8_stdio()
 
@@ -108,8 +100,10 @@ def get_piper_command_args():
     if configured_command:
         return configured_command.split()
 
-    bundled_piper = BASE_DIR / "piper" / "piper"
-    bundled_espeak_data = BASE_DIR / "piper" / "espeak-ng-data"
+    # ponytail: piper/ dir contains piper/piper/ subdir with binary
+    bundled_piper_dir = BASE_DIR / "piper" / "piper"
+    bundled_piper = bundled_piper_dir / "piper"
+    bundled_espeak_data = bundled_piper_dir / "espeak-ng-data"
     if bundled_piper.exists():
         args = [str(bundled_piper)]
         if bundled_espeak_data.exists():
@@ -174,11 +168,11 @@ def get_piper_model_path():
     if configured_model:
         return str(Path(configured_model).expanduser())
 
-    default_model = BASE_DIR / DEFAULT_PIPER_MODEL
+    default_model = BASE_DIR / "models" / DEFAULT_PIPER_MODEL
     if default_model.exists():
         return str(default_model)
 
-    spanish_models = sorted(BASE_DIR.glob("es_*.onnx"))
+    spanish_models = sorted((BASE_DIR / "models").glob("es_*.onnx"))
     if spanish_models:
         return str(spanish_models[0])
 
@@ -591,7 +585,9 @@ def speak(text, blocking=True):
 
         if blocking:
             # Iniciar hilo de reproducción y esperar a que termine
-            worker_thread = threading.Thread(target=speak_worker, args=(q,), daemon=True)
+            worker_thread = threading.Thread(
+                target=speak_worker, args=(q,), daemon=True
+            )
             worker_thread.start()
             q.join()
             speak_lock.release()
@@ -860,16 +856,16 @@ def voice_loop():
 
     while True:
         print("\n[STT] Esperando tu voz...")
-        
+
         # Esperar a que el TTS termine de hablar antes de escuchar al micrófono
         speak_lock.acquire()
         speak_lock.release()
         # Pequeña pausa para que el eco de las bocinas se disipe
         time.sleep(0.8)
-        
+
         ai_busy = False  # El holograma está libre justo cuando empieza a escuchar
         user_input = listener.listen_once()
-        ai_busy = True   # El holograma vuelve a estar ocupado procesando el input
+        ai_busy = True  # El holograma vuelve a estar ocupado procesando el input
 
         if not user_input:
             continue

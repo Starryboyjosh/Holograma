@@ -8,24 +8,7 @@ identity, age, gender, race, emotion, health, or any other sensitive attribute.
 import os
 
 
-def _env_float(name, default):
-    value = os.getenv(name)
-    if value is None or not value.strip():
-        return default
-    try:
-        return float(value)
-    except ValueError:
-        return default
-
-
-def _env_int(name, default):
-    value = os.getenv(name)
-    if value is None or not value.strip():
-        return default
-    try:
-        return int(value)
-    except ValueError:
-        return default
+from utils import _env_float, _env_int
 
 
 class FaceAnalyzer:

@@ -19,43 +19,9 @@ from pathlib import Path
 import numpy as np
 
 
-def configure_utf8_stdio():
-    """Keep Windows consoles from crashing on non-ASCII output."""
-    for stream in (sys.stdout, sys.stderr):
-        reconfigure = getattr(stream, "reconfigure", None)
-        if callable(reconfigure):
-            reconfigure(encoding="utf-8", errors="replace")
-
+from utils import _env, _env_float, _env_int, configure_utf8_stdio
 
 configure_utf8_stdio()
-
-
-def _env(name, default=None):
-    """Read a non-empty environment variable or return a default."""
-    value = os.getenv(name)
-    if value is None or not value.strip():
-        return default
-    return value.strip()
-
-
-def _env_float(name, default):
-    value = _env(name)
-    if value is None:
-        return default
-    try:
-        return float(value)
-    except ValueError:
-        return default
-
-
-def _env_int(name, default):
-    value = _env(name)
-    if value is None:
-        return default
-    try:
-        return int(value)
-    except ValueError:
-        return default
 
 
 class WhisperListener:

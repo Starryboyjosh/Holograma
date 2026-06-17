@@ -209,7 +209,7 @@ class SpeakPayload(BaseModel):
 def get_voices():
     import glob
     from pathlib import Path
-    onnx_files = glob.glob("es_*.onnx")
+    onnx_files = glob.glob("models/es_*.onnx")
     voices = [Path(f).name for f in onnx_files]
     if not voices:
         voices = ["es_MX-claude-high.onnx"]

@@ -16,20 +16,24 @@ __pycache__/
 .DS_Store
 .idea/
 .vscode/
-
+dist/
+.zed/
+node_modules/
 whisper_cache/
 models/
+build/
+.git/
 
 # Local/generated model and binary artifacts.
 *.pt
 piper/
 piper_amd64.tar.gz
 piper_wrapper.sh
+static/
+models/
 
 # Local runtime configuration.
 config.json
 
 # Graphify local cache and machine-specific markers.
-graphify-out/cache/
-graphify-out/.graphify_python
-graphify-out/.graphify_root
+graphify-out/

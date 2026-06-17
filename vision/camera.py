@@ -15,15 +15,7 @@ import platform
 from pathlib import Path
 
 
-def _env_int(name, default):
-    """Read an integer environment variable or return a default."""
-    value = os.getenv(name)
-    if value is None or not value.strip():
-        return default
-    try:
-        return int(value.strip())
-    except ValueError:
-        return default
+from utils import _env_int
 
 
 class Camera:

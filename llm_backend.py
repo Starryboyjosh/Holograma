@@ -16,22 +16,7 @@ class LLMBackendError(Exception):
     pass
 
 
-def _env(name, default=None):
-    value = os.getenv(name)
-    if value is None or not value.strip():
-        return default
-    return value.strip()
-
-
-def _env_float(name, default):
-    value = _env(name)
-    if value is None:
-        return default
-
-    try:
-        return float(value)
-    except ValueError:
-        return default
+from utils import _env, _env_float
 
 
 def _ollama_base_url():

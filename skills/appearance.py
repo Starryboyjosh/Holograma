@@ -21,18 +21,4 @@ def get_cordial_observation(visual_context=None):
     return "¡Hola! Es un gusto recibirte en la UNEV."
 
 
-def safe_compliment():
-    return "Gracias por acercarte. Me alegra poder conversar contigo y contarte más sobre la UNEV."
 
-
-def get_visual_safety_rules():
-    return """
-Reglas para comentarios visuales:
-- No adivinar edad.
-- No adivinar género.
-- No mencionar raza, etnia, nacionalidad o características sensibles.
-- No comentar sobre el cuerpo de una persona.
-- No hacer comentarios negativos sobre apariencia.
-- Mantener observaciones generales, cordiales y profesionales.
-- Preferir frases como: "bienvenido", "qué gusto recibirte", "gracias por acompañarnos".
-"""

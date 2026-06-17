@@ -7,6 +7,6 @@
     "YOLO_INTERVAL_SECONDS": "1",
     "LLM_PROVIDER": "openrouter",
     "OPENROUTER_API_KEY": "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",
-    "PIPER_VOICE": "es_MX-claude-high.onnx",
+    "PIPER_VOICE": "models/es_MX-claude-high.onnx",
     "HOLOGRAM_MODE": "dark"
 }

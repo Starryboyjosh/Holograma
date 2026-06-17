@@ -187,12 +187,7 @@ else:
     HONDURAS_INFO = DEFAULT_HONDURAS_INFO
 
 
-def normalize_text(text):
-    text = text.lower().strip()
-    normalized = unicodedata.normalize("NFD", text)
-    return "".join(
-        character for character in normalized if unicodedata.category(character) != "Mn"
-    )
+from skills.utils import normalize_text
 
 
 def get_university_summary():

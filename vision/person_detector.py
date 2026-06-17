@@ -19,22 +19,7 @@ from pathlib import Path
 _PERSON_CLASS_ID = 0
 
 
-def _env(name, default=None):
-    """Read a non-empty environment variable or return a default."""
-    value = os.getenv(name)
-    if value is None or not value.strip():
-        return default
-    return value.strip()
-
-
-def _env_float(name, default):
-    value = _env(name)
-    if value is None:
-        return default
-    try:
-        return float(value)
-    except ValueError:
-        return default
+from utils import _env, _env_float
 
 
 class YoloPersonDetector:
@@ -67,11 +52,15 @@ class YoloPersonDetector:
                 "Ejecuta: pip install ultralytics"
             ) from error
 
-        # Regla A: use pathlib for model path resolution
         model_path = Path(self.model_name)
         if not model_path.is_absolute():
             base_dir = Path(__file__).resolve().parent.parent
-            model_path = base_dir / model_path
+            # Try models/ subdirectory first
+            model_path_in_models = base_dir / "models" / model_path
+            if model_path_in_models.exists() or not (base_dir / model_path).exists():
+                model_path = model_path_in_models
+            else:
+                model_path = base_dir / model_path
 
         if not model_path.exists():
             fallback_path = model_path.parent / "yolo26n.pt"
