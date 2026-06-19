@@ -28,6 +28,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from hologram_controller import create_hologram_manager
 from llm_backend import generate_reply, get_backend_status, get_selected_backend
 from skills.appearance import get_cordial_observation
 from skills.event_mode import get_greeting, get_system_prompt
@@ -63,6 +64,10 @@ presence_manager = PresenceManager(
 )
 speak_lock = threading.Lock()
 ai_busy = False
+
+# Puente con el ventilador holográfico físico (TCP). Deshabilitado (no-op) si
+# HOLOGRAM_TCP_IP no está definida — la IA corre igual sin dispositivo conectado.
+hologram = create_hologram_manager()
 
 
 # ======================================================================
@@ -577,6 +582,9 @@ def speak(text, blocking=True):
         print(f"[TTS] Omitiendo habla para evitar traslape: {text[:60]}...")
         return
 
+    # El holograma muestra la animación de "hablando" mientras dura el TTS.
+    hologram.set_state("speaking")
+
     try:
         q = queue.Queue()
         for chunk in chunks:
@@ -591,6 +599,7 @@ def speak(text, blocking=True):
             worker_thread.start()
             q.join()
             speak_lock.release()
+            hologram.set_state("idle")
         else:
             # En modo no-bloqueante, el worker libera el lock al terminar
             def _non_blocking_worker(q, lock):
@@ -599,6 +608,7 @@ def speak(text, blocking=True):
                     q.join()
                 finally:
                     lock.release()
+                    hologram.set_state("idle")
 
             worker_thread = threading.Thread(
                 target=_non_blocking_worker, args=(q, speak_lock), daemon=True
@@ -722,6 +732,7 @@ def _camera_detection_callback(event, count, analysis=None):
     if ai_busy or speak_lock.locked():
         if event == "person_left":
             presence_manager.force_person_left()
+            hologram.set_state("idle")
             print("[Cámara] La persona se fue. Vuelvo a modo espera (sin interrumpir).")
         return
 
@@ -743,6 +754,7 @@ def _camera_detection_callback(event, count, analysis=None):
 
     elif event == "person_left":
         presence_manager.force_person_left()
+        hologram.set_state("idle")
         print("[Cámara] La persona se fue. Vuelvo a modo espera.")
 
 
@@ -794,6 +806,7 @@ def chat_to_voice():
     print("Ollama recomendado para este setup: gemma4:e4b.")
 
     while True:
+        hologram.set_state("idle")
         user_input = input("\nYou: ").strip()
 
         if not user_input:
@@ -811,6 +824,7 @@ def chat_to_voice():
                 continue
 
             print("The AI is thinking...")
+            hologram.set_state("thinking")
             reply = ask_ai(user_input, CURRENT_MODE)
             speak(reply)
         finally:
@@ -864,6 +878,7 @@ def voice_loop():
         time.sleep(0.8)
 
         ai_busy = False  # El holograma está libre justo cuando empieza a escuchar
+        hologram.set_state("listening")
         user_input = listener.listen_once()
         ai_busy = True  # El holograma vuelve a estar ocupado procesando el input
 
@@ -881,6 +896,7 @@ def voice_loop():
                 continue
 
             print("The AI is thinking...")
+            hologram.set_state("thinking")
             reply = ask_ai(user_input, CURRENT_MODE)
             speak(reply)
         finally:
@@ -899,13 +915,19 @@ def main():
     )
     use_camera = "--camera" in sys.argv or os.getenv("HOLOGRAM_CAMERA", "") == "1"
 
+    # Conecta el holograma físico (no-op si HOLOGRAM_TCP_IP no está definida).
+    hologram.start()
+
     if use_camera:
         start_camera_thread()
 
-    if use_voice:
-        voice_loop()
-    else:
-        chat_to_voice()
+    try:
+        if use_voice:
+            voice_loop()
+        else:
+            chat_to_voice()
+    finally:
+        hologram.close()
 
 
 if __name__ == "__main__":
