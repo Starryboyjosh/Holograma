@@ -203,10 +203,11 @@ def discover_devices(subnet: str = "192.168.1", port: int = 50200, timeout: floa
     Returns:
         Lista de IPs que respondieron en el puerto 50200
     """
-    print(f"🔍 Escaneando {subnet}.1-254 en puerto {port}...")
+    import concurrent.futures
+    print(f"🔍 Escaneando {subnet}.1-254 en puerto {port} de forma concurrente...")
     found = []
-    for i in range(1, 255):
-        ip = f"{subnet}.{i}"
+
+    def check_ip(ip):
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.settimeout(timeout)
@@ -214,9 +215,18 @@ def discover_devices(subnet: str = "192.168.1", port: int = 50200, timeout: floa
             s.close()
             if result == 0:
                 print(f"  ✅ Holograma encontrado en {ip}")
-                found.append(ip)
+                return ip
         except Exception:
             pass
+        return None
+
+    ips = [f"{subnet}.{i}" for i in range(1, 255)]
+    with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
+        results = executor.map(check_ip, ips)
+        for res in results:
+            if res:
+                found.append(res)
+
     if not found:
         print("  ❌ No se encontraron dispositivos en esa subred.")
     return found

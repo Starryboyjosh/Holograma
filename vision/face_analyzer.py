@@ -70,8 +70,8 @@ class FaceAnalyzer:
         if face_count <= 0:
             return "No veo rostros claramente de frente."
         if face_count == 1:
-            return "Veo a una persona frente a la cámara."
-        return f"Veo {face_count} personas frente a la cámara."
+            return "Veo a una persona frente a mí."
+        return f"Veo {face_count} personas frente a mí."
 
     @staticmethod
     def is_available():

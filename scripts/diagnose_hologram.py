@@ -18,7 +18,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))
 load_dotenv(BASE_DIR / ".env")
 
 

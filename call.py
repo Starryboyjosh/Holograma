@@ -35,7 +35,7 @@ from skills.event_mode import get_greeting, get_system_prompt
 from skills.presence import PresenceManager
 from skills.router import route_local_skill
 from skills.university import get_university_context, normalize_text
-from utils import configure_utf8_stdio
+from utils import _is_quiet, configure_utf8_stdio
 
 configure_utf8_stdio()
 
@@ -64,6 +64,31 @@ presence_manager = PresenceManager(
 )
 speak_lock = threading.Lock()
 ai_busy = False
+_hologram_paused = False
+
+def stop_all_tts_processes():
+    """Attempt to terminate any running TTS or audio players on Linux."""
+    import platform
+    import subprocess
+    if platform.system() == "Linux":
+        for proc in ["aplay", "paplay", "piper", "espeak-ng", "espeak", "spd-say"]:
+            try:
+                subprocess.run(["killall", "-9", proc], capture_output=True)
+            except Exception:
+                pass
+
+def pause_hologram():
+    """Pause hologram activity: stop speaking, listening and seeing."""
+    global _hologram_paused
+    _hologram_paused = True
+    stop_all_tts_processes()
+    print("[Holograma] IA Pausada por completo.")
+
+def resume_hologram():
+    """Resume hologram activity."""
+    global _hologram_paused
+    _hologram_paused = False
+    print("[Holograma] IA Reanudada.")
 
 # Puente con el ventilador holográfico físico (TCP). Deshabilitado (no-op) si
 # HOLOGRAM_TCP_IP no está definida — la IA corre igual sin dispositivo conectado.
@@ -194,7 +219,8 @@ def get_piper_sample_rate(model_path):
     except FileNotFoundError:
         return "22050"
     except json.JSONDecodeError:
-        print(f"AVISO: No pude leer {config_path}. Usando 22050 Hz.")
+        if not _is_quiet():
+            print(f"AVISO: No pude leer {config_path}. Usando 22050 Hz.")
         return "22050"
 
     sample_rate = config.get("audio", {}).get("sample_rate", 22050)
@@ -228,7 +254,8 @@ def run_powershell(script):
     """Run a PowerShell script and return True when it succeeds."""
     powershell = get_powershell_command()
     if not powershell:
-        print("AVISO: No encontré PowerShell para reproducir voz en Windows.")
+        if not _is_quiet():
+            print("AVISO: No encontré PowerShell para reproducir voz en Windows.")
         return False
 
     try:
@@ -247,15 +274,18 @@ def run_powershell(script):
             text=True,
         )
     except Exception as error:
-        print(f"Error ejecutando PowerShell: {error}")
+        if not _is_quiet():
+                    print(f"Error ejecutando PowerShell: {error}")
         return False
 
     if result.stdout.strip():
-        print(result.stdout.strip())
+        if not _is_quiet():
+            print(result.stdout.strip())
 
     if result.returncode != 0:
         if result.stderr.strip():
-            print(result.stderr.strip())
+            if not _is_quiet():
+                print(result.stderr.strip())
         return False
 
     return True
@@ -308,19 +338,22 @@ def play_wav_file(wav_path):
                 text=True,
             )
         except Exception as error:
-            print(f"AVISO: No pude usar {player_command[0]} para audio: {error}")
+            if not _is_quiet():
+                print(f"AVISO: No pude usar {player_command[0]} para audio: {error}")
             continue
 
         if result.returncode == 0:
             return True
 
         if result.stderr.strip():
-            print(f"AVISO: {player_command[0]} falló: {result.stderr.strip()}")
+            if not _is_quiet():
+                print(f"AVISO: {player_command[0]} falló: {result.stderr.strip()}")
 
-    print(
-        "AVISO: No encontré reproductor de audio compatible. "
-        "En Linux instala aplay, paplay, pw-play, ffplay o mpv."
-    )
+    if not _is_quiet():
+        print(
+            "AVISO: No encontré reproductor de audio compatible. "
+            "En Linux instala aplay, paplay, pw-play, ffplay o mpv."
+        )
     return False
 
 
@@ -328,26 +361,29 @@ def speak_with_piper(text):
     """Use Piper TTS and play the generated WAV file on the current OS."""
     piper_command_args = get_piper_command_args()
     if not piper_command_args:
-        print("AVISO: No encontré Piper. Intentaré usar una voz nativa del sistema.")
-        print(get_piper_install_hint())
+        if not _is_quiet():
+            print("AVISO: No encontré Piper. Intentaré usar una voz nativa del sistema.")
+            print(get_piper_install_hint())
         return False
 
     model_path = get_piper_model_path()
 
     # Regla A: pathlib for path checks
     if not Path(model_path).exists():
-        print(
-            f"ERROR: No encontré la voz {model_path}. "
-            "Descarga una voz de Piper en español o define PIPER_MODEL_PATH."
-        )
+        if not _is_quiet():
+            print(
+                f"ERROR: No encontré la voz {model_path}. "
+                "Descarga una voz de Piper en español o define PIPER_MODEL_PATH."
+            )
         return False
 
     config_path = Path(f"{model_path}.json")
     if not config_path.exists():
-        print(
-            f"ERROR: Falta {config_path}. "
-            "Piper necesita el archivo .onnx y su .onnx.json correspondiente."
-        )
+        if not _is_quiet():
+            print(
+                f"ERROR: Falta {config_path}. "
+                "Piper necesita el archivo .onnx y su .onnx.json correspondiente."
+            )
         return False
 
     temp_wav = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
@@ -387,17 +423,21 @@ def speak_with_piper(text):
         )
 
         if result.returncode != 0:
-            print("AVISO: Piper no pudo generar la voz.")
+            if not _is_quiet():
+                print("AVISO: Piper no pudo generar la voz.")
             if result.stderr.strip():
-                print(result.stderr.strip())
+                if not _is_quiet():
+                    print(result.stderr.strip())
             return False
 
         return play_wav_file(str(wav_path))
     except subprocess.TimeoutExpired:
-        print("AVISO: Piper tardó demasiado generando la voz.")
+        if not _is_quiet():
+            print("AVISO: Piper tardó demasiado generando la voz.")
         return False
     except Exception as error:
-        print(f"Error reproduciendo voz con Piper: {error}")
+        if not _is_quiet():
+            print(f"Error reproduciendo voz con Piper: {error}")
         return False
     finally:
         try:
@@ -449,7 +489,8 @@ def speak_with_linux_tts(text):
                     timeout=60,
                 )
             except Exception as error:
-                print(f"AVISO: No pude usar {command}: {error}")
+                if not _is_quiet():
+                    print(f"AVISO: No pude usar {command}: {error}")
                 break
 
             if result.returncode == 0:
@@ -468,7 +509,8 @@ def speak_with_linux_tts(text):
             )
             return result.returncode == 0
         except Exception as error:
-            print(f"AVISO: No pude usar spd-say: {error}")
+            if not _is_quiet():
+                print(f"AVISO: No pude usar spd-say: {error}")
 
     return False
 
@@ -524,6 +566,14 @@ def _split_into_chunks(text):
 def speak_worker(q):
     """Worker de hilo que consume y habla los fragmentos secuencialmente."""
     while True:
+        if _hologram_paused:
+            while not q.empty():
+                try:
+                    q.get_nowait()
+                    q.task_done()
+                except Exception:
+                    pass
+            break
         chunk = q.get()
         if chunk is None:
             q.task_done()
@@ -533,7 +583,8 @@ def speak_worker(q):
         system_name = platform.system()
 
         try:
-            print(f"\nSpeaking chunk: {chunk}")
+            if not _is_quiet():
+                print(f"\nSpeaking chunk: {chunk}")
             if tts_backend in ["auto", "piper"]:
                 if speak_with_piper(chunk):
                     continue
@@ -561,9 +612,11 @@ def speak_worker(q):
                 if speak_with_linux_tts(chunk):
                     continue
 
-            print(f"AVISO: No pude reproducir voz para el fragmento: {chunk}")
+            if not _is_quiet():
+                print(f"AVISO: No pude reproducir voz para el fragmento: {chunk}")
         except Exception as e:
-            print(f"Error en el reproductor de voz: {e}")
+            if not _is_quiet():
+                print(f"Error en el reproductor de voz: {e}")
         finally:
             q.task_done()
 
@@ -572,6 +625,8 @@ def speak(text, blocking=True):
     """Speak text using Piper when possible, with OS-native fallbacks.
     Utiliza segmentación inteligente por cláusulas y oraciones para streaming de audio.
     """
+    if _hologram_paused:
+        return
     chunks = _split_into_chunks(text)
     if not chunks:
         return
@@ -579,7 +634,8 @@ def speak(text, blocking=True):
     # Evitar reproducción superpuesta usando el speak_lock
     acquired = speak_lock.acquire(blocking=blocking)
     if not acquired:
-        print(f"[TTS] Omitiendo habla para evitar traslape: {text[:60]}...")
+        if not _is_quiet():
+            print(f"[TTS] Omitiendo habla para evitar traslape: {text[:60]}...")
         return
 
     # El holograma muestra la animación de "hablando" mientras dura el TTS.
@@ -618,6 +674,7 @@ def speak(text, blocking=True):
             return
     except Exception:
         speak_lock.release()
+        hologram.set_state("idle")
         raise
 
 
@@ -625,6 +682,64 @@ def speak(text, blocking=True):
 # AI / LLM helpers
 # ======================================================================
 
+_last_camera_analysis = {}
+_last_person_time = 0
+_cached_person_analysis = {}
+_visual_keywords = [
+    "ves", "mir", "cámar", "frent", "describe", "descríbeme",
+    "qué hay", "qué ves", "que ves", "que hay",
+    "delante", "enfrente", "visible", "veo", "ven",
+    "algo ahí", "alguien", "quién está", "quien esta",
+    "objeto", "detect", "yolo", "persona", "gente",
+]
+
+def _build_camera_context(analysis):
+    global _last_person_time, _cached_person_analysis
+    import time
+    
+    if analysis.get("person_count", 0) > 0:
+        _last_person_time = time.time()
+        _cached_person_analysis = analysis.copy()
+        active_analysis = analysis
+    else:
+        if time.time() - _last_person_time <= 60.0:
+            active_analysis = _cached_person_analysis
+        else:
+            active_analysis = analysis
+
+    parts = []
+    pc = active_analysis.get("person_count", 0)
+    if pc > 0:
+        parts.append(f"Personas detectadas frente a ti: {pc}")
+    fd = active_analysis.get("face_description")
+    if fd:
+        parts.append(f"Descripción facial: {fd}")
+    cc = active_analysis.get("custom_count", 0)
+    co = active_analysis.get("custom_objects", [])
+    if cc > 0:
+        labels = list({o["label"] for o in co})
+        parts.append(f"Personas u objetos específicos que reconozco visualmente: {', '.join(labels[:5])}")
+    if not parts:
+        parts.append("No veo a nadie ni nada específico en este momento.")
+    return "\n".join(parts)
+
+def _is_visual_question(user_input):
+    text = user_input.lower().strip()
+    for kw in _visual_keywords:
+        if kw in text:
+            return True
+    return False
+
+def _is_greeting(user_input):
+    text = user_input.lower().strip()
+    greeting_keywords = [
+        "hola", "buenos dias", "buenos días", "buenas tardes", "buenas noches",
+        "saludo", "cómo estás", "como estas", "qué tal", "que tal", "buen dia", "buen día"
+    ]
+    for kw in greeting_keywords:
+        if kw in text:
+            return True
+    return False
 
 def ask_ai(user_input, mode=None):
     mode = mode or CURRENT_MODE
@@ -634,10 +749,15 @@ def ask_ai(user_input, mode=None):
         if local_response:
             return local_response
 
+    camera_context = None
+    if _last_camera_analysis:
+        camera_context = _build_camera_context(_last_camera_analysis)
+
     return generate_reply(
         user_input=user_input,
         system_prompt=get_system_prompt(mode),
         university_context=get_university_context(),
+        camera_context=camera_context,
     )
 
 
@@ -725,10 +845,15 @@ def handle_command(user_input):
 # ======================================================================
 
 
+_last_custom_speak_times = {}
+
 def _camera_detection_callback(event, count, analysis=None):
     """Handle YOLO detection events from the background camera thread."""
-    global ai_busy
+    global ai_busy, _last_camera_analysis, _last_custom_speak_times
+    if _hologram_paused:
+        return
     analysis = analysis or {}
+    _last_camera_analysis = analysis
     if ai_busy or speak_lock.locked():
         if event == "person_left":
             presence_manager.force_person_left()
@@ -738,24 +863,49 @@ def _camera_detection_callback(event, count, analysis=None):
 
     if event == "person_entered":
         if presence_manager.should_greet(True):
-            face_description = analysis.get("face_description")
             greeting = get_greeting(CURRENT_MODE)
-            if face_description:
-                greeting = f"{face_description} {greeting}"
+            # Personalize greeting if custom identity is available
+            custom_objs = analysis.get("custom_objects", [])
+            labels = list({o["label"] for o in custom_objs})
+            if labels:
+                greeting = f"¡Hola {labels[0]}! " + greeting.replace("¡Hola! ", "").replace("¡Hola ", "")
+                # Register greeting timestamp to prevent immediate custom object double announcements
+                for lbl in labels:
+                    _last_custom_speak_times[lbl] = time.time()
             speak(greeting, blocking=False)
 
     elif event == "group_detected":
         if presence_manager.should_greet_group():
-            face_description = analysis.get("face_description")
             observation = get_cordial_observation("grupo")
-            if face_description:
-                observation = f"{face_description} {observation}"
             speak(observation, blocking=False)
 
     elif event == "person_left":
         presence_manager.force_person_left()
         hologram.set_state("idle")
         print("[Cámara] La persona se fue. Vuelvo a modo espera.")
+
+    elif event == "custom_object_detected":
+        custom_objs = analysis.get("custom_objects", [])
+        labels = list({o["label"] for o in custom_objs})
+        
+        # Cooldown per class to avoid repetitive announcements
+        now = time.time()
+        labels_to_speak = [
+            lbl for lbl in labels
+            if now - _last_custom_speak_times.get(lbl, 0) > 60.0
+        ]
+        
+        if labels_to_speak:
+            for lbl in labels_to_speak:
+                _last_custom_speak_times[lbl] = now
+            desc = ", ".join(labels_to_speak[:3])
+            # Delay slightly to avoid lock collision if person_entered fired simultaneously
+            def _delayed_speak():
+                import time
+                time.sleep(1.0)
+                speak(f"¡Mira, detecto a {desc}!", blocking=False)
+            import threading
+            threading.Thread(target=_delayed_speak, daemon=True).start()
 
 
 def start_camera_thread():
@@ -855,21 +1005,28 @@ def voice_loop():
 
     listener = WhisperListener()
 
-    print("--- UNEV Hologram (Voz) ---")
-    print("Habla al micrófono. Di 'salir' o 'exit' para terminar.")
+    if not _is_quiet():
+        print("--- UNEV Hologram (Voz) ---")
+        print("Habla al micrófono. Di 'salir' o 'exit' para terminar.")
     print(get_stt_status())
     print(get_backend_status())
     print("Ollama recomendado para este setup: gemma4:e4b.")
 
     # Pre-load the Whisper model so the first utterance is fast
-    print("[STT] Preparando modelo de voz...")
+    if not _is_quiet():
+        print("[STT] Preparando modelo de voz...")
     listener._load_model()
 
     global ai_busy
     ai_busy = True
 
     while True:
-        print("\n[STT] Esperando tu voz...")
+        if _hologram_paused:
+            time.sleep(0.5)
+            continue
+
+        if not _is_quiet():
+            print("\n[STT] Esperando tu voz...")
 
         # Esperar a que el TTS termine de hablar antes de escuchar al micrófono
         speak_lock.acquire()
@@ -886,7 +1043,8 @@ def voice_loop():
             continue
 
         if normalize_text(user_input) in ["quit", "exit", "salir"]:
-            print("¡Hasta pronto!")
+            if not _is_quiet():
+                print("¡Hasta pronto!")
             break
 
         try:

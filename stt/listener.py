@@ -19,7 +19,7 @@ from pathlib import Path
 import numpy as np
 
 
-from utils import _env, _env_float, _env_int, configure_utf8_stdio
+from utils import _env, _env_float, _env_int, _is_quiet, configure_utf8_stdio
 
 configure_utf8_stdio()
 
@@ -88,10 +88,11 @@ class WhisperListener:
         device = _env("WHISPER_DEVICE", "cpu")
         compute_type = _env("WHISPER_COMPUTE_TYPE", "int8")
 
-        print(
-            f"[STT] Cargando modelo Whisper '{self.model_size}' "
-            f"(device={device}, compute={compute_type})..."
-        )
+        if not _is_quiet():
+            print(
+                f"[STT] Cargando modelo Whisper '{self.model_size}' "
+                f"(device={device}, compute={compute_type})..."
+            )
 
         try:
             self._model = WhisperModel(
@@ -102,10 +103,11 @@ class WhisperListener:
         except RuntimeError as error:
             error_str = str(error)
             if device != "cpu" and ("cublas" in error_str.lower() or "cuda" in error_str.lower() or "onnxruntime" in error_str.lower()):
-                print(
-                    f"[STT] AVISO: Error al cargar modelo en '{device}' ({error}). "
-                    "Intentando fallback en 'cpu'..."
-                )
+                if not _is_quiet():
+                    print(
+                        f"[STT] AVISO: Error al cargar modelo en '{device}' ({error}). "
+                        "Intentando fallback en 'cpu'..."
+                    )
                 self._model = WhisperModel(
                     self.model_size,
                     device="cpu",
@@ -114,7 +116,8 @@ class WhisperListener:
             else:
                 raise
 
-        print("[STT] Modelo Whisper listo.")
+        if not _is_quiet():
+            print("[STT] Modelo Whisper listo.")
         return self._model
 
     # ------------------------------------------------------------------
@@ -142,7 +145,8 @@ class WhisperListener:
         silent_chunks = 0
         silence_chunks_needed = int(self.silence_duration / chunk_duration)
 
-        print("[STT] Escuchando... (habla y haré una pausa cuando termines)")
+        if not _is_quiet():
+            print("[STT] Escuchando... (habla y haré una pausa cuando termines)")
 
         for _ in range(max_chunks):
             try:
@@ -154,7 +158,8 @@ class WhisperListener:
                 )
                 sd.wait()
             except Exception as error:
-                print(f"[STT] Error grabando audio: {error}")
+                if not _is_quiet():
+                    print(f"[STT] Error grabando audio: {error}")
                 break
 
             recorded_chunks.append(chunk.flatten())
@@ -244,10 +249,11 @@ class WhisperListener:
             if not should_retry_cpu:
                 raise
 
-            print(
-                f"[STT] AVISO: CUDA falló durante transcripción ({error}). "
-                "Reintentando con CPU..."
-            )
+            if not _is_quiet():
+                print(
+                    f"[STT] AVISO: CUDA falló durante transcripción ({error}). "
+                    "Reintentando con CPU..."
+                )
             from faster_whisper import WhisperModel
 
             self._model = WhisperModel(
@@ -268,7 +274,8 @@ class WhisperListener:
         audio = self._record_until_silence()
 
         if audio.size == 0:
-            print("[STT] No se capturó audio.")
+            if not _is_quiet():
+                print("[STT] No se capturó audio.")
             return ""
 
         wav_path = self._audio_to_wav_path(audio)
@@ -282,9 +289,11 @@ class WhisperListener:
                 pass
 
         if text:
-            print(f"[STT] Transcripción: {text}")
+            if not _is_quiet():
+                print(f"[STT] Transcripción: {text}")
         else:
-            print("[STT] No se detectó habla.")
+            if not _is_quiet():
+                print("[STT] No se detectó habla.")
 
         return text
 

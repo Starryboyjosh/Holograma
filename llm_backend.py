@@ -160,10 +160,10 @@ def get_backend_status():
     return "Backend activo: local_only. Solo se responderán skills locales."
 
 
-def _build_messages(user_input, system_prompt, university_context):
+def _build_messages(user_input, system_prompt, university_context, camera_context=None):
     # Reforzar idioma español en el mensaje del usuario para modelos débiles
     user_content = f"{user_input}\n\n[Instrucción: responde siempre en español.]"
-    return [
+    messages = [
         {
             "role": "system",
             "content": system_prompt,
@@ -172,11 +172,17 @@ def _build_messages(user_input, system_prompt, university_context):
             "role": "system",
             "content": university_context,
         },
-        {
-            "role": "user",
-            "content": user_content,
-        },
     ]
+    if camera_context:
+        messages.append({
+            "role": "system",
+            "content": f"Contexto actual de la cámara:\n{camera_context}",
+        })
+    messages.append({
+        "role": "user",
+        "content": user_content,
+    })
+    return messages
 
 
 def _chat_with_nvidia(messages):
@@ -353,9 +359,9 @@ def _postprocess_reply(text):
     return text
 
 
-def generate_reply(user_input, system_prompt, university_context):
+def generate_reply(user_input, system_prompt, university_context, camera_context=None):
     backend = get_selected_backend()
-    messages = _build_messages(user_input, system_prompt, university_context)
+    messages = _build_messages(user_input, system_prompt, university_context, camera_context)
 
     if backend == "local_only":
         return (
@@ -389,8 +395,7 @@ def generate_reply(user_input, system_prompt, university_context):
 
 async def stream_llm_response(prompt: str) -> AsyncGenerator[str, None]:
     """Generador asíncrono para transmitir la respuesta del LLM en tiempo real."""
-    provider = os.getenv("LLM_PROVIDER", "openrouter").lower().strip()
-    model = os.getenv("LLM_MODEL", "meta-llama/llama-3.3-70b-instruct").strip()
+    backend = get_selected_backend()
 
     try:
         from skills.event_mode import get_system_prompt
@@ -401,13 +406,40 @@ async def stream_llm_response(prompt: str) -> AsyncGenerator[str, None]:
         system_prompt = "Eres un asistente de la UNEV."
         university_context = ""
 
-    messages = _build_messages(prompt, system_prompt, university_context)
+    # Obtener contexto de la cámara si hay una pregunta visual o un saludo
+    camera_context = None
+    try:
+        from call import _last_camera_analysis, _build_camera_context
+        if _last_camera_analysis:
+            camera_context = _build_camera_context(_last_camera_analysis)
+    except ImportError:
+        pass
 
-    if provider == "openai":
+    if backend == "local_only":
+        try:
+            from skills.router import route_local_skill
+            local_response = route_local_skill(prompt)
+        except Exception:
+            local_response = None
+
+        if local_response:
+            yield local_response
+        else:
+            yield (
+                "Por ahora estoy en modo local. Puedo responder preguntas básicas sobre UNEV, "
+                "sus carreras, admisiones, ubicación y aprobación oficial. Para conversación abierta, "
+                "configura NVIDIA_API_KEY, OPENAI_API_KEY o instala Ollama con el modelo recomendado."
+            )
+        return
+
+    messages = _build_messages(prompt, system_prompt, university_context, camera_context)
+
+    if backend == "openai":
         from openai import AsyncOpenAI
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
             raise LLMBackendError("Falta la variable de entorno OPENAI_API_KEY.")
+        model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
         client = AsyncOpenAI(api_key=api_key)
         
         response = await client.chat.completions.create(
@@ -421,11 +453,12 @@ async def stream_llm_response(prompt: str) -> AsyncGenerator[str, None]:
             if content:
                 yield content
 
-    elif provider == "openrouter":
+    elif backend == "openrouter":
         from openai import AsyncOpenAI
         api_key = os.getenv("OPENROUTER_API_KEY")
         if not api_key:
             raise LLMBackendError("Falta la variable de entorno OPENROUTER_API_KEY.")
+        model = os.getenv("LLM_MODEL", "meta-llama/llama-3.3-70b-instruct")
         client = AsyncOpenAI(
             api_key=api_key,
             base_url="https://openrouter.ai/api/v1"
@@ -442,11 +475,12 @@ async def stream_llm_response(prompt: str) -> AsyncGenerator[str, None]:
             if content:
                 yield content
 
-    elif provider == "claude_native":
+    elif backend == "claude_native":
         from anthropic import AsyncAnthropic
         api_key = os.getenv("ANTHROPIC_API_KEY")
         if not api_key:
             raise LLMBackendError("Falta la variable de entorno ANTHROPIC_API_KEY.")
+        model = os.getenv("LLM_MODEL", "claude-3-5-sonnet-latest")
         client = AsyncAnthropic(api_key=api_key)
         
         # Anthropic maneja el system prompt por separado
@@ -467,6 +501,43 @@ async def stream_llm_response(prompt: str) -> AsyncGenerator[str, None]:
         ) as stream:
             async for text in stream.text_stream:
                 yield text
+
+    elif backend == "nvidia":
+        from openai import AsyncOpenAI
+        api_key = os.getenv("NVIDIA_API_KEY")
+        if not api_key:
+            raise LLMBackendError("Falta la variable de entorno NVIDIA_API_KEY.")
+        model = os.getenv("NVIDIA_MODEL", "moonshotai/kimi-k2.6")
+        base_url = os.getenv("NVIDIA_BASE_URL", "https://integrate.api.nvidia.com/v1")
+        client = AsyncOpenAI(api_key=api_key, base_url=base_url)
+        
+        response = await client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=0.6,
+            stream=True
+        )
+        async for chunk in response:
+            content = chunk.choices[0].delta.content
+            if content:
+                yield content
+
+    elif backend == "ollama":
+        from openai import AsyncOpenAI
+        model = _ollama_model_name()
+        base_url = f"{_ollama_base_url()}/v1"
+        client = AsyncOpenAI(api_key="ollama", base_url=base_url)
+        
+        response = await client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=0.6,
+            stream=True
+        )
+        async for chunk in response:
+            content = chunk.choices[0].delta.content
+            if content:
+                yield content
     else:
-        raise LLMBackendError(f"Proveedor no soportado: {provider}")
+        raise LLMBackendError(f"Backend no soportado para streaming: {backend}")
 

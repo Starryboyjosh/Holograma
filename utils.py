@@ -26,6 +26,11 @@ def _env_int(name: str, default: int = 0) -> int:
     except ValueError:
         return default
 
+def _is_quiet() -> bool:
+    """Returns True if HOLOGRAM_QUIET env var is set to 1/true/yes."""
+    return os.environ.get("HOLOGRAM_QUIET", "").lower() in ("1", "true", "yes")
+
+
 def configure_utf8_stdio():
     """Configures standard input/output streams to use UTF-8 encoding across systems."""
     if platform.system() == "Windows":

@@ -42,8 +42,7 @@ interface SavedObject {
 }
 
 export default function App() {
-  const [isUnlocked, setIsUnlocked] = useState(false);
-  const [password, setPassword] = useState('');
+  const isUnlocked = true;
   const [currentScreen, setCurrentScreen] = useState('home'); // 'home' | 'assistant' | 'settings' | 'teaching'
   const [darkMode, setDarkMode] = useState(true); // Default a dark para emular el vibe de la interfaz
   const [isConversationActive, setIsConversationActive] = useState(false);
@@ -54,7 +53,7 @@ export default function App() {
   const [customQuery, setCustomQuery] = useState('');
 
   // Transcripciones reales e interactivas
-  const [aiSpokenText, setAiSpokenText] = useState("Introduce la contraseña del holograma para iniciar nuestra interacción.");
+  const [aiSpokenText, setAiSpokenText] = useState("Holograma listo para interactuar.");
   const [userSpokenText, setUserSpokenText] = useState("Listo para recibir comandos.");
   const [highlightKeyword, setHighlightKeyword] = useState("");
 
@@ -78,25 +77,68 @@ export default function App() {
   const [voicesList, setVoicesList] = useState<string[]>(['es_MX-claude-high.onnx']);
   const [isPlayingVoiceSample, setIsPlayingVoiceSample] = useState(false);
 
-  // Módulo de Entrenamiento Visual (YOLOE Refresher)
+  // Módulo de Entrenamiento Visual (YOLO)
   const [teachingTab, setTeachingTab] = useState('visual'); 
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [boundingBoxes, setBoundingBoxes] = useState<BoundingBox[]>([]);
   const [currentLabel, setCurrentLabel] = useState('Carnet UNEV');
   const [currentDesc, setCurrentDesc] = useState('Identificación estudiantil oficial');
-  const [savedTeachingObjects, setSavedTeachingObjects] = useState<SavedObject[]>([
-    { id: 1, label: 'Escudo UNEV', desc: 'Isotipo institucional bordado', x: 25, y: 30, w: 90, h: 90, thumbnail: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&q=80&w=150' },
-    { id: 2, label: 'Telescopio de Aula', desc: 'Ubicado en el laboratorio de física', x: 55, y: 45, w: 100, h: 120, thumbnail: 'https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80&w=150' }
-  ]);
+  const [savedTeachingObjects, setSavedTeachingObjects] = useState<SavedObject[]>([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [drawStartPos, setDrawStartPos] = useState({ x: 0, y: 0 });
   const [tempBox, setTempBox] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
+  
+  // Control Remoto del Holograma
+  const [holoIp, setHoloIp] = useState('');
+  const [holoPort, setHoloPort] = useState(50200);
+  const [holoConnected, setHoloConnected] = useState(false);
+  const [holoStatusMsg, setHoloStatusMsg] = useState<string | null>(null);
+  const [holoToast, setHoloToast] = useState<string | null>(null);
+  const [clipNumber, setClipNumber] = useState(0);
   
   const canvasRef = useRef<HTMLDivElement | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
   const [wsConnected, setWsConnected] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const pipVideoRef = useRef<HTMLVideoElement | null>(null);
+  const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
+
+  const setVideoRef = (el: HTMLVideoElement | null) => {
+    videoRef.current = el;
+    if (el && cameraStream) {
+      el.srcObject = cameraStream;
+    }
+  };
+
+  const setPipVideoRef = (el: HTMLVideoElement | null) => {
+    pipVideoRef.current = el;
+    if (el && cameraStream) {
+      el.srcObject = cameraStream;
+    }
+  };
   const recognitionRef = useRef<any>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [dragOver, setDragOver] = useState(false);
+
+  const handleFileDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = () => setUploadedImage(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => setUploadedImage(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
 
   // Web Speech API: Reconocimiento de Voz (STT) en Navegador
   const startSpeechRecognition = () => {
@@ -166,24 +208,34 @@ export default function App() {
   // Webcam stream hook
   useEffect(() => {
     let stream: MediaStream | null = null;
-    if (cameraOn && currentScreen === 'assistant') {
+    if (cameraOn) {
       navigator.mediaDevices.getUserMedia({ video: true })
         .then((s) => {
           stream = s;
-          if (videoRef.current) {
-            videoRef.current.srcObject = s;
-          }
+          setCameraStream(s);
         })
         .catch((err) => {
           console.warn("No se pudo acceder a la cámara en el navegador:", err);
         });
+    } else {
+      setCameraStream(null);
     }
     return () => {
       if (stream) {
         stream.getTracks().forEach(track => track.stop());
       }
+      setCameraStream(null);
     };
-  }, [cameraOn, currentScreen]);
+  }, [cameraOn]);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.srcObject = cameraStream;
+    }
+    if (pipVideoRef.current) {
+      pipVideoRef.current.srcObject = cameraStream;
+    }
+  }, [cameraStream]);
 
   // Alertas personalizadas no bloqueantes
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -218,6 +270,15 @@ export default function App() {
         const voicesData = await voicesRes.json();
         if (voicesData.voices) setVoicesList(voicesData.voices);
       }
+      
+      // Obtener metadatos de entrenamiento visual
+      const metaRes = await fetch('/api/train/metadata');
+      if (metaRes.ok) {
+        const metaData = await metaRes.json();
+        if (metaData.items) {
+           setSavedTeachingObjects(metaData.items);
+        }
+      }
     } catch (err) {
       console.error("Error al obtener la configuración:", err);
     }
@@ -226,6 +287,7 @@ export default function App() {
   useEffect(() => {
     if (isUnlocked) {
       fetchConfig();
+      fetchHoloStatus();
       connectWebSocket();
     }
     return () => {
@@ -276,6 +338,8 @@ export default function App() {
             showToast("Persona detectada por la cámara.");
           } else if (data.event === 'person_left') {
             showToast("La persona se ha retirado.");
+          } else if (data.event === 'custom_object_detected') {
+            showToast("Objeto entrenado detectado por la cámara.");
           }
         } else if (data.type === 'error') {
           showToast(`Error: ${data.message}`);
@@ -315,13 +379,13 @@ export default function App() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          OLLAMA_MODEL: aiEngine === 'local' ? selectedLocalModel : null,
+          OLLAMA_MODEL: aiEngine === 'local' ? selectedLocalModel : "",
           LLM_PROVIDER: aiEngine === 'local' ? 'ollama' : apiProvider,
-          LLM_MODEL: aiEngine === 'api' ? apiModel : null,
+          LLM_MODEL: aiEngine === 'api' ? apiModel : "",
           OPENROUTER_API_KEY: aiEngine === 'api' ? apiKey : '',
           HOLOGRAM_CAMERA: yoloEnabled ? '1' : '0',
           YOLO_INTERVAL_SECONDS: yoloInterval,
-          YOLO_MODEL: 'yoloe26.pt',
+          YOLO_MODEL: 'yolo26n.pt',
           WHISPER_MODEL: whisperSize,
           PIPER_VOICE: piperVoice,
           HOLOGRAM_MODE: appearanceTheme
@@ -339,29 +403,7 @@ export default function App() {
   };
 
   // Verificar Contraseña de Acceso
-  const verifyPassword = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    try {
-      const response = await fetch('/api/verify-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password })
-      });
-      const data = await response.json();
-      if (data.status === 'ok') {
-        setIsUnlocked(true);
-        setAiSpokenText("Holograma listo para interactuar.");
-        setHighlightKeyword("");
-        setUserSpokenText("Presiona el botón para hablar.");
-      } else {
-        alert("Contraseña incorrecta. Acceso denegado.");
-      }
-    } catch (err) {
-      alert("Error al conectar con el servidor para la autenticación.");
-    }
-  };
-
-  useEffect(() => {
+useEffect(() => {
     if (appearanceTheme === 'dark') {
       setDarkMode(true);
     } else if (appearanceTheme === 'light') {
@@ -465,18 +507,10 @@ export default function App() {
       });
       
       if (response.ok) {
-        const newItems = boundingBoxes.map((box, idx) => ({
-          id: Date.now() + idx,
-          label: box.label || currentLabel,
-          desc: box.desc || currentDesc,
-          x: box.x,
-          y: box.y,
-          w: box.w,
-          h: box.h,
-          thumbnail: uploadedImage || ''
-        }));
-
-        setSavedTeachingObjects([...savedTeachingObjects, ...newItems]);
+        const data = await response.json();
+        if (data.items) {
+           setSavedTeachingObjects(data.items);
+        }
         setBoundingBoxes([]);
         setUploadedImage(null);
         showToast("¡Objeto guardado y entrenado con éxito!");
@@ -496,7 +530,7 @@ export default function App() {
         body: JSON.stringify({ vocabulary: terms })
       });
       if (response.ok) {
-        showToast("Vocabulario textual cargado al motor YOLOE.");
+        showToast("Vocabulario textual cargado al motor YOLO.");
       } else {
         showToast("Error al compilar el vocabulario.");
       }
@@ -542,35 +576,76 @@ export default function App() {
     setTimeout(() => setIsPlayingVoiceSample(false), 2500);
   };
 
-  // Si no está desbloqueado, muestra el modal de contraseña
-  if (!isUnlocked) {
-    return (
-      <div className="min-h-screen bg-[#0B0F19] text-white flex items-center justify-center font-sans">
-        <style>{customStyles}</style>
-        <form onSubmit={verifyPassword} className="w-11/12 max-w-md p-10 bg-slate-900/70 border border-slate-800 rounded-3xl shadow-2xl backdrop-blur-md text-center">
-          <h2 className="text-3xl font-extrabold mb-4 bg-gradient-to-r from-orange-400 to-[#E25C1D] bg-clip-text text-transparent">
-            Acceso Encriptado
-          </h2>
-          <p className="text-slate-400 text-sm mb-6">
-            Introduce la clave para habilitar la interfaz del holograma UNEV.
-          </p>
-          <div className="mb-6">
-            <input 
-              type="password" 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••" 
-              className="w-full py-3 px-4 text-center text-lg bg-slate-950 border border-slate-800 rounded-xl outline-none focus:border-[#E25C1D] focus:shadow-[0_0_10px_rgba(226,92,29,0.1)] transition-all"
-              autoFocus
-            />
-          </div>
-          <button type="submit" className="w-full py-3 bg-[#E25C1D] hover:bg-orange-600 active:scale-[0.98] text-white font-bold rounded-xl transition-all shadow-lg shadow-[#E25C1D]/20">
-            Desbloquear Consola
-          </button>
-        </form>
-      </div>
-    );
-  }
+  // Control Remoto del Holograma
+  const showHoloToast = (msg: string) => {
+    setHoloToast(msg);
+    setTimeout(() => setHoloToast(null), 3000);
+  };
+
+  const connectHologram = async () => {
+    if (!holoIp) { showHoloToast("Introduce una IP"); return; }
+    try {
+      const res = await fetch('/api/hologram/connect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ip: holoIp, port: holoPort })
+      });
+      const data = await res.json();
+      if (data.status === 'ok') {
+        setHoloConnected(true);
+        setHoloStatusMsg(`Conectado a ${data.ip}:${data.port}`);
+        showHoloToast(`Conectado a ${data.ip}`);
+      } else {
+        setHoloConnected(false);
+        showHoloToast(`Error: ${data.message}`);
+      }
+    } catch { showHoloToast("Error de conexión"); }
+  };
+
+  const disconnectHologram = async () => {
+    try {
+      const res = await fetch('/api/hologram/disconnect', { method: 'POST' });
+      const data = await res.json();
+      if (data.status === 'ok') {
+        setHoloConnected(false);
+        setHoloStatusMsg('Desconectado');
+        showHoloToast('Desconectado');
+      }
+    } catch { showHoloToast("Error al desconectar"); }
+  };
+
+  const sendHoloCommand = async (command: string, index?: number) => {
+    try {
+      const body: any = { command };
+      if (index !== undefined) body.index = index;
+      const res = await fetch('/api/hologram/command', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+      if (data.status === 'ok') {
+        showHoloToast(`Comando: ${command}${index !== undefined ? ' #'+index : ''}`);
+      } else {
+        showHoloToast(`Error: ${data.message}`);
+      }
+    } catch { showHoloToast("Error enviando comando"); }
+  };
+
+  const fetchHoloStatus = async () => {
+    try {
+      const res = await fetch('/api/hologram/status');
+      const data = await res.json();
+      setHoloConnected(data.connected);
+      if (data.connected) {
+        setHoloIp(data.ip);
+        setHoloPort(data.port);
+        setHoloStatusMsg(`Conectado a ${data.ip}:${data.port}`);
+      } else {
+        setHoloStatusMsg('Desconectado');
+      }
+    } catch { /* ignorar */ }
+  };
 
   return (
     <div className={`min-h-screen font-sans transition-colors duration-500 flex flex-col justify-between ${darkMode ? 'dark bg-[#0B0F19]' : 'bg-[#F4F6FA] text-[#1C2D5A]'}`}>
@@ -624,6 +699,12 @@ export default function App() {
             className={`font-semibold text-sm transition-all py-1.5 px-3.5 rounded-xl flex items-center gap-2 ${currentScreen === 'teaching' ? 'bg-[#E25C1D]/10 text-[#E25C1D] font-bold' : `hover:text-[#E25C1D] ${darkMode ? 'text-slate-300 hover:bg-slate-800/20' : 'text-[#5B6B6B] hover:bg-gray-200/50'}`}`}
           >
             Entrenar Visión
+          </button>
+          <button 
+            onClick={() => setCurrentScreen('remote')} 
+            className={`font-semibold text-sm transition-all py-1.5 px-3.5 rounded-xl flex items-center gap-2 ${currentScreen === 'remote' ? 'bg-[#E25C1D]/10 text-[#E25C1D] font-bold' : `hover:text-[#E25C1D] ${darkMode ? 'text-slate-300 hover:bg-slate-800/20' : 'text-[#5B6B6B] hover:bg-gray-200/50'}`}`}
+          >
+            Control
           </button>
           <button 
             onClick={() => setCurrentScreen('settings')} 
@@ -712,7 +793,7 @@ export default function App() {
               {yoloEnabled && cameraOn ? (
                 <div className="w-56 h-36 rounded-2xl overflow-hidden border border-slate-800 shadow-lg relative bg-slate-950 flex items-center justify-center">
                   <video 
-                    ref={videoRef}
+                    ref={setVideoRef}
                     autoPlay 
                     playsInline 
                     muted 
@@ -963,9 +1044,9 @@ export default function App() {
                 )}
               </div>
 
-              {/* Cámara y Visión (YOLOe26) */}
+              {/* Cámara y Visión (YOLO) */}
               <div className={`break-inside-avoid inline-block w-full mb-6 p-6 rounded-3xl border shadow-sm space-y-4 ${darkMode ? 'bg-[#131E3B] border-slate-800' : 'bg-white border-gray-200 text-slate-800'}`}>
-                <h3 className="font-bold text-sm uppercase tracking-wider text-[#E25C1D]">Detección Visual YOLOe26</h3>
+                <h3 className="font-bold text-sm uppercase tracking-wider text-[#E25C1D]">Detección Visual YOLO</h3>
                 <div className={`grid grid-cols-2 gap-2 p-1 rounded-xl ${darkMode ? 'bg-slate-900/60' : 'bg-gray-100'}`}>
                   <button 
                     onClick={() => setYoloEnabled(true)}
@@ -1050,7 +1131,150 @@ export default function App() {
           </div>
         )}
 
-        {/* PANTALLA 4: ENTRENAR VISIÓN */}
+        {/* PANTALLA 4: CONTROL REMOTO */}
+        {currentScreen === 'remote' && (
+          <div className={`w-full max-w-4xl space-y-6 py-4 ${darkMode ? 'text-slate-100' : 'text-slate-800'}`}>
+            <div className={`flex justify-between items-center pb-4 border-b ${darkMode ? 'border-slate-800' : 'border-gray-200'}`}>
+              <div>
+                <h1 className={`text-2xl font-black ${darkMode ? 'text-white' : 'text-[#1C2D5A]'}`}>Control Remoto del Holograma</h1>
+                <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Comandos TCP para el ventilador holográfico MISSYOU</p>
+              </div>
+            </div>
+
+            {holoToast && (
+              <div className="fixed bottom-6 right-6 z-50 bg-[#1C2D5A] border border-[#E25C1D]/30 text-white px-4 py-3 rounded-xl shadow-2xl text-sm font-semibold animate-bounce">
+                {holoToast}
+              </div>
+            )}
+
+            <div className="columns-1 md:columns-2 gap-6 space-y-6 md:space-y-0 [column-fill:balance]">
+              {/* Tarjeta: Conexión */}
+              <div className={`break-inside-avoid inline-block w-full mb-6 p-6 rounded-3xl border shadow-sm space-y-4 ${darkMode ? 'bg-[#131E3B] border-slate-800' : 'bg-white border-gray-200 text-slate-800'}`}>
+                <h3 className="font-bold text-sm uppercase tracking-wider text-[#E25C1D]">Conexión</h3>
+                <div className="space-y-3">
+                  <div>
+                    <label className={`text-xs font-semibold ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Dirección IP</label>
+                    <input type="text" value={holoIp}
+                      onChange={(e) => setHoloIp(e.target.value)}
+                      placeholder="10.10.10.1"
+                      className={`w-full text-sm p-3 rounded-xl border focus:outline-none focus:border-[#E25C1D] ${darkMode ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-gray-300 text-slate-800'}`}
+                    />
+                  </div>
+                  <div>
+                    <label className={`text-xs font-semibold ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Puerto</label>
+                    <input type="number" value={holoPort}
+                      onChange={(e) => setHoloPort(Number(e.target.value))}
+                      className={`w-full text-sm p-3 rounded-xl border focus:outline-none focus:border-[#E25C1D] ${darkMode ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-gray-300 text-slate-800'}`}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className={`w-2.5 h-2.5 rounded-full ${holoConnected ? 'bg-emerald-400 animate-pulse' : 'bg-rose-500 animate-pulse'}`}></span>
+                      <span className="text-xs font-bold">{holoConnected ? 'Conectado' : 'Desconectado'}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={connectHologram}
+                        className="px-4 py-2 bg-[#E25C1D] hover:bg-orange-600 text-white font-bold text-xs rounded-xl transition-all">
+                        Conectar
+                      </button>
+                      <button onClick={disconnectHologram}
+                        className={`px-4 py-2 text-xs font-bold rounded-xl transition-all ${darkMode ? 'bg-rose-500/20 hover:bg-rose-500/30 text-rose-400' : 'bg-rose-50 hover:bg-rose-100 text-rose-600'}`}>
+                        Desconectar
+                      </button>
+                    </div>
+                  </div>
+                  {holoStatusMsg && (
+                    <p className={`text-[10px] ${holoConnected ? 'text-emerald-400' : 'darkMode ? text-slate-500 : text-gray-500'}`}>{holoStatusMsg}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Tarjeta: Control de Reproducción */}
+              <div className={`break-inside-avoid inline-block w-full mb-6 p-6 rounded-3xl border shadow-sm space-y-4 ${darkMode ? 'bg-[#131E3B] border-slate-800' : 'bg-white border-gray-200 text-slate-800'}`}>
+                <h3 className="font-bold text-sm uppercase tracking-wider text-[#E25C1D]">Reproducción</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <button onClick={() => sendHoloCommand('start')}
+                    className="py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition-all">
+                    ▶ Iniciar
+                  </button>
+                  <button onClick={() => sendHoloCommand('shutdown')}
+                    className="py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl transition-all">
+                    ⏹ Detener
+                  </button>
+                  <button onClick={() => sendHoloCommand('pause')}
+                    className={`py-3 text-xs font-bold rounded-xl transition-all ${darkMode ? 'bg-slate-800 hover:bg-slate-700 text-slate-200' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}>
+                    ⏸ Pausa
+                  </button>
+                  <button onClick={() => sendHoloCommand('play')}
+                    className={`py-3 text-xs font-bold rounded-xl transition-all ${darkMode ? 'bg-slate-800 hover:bg-slate-700 text-slate-200' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}>
+                    ▶ Reanudar
+                  </button>
+                </div>
+                <button onClick={() => sendHoloCommand('loop_current')}
+                  className={`w-full py-3 text-xs font-bold rounded-xl transition-all ${darkMode ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20' : 'bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-200'}`}>
+                  🔁 Loop del Clip Actual
+                </button>
+              </div>
+
+              {/* Tarjeta: Navegación de Clips */}
+              <div className={`break-inside-avoid inline-block w-full mb-6 p-6 rounded-3xl border shadow-sm space-y-4 ${darkMode ? 'bg-[#131E3B] border-slate-800' : 'bg-white border-gray-200 text-slate-800'}`}>
+                <h3 className="font-bold text-sm uppercase tracking-wider text-[#E25C1D]">Navegación de Clips</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <button onClick={() => sendHoloCommand('prev_file')}
+                    className={`py-3 text-xs font-bold rounded-xl transition-all ${darkMode ? 'bg-slate-800 hover:bg-slate-700 text-slate-200' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}>
+                    ⏮ Anterior
+                  </button>
+                  <button onClick={() => sendHoloCommand('next_file')}
+                    className={`py-3 text-xs font-bold rounded-xl transition-all ${darkMode ? 'bg-slate-800 hover:bg-slate-700 text-slate-200' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}>
+                    ⏭ Siguiente
+                  </button>
+                </div>
+                <div className="flex items-center gap-2 pt-2">
+                  <label className={`text-xs font-semibold ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Clip #:</label>
+                  <input type="number" min={0} max={255} value={clipNumber}
+                    onChange={(e) => setClipNumber(Number(e.target.value))}
+                    className={`w-20 text-sm p-2 rounded-xl border focus:outline-none focus:border-[#E25C1D] text-center ${darkMode ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-gray-300 text-slate-800'}`}
+                  />
+                  <button onClick={() => sendHoloCommand('play_file', clipNumber)}
+                    className="px-4 py-2 bg-[#E25C1D] hover:bg-orange-600 text-white font-bold text-xs rounded-xl transition-all">
+                    Ir al Clip
+                  </button>
+                </div>
+              </div>
+
+              {/* Tarjeta: Brillo */}
+              <div className={`break-inside-avoid inline-block w-full mb-6 p-6 rounded-3xl border shadow-sm space-y-4 ${darkMode ? 'bg-[#131E3B] border-slate-800' : 'bg-white border-gray-200 text-slate-800'}`}>
+                <h3 className="font-bold text-sm uppercase tracking-wider text-[#E25C1D]">Brillo</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <button onClick={() => sendHoloCommand('brightness_down')}
+                    className={`py-3 text-xs font-bold rounded-xl transition-all ${darkMode ? 'bg-slate-800 hover:bg-slate-700 text-slate-200' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}>
+                    🔅 Bajar Brillo
+                  </button>
+                  <button onClick={() => sendHoloCommand('brightness_up')}
+                    className={`py-3 text-xs font-bold rounded-xl transition-all ${darkMode ? 'bg-slate-800 hover:bg-slate-700 text-slate-200' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}>
+                    🔆 Subir Brillo
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className={`p-6 rounded-3xl border shadow-sm space-y-3 ${darkMode ? 'bg-[#131E3B] border-slate-800' : 'bg-white border-gray-200 text-slate-800'}`}>
+              <h3 className="font-bold text-sm uppercase tracking-wider text-[#E25C1D]">Comandos Rápidos</h3>
+              <div className="flex flex-wrap gap-2">
+                {['start', 'play', 'pause', 'shutdown', 'loop_current', 'brightness_up', 'brightness_down', 'next_file', 'prev_file'].map((cmd) => (
+                  <button key={cmd}
+                    onClick={() => sendHoloCommand(cmd)}
+                    className={`px-3 py-1.5 text-[10px] font-bold rounded-lg transition-all ${darkMode ? 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700' : 'bg-gray-100 hover:bg-gray-200 text-gray-600 border border-gray-200'}`}>
+                    {cmd.replace(/_/g, ' ')}
+                  </button>
+                ))}
+              </div>
+              <p className="text-[10px] text-slate-500 pt-1">Protocolo MISSYOU | Puerto TCP 50200 | Comandos de 3 bytes</p>
+            </div>
+          </div>
+        )}
+
+        {/* PANTALLA 5: ENTRENAR VISIÓN */}
         {currentScreen === 'teaching' && (
           <div className={`w-full max-w-5xl space-y-6 py-4 ${darkMode ? 'text-slate-100' : 'text-slate-800'}`}>
             <div className={`pb-4 border-b ${darkMode ? 'border-slate-800' : 'border-gray-200'}`}>
@@ -1076,11 +1300,18 @@ export default function App() {
             {teachingTab === 'visual' ? (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
                 <div className="lg:col-span-8 flex flex-col space-y-4">
-                  <div className={`flex-1 rounded-3xl border-2 border-dashed p-6 flex flex-col items-center justify-center min-h-[350px] relative transition-all ${
+                  <div 
+                    onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                    onDragLeave={() => setDragOver(false)}
+                    onDrop={handleFileDrop}
+                    onClick={() => !uploadedImage && fileInputRef.current?.click()}
+                    className={`flex-1 rounded-3xl border-2 border-dashed p-6 flex flex-col items-center justify-center min-h-[350px] relative transition-all cursor-pointer ${
                     uploadedImage 
                       ? (darkMode ? 'border-[#E25C1D]/50 bg-slate-900/10' : 'border-[#E25C1D]/50 bg-orange-50')
-                      : (darkMode ? 'border-slate-800 bg-slate-900/10' : 'border-gray-300 bg-gray-50')
-                  }`}>
+                      : dragOver
+                        ? 'border-[#E25C1D] bg-[#E25C1D]/10'
+                        : (darkMode ? 'border-slate-800 bg-slate-900/10' : 'border-gray-300 bg-gray-50')
+                    }`}>
                     {uploadedImage ? (
                       <div className="relative max-w-full overflow-hidden select-none">
                         <img src={uploadedImage} alt="Referencia" className="max-h-[350px] rounded-xl object-contain pointer-events-none" />
@@ -1110,16 +1341,17 @@ export default function App() {
                       </div>
                     ) : (
                       <div className="text-center space-y-4 p-8">
-                        <p className="font-bold">Elige una imagen de ejemplo</p>
+                        <p className="font-bold">Arrastra una imagen o haz clic aquí</p>
+                        <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>O elige una imagen de ejemplo</p>
                         <div className="flex justify-center gap-2">
                           <button 
-                            onClick={() => setUploadedImage('https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&q=80&w=800')}
+                            onClick={(e) => { e.stopPropagation(); setUploadedImage('https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&q=80&w=800'); }}
                             className="px-3 py-1.5 bg-[#E25C1D]/10 text-[#E25C1D] text-xs font-bold rounded-lg border border-[#E25C1D]/20 hover:bg-[#E25C1D]/20"
                           >
                             Muestra: Carnet
                           </button>
                           <button 
-                            onClick={() => setUploadedImage('https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80&w=800')}
+                            onClick={(e) => { e.stopPropagation(); setUploadedImage('https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80&w=800'); }}
                             className="px-3 py-1.5 bg-[#E25C1D]/10 text-[#E25C1D] text-xs font-bold rounded-lg border border-[#E25C1D]/20 hover:bg-[#E25C1D]/20"
                           >
                             Muestra: Telescopio
@@ -1127,6 +1359,7 @@ export default function App() {
                         </div>
                       </div>
                     )}
+                    <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileSelect} className="hidden" />
                   </div>
 
                   {uploadedImage && (
@@ -1185,8 +1418,14 @@ export default function App() {
                       <div key={item.id} className={`p-2.5 rounded-2xl border flex items-center gap-3 ${darkMode ? 'bg-slate-900 border-slate-800' : 'bg-gray-50 border-gray-200'}`}>
                         <img src={item.thumbnail} alt={item.label} className="w-12 h-12 rounded-xl object-cover shrink-0" />
                         <div className="flex-1 min-w-0">
-                          <p className={`font-bold text-xs truncate ${darkMode ? 'text-white' : 'text-slate-800'}`}>{item.label}</p>
-                          <p className={`text-[10px] truncate ${darkMode ? 'text-gray-500' : 'text-gray-600'}`}>{item.desc}</p>
+                          <p className={`font-bold text-xs truncate ${darkMode ? 'text-white' : 'text-slate-800'}`}>
+                            <span className="text-[#E25C1D] uppercase text-[9px] mr-1">Clase:</span> 
+                            {item.label}
+                          </p>
+                          <p className={`text-[10px] truncate ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            <span className="font-semibold mr-1 opacity-70">Desc:</span>
+                            {item.desc}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -1238,10 +1477,12 @@ export default function App() {
 
             <div className="flex-1 min-w-0 flex flex-col justify-center gap-2 text-white relative">
               <div className="w-full h-36 rounded-xl overflow-hidden border border-slate-800 relative bg-slate-950 flex items-center justify-center">
-                <img 
-                  src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=350" 
-                  alt="Inferencia en tiempo real PIP" 
-                  className="w-full h-full object-cover opacity-60 pointer-events-none"
+                <video 
+                  ref={setPipVideoRef}
+                  autoPlay 
+                  playsInline 
+                  muted 
+                  className="w-full h-full object-cover opacity-80 pointer-events-none"
                 />
                 <div className="absolute top-1 left-1 bg-slate-900/95 border border-red-500/40 px-1.5 py-0.5 rounded-full flex items-center gap-1 text-[8px] text-white font-semibold">
                   <span className="h-1 w-1 rounded-full bg-red-500 animate-pulse"></span>
@@ -1272,6 +1513,9 @@ export default function App() {
         </button>
         <button onClick={() => setCurrentScreen('teaching')} className={`flex flex-col items-center gap-1 text-[10px] font-bold ${currentScreen === 'teaching' ? 'text-[#E25C1D]' : (darkMode ? 'text-slate-400' : 'text-[#5B6B6B]')}`}>
           Entrenar
+        </button>
+        <button onClick={() => setCurrentScreen('remote')} className={`flex flex-col items-center gap-1 text-[10px] font-bold ${currentScreen === 'remote' ? 'text-[#E25C1D]' : (darkMode ? 'text-slate-400' : 'text-[#5B6B6B]')}`}>
+          Control
         </button>
         <button onClick={() => setCurrentScreen('settings')} className={`flex flex-col items-center gap-1 text-[10px] font-bold ${currentScreen === 'settings' ? 'text-[#E25C1D]' : (darkMode ? 'text-slate-400' : 'text-[#5B6B6B]')}`}>
           Ajustes

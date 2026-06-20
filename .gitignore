@@ -31,9 +31,15 @@ piper_amd64.tar.gz
 piper_wrapper.sh
 static/
 models/
-
+.opencode/
+.claude/
+.codex/
 # Local runtime configuration.
 config.json
 
 # Graphify local cache and machine-specific markers.
 graphify-out/
+
+!data/
+!data/*
+!data/images/*

@@ -28,9 +28,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Obtener contraseña del archivo .env o usar valor por defecto
-CHAT_PASSWORD = os.getenv("CHAT_PASSWORD", "unev_admin_2026")
-
 active_connections: List[WebSocket] = []
 running_loop = None
 
@@ -67,9 +64,6 @@ def send_to_web_client(type_name: str, text: str, user_text: str = None):
     asyncio.run_coroutine_threadsafe(do_send(), running_loop)
 
 # --- Modelos Pydantic ---
-class PasswordVerify(BaseModel):
-    password: str
-
 class ConfigUpdate(BaseModel):
     OLLAMA_MODEL: Optional[str] = None
     WHISPER_MODEL: Optional[str] = None
@@ -99,12 +93,6 @@ class VocabularyPayload(BaseModel):
 
 # --- Endpoints REST API ---
 
-@app.post("/api/verify-password")
-def verify_password(payload: PasswordVerify):
-    if payload.password == CHAT_PASSWORD:
-        return {"status": "ok"}
-    return {"status": "error"}
-
 @app.get("/api/config")
 def get_config():
     config_path = "config.json"
@@ -121,7 +109,7 @@ def get_config():
         "WHISPER_MODEL": config_data.get("WHISPER_MODEL", "medium"),
         "HOLOGRAM_INPUT": config_data.get("HOLOGRAM_INPUT", "voice"),
         "HOLOGRAM_CAMERA": config_data.get("HOLOGRAM_CAMERA", "1"),
-        "YOLO_MODEL": config_data.get("YOLO_MODEL", "yoloe26.pt"),
+        "YOLO_MODEL": config_data.get("YOLO_MODEL", "yolo26n.pt"),
         "YOLO_INTERVAL_SECONDS": config_data.get("YOLO_INTERVAL_SECONDS", "1.0"),
         "LLM_PROVIDER": os.getenv("LLM_PROVIDER") or config_data.get("LLM_PROVIDER", "openrouter"),
         "OPENROUTER_API_KEY": os.getenv("OPENROUTER_API_KEY") or config_data.get("OPENROUTER_API_KEY", ""),
@@ -141,8 +129,9 @@ def update_config(payload: ConfigUpdate):
             pass
             
     if payload.OLLAMA_MODEL is not None:
-        config_data["OLLAMA_MODEL"] = payload.OLLAMA_MODEL
-        os.environ["OLLAMA_MODEL"] = str(payload.OLLAMA_MODEL) if payload.OLLAMA_MODEL else ""
+        val = payload.OLLAMA_MODEL if payload.OLLAMA_MODEL is not None else ""
+        config_data["OLLAMA_MODEL"] = val
+        os.environ["OLLAMA_MODEL"] = str(val)
     if payload.WHISPER_MODEL is not None:
         config_data["WHISPER_MODEL"] = payload.WHISPER_MODEL
         os.environ["WHISPER_MODEL"] = payload.WHISPER_MODEL
@@ -170,6 +159,23 @@ def update_config(payload: ConfigUpdate):
     if payload.HOLOGRAM_MODE is not None:
         config_data["HOLOGRAM_MODE"] = payload.HOLOGRAM_MODE
         os.environ["HOLOGRAM_MODE"] = payload.HOLOGRAM_MODE
+        
+    # Agrega parámetros por defecto si faltan en config_data
+    default_config = {
+        "OLLAMA_MODEL": "",
+        "WHISPER_MODEL": "small",
+        "HOLOGRAM_INPUT": "voice",
+        "HOLOGRAM_CAMERA": "1",
+        "YOLO_MODEL": "yolo26n.pt",
+        "YOLO_INTERVAL_SECONDS": "0.6",
+        "LLM_PROVIDER": "openrouter",
+        "OPENROUTER_API_KEY": "",
+        "PIPER_VOICE": "es_MX-claude-high.onnx",
+        "HOLOGRAM_MODE": "dark"
+    }
+    for k, v in default_config.items():
+        if k not in config_data:
+            config_data[k] = v
         
     try:
         with open(config_path, "w", encoding="utf-8") as f:
@@ -242,29 +248,57 @@ def train_image(payload: TrainImagePayload):
     print(f"[YOLO Training] Received training image with {len(payload.boundingBoxes)} bounding boxes.")
     try:
         os.makedirs("data", exist_ok=True)
+        os.makedirs("data/images", exist_ok=True)
         meta_path = "data/training_metadata.json"
         existing = []
         if os.path.exists(meta_path):
             with open(meta_path, "r", encoding="utf-8") as f:
                 existing = json.load(f)
         
+        # Save image
+        image_data = payload.image
+        import base64
+        image_filename = f"image_{int(time.time())}.jpg"
+        image_path = os.path.join("data/images", image_filename)
+        
+        if image_data and "base64," in image_data:
+            header, encoded = image_data.split("base64,", 1)
+            with open(image_path, "wb") as f:
+                f.write(base64.b64decode(encoded))
+        
+        thumbnail_url = f"/data/images/{image_filename}" if image_data else ""
+        
         for box in payload.boundingBoxes:
+            new_id = int(time.time() * 1000)
             existing.append({
+                "id": new_id,
                 "label": box.label,
                 "desc": box.desc,
                 "x": box.x,
                 "y": box.y,
                 "w": box.w,
                 "h": box.h,
+                "thumbnail": thumbnail_url,
                 "timestamp": time.time()
             })
             
         with open(meta_path, "w", encoding="utf-8") as f:
             json.dump(existing, f, indent=4)
             
-        return {"status": "ok"}
+        return {"status": "ok", "items": existing}
     except Exception as e:
         return {"status": "error", "message": str(e)}
+
+@app.get("/api/train/metadata")
+def get_training_metadata():
+    meta_path = "data/training_metadata.json"
+    if os.path.exists(meta_path):
+        try:
+            with open(meta_path, "r", encoding="utf-8") as f:
+                return {"status": "ok", "items": json.load(f)}
+        except:
+            pass
+    return {"status": "ok", "items": []}
 
 @app.post("/api/train/vocabulary")
 def train_vocabulary(payload: VocabularyPayload):
@@ -274,6 +308,107 @@ def train_vocabulary(payload: VocabularyPayload):
         with open("data/open_vocabulary.txt", "w", encoding="utf-8") as f:
             f.write(payload.vocabulary)
         return {"status": "ok"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+class HologramConnect(BaseModel):
+    ip: str
+    port: Optional[int] = 50200
+
+class HologramCommand(BaseModel):
+    command: str
+    index: Optional[int] = None
+
+# --- Control Remoto del Holograma (singleton TCP) ---
+
+_holo_controller: Optional["HologramFanController"] = None
+
+def _get_holo():
+    global _holo_controller
+    if _holo_controller is None:
+        from hologram_controller import HologramFanController
+        _holo_controller = HologramFanController(verbose=False)
+    return _holo_controller
+
+@app.post("/api/hologram/connect")
+def holo_connect(payload: HologramConnect):
+    try:
+        fan = _get_holo()
+        fan.ip = payload.ip
+        fan.port = payload.port or 50200
+        fan.connect()
+        return {"status": "ok", "ip": payload.ip, "port": fan.port}
+    except Exception as e:
+        return {"status": "error", "message": str(e), "ip": payload.ip}
+
+@app.post("/api/hologram/disconnect")
+def holo_disconnect():
+    try:
+        fan = _get_holo()
+        fan.disconnect()
+        return {"status": "ok"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.post("/api/hologram/command")
+def holo_command(payload: HologramCommand):
+    try:
+        fan = _get_holo()
+        cmd = payload.command.lower()
+        if cmd == "start":
+            fan.start()
+        elif cmd == "shutdown":
+            fan.shutdown()
+        elif cmd == "pause":
+            fan.pause()
+        elif cmd == "play":
+            fan.play()
+        elif cmd == "loop_current":
+            fan.loop_current()
+        elif cmd == "play_file":
+            if payload.index is None:
+                return {"status": "error", "message": "Se requiere 'index' para play_file"}
+            fan.play_file(payload.index)
+        elif cmd == "next_file":
+            fan.next_file()
+        elif cmd == "prev_file":
+            fan.prev_file()
+        elif cmd == "brightness_up":
+            fan.brightness_up()
+        elif cmd == "brightness_down":
+            fan.brightness_down()
+        else:
+            return {"status": "error", "message": f"Comando desconocido: {cmd}"}
+        return {"status": "ok", "command": cmd, "index": payload.index}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.get("/api/hologram/status")
+def holo_status():
+    fan = _get_holo()
+    import call
+    return {
+        "connected": fan.is_connected,
+        "ip": getattr(fan, "ip", ""),
+        "port": getattr(fan, "port", 50200),
+        "ai_paused": getattr(call, "_hologram_paused", False),
+    }
+
+@app.post("/api/hologram/pause_ai")
+def pause_ai():
+    try:
+        import call
+        call.pause_hologram()
+        return {"status": "ok", "ai_paused": True}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.post("/api/hologram/resume_ai")
+def resume_ai():
+    try:
+        import call
+        call.resume_hologram()
+        return {"status": "ok", "ai_paused": False}
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
@@ -291,6 +426,9 @@ def read_root():
 # Crear directorio de assets si no existe y montar de forma segura
 os.makedirs("static/assets", exist_ok=True)
 app.mount("/assets", StaticFiles(directory="static/assets"), name="assets")
+
+os.makedirs("data", exist_ok=True)
+app.mount("/data", StaticFiles(directory="data"), name="data")
 
 @app.get("/{path:path}")
 def read_all_other_paths(path: str):

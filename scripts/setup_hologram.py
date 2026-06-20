@@ -41,7 +41,7 @@ hermes_theme = Theme(
 )
 
 console = Console(theme=hermes_theme)
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 CONFIG_FILE = BASE_DIR / "config.json"
 
 # Constantes de consumo de VRAM en Megabytes (MB)
@@ -244,7 +244,7 @@ def configure_vision():
         return False, None, 0, 0
 
     console.print(
-        "[success]Visión activada con modelo predeterminado: yoloe26.pt (~80 MB VRAM)[/success]"
+        "[success]Visión activada con modelo predeterminado: yolo26n.pt (~80 MB VRAM)[/success]"
     )
 
     # Preguntar por el ratio de Frame Skipping para optimizar rendimiento
@@ -252,7 +252,7 @@ def configure_vision():
         "Ratio de 'Frame Skipping' (procesar 1 de cada X fotogramas)", default=5
     )
 
-    return True, "yoloe26.pt", frame_skipping, VISION_VRAM
+    return True, "yolo26n.pt", frame_skipping, VISION_VRAM
 
 
 def run_setup():
@@ -342,7 +342,7 @@ def run_setup():
             "WHISPER_MODEL": ear_model,
             "HOLOGRAM_INPUT": "voice",
             "HOLOGRAM_CAMERA": "1" if vision_active else "0",
-            "YOLO_MODEL": yolo_model if vision_active else "yoloe26.pt",
+            "YOLO_MODEL": yolo_model if vision_active else "yolo26n.pt",
             "YOLO_INTERVAL_SECONDS": str(frame_skip / 30.0) if vision_active else "1.0",
         }
 
