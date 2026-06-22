@@ -52,7 +52,7 @@ if CONFIG_FILE.exists():
         with CONFIG_FILE.open("r", encoding="utf-8") as f:
             config_data = json.load(f)
             for key, val in config_data.items():
-                if val is not None:
+                if val is not None and str(val) != "" and not os.environ.get(key):
                     os.environ[key] = str(val)
     except Exception as e:
         print(f"AVISO: No se pudo cargar {CONFIG_FILE.name}: {e}")
@@ -357,34 +357,29 @@ def play_wav_file(wav_path):
     return False
 
 
-def speak_with_piper(text):
-    """Use Piper TTS and play the generated WAV file on the current OS."""
+def _piper_available():
+    """True si Piper y su modelo de voz están listos para usarse."""
+    try:
+        if not get_piper_command_args():
+            return False
+        model_path = get_piper_model_path()
+        return Path(model_path).exists() and Path(f"{model_path}.json").exists()
+    except Exception:
+        return False
+
+
+def _piper_synth_to_wav(text):
+    """Sintetiza *text* a un WAV temporal con Piper. Devuelve la ruta (Path) o
+    ``None`` si Piper no está disponible o falla. NO reproduce: separar síntesis
+    de reproducción permite ir generando el siguiente fragmento mientras suena el
+    actual (pipeline), evitando la pausa tras cada punto."""
     piper_command_args = get_piper_command_args()
     if not piper_command_args:
-        if not _is_quiet():
-            print("AVISO: No encontré Piper. Intentaré usar una voz nativa del sistema.")
-            print(get_piper_install_hint())
-        return False
+        return None
 
     model_path = get_piper_model_path()
-
-    # Regla A: pathlib for path checks
-    if not Path(model_path).exists():
-        if not _is_quiet():
-            print(
-                f"ERROR: No encontré la voz {model_path}. "
-                "Descarga una voz de Piper en español o define PIPER_MODEL_PATH."
-            )
-        return False
-
-    config_path = Path(f"{model_path}.json")
-    if not config_path.exists():
-        if not _is_quiet():
-            print(
-                f"ERROR: Falta {config_path}. "
-                "Piper necesita el archivo .onnx y su .onnx.json correspondiente."
-            )
-        return False
+    if not Path(model_path).exists() or not Path(f"{model_path}.json").exists():
+        return None
 
     temp_wav = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
     wav_path = Path(temp_wav.name)  # Regla A
@@ -425,25 +420,36 @@ def speak_with_piper(text):
         if result.returncode != 0:
             if not _is_quiet():
                 print("AVISO: Piper no pudo generar la voz.")
-            if result.stderr.strip():
-                if not _is_quiet():
+                if result.stderr.strip():
                     print(result.stderr.strip())
-            return False
+            wav_path.unlink(missing_ok=True)
+            return None
 
-        return play_wav_file(str(wav_path))
+        return wav_path
     except subprocess.TimeoutExpired:
         if not _is_quiet():
             print("AVISO: Piper tardó demasiado generando la voz.")
-        return False
+        wav_path.unlink(missing_ok=True)
+        return None
     except Exception as error:
         if not _is_quiet():
-            print(f"Error reproduciendo voz con Piper: {error}")
+            print(f"Error generando voz con Piper: {error}")
+        wav_path.unlink(missing_ok=True)
+        return None
+
+
+def speak_with_piper(text):
+    """Use Piper TTS and play the generated WAV file on the current OS."""
+    wav_path = _piper_synth_to_wav(text)
+    if wav_path is None:
+        if not _is_quiet():
+            print("AVISO: No pude generar voz con Piper. Intentaré una voz nativa del sistema.")
+            print(get_piper_install_hint())
         return False
+    try:
+        return play_wav_file(str(wav_path))
     finally:
-        try:
-            wav_path.unlink()  # Regla A
-        except OSError:
-            pass
+        wav_path.unlink(missing_ok=True)  # Regla A
 
 
 def speak_with_windows_voice(text):
@@ -563,62 +569,81 @@ def _split_into_chunks(text):
     return chunks
 
 
-def speak_worker(q):
-    """Worker de hilo que consume y habla los fragmentos secuencialmente."""
-    while True:
-        if _hologram_paused:
-            while not q.empty():
-                try:
-                    q.get_nowait()
-                    q.task_done()
-                except Exception:
-                    pass
-            break
-        chunk = q.get()
-        if chunk is None:
-            q.task_done()
-            break
+def _speak_chunk_os(chunk):
+    """Reproduce un fragmento con el TTS nativo del SO (fallback sin Piper)."""
+    tts_backend = os.getenv("TTS_BACKEND", "auto").lower().strip()
+    system_name = platform.system()
+    try:
+        if system_name == "Windows" and tts_backend in ("auto", "windows", "native"):
+            if speak_with_windows_voice(chunk):
+                return True
+        if is_wsl() and tts_backend in ("auto", "windows", "native"):
+            if speak_with_windows_voice(chunk):
+                return True
+        if system_name == "Linux" and tts_backend in (
+            "auto", "linux", "native", "espeak"
+        ):
+            if speak_with_linux_tts(chunk):
+                return True
+        if not _is_quiet():
+            print(f"AVISO: No pude reproducir voz para el fragmento: {chunk}")
+    except Exception as e:
+        if not _is_quiet():
+            print(f"Error en el reproductor de voz: {e}")
+    return False
 
-        tts_backend = os.getenv("TTS_BACKEND", "auto").lower().strip()
-        system_name = platform.system()
 
-        try:
+def _render_chunks(chunks):
+    """Sintetiza y reproduce los fragmentos de voz.
+
+    Con Piper usa un *pipeline*: un hilo sintetiza el siguiente fragmento
+    mientras el actual se está reproduciendo, de modo que NO hay pausa tras cada
+    punto/oración (antes se sintetizaba y reproducía en serie). Si Piper no está
+    disponible, cae al TTS nativo del sistema fragmento por fragmento.
+    """
+    tts_backend = os.getenv("TTS_BACKEND", "auto").lower().strip()
+    use_piper = tts_backend in ("auto", "piper") and _piper_available()
+
+    if not use_piper:
+        for chunk in chunks:
+            if _hologram_paused:
+                return
             if not _is_quiet():
                 print(f"\nSpeaking chunk: {chunk}")
-            if tts_backend in ["auto", "piper"]:
-                if speak_with_piper(chunk):
-                    continue
-                if tts_backend == "piper":
-                    continue
+            _speak_chunk_os(chunk)
+        return
 
-            if system_name == "Windows" and tts_backend in [
-                "auto",
-                "windows",
-                "native",
-            ]:
-                if speak_with_windows_voice(chunk):
-                    continue
+    # --- Pipeline Piper: síntesis adelantada + reproducción ordenada ---
+    wav_q = queue.Queue(maxsize=2)
+    _SENTINEL = object()
 
-            if is_wsl() and tts_backend in ["auto", "windows", "native"]:
-                if speak_with_windows_voice(chunk):
-                    continue
+    def _synth():
+        for chunk in chunks:
+            if _hologram_paused:
+                break
+            wav_q.put((chunk, _piper_synth_to_wav(chunk)))
+        wav_q.put(_SENTINEL)
 
-            if system_name == "Linux" and tts_backend in [
-                "auto",
-                "linux",
-                "native",
-                "espeak",
-            ]:
-                if speak_with_linux_tts(chunk):
-                    continue
+    threading.Thread(target=_synth, args=(), daemon=True).start()
 
-            if not _is_quiet():
-                print(f"AVISO: No pude reproducir voz para el fragmento: {chunk}")
-        except Exception as e:
-            if not _is_quiet():
-                print(f"Error en el reproductor de voz: {e}")
-        finally:
-            q.task_done()
+    while True:
+        item = wav_q.get()
+        if item is _SENTINEL:
+            break
+        chunk, wav_path = item
+        if _hologram_paused:
+            if wav_path is not None:
+                wav_path.unlink(missing_ok=True)
+            continue
+        if not _is_quiet():
+            print(f"\nSpeaking chunk: {chunk}")
+        if wav_path is None:
+            _speak_chunk_os(chunk)  # fallback para ese fragmento
+        else:
+            try:
+                play_wav_file(str(wav_path))
+            finally:
+                wav_path.unlink(missing_ok=True)
 
 
 def speak(text, blocking=True):
@@ -641,41 +666,18 @@ def speak(text, blocking=True):
     # El holograma muestra la animación de "hablando" mientras dura el TTS.
     hologram.set_state("speaking")
 
-    try:
-        q = queue.Queue()
-        for chunk in chunks:
-            q.put(chunk)
-        q.put(None)  # Sentinel de finalización
-
-        if blocking:
-            # Iniciar hilo de reproducción y esperar a que termine
-            worker_thread = threading.Thread(
-                target=speak_worker, args=(q,), daemon=True
-            )
-            worker_thread.start()
-            q.join()
+    def _run():
+        try:
+            _render_chunks(chunks)
+        finally:
             speak_lock.release()
             hologram.set_state("idle")
-        else:
-            # En modo no-bloqueante, el worker libera el lock al terminar
-            def _non_blocking_worker(q, lock):
-                try:
-                    speak_worker(q)
-                    q.join()
-                finally:
-                    lock.release()
-                    hologram.set_state("idle")
 
-            worker_thread = threading.Thread(
-                target=_non_blocking_worker, args=(q, speak_lock), daemon=True
-            )
-            worker_thread.start()
-            # NO liberar el lock aquí — el worker lo hará al terminar
-            return
-    except Exception:
-        speak_lock.release()
-        hologram.set_state("idle")
-        raise
+    if blocking:
+        _run()
+    else:
+        # No-bloqueante (p. ej. web): reproducir en un hilo; libera el lock al final.
+        threading.Thread(target=_run, daemon=True).start()
 
 
 # ======================================================================
@@ -709,18 +711,19 @@ def _build_camera_context(analysis):
 
     parts = []
     pc = active_analysis.get("person_count", 0)
-    if pc > 0:
-        parts.append(f"Personas detectadas frente a ti: {pc}")
+    if pc == 1:
+        parts.append("Veo a una persona frente a ti en este momento.")
+    elif pc > 1:
+        parts.append(f"Veo a {pc} personas frente a ti en este momento.")
     fd = active_analysis.get("face_description")
     if fd:
-        parts.append(f"Descripción facial: {fd}")
-    cc = active_analysis.get("custom_count", 0)
+        parts.append(fd)
     co = active_analysis.get("custom_objects", [])
-    if cc > 0:
+    if co:
         labels = list({o["label"] for o in co})
-        parts.append(f"Personas u objetos específicos que reconozco visualmente: {', '.join(labels[:5])}")
+        parts.append(f"Objetos que reconozco visualmente frente a ti: {', '.join(labels[:5])}")
     if not parts:
-        parts.append("No veo a nadie ni nada específico en este momento.")
+        parts.append("No veo a nadie frente a ti en este momento.")
     return "\n".join(parts)
 
 def _is_visual_question(user_input):
@@ -847,13 +850,29 @@ def handle_command(user_input):
 
 _last_custom_speak_times = {}
 
+# Instancia activa del detector de cámara (para exponer el feed anotado al frontend).
+_camera_detector = None
+
+
+def get_latest_camera_jpeg():
+    """Return the latest annotated camera frame (JPEG bytes) or None."""
+    if _camera_detector is None:
+        return None
+    return _camera_detector.get_latest_jpeg()
+
+
 def _camera_detection_callback(event, count, analysis=None):
     """Handle YOLO detection events from the background camera thread."""
-    global ai_busy, _last_camera_analysis, _last_custom_speak_times
+    global ai_busy, _last_camera_analysis, _last_custom_speak_times, _person_present
     if _hologram_paused:
         return
     analysis = analysis or {}
     _last_camera_analysis = analysis
+    # Presencia para el modo presentación (se actualiza aunque la IA esté ocupada).
+    if event in ("person_entered", "group_detected"):
+        _person_present = True
+    elif event == "person_left":
+        _person_present = False
     if ai_busy or speak_lock.locked():
         if event == "person_left":
             presence_manager.force_person_left()
@@ -863,16 +882,9 @@ def _camera_detection_callback(event, count, analysis=None):
 
     if event == "person_entered":
         if presence_manager.should_greet(True):
-            greeting = get_greeting(CURRENT_MODE)
-            # Personalize greeting if custom identity is available
-            custom_objs = analysis.get("custom_objects", [])
-            labels = list({o["label"] for o in custom_objs})
-            if labels:
-                greeting = f"¡Hola {labels[0]}! " + greeting.replace("¡Hola! ", "").replace("¡Hola ", "")
-                # Register greeting timestamp to prevent immediate custom object double announcements
-                for lbl in labels:
-                    _last_custom_speak_times[lbl] = time.time()
-            speak(greeting, blocking=False)
+            # Saludo genérico de presencia: el holograma reconoce que llegó una
+            # persona, sin atribuir ninguna identidad concreta.
+            speak(get_greeting(CURRENT_MODE), blocking=False)
 
     elif event == "group_detected":
         if presence_manager.should_greet_group():
@@ -926,7 +938,9 @@ def start_camera_thread():
         )
         return None
 
+    global _camera_detector
     detector = YoloPersonDetector()
+    _camera_detector = detector
 
     thread = threading.Thread(
         target=detector.run_continuous,
@@ -953,7 +967,7 @@ def chat_to_voice():
     )
     print("Modes: 'modo jueces', 'modo expo', 'modo admisiones', 'modo normal'.")
     print(get_backend_status())
-    print("Ollama recomendado para este setup: gemma4:e4b.")
+    print("Ollama recomendado para este equipo: gemma3:1b (el mas rapido en CPU; modelos mayores hacen timeout).")
 
     while True:
         hologram.set_state("idle")
@@ -981,6 +995,98 @@ def chat_to_voice():
             ai_busy = False
 
 
+# ======================================================================
+# Activación de la escucha (push-to-talk / modo presentación)
+# ======================================================================
+#
+# Modos vía HOLOGRAM_VOICE_TRIGGER (cambiables en caliente con set_trigger_mode):
+#   ptt           -> push-to-talk: escucha SOLO cuando se solicita (botón del
+#                    orbe en la WebApp o ENTER en la terminal). Lo más fiable en
+#                    lugares ruidosos.
+#   presentation  -> el holograma escucha y responde de forma continua, pero solo
+#                    mientras la cámara detecta gente delante. Manos libres.
+#   auto          -> escucha continua siempre (sin depender de la cámara).
+
+# Evento que dispara una escucha puntual. Lo activan el botón de la WebApp
+# (vía main.py -> request_listen) o ENTER en la terminal.
+_listen_requested = threading.Event()
+
+# main.py lo pone en True al lanzar voice_loop en un hilo del servidor web, para
+# no leer stdin (la terminal del servidor) como push-to-talk.
+WEB_MODE = False
+
+# Modo de activación actual (dinámico: la WebApp puede cambiarlo sin reiniciar).
+_voice_trigger_mode = os.getenv("HOLOGRAM_VOICE_TRIGGER", "ptt").lower().strip()
+if _voice_trigger_mode not in ("ptt", "presentation", "auto"):
+    _voice_trigger_mode = "ptt"
+
+# Lo actualiza la cámara (_camera_detection_callback): ¿hay alguien delante?
+_person_present = False
+
+
+def request_listen():
+    """Solicita una escucha puntual (push-to-talk remoto, p. ej. la WebApp)."""
+    _listen_requested.set()
+
+
+def set_trigger_mode(mode):
+    """Cambia en caliente el modo de activación de voz. Devuelve el modo final."""
+    global _voice_trigger_mode
+    mode = (mode or "").lower().strip()
+    if mode in ("ptt", "presentation", "auto"):
+        _voice_trigger_mode = mode
+        if not _is_quiet():
+            print(f"[VOZ] Modo de activación -> {mode}")
+    return _voice_trigger_mode
+
+
+def get_trigger_mode():
+    """Devuelve el modo de activación de voz actual."""
+    return _voice_trigger_mode
+
+
+def _stdin_ptt_reader():
+    """Lee ENTER de la terminal y solicita una escucha (push-to-talk en CLI)."""
+    while True:
+        try:
+            if sys.stdin.readline() == "":
+                break  # EOF: terminal cerrada
+        except Exception:
+            break
+        request_listen()
+
+
+def _wait_for_trigger():
+    """Bloquea hasta que toque escuchar, según el modo dinámico actual.
+
+    Devuelve ``True`` si hay que escuchar, ``False`` si hay que reintentar el
+    bucle (holograma en pausa o cambio de modo: se reevalúa en la próxima vuelta).
+    """
+    mode = _voice_trigger_mode
+
+    if mode == "auto":
+        return True
+
+    if mode == "presentation":
+        # Escuchar de forma continua, pero solo mientras la cámara vea gente.
+        # El botón del orbe también puede forzar una escucha puntual.
+        while _voice_trigger_mode == "presentation" and not _hologram_paused:
+            if _person_present:
+                return True
+            if _listen_requested.is_set():
+                _listen_requested.clear()
+                return True
+            time.sleep(0.3)
+        return False
+
+    # ptt: esperar la solicitud (botón del orbe o ENTER).
+    while _voice_trigger_mode == "ptt" and not _hologram_paused:
+        if _listen_requested.wait(timeout=0.5):
+            _listen_requested.clear()
+            return True
+    return False
+
+
 def voice_loop():
     """Voice input loop: microphone → Whisper → LLM → TTS (Regla B: sounddevice)."""
     try:
@@ -1005,12 +1111,20 @@ def voice_loop():
 
     listener = WhisperListener()
 
+    # Lector de teclado para push-to-talk en CLI (ENTER para hablar). En modo
+    # web el disparador llega por WebSocket, así que no tocamos stdin.
+    if not WEB_MODE and sys.stdin and sys.stdin.isatty():
+        threading.Thread(target=_stdin_ptt_reader, daemon=True).start()
+        if not _is_quiet():
+            print("[PTT] Pulsa ENTER para hablar.")
+
     if not _is_quiet():
         print("--- UNEV Hologram (Voz) ---")
+        print(f"Modo de activación: {_voice_trigger_mode}")
         print("Habla al micrófono. Di 'salir' o 'exit' para terminar.")
     print(get_stt_status())
     print(get_backend_status())
-    print("Ollama recomendado para este setup: gemma4:e4b.")
+    print("Ollama recomendado para este equipo: gemma3:1b (el mas rapido en CPU; modelos mayores hacen timeout).")
 
     # Pre-load the Whisper model so the first utterance is fast
     if not _is_quiet():
@@ -1023,6 +1137,13 @@ def voice_loop():
     while True:
         if _hologram_paused:
             time.sleep(0.5)
+            continue
+
+        # Esperar el disparador de activación según el modo actual (ptt /
+        # presentation / auto). Bloquea hasta que el botón/ENTER soliciten
+        # escuchar, o (en presentación) hasta que la cámara vea gente.
+        hologram.set_state("idle")
+        if not _wait_for_trigger():
             continue
 
         if not _is_quiet():

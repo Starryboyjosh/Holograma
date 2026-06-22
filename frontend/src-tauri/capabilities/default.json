@@ -1,0 +1,13 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Permisos de la ventana principal y de las ventanas widget desprendibles.",
+  "windows": ["main", "widget-*"],
+  "permissions": [
+    "core:default",
+    "core:webview:allow-create-webview-window",
+    "core:window:allow-set-focus",
+    "core:window:allow-close",
+    "core:window:allow-set-title"
+  ]
+}

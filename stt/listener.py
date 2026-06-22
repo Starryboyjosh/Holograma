@@ -24,6 +24,35 @@ from utils import _env, _env_float, _env_int, _is_quiet, configure_utf8_stdio
 configure_utf8_stdio()
 
 
+# Frases que Whisper suele "alucinar" cuando sólo hay silencio, música o ruido.
+# Se descartan para que la IA no responda a comandos inexistentes.
+_HALLUCINATION_PHRASES = {
+    "gracias",
+    "gracias.",
+    "gracias por ver el video",
+    "gracias por ver el video.",
+    "¡gracias por ver el video!",
+    "subtítulos realizados por la comunidad de amara.org",
+    "subtitulos realizados por la comunidad de amara.org",
+    "subtítulos por la comunidad de amara.org",
+    "¡suscríbete!",
+    "suscríbete",
+    "más información en www.alimmenta.com",
+}
+
+
+def _looks_like_hallucination(text):
+    """Return True if *text* is empty or a known Whisper silence-hallucination."""
+    cleaned = text.strip().lower()
+    if not cleaned:
+        return True
+    # Una sola "palabra" muy corta sin contenido real (puntuación, ruido).
+    stripped = cleaned.strip(".,!¡¿? ")
+    if len(stripped) <= 1:
+        return True
+    return cleaned in _HALLUCINATION_PHRASES
+
+
 class WhisperListener:
     """Record from the microphone and transcribe with Faster-Whisper.
 
@@ -57,14 +86,27 @@ class WhisperListener:
         self.language = language or _env("WHISPER_LANGUAGE", "es")
         self.sample_rate = sample_rate or _env_int("WHISPER_SAMPLE_RATE", 16000)
         self.silence_threshold = silence_threshold or _env_float(
-            "WHISPER_SILENCE_THRESHOLD", 0.03
+            "WHISPER_SILENCE_THRESHOLD", 0.02
         )
         self.silence_duration = silence_duration or _env_float(
-            "WHISPER_SILENCE_DURATION", 2.0
+            "WHISPER_SILENCE_DURATION", 1.2
         )
         self.max_record_seconds = max_record_seconds or _env_float(
             "WHISPER_MAX_RECORD_SECONDS", 12.0
         )
+        # Tiempo máximo esperando a que la persona EMPIECE a hablar antes de
+        # descartar el intento (evita transcribir silencio puro en bucle).
+        self.max_wait_seconds = _env_float("WHISPER_MAX_WAIT_SECONDS", 6.0)
+        # Duración mínima de habla útil; por debajo se considera ruido y se ignora.
+        self.min_speech_seconds = _env_float("WHISPER_MIN_SPEECH_SECONDS", 0.4)
+        # Calibración del ruido ambiente al inicio de cada captura: se mide el RMS
+        # del entorno durante unos instantes y el umbral de silencio se eleva por
+        # encima de ese piso (umbral adaptativo). Imprescindible en lugares
+        # ruidosos, donde un umbral fijo nunca detecta el fin del habla.
+        self.calibration_seconds = _env_float("WHISPER_CALIBRATION_SECONDS", 0.4)
+        # Factor multiplicativo sobre el ruido ambiente medido. El umbral final es
+        # max(silence_threshold, ruido * noise_factor).
+        self.noise_factor = _env_float("WHISPER_NOISE_FACTOR", 2.5)
 
         self._model = None
 
@@ -127,6 +169,13 @@ class WhisperListener:
     def _record_until_silence(self):
         """Record audio from the default microphone until silence is detected.
 
+        Usa un único ``sd.InputStream`` continuo con callback + cola en vez de
+        abrir/cerrar el stream por trozos (``sd.rec``/``sd.wait``). Esto elimina
+        los huecos muertos entre trozos (que cortaban sílabas) y los *stalls* del
+        driver de audio que hacían "trabar" la app. Además calibra el ruido
+        ambiente para un umbral adaptativo y conserva un pre-roll para no perder
+        la primera sílaba.
+
         Returns a numpy array of shape ``(samples,)`` with float32 values.
         """
         try:
@@ -137,48 +186,112 @@ class WhisperListener:
                 "Ejecuta: pip install sounddevice"
             ) from error
 
-        chunk_duration = 0.5  # seconds per chunk
-        chunk_samples = int(self.sample_rate * chunk_duration)
-        max_chunks = int(self.max_record_seconds / chunk_duration)
+        import queue as _queue
+        from collections import deque
 
-        recorded_chunks = []
-        silent_chunks = 0
-        silence_chunks_needed = int(self.silence_duration / chunk_duration)
+        block_seconds = 0.05  # bloques de 50 ms: buena resolución sin sobrecarga
+        block_samples = int(self.sample_rate * block_seconds)
+        silence_blocks_needed = max(1, int(self.silence_duration / block_seconds))
+        wait_blocks = max(1, int(self.max_wait_seconds / block_seconds))
+        max_blocks = max(1, int(self.max_record_seconds / block_seconds))
+        # Pre-roll: ~300 ms previos al inicio del habla que se anteponen a la
+        # grabación para no cortar el arranque de la primera palabra.
+        preroll_blocks = max(1, int(0.3 / block_seconds))
+
+        audio_q = _queue.Queue()
+
+        def _callback(indata, frames, time_info, status):  # noqa: ARG001
+            # El callback corre en el hilo de PortAudio: copiar y encolar es todo
+            # lo que se hace aquí para no perder bloques.
+            audio_q.put(indata[:, 0].copy())
+
+        recorded = []
+        preroll = deque(maxlen=preroll_blocks)
+        silent_blocks = 0
+        waited_blocks = 0
+        speech_started = False
+        threshold = self.silence_threshold
 
         if not _is_quiet():
             print("[STT] Escuchando... (habla y haré una pausa cuando termines)")
 
-        for _ in range(max_chunks):
-            try:
-                chunk = sd.rec(
-                    chunk_samples,
-                    samplerate=self.sample_rate,
-                    channels=1,
-                    dtype="float32",
-                )
-                sd.wait()
-            except Exception as error:
-                if not _is_quiet():
-                    print(f"[STT] Error grabando audio: {error}")
-                break
+        try:
+            with sd.InputStream(
+                samplerate=self.sample_rate,
+                channels=1,
+                dtype="float32",
+                blocksize=block_samples,
+                callback=_callback,
+            ):
+                # --- Calibración del ruido ambiente (umbral adaptativo) ---
+                calib_blocks = max(1, int(self.calibration_seconds / block_seconds))
+                noise_levels = []
+                for _ in range(calib_blocks):
+                    try:
+                        block = audio_q.get(timeout=1.0)
+                    except _queue.Empty:
+                        break
+                    noise_levels.append(float(np.sqrt(np.mean(block ** 2))))
+                if noise_levels:
+                    noise_floor = float(np.median(noise_levels))
+                    threshold = max(
+                        self.silence_threshold, noise_floor * self.noise_factor
+                    )
+                    if not _is_quiet():
+                        print(
+                            f"[STT] Ruido ambiente={noise_floor:.4f} "
+                            f"-> umbral adaptativo={threshold:.4f}"
+                        )
 
-            recorded_chunks.append(chunk.flatten())
+                # --- Captura continua ---
+                processed = 0
+                while processed < max_blocks:
+                    try:
+                        block = audio_q.get(timeout=self.max_wait_seconds + 1.0)
+                    except _queue.Empty:
+                        break
+                    processed += 1
+                    rms = float(np.sqrt(np.mean(block ** 2)))
 
-            # Silence detection via RMS
-            rms = np.sqrt(np.mean(chunk ** 2))
+                    # Fase 1: esperar a que la persona empiece a hablar. Mientras
+                    # no haya voz no acumulamos silencio (así no se transcribe
+                    # silencio en bucle).
+                    if not speech_started:
+                        preroll.append(block)
+                        if rms >= threshold:
+                            speech_started = True
+                            recorded.extend(preroll)  # incluir pre-roll
+                            preroll.clear()
+                        else:
+                            waited_blocks += 1
+                            if waited_blocks >= wait_blocks:
+                                return np.array([], dtype=np.float32)
+                        continue
 
-            if rms < self.silence_threshold:
-                silent_chunks += 1
-            else:
-                silent_chunks = 0
+                    # Fase 2: ya hay habla; grabar hasta una pausa sostenida.
+                    recorded.append(block)
+                    if rms < threshold:
+                        silent_blocks += 1
+                    else:
+                        silent_blocks = 0
 
-            if silent_chunks >= silence_chunks_needed and len(recorded_chunks) > 2:
-                break
-
-        if not recorded_chunks:
+                    if silent_blocks >= silence_blocks_needed:
+                        break
+        except Exception as error:
+            if not _is_quiet():
+                print(f"[STT] Error grabando audio: {error}")
             return np.array([], dtype=np.float32)
 
-        return np.concatenate(recorded_chunks)
+        if not recorded:
+            return np.array([], dtype=np.float32)
+
+        audio = np.concatenate(recorded)
+        # Descartar capturas demasiado cortas (golpes, ruido, eco) que el modelo
+        # tiende a "alucinar" como frases falsas.
+        if audio.size < int(self.sample_rate * self.min_speech_seconds):
+            return np.array([], dtype=np.float32)
+
+        return audio
 
     def _audio_to_wav_path(self, audio):
         """Write a float32 numpy array to a temporary WAV file.
@@ -230,6 +343,11 @@ class WhisperListener:
             "vad_filter": True,
             "vad_parameters": dict(min_silence_duration_ms=500),
             "initial_prompt": prompt,
+            # Determinista y sin arrastrar contexto previo: evita que el modelo
+            # repita/alucine frases de turnos anteriores.
+            "temperature": 0.0,
+            "condition_on_previous_text": False,
+            "no_speech_threshold": 0.6,
         }
 
         try:
@@ -288,12 +406,13 @@ class WhisperListener:
             except OSError:
                 pass
 
-        if text:
+        if _looks_like_hallucination(text):
             if not _is_quiet():
-                print(f"[STT] Transcripción: {text}")
-        else:
-            if not _is_quiet():
-                print("[STT] No se detectó habla.")
+                print(f"[STT] Descartado (silencio/alucinación): {text!r}")
+            return ""
+
+        if not _is_quiet():
+            print(f"[STT] Transcripción: {text}")
 
         return text
 

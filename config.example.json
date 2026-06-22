@@ -1,0 +1,17 @@
+{
+    "OLLAMA_MODEL": "gemma3:1b",
+    "WHISPER_MODEL": "small",
+    "HOLOGRAM_INPUT": "voice",
+    "HOLOGRAM_CAMERA": "1",
+    "YOLO_MODEL": "yolo26n.pt",
+    "YOLO_INTERVAL_SECONDS": "0.6",
+    "HOLOGRAM_VOICE_TRIGGER": "ptt",
+    "LLM_PROVIDER": "openrouter",
+    "LLM_MODEL": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+    "OPENROUTER_API_KEY": "",
+    "OPENAI_API_KEY": "",
+    "ANTHROPIC_API_KEY": "",
+    "NVIDIA_API_KEY": "",
+    "PIPER_VOICE": "es_MX-claude-high.onnx",
+    "HOLOGRAM_MODE": "dark"
+}

@@ -1,11 +1,38 @@
+import os
 import time
 
 
+def _env_float(name, default):
+    try:
+        return float(os.getenv(name, str(default)))
+    except (TypeError, ValueError):
+        return default
+
+
 class PresenceManager:
-    def __init__(self, greeting_cooldown_seconds=30, absence_reset_seconds=8, group_cooldown_seconds=180):
-        self.greeting_cooldown_seconds = greeting_cooldown_seconds
-        self.absence_reset_seconds = absence_reset_seconds
-        self.group_cooldown_seconds = group_cooldown_seconds
+    def __init__(
+        self,
+        greeting_cooldown_seconds=None,
+        absence_reset_seconds=None,
+        group_cooldown_seconds=None,
+    ):
+        # Intervalos ajustables por entorno (segundos). El saludo no se repite
+        # hasta pasado greeting_cooldown; sube el valor para un demo más calmado.
+        self.greeting_cooldown_seconds = (
+            greeting_cooldown_seconds
+            if greeting_cooldown_seconds is not None
+            else _env_float("PRESENCE_GREETING_COOLDOWN", 40)
+        )
+        self.absence_reset_seconds = (
+            absence_reset_seconds
+            if absence_reset_seconds is not None
+            else _env_float("PRESENCE_ABSENCE_SECONDS", 5)
+        )
+        self.group_cooldown_seconds = (
+            group_cooldown_seconds
+            if group_cooldown_seconds is not None
+            else _env_float("PRESENCE_GROUP_COOLDOWN", 180)
+        )
         self.last_greeting_time = 0
         self.last_group_time = 0
         self.last_seen_time = 0

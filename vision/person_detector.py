@@ -13,6 +13,7 @@ Uso básico:
 
 import json
 import os
+import threading
 import time
 from pathlib import Path
 
@@ -45,6 +46,9 @@ class YoloPersonDetector:
         self._custom_classes: list[str] = []
         self._custom_vocabulary: list[str] = []
         self._last_reload_time = 0
+        # Último cuadro anotado (JPEG) para transmitir al frontend vía MJPEG.
+        self._latest_jpeg: bytes | None = None
+        self._jpeg_lock = threading.Lock()
         self._load_training_data()
 
     def load(self):
@@ -201,22 +205,15 @@ class YoloPersonDetector:
         return persons
 
     def analyze_frame(self, frame):
-        """Return person and custom object detections plus optional safe face count."""
+        """Return person and custom object detections plus optional safe face count.
+
+        Sólo se reportan objetos personalizados que el modelo de visión realmente
+        detecta en el cuadro.  No se infiere ni se inyecta ninguna identidad: el
+        sistema analiza presencia de personas y objetos visibles, no quién es cada
+        quien.
+        """
         persons = self.detect_persons_in_frame(frame)
         custom_objects = self.detect_custom_objects(frame)
-        
-        # DEMO FALLBACK: YOLO zero-shot text prompting cannot recognize specific identities (faces).
-        # If the user trained a custom class (e.g. their name) and a person is detected,
-        # we always inject those custom classes so the LLM acknowledges them.
-        if persons and self._custom_classes:
-            existing_labels = {obj["label"] for obj in custom_objects}
-            for cls_name in self._custom_classes:
-                if cls_name not in existing_labels:
-                    custom_objects.append({
-                        "label": cls_name,
-                        "confidence": 0.99,
-                        "box": persons[0]["box"],
-                    })
 
         analysis = {
             "person_count": len(persons),
@@ -279,6 +276,80 @@ class YoloPersonDetector:
             return self.count_persons_in_frame(frame)
 
     # ------------------------------------------------------------------
+    # Live annotated frame buffer (MJPEG streaming to the web interface)
+    # ------------------------------------------------------------------
+
+    def _draw_overlay(self, frame, analysis):
+        """Draw person and custom-object boxes on a copy of *frame*."""
+        try:
+            import cv2
+        except ImportError:
+            return frame
+
+        annotated = frame.copy()
+
+        for person in analysis.get("persons", []):
+            x1, y1, x2, y2 = (int(v) for v in person["box"])
+            cv2.rectangle(annotated, (x1, y1), (x2, y2), (29, 92, 226), 2)
+            conf = person.get("confidence", 0.0)
+            cv2.putText(
+                annotated,
+                f"Persona {conf:.0%}",
+                (x1, max(0, y1 - 8)),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.55,
+                (29, 92, 226),
+                2,
+                cv2.LINE_AA,
+            )
+
+        for obj in analysis.get("custom_objects", []):
+            x1, y1, x2, y2 = (int(v) for v in obj["box"])
+            cv2.rectangle(annotated, (x1, y1), (x2, y2), (60, 200, 90), 2)
+            cv2.putText(
+                annotated,
+                str(obj.get("label", "objeto")),
+                (x1, max(0, y1 - 8)),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.55,
+                (60, 200, 90),
+                2,
+                cv2.LINE_AA,
+            )
+
+        count = analysis.get("person_count", 0)
+        cv2.putText(
+            annotated,
+            f"Personas: {count}",
+            (10, 24),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (255, 255, 255),
+            2,
+            cv2.LINE_AA,
+        )
+        return annotated
+
+    def _store_annotated_frame(self, frame, analysis):
+        """Encode *frame* (with overlay) to JPEG and cache it for streaming."""
+        try:
+            import cv2
+        except ImportError:
+            return
+
+        annotated = self._draw_overlay(frame, analysis)
+        ok, buffer = cv2.imencode(".jpg", annotated, [cv2.IMWRITE_JPEG_QUALITY, 80])
+        if not ok:
+            return
+        with self._jpeg_lock:
+            self._latest_jpeg = buffer.tobytes()
+
+    def get_latest_jpeg(self):
+        """Return the most recent annotated frame as JPEG bytes (or None)."""
+        with self._jpeg_lock:
+            return self._latest_jpeg
+
+    # ------------------------------------------------------------------
     # Continuous detection loop
     # ------------------------------------------------------------------
 
@@ -306,6 +377,13 @@ class YoloPersonDetector:
         was_present = False
         last_count = 0
         last_custom_labels: set[str] = set()
+        last_analysis = {"person_count": 0, "persons": [], "custom_objects": []}
+        last_detect_time = 0.0
+        # Anti-rebote: instante en que la persona dejó de verse. Solo declaramos
+        # "person_left" si la ausencia se sostiene, para no cortar la conversación
+        # por un cuadro perdido (giro de cabeza, oclusión, parpadeo del detector).
+        absent_since = None
+        absence_grace = _env_float("PRESENCE_ABSENCE_SECONDS", 5.0)
 
         print(f"[YOLO] Iniciando detección continua (cámara {camera_index})...")
 
@@ -313,39 +391,57 @@ class YoloPersonDetector:
             while True:
                 frame = cam.read_frame()
                 if frame is None:
-                    time.sleep(interval_seconds)
+                    time.sleep(0.1)
                     continue
 
-                analysis = self.analyze_frame(frame)
-                count = analysis["person_count"]
-                is_present = count > 0
-
-                if is_present and not was_present:
-                    event = "group_detected" if count > 3 else "person_entered"
-                elif is_present and was_present:
-                    if count > 3 and last_count <= 3:
-                        event = "group_detected"
-                    else:
-                        event = "person_still_present"
-                elif not is_present and was_present:
-                    event = "person_left"
-                else:
+                now = time.time()
+                # La detección YOLO corre cada *interval_seconds*; entre cuadros se
+                # reutiliza el último análisis para mantener el video fluido sin
+                # saturar la CPU/GPU.
+                if now - last_detect_time >= interval_seconds:
+                    last_detect_time = now
+                    analysis = self.analyze_frame(frame)
+                    last_analysis = analysis
+                    count = analysis["person_count"]
+                    is_present = count > 0
                     event = "no_person"
 
-                if event != "no_person" and event != "person_still_present":
-                    callback(event, count, analysis)
+                    if is_present:
+                        absent_since = None  # sigue (o vuelve a estar) presente
+                        if not was_present:
+                            event = "group_detected" if count > 3 else "person_entered"
+                            was_present = True
+                        elif count > 3 and last_count <= 3:
+                            event = "group_detected"
+                        else:
+                            event = "person_still_present"
+                    elif was_present:
+                        # Ausencia: arrancar/continuar el temporizador de gracia y
+                        # solo declarar "se fue" cuando se sostenga.
+                        if absent_since is None:
+                            absent_since = now
+                        elif now - absent_since >= absence_grace:
+                            event = "person_left"
+                            was_present = False
+                            absent_since = None
 
-                current_custom_labels = {
-                    obj["label"] for obj in analysis.get("custom_objects", [])
-                }
-                new_labels = current_custom_labels - last_custom_labels
-                if new_labels:
-                    callback("custom_object_detected", len(new_labels), analysis)
+                    if event != "no_person" and event != "person_still_present":
+                        callback(event, count, analysis)
 
-                was_present = is_present
-                last_count = count
-                last_custom_labels = current_custom_labels
-                time.sleep(interval_seconds)
+                    current_custom_labels = {
+                        obj["label"] for obj in analysis.get("custom_objects", [])
+                    }
+                    new_labels = current_custom_labels - last_custom_labels
+                    if new_labels:
+                        callback("custom_object_detected", len(new_labels), analysis)
+
+                    was_present = is_present
+                    last_count = count
+                    last_custom_labels = current_custom_labels
+
+                # Publica el cuadro actual con las cajas del análisis más reciente.
+                self._store_annotated_frame(frame, last_analysis)
+                time.sleep(0.03)
 
     # ------------------------------------------------------------------
     # Availability check

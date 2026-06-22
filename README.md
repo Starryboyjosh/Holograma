@@ -9,7 +9,7 @@ Holograma y guía interactivo inteligente para la Universidad Virtual (UNEV) dis
 El **Holograma UNEV** es un asistente interactivo multimodal de última generación. Está diseñado para interactuar con los visitantes a través de múltiples canales:
 - **Visual**: Detecta la llegada de personas, grupos o vestimenta formal usando la cámara del dispositivo.
 - **Auditivo (Voz)**: Escucha preguntas mediante el micrófono, las transcribe en tiempo real y responde usando síntesis de voz natural en español.
-- **Digital (WebSockets/API)**: Proporciona una interfaz basada en FastAPI para streaming de texto y simulación de flujos de audio avanzados (XTTS).
+- **Digital (WebSockets/API)**: Proporciona una interfaz basada en FastAPI para streaming de texto y eventos de estado del TTS local.
 
 El sistema puede operar de manera 100% local (sin internet) mediante modelos eficientes optimizados para CPU/GPU locales, o conectarse a APIs externas si se prefiere.
 
@@ -35,7 +35,7 @@ Soporta múltiples proveedores de modelos de lenguaje, seleccionables por variab
 ### 3. API y Servidor Web (`main.py`)
 - **FastAPI**: Ofrece una API REST y un servidor de WebSockets en `/ws/chat`.
 - **Streaming Asíncrono**: Transmite las respuestas del LLM al cliente en tiempo real (`text_chunk`).
-- **Simulación XTTS**: Integra un pipeline simulado para generación rápida de voz en formato web.
+- **Eventos TTS**: Notifica al frontend cuando la respuesta se envía a Piper o al fallback local del sistema operativo.
 
 ### 4. Reconocimiento de Voz - STT (`stt/listener.py`)
 - **Faster-Whisper**: Motor de transcripción local rápido optimizado para español.
@@ -100,7 +100,7 @@ py -m venv .venv
 
 ### 2. Descargar Modelo Ollama (Recomendado para uso local):
 ```bash
-ollama pull gemma4:e4b
+ollama pull gemma3:1b
 ```
 
 ### 3. Ejecutar:
@@ -126,7 +126,7 @@ ollama pull gemma4:e4b
 | `LLM_BACKEND` | `auto` | `auto`, `nvidia`, `openai`, `ollama`, `local_only`, `openrouter`, `claude_native` |
 | `LLM_PROVIDER` | `openrouter` | Proveedor para streaming WebSocket: `openrouter`, `openai`, `claude_native` |
 | `LLM_MODEL` | `meta-llama/llama-3.3-70b-instruct` | Modelo para APIs en la nube |
-| `OLLAMA_MODEL` | `gemma4:e4b` | Modelo local a ejecutar en Ollama |
+| `OLLAMA_MODEL` | `gemma3:1b` | Modelo local a ejecutar en Ollama para fallback rápido |
 | `OLLAMA_BASE_URL` | `http://127.0.0.1:11434` | URL del servidor Ollama |
 | `HOLOGRAM_MODE` | `normal` | Modo activo: `normal`, `judges`, `expo`, `admissions` |
 | `HOLOGRAM_INPUT` | `keyboard` | Método de entrada: `keyboard` o `voice` |
@@ -137,6 +137,9 @@ ollama pull gemma4:e4b
 | `YOLO_CONFIDENCE` | `0.5` | Umbral de confianza para detección |
 | `YOLO_INTERVAL_SECONDS` | `1.0` | Segundos entre ciclos de detección |
 | `HOLOGRAM_FACE_ANALYSIS` | `0` | Poner en `1` para contar rostros visibles de forma segura con OpenCV |
+| `PRESENCE_ABSENCE_SECONDS` | `5` | Ausencia sostenida (s) antes de declarar que la persona se fue (anti-rebote: evita cortes por un cuadro perdido) |
+| `PRESENCE_GREETING_COOLDOWN` | `40` | Segundos mínimos entre saludos de presencia |
+| `PRESENCE_GROUP_COOLDOWN` | `180` | Segundos mínimos entre saludos a grupos |
 | `WHISPER_MODEL` | `base` | Modelo de STT (`tiny`, `base`, `small`, `medium`) |
 | `WHISPER_DEVICE` | `cpu` | Dispositivo: `cpu`, `cuda` |
 | `WHISPER_COMPUTE_TYPE` | `int8` | Tipo de cómputo: `int8`, `float16`, `float32` |
@@ -144,11 +147,37 @@ ollama pull gemma4:e4b
 | `WHISPER_SILENCE_THRESHOLD` | `0.01` | Umbral RMS para detectar silencio |
 | `WHISPER_SILENCE_DURATION` | `1.5` | Segundos de silencio antes de parar grabación |
 | `WHISPER_MAX_RECORD_SECONDS` | `15.0` | Límite máximo de grabación |
+| `WHISPER_NOISE_FACTOR` | `2.5` | Factor sobre el ruido ambiente para el umbral adaptativo (clave en lugares ruidosos) |
+| `WHISPER_CALIBRATION_SECONDS` | `0.4` | Segundos de calibración del ruido ambiente al iniciar cada escucha |
+| `HOLOGRAM_VOICE_TRIGGER` | `ptt` | Activación: `ptt` (botón del orbe/ENTER), `presentation` (responde solo cuando la cámara ve gente), `auto` (escucha siempre) |
+| `WAKEWORD_MODEL` | `hey_jarvis` | (Opcional) Modelo openWakeWord. El módulo `stt/wakeword.py` queda para uso futuro; no está cableado por defecto |
+| `WAKEWORD_THRESHOLD` | `0.5` | (Opcional) Score mínimo [0-1] para la palabra clave |
 | `TTS_BACKEND` | `auto` | Backend de voz: `auto`, `piper`, `windows`, `linux` |
 | `PIPER_MODEL_PATH` | - | Ruta personalizada del modelo `.onnx` para Piper |
 | `PIPER_COMMAND` | - | Comando personalizado para ejecutar Piper |
 | `PIPER_TIMEOUT_SECONDS` | `120` | Timeout para generación de voz |
 | `WINDOWS_TTS_VOICE` | - | Nombre de voz SAPI específica en Windows |
+
+### 🎙️ Activación de la voz
+
+Todo el audio (STT con Whisper y TTS con Piper) se procesa en el **servidor**
+(la laptop). La WebApp solo dispara la escucha y muestra el estado, así que
+funciona en **cualquier navegador** (Firefox incluido) sin Web Speech API y sin
+necesidad de una app de escritorio.
+
+El micrófono se captura con un `sounddevice.InputStream` continuo (sin huecos ni
+*stalls*) y un **umbral adaptativo** calibrado con el ruido ambiente. Los modos
+se cambian en caliente desde la WebApp (sin reiniciar):
+
+- **Push-to-talk (`ptt`, por defecto)**: escucha SOLO al tocar el orbe en la
+  WebApp o pulsar **ENTER** en la terminal. Lo más fiable en lugares ruidosos.
+- **Presentación (`presentation`)**: manos libres. El holograma saluda y
+  responde de forma continua, pero solo mientras la cámara detecta gente
+  delante. Ideal para stands/expos.
+- **Auto (`auto`)**: escucha continua siempre, sin depender de la cámara.
+
+> La palabra clave (openWakeWord) se retiró del flujo por defecto; el módulo
+> `stt/wakeword.py` queda disponible por si se quiere reactivar más adelante.
 
 ---
 

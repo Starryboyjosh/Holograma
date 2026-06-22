@@ -8,6 +8,9 @@ env/
 __pycache__/
 *.py[cod]
 *$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
 *.wav
 *.mp3
@@ -26,19 +29,25 @@ build/
 
 # Local/generated model and binary artifacts.
 *.pt
+*.onnx
+*.onnx.json
 piper/
 piper_amd64.tar.gz
 piper_wrapper.sh
 static/
-models/
 .opencode/
 .claude/
 .codex/
 # Local runtime configuration.
 config.json
 
-# Graphify local cache and machine-specific markers.
-graphify-out/
+# Graphify machine-specific cache/markers. Keep graph outputs tracked.
+graphify-out/.graphify_python
+graphify-out/.graphify_root
+graphify-out/cache/
+
+# Runtime training scratch data.
+data/open_vocabulary.txt
 
 !data/
 !data/*

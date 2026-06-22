@@ -1,1 +1,0 @@
-/home/escoto/Documentos/Holograma/scripts/piper_wrapper.sh

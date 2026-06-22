@@ -1,1 +1,87 @@
 @import "tailwindcss";
+
+/* Tailwind v4 needs an explicit dark variant when toggling a class manually
+   (instead of the default prefers-color-scheme). ThemeProvider toggles `.dark`
+   on <html>, so every `dark:` utility keys off that class. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Page background — light by default, navy/orange glow in dark mode. Moved here
+   from the per-render inline style so the whole app shares one source. */
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background-color: #f4f6fa;
+  color: #1c2d5a;
+}
+
+.dark body {
+  background-color: #070a12;
+  color: #f1f5f9;
+  background-image:
+    radial-gradient(900px 500px at 75% -5%, rgba(226, 92, 29, 0.1), transparent),
+    radial-gradient(700px 500px at 10% 110%, rgba(28, 45, 90, 0.45), transparent);
+  background-attachment: fixed;
+}
+
+/* Animations (previously injected through an inline <style> in App.tsx). */
+@keyframes pulse-orange {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+    filter: drop-shadow(0 0 0px rgba(226, 92, 29, 0));
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+    filter: drop-shadow(0 0 15px rgba(226, 92, 29, 0.45));
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes rotate-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.organic-orb {
+  animation:
+    pulse-orange 3.5s ease-in-out infinite,
+    float 6s ease-in-out infinite;
+}
+
+.spin-slow {
+  animation: rotate-slow 16s linear infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out;
+}
