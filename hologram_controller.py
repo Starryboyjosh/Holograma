@@ -26,7 +26,6 @@ import queue
 import socket
 import threading
 import time
-from typing import Optional
 
 
 class HologramFanController:
@@ -73,7 +72,7 @@ class HologramFanController:
         self.port = port
         self.timeout = timeout
         self.verbose = verbose
-        self._sock: Optional[socket.socket] = None
+        self._sock: socket.socket | None = None
 
     @property
     def is_connected(self) -> bool:
@@ -90,9 +89,9 @@ class HologramFanController:
             self._sock.connect((self.ip, self.port))
             if self.verbose:
                 print(f"✅ Conectado a {self.ip}:{self.port}")
-        except (socket.timeout, ConnectionRefusedError, OSError) as e:
+        except (TimeoutError, ConnectionRefusedError, OSError) as e:
             self._sock = None
-            raise ConnectionError(
+            raise ConnectionError(  # noqa: B904 - mensaje de usuario, traza original irrelevante
                 f"No se pudo conectar a {self.ip}:{self.port}\n"
                 f"  → Verifica que 'Third party control' esté ACTIVADO en la APP\n"
                 f"  → Verifica que estés en la misma red WiFi\n"
@@ -272,9 +271,9 @@ class HologramStateManager:
 
     def __init__(
         self,
-        ip: Optional[str] = None,
+        ip: str | None = None,
         port: int = 50200,
-        state_clips: Optional[dict] = None,
+        state_clips: dict | None = None,
         min_send_gap: float = 0.25,
         verbose: bool = False,
     ):
@@ -285,10 +284,10 @@ class HologramStateManager:
         self.verbose = verbose
         self.enabled = bool(ip)
 
-        self._queue: "queue.Queue[Optional[str]]" = queue.Queue()
-        self._thread: Optional[threading.Thread] = None
-        self._fan: Optional[HologramFanController] = None
-        self._last_state: Optional[str] = None
+        self._queue: queue.Queue[str | None] = queue.Queue()
+        self._thread: threading.Thread | None = None
+        self._fan: HologramFanController | None = None
+        self._last_state: str | None = None
         self._last_send = 0.0
         self._reconnect_delay = 1.0
         self._next_reconnect = 0.0

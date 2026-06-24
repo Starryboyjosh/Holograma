@@ -5,7 +5,6 @@ This module only detects/counts visible faces. It intentionally does not infer
 identity, age, gender, race, emotion, health, or any other sensitive attribute.
 """
 
-import os
 
 
 from utils import _env_float, _env_int

@@ -10,14 +10,11 @@ Uso básico:
     text = listener.listen_once()
 """
 
-import os
-import sys
 import tempfile
 import wave
 from pathlib import Path
 
 import numpy as np
-
 
 from utils import _env, _env_float, _env_int, _is_quiet, configure_utf8_stdio
 

@@ -24,10 +24,7 @@ Modelo:
     - ``WAKEWORD_THRESHOLD`` es el score mínimo [0-1] para disparar (def. 0.5).
 """
 
-import sys
 from pathlib import Path
-
-import numpy as np
 
 from utils import _env, _env_float, _is_quiet, configure_utf8_stdio
 

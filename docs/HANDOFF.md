@@ -121,9 +121,14 @@ The Settings AI-brain card is now driven by the live contract:
   Residual, separate concerns (not UNEV-fact duplication): `skills/honduras.py` is
   general Honduras context; `TeachingScreen.tsx` has its own vision-demo labels.
 
-### G. Legacy lint debt
-- `ruff check .` reports ~38 issues in untouched modules (call.py, vision/, stt/,
-  scripts/). Sweep with `ruff check --fix` + review once those modules can be run.
+### G. Legacy lint debt  ✅ DONE (this commit)
+- `ruff check .` is now **clean** (was 36 issues). Applied only behavior-preserving
+  fixes: safe autofixes (import sort, unused imports, `Optional→| None`, empty
+  f-strings) + manual (relocated 3 misplaced imports — verified leaf utils have no
+  circular dep and that the modules still `import`; dropped an unused loop index and
+  a dead assignment; `# noqa: B904` on a user-facing ConnectionError).
+- The heavy modules still can't be *run* here (no ML stack), but they compile and
+  import cleanly.
 
 ## Reusable knobs already in the contract
 Providers: openrouter, openai, claude_native, nvidia, custom_openai, ollama,

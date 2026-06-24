@@ -12,7 +12,6 @@ Regla de Oro C: Se integra con el entorno virtual y requirements.txt.
 """
 
 import json
-import os
 import sys
 from pathlib import Path
 
@@ -358,9 +357,9 @@ def run_setup():
             # Dar instrucciones de cómo correr la app
             console.print(
                 Panel(
-                    f"Configuración aplicada. Ahora puedes iniciar el asistente con:\n\n"
-                    f"  [bold]python call.py --voice --camera[/bold]\n\n"
-                    f"La aplicación cargará automáticamente los valores definidos en tu config.json.",
+                    "Configuración aplicada. Ahora puedes iniciar el asistente con:\n\n"
+                    "  [bold]python call.py --voice --camera[/bold]\n\n"
+                    "La aplicación cargará automáticamente los valores definidos en tu config.json.",
                     title="Siguientes pasos",
                     border_style="green",
                 )

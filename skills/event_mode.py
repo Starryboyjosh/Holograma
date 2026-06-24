@@ -1,6 +1,7 @@
 import os
 import random
 
+
 def _has_camera():
     return os.getenv("HOLOGRAM_CAMERA", "0") == "1"
 

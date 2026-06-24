@@ -17,6 +17,7 @@ import importlib.util
 import json
 import os
 import platform
+import queue
 import re
 import shutil
 import subprocess
@@ -528,8 +529,6 @@ def speak_with_linux_tts(text):
     return False
 
 
-import queue
-
 # Configuración del pipeline de streaming TTS
 _MIN_FIRST_CHUNK_LEN = 23  # Latencia baja inicial (ej. "Hola, buenas tardes.")
 _MIN_SENTENCE_LEN = 30  # Oración promedio
@@ -553,7 +552,7 @@ def _split_into_chunks(text):
 
     # Procesamos el texto de forma secuencial simulando la llegada de tokens
     words = text.split(" ")
-    for i, word in enumerate(words):
+    for word in words:
         buf += word + " "
         sep = _SENTENCE_RE if first_chunk_sent else _CLAUSE_RE
         min_len = _MIN_SENTENCE_LEN if first_chunk_sent else _MIN_FIRST_CHUNK_LEN

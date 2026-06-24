@@ -1,6 +1,7 @@
-import unicodedata
 import json
 from pathlib import Path
+
+from skills.utils import normalize_text
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 JSON_PATH = BASE_DIR / "data" / "honduras_info.json"
@@ -185,9 +186,6 @@ if JSON_PATH.exists():
         HONDURAS_INFO = DEFAULT_HONDURAS_INFO
 else:
     HONDURAS_INFO = DEFAULT_HONDURAS_INFO
-
-
-from skills.utils import normalize_text
 
 
 def get_university_summary():

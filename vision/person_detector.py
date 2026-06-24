@@ -12,16 +12,14 @@ Uso básico:
 """
 
 import json
-import os
 import threading
 import time
 from pathlib import Path
 
+from utils import _env, _env_float
+
 # COCO class ID for "person"
 _PERSON_CLASS_ID = 0
-
-
-from utils import _env, _env_float
 
 
 class YoloPersonDetector:
@@ -451,8 +449,8 @@ class YoloPersonDetector:
     def is_available():
         """Return True if ultralytics and OpenCV are importable."""
         try:
-            from ultralytics import YOLO  # noqa: F401
             import cv2  # noqa: F401
+            from ultralytics import YOLO  # noqa: F401
             return True
         except ImportError:
             return False
@@ -468,7 +466,6 @@ def get_vision_status():
 
     try:
         from ultralytics import YOLO  # noqa: F401
-        ultralytics_ok = True
     except ImportError:
         return "Visión no disponible: falta ultralytics. Ejecuta: pip install ultralytics"
 

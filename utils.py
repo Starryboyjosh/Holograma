@@ -1,6 +1,7 @@
 import os
-import sys
 import platform
+import sys
+
 
 def _env(name: str, default: str = "") -> str:
     """Helper to retrieve string environment variables."""

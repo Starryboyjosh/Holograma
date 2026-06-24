@@ -1,5 +1,6 @@
 import unicodedata
 
+
 def normalize_text(text: str) -> str:
     """Normalizes text by removing accents, lowercasing, and stripping whitespace."""
     if not text:

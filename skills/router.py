@@ -1,3 +1,4 @@
+import skills.honduras as honduras
 from skills.university import (
     get_admission_info,
     get_approval_info,
@@ -8,7 +9,6 @@ from skills.university import (
     get_website_info,
     normalize_text,
 )
-import skills.honduras as honduras
 
 
 def route_local_skill(user_input):
