@@ -11,10 +11,16 @@ if TYPE_CHECKING:
 from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
+from fastapi.responses import (
+    FileResponse,
+    HTMLResponse,
+    JSONResponse,
+    StreamingResponse,
+)
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from auth_token import request_authorized
 from llm_backend import probe_backend, stream_llm_response
 from provider_config import all_providers_public_info
 from security import (
@@ -194,6 +200,24 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Token de capacidad opcional para endpoints privilegiados (ajustes, contenido,
+# cámara, entrenamiento). Apagado por defecto (HOLOGRAM_API_TOKEN vacío) para no
+# romper la app actual; al activarlo, las escrituras exigen el header X-API-Token.
+# La shell de Tauri debe entregar el token al frontend (ver docs/HANDOFF.md, D.2).
+_API_TOKEN = os.getenv("HOLOGRAM_API_TOKEN", "").strip()
+
+
+@app.middleware("http")
+async def _api_token_gate(request, call_next):
+    if _API_TOKEN and not request_authorized(
+        request.url.path, request.method, request.headers.get("x-api-token"), _API_TOKEN
+    ):
+        return JSONResponse(
+            {"status": "error", "message": "No autorizado: falta o no coincide X-API-Token."},
+            status_code=401,
+        )
+    return await call_next(request)
 
 active_connections: list[WebSocket] = []
 running_loop = None

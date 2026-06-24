@@ -10,8 +10,8 @@
     "semantic_hash": ""
   },
   "main.py": {
-    "mtime": 1782310823.3760643,
-    "ast_hash": "5c598e17a47a9beec681ecd29ed0a2fa",
+    "mtime": 1782311132.5772579,
+    "ast_hash": "c614879643654fc86b31881b3804fcec",
     "semantic_hash": ""
   },
   "skills/__init__.py": {
@@ -840,8 +840,8 @@
     "semantic_hash": ""
   },
   "docs/HANDOFF.md": {
-    "mtime": 1782310976.0756123,
-    "ast_hash": "6a5c02405c32e2a179653002e0faed11",
+    "mtime": 1782311262.5830445,
+    "ast_hash": "0ec1606cecccba184c9243af11cb2c0d",
     "semantic_hash": ""
   },
   "docs/Last_LLM.md": {
@@ -882,6 +882,11 @@
   "tests/test_camera_stop.py": {
     "mtime": 1782310905.8658226,
     "ast_hash": "9c0c859430837793e338c899bbe8c8ae",
+    "semantic_hash": ""
+  },
+  "docs/PACKAGING.md": {
+    "mtime": 1782311193.431813,
+    "ast_hash": "8e66e0b3df5d3002a5ec72178c42e5cf",
     "semantic_hash": ""
   }
 }

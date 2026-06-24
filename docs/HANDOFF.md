@@ -16,7 +16,7 @@ the audit.
 
 ## Verify Phases 1 + A (already done)
 ```bash
-.venv/bin/pytest                                                  # 32 passing
+.venv/bin/pytest                                                  # 58 passing
 .venv/bin/ruff check provider_config.py llm_backend.py main.py tests/   # clean
 cd frontend && npx eslint . && npx tsc -p tsconfig.app.json --noEmit    # clean
 cd frontend && npm test                                          # 12 passing (vitest)
@@ -83,11 +83,13 @@ The Settings AI-brain card is now driven by the live contract:
 - Only encode MJPEG when a consumer is attached (`video_feed`).
 
 ### C. Windows-first sidecar packaging  (cannot finish here; needs Windows runner)
-- Tauri still spawns `python3 main.py` from source (`frontend/src-tauri/src/lib.rs:57`);
-  no `externalBin`. Build a PyInstaller sidecar, wire `tauri.conf.json` bundle,
-  resource lookup post-install, OS app-data/config/cache dirs, model assets with
-  checksums, clean child-process shutdown (current `kill_backend` orphans Piper/
-  audio), Windows+Linux CI. **Pin Python ~3.11/3.12** for wheel availability.
+- **Documented with concrete steps + a starter PyInstaller `.spec` in
+  [`docs/PACKAGING.md`](PACKAGING.md)** (this commit). Confirmed from source: Tauri
+  spawns `python3 main.py` (`lib.rs:57`, no `externalBin`); `kill_backend` does
+  `child.kill()` only (orphans Piper/audio); `tauri.conf.json` has no `externalBin`.
+- Remaining (on a Windows+Linux runner): build the sidecar, wire `externalBin`,
+  switch `spawn_backend` to the sidecar in release, kill the process **tree**, move
+  config/cache to OS app-data, CI. **Pin Python ~3.11/3.12** for wheel availability.
 
 ### D. Security + operator auth
 **D.1 — input hardening + secret hygiene ✅ DONE (this commit, fully testable here):**
@@ -100,21 +102,32 @@ The Settings AI-brain card is now driven by the live contract:
   for training files. `llm_backend._humanize_probe_error` redacts the raw provider
   error. CORS is now configurable via `CORS_ALLOW_ORIGINS` (default `*` preserved).
 
-**D.2 — auth + secret storage (NOT done; needs the Tauri shell + a running backend):**
-- Per-process **Tauri capability token** for WS/REST (Rust passes it to backend env +
-  frontend; frontend sends it). HIGH breakage risk — must be validated in the desktop
-  app, can't be here. Split visitor vs privileged (settings/train) APIs behind it.
-- OS keyring for secrets (Windows Credential Manager / Linux Secret Service) instead
-  of plaintext `.env`/`config.json`.
-- Rate limits / concurrency caps on WS + LLM calls.
+**D.2 — opt-in API-token gate ✅ PARTIAL (this commit):**
+- `auth_token.py` (pure, 7 tests): `request_authorized(path, method, provided, expected)`
+  — auth off when no token; reads always pass; privileged **writes** (`/api/config`,
+  `/api/unev-content`, `/api/camera`, `/api/llm/test`, `/api/train`, `/api/speak`)
+  require `X-API-Token` (constant-time compare). `generate_token()` helper.
+- `main.py`: opt-in HTTP middleware gated on `HOLOGRAM_API_TOKEN` (empty = current
+  behavior, no breakage). When set, the **Tauri shell must deliver the token to the
+  frontend** (Rust env → `get_backend_url`-style command → `X-API-Token` header) — that
+  wiring + **WS auth** (query token) still need the running desktop app to validate.
+
+**D.2 — still open (needs the Tauri shell / running backend):**
+- Deliver the token from Rust to the frontend + send it on every privileged call; WS
+  capability token. OS keyring for secrets (Windows Credential Manager / Linux Secret
+  Service) instead of plaintext `.env`/`config.json`. Rate limits / concurrency caps.
 - Lock down CORS to the validated WebView origin (set `CORS_ALLOW_ORIGINS`).
 
-### E. De-monkey-patch into typed services  (refactor; do incrementally)
-- `main.py:38-78` patches `call.speak`, `WhisperListener.listen_once`,
-  `_camera_detection_callback` at startup; globals everywhere. Migrate toward
-  `application/` services (conversation/config/device) + an event bus, using the
-  strangler pattern (add seam, route through it, keep working). `call.py` (1265 L)
-  and `main.py` (900 L) are the god-modules to split.
+### E. De-monkey-patch into typed services  (refactor; INTENTIONALLY DEFERRED)
+- Highest-risk item and **not safe to do blind**: rewriting the startup
+  monkey-patching + globals into services means changing `call.py`/`main.py` hot
+  paths that can't be run in this env (no ML stack). Left for an environment where
+  the backend runs end-to-end.
+- Plan when picked up: `main.py:38-78` patches `call.speak`,
+  `WhisperListener.listen_once`, `_camera_detection_callback` at startup; globals
+  everywhere. Migrate toward `application/` services (conversation/config/device) +
+  an event bus, strangler-style (add seam, route through it, keep working).
+  `call.py` (~1300 L) and `main.py` (~970 L) are the god-modules to split.
 
 ### F. Single editable UNEV content source  ✅ DONE (this commit)
 - `skills/unev_content.py` is now the single authoritative source: holds the
