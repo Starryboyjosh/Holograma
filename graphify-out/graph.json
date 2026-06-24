@@ -90,7 +90,7 @@
       "source_location": "L217",
       "_origin": "ast",
       "id": "call_get_piper_sample_rate",
-      "community": 16,
+      "community": 27,
       "norm_label": "get_piper_sample_rate()"
     },
     {
@@ -110,7 +110,7 @@
       "source_location": "L242",
       "_origin": "ast",
       "id": "call_get_powershell_command",
-      "community": 2,
+      "community": 16,
       "norm_label": "get_powershell_command()"
     },
     {
@@ -120,7 +120,7 @@
       "source_location": "L258",
       "_origin": "ast",
       "id": "call_run_powershell",
-      "community": 2,
+      "community": 16,
       "norm_label": "run_powershell()"
     },
     {
@@ -130,7 +130,7 @@
       "source_location": "L299",
       "_origin": "ast",
       "id": "call_play_wav_with_windows",
-      "community": 62,
+      "community": 16,
       "norm_label": "play_wav_with_windows()"
     },
     {
@@ -140,7 +140,7 @@
       "source_location": "L315",
       "_origin": "ast",
       "id": "call_play_wav_file",
-      "community": 62,
+      "community": 13,
       "norm_label": "play_wav_file()"
     },
     {
@@ -220,7 +220,7 @@
       "source_location": "L606",
       "_origin": "ast",
       "id": "call_render_chunks",
-      "community": 62,
+      "community": 13,
       "norm_label": "_render_chunks()"
     },
     {
@@ -280,7 +280,7 @@
       "source_location": "L817",
       "_origin": "ast",
       "id": "call_set_mode",
-      "community": 5,
+      "community": 7,
       "norm_label": "set_mode()"
     },
     {
@@ -290,7 +290,7 @@
       "source_location": "L841",
       "_origin": "ast",
       "id": "call_get_help_text",
-      "community": 5,
+      "community": 7,
       "norm_label": "get_help_text()"
     },
     {
@@ -300,7 +300,7 @@
       "source_location": "L849",
       "_origin": "ast",
       "id": "call_handle_command",
-      "community": 5,
+      "community": 7,
       "norm_label": "handle_command()"
     },
     {
@@ -310,7 +310,7 @@
       "source_location": "L902",
       "_origin": "ast",
       "id": "call_get_latest_camera_jpeg",
-      "community": 70,
+      "community": 5,
       "norm_label": "get_latest_camera_jpeg()"
     },
     {
@@ -360,7 +360,7 @@
       "source_location": "L1082",
       "_origin": "ast",
       "id": "call_set_trigger_mode",
-      "community": 16,
+      "community": 27,
       "norm_label": "set_trigger_mode()"
     },
     {
@@ -500,7 +500,7 @@
       "source_location": "L218",
       "_origin": "ast",
       "id": "call_rationale_218",
-      "community": 16,
+      "community": 27,
       "norm_label": "read piper sample rate from the model json sidecar when available."
     },
     {
@@ -520,7 +520,7 @@
       "source_location": "L243",
       "_origin": "ast",
       "id": "call_rationale_243",
-      "community": 2,
+      "community": 16,
       "norm_label": "return a powershell executable path on windows or wsl if available."
     },
     {
@@ -530,7 +530,7 @@
       "source_location": "L259",
       "_origin": "ast",
       "id": "call_rationale_259",
-      "community": 2,
+      "community": 16,
       "norm_label": "run a powershell script and return true when it succeeds."
     },
     {
@@ -540,7 +540,7 @@
       "source_location": "L300",
       "_origin": "ast",
       "id": "call_rationale_300",
-      "community": 62,
+      "community": 16,
       "norm_label": "play a wav file with windows' built-in soundplayer."
     },
     {
@@ -550,7 +550,7 @@
       "source_location": "L316",
       "_origin": "ast",
       "id": "call_rationale_316",
-      "community": 62,
+      "community": 13,
       "norm_label": "play a wav file on windows, linux, or macos using available system tools."
     },
     {
@@ -630,7 +630,7 @@
       "source_location": "L607",
       "_origin": "ast",
       "id": "call_rationale_607",
-      "community": 62,
+      "community": 13,
       "norm_label": "sintetiza y reproduce los fragmentos de voz.      con piper usa un *pipeline*: u"
     },
     {
@@ -650,7 +650,7 @@
       "source_location": "L903",
       "_origin": "ast",
       "id": "call_rationale_903",
-      "community": 70,
+      "community": 5,
       "norm_label": "return the latest annotated camera frame (jpeg bytes) or none."
     },
     {
@@ -700,7 +700,7 @@
       "source_location": "L1083",
       "_origin": "ast",
       "id": "call_rationale_1083",
-      "community": 16,
+      "community": 27,
       "norm_label": "cambia en caliente el modo de activacion de voz. devuelve el modo final."
     },
     {
@@ -1240,7 +1240,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "schemas_desktop_schema",
-      "community": 29,
+      "community": 65,
       "norm_label": "desktop-schema.json"
     },
     {
@@ -1250,7 +1250,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "schemas_desktop_schema_schema",
-      "community": 29,
+      "community": 65,
       "norm_label": "$schema"
     },
     {
@@ -1260,7 +1260,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "schemas_desktop_schema_title",
-      "community": 29,
+      "community": 65,
       "norm_label": "title"
     },
     {
@@ -1270,7 +1270,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "schemas_desktop_schema_description",
-      "community": 29,
+      "community": 65,
       "norm_label": "description"
     },
     {
@@ -1280,7 +1280,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "schemas_desktop_schema_anyof",
-      "community": 29,
+      "community": 65,
       "norm_label": "anyof"
     },
     {
@@ -1820,7 +1820,7 @@
       "source_location": "L2239",
       "_origin": "ast",
       "id": "schemas_desktop_schema_definitions_value",
-      "community": 65,
+      "community": 29,
       "norm_label": "value"
     },
     {
@@ -1830,7 +1830,7 @@
       "source_location": "L2240",
       "_origin": "ast",
       "id": "schemas_desktop_schema_value_description",
-      "community": 65,
+      "community": 29,
       "norm_label": "description"
     },
     {
@@ -1840,7 +1840,7 @@
       "source_location": "L2241",
       "_origin": "ast",
       "id": "schemas_desktop_schema_value_anyof",
-      "community": 65,
+      "community": 29,
       "norm_label": "anyof"
     },
     {
@@ -1910,7 +1910,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "schemas_linux_schema",
-      "community": 30,
+      "community": 69,
       "norm_label": "linux-schema.json"
     },
     {
@@ -1920,7 +1920,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "schemas_linux_schema_schema",
-      "community": 30,
+      "community": 69,
       "norm_label": "$schema"
     },
     {
@@ -1930,7 +1930,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "schemas_linux_schema_title",
-      "community": 30,
+      "community": 69,
       "norm_label": "title"
     },
     {
@@ -1940,7 +1940,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "schemas_linux_schema_description",
-      "community": 30,
+      "community": 69,
       "norm_label": "description"
     },
     {
@@ -1950,7 +1950,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "schemas_linux_schema_anyof",
-      "community": 30,
+      "community": 69,
       "norm_label": "anyof"
     },
     {
@@ -2440,7 +2440,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "schemas_linux_schema_definitions_permissionentry",
-      "community": 69,
+      "community": 30,
       "norm_label": "permissionentry"
     },
     {
@@ -2450,7 +2450,7 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "schemas_linux_schema_permissionentry_description",
-      "community": 69,
+      "community": 30,
       "norm_label": "description"
     },
     {
@@ -2460,7 +2460,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "schemas_linux_schema_permissionentry_anyof",
-      "community": 69,
+      "community": 30,
       "norm_label": "anyof"
     },
     {
@@ -2957,7 +2957,7 @@
       "label": "ShellLayout()",
       "file_type": "code",
       "source_file": "frontend/src/App.tsx",
-      "source_location": "L16",
+      "source_location": "L17",
       "_origin": "ast",
       "id": "src_app_shelllayout",
       "community": 8,
@@ -2967,7 +2967,7 @@
       "label": "App()",
       "file_type": "code",
       "source_file": "frontend/src/App.tsx",
-      "source_location": "L26",
+      "source_location": "L27",
       "_origin": "ast",
       "id": "src_app_app",
       "community": 8,
@@ -2997,7 +2997,7 @@
       "label": "WsChip()",
       "file_type": "code",
       "source_file": "frontend/src/components/AppShell.tsx",
-      "source_location": "L16",
+      "source_location": "L17",
       "_origin": "ast",
       "id": "components_appshell_wschip",
       "community": 15,
@@ -3007,7 +3007,7 @@
       "label": "AppShell()",
       "file_type": "code",
       "source_file": "frontend/src/components/AppShell.tsx",
-      "source_location": "L31",
+      "source_location": "L32",
       "_origin": "ast",
       "id": "components_appshell_appshell",
       "community": 15,
@@ -3080,7 +3080,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_hologramcontrols",
-      "community": 24,
+      "community": 56,
       "norm_label": "hologramcontrols.tsx"
     },
     {
@@ -3090,7 +3090,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "components_hologramcontrols_hologram",
-      "community": 24,
+      "community": 56,
       "norm_label": "hologram"
     },
     {
@@ -3100,7 +3100,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "components_hologramcontrols_quick_commands",
-      "community": 24,
+      "community": 56,
       "norm_label": "quick_commands"
     },
     {
@@ -3110,7 +3110,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "components_hologramcontrols_hologramcontrols",
-      "community": 33,
+      "community": 58,
       "norm_label": "hologramcontrols()"
     },
     {
@@ -3120,7 +3120,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_orb",
-      "community": 46,
+      "community": 8,
       "norm_label": "orb.tsx"
     },
     {
@@ -3130,7 +3130,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "components_orb_orbprops",
-      "community": 46,
+      "community": 8,
       "norm_label": "orbprops"
     },
     {
@@ -3140,7 +3140,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "components_orb_orb",
-      "community": 46,
+      "community": 8,
       "norm_label": "orb()"
     },
     {
@@ -3220,7 +3220,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "ui_card",
-      "community": 24,
+      "community": 56,
       "norm_label": "card.tsx"
     },
     {
@@ -3230,7 +3230,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "ui_card_cardprops",
-      "community": 24,
+      "community": 56,
       "norm_label": "cardprops"
     },
     {
@@ -3240,7 +3240,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "ui_card_card",
-      "community": 24,
+      "community": 56,
       "norm_label": "card()"
     },
     {
@@ -3250,7 +3250,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "ui_card_sectiontitle",
-      "community": 24,
+      "community": 56,
       "norm_label": "sectiontitle()"
     },
     {
@@ -3260,38 +3260,48 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "ui_field",
-      "community": 24,
+      "community": 56,
       "norm_label": "field.tsx"
     },
     {
       "label": "Field()",
       "file_type": "code",
       "source_file": "frontend/src/components/ui/Field.tsx",
-      "source_location": "L4",
+      "source_location": "L9",
       "_origin": "ast",
       "id": "ui_field_field",
-      "community": 24,
+      "community": 56,
       "norm_label": "field()"
     },
     {
       "label": "TextInput()",
       "file_type": "code",
       "source_file": "frontend/src/components/ui/Field.tsx",
-      "source_location": "L15",
+      "source_location": "L20",
       "_origin": "ast",
       "id": "ui_field_textinput",
-      "community": 24,
+      "community": 56,
       "norm_label": "textinput()"
     },
     {
       "label": "Select()",
       "file_type": "code",
       "source_file": "frontend/src/components/ui/Field.tsx",
-      "source_location": "L20",
+      "source_location": "L25",
       "_origin": "ast",
       "id": "ui_field_select",
-      "community": 24,
+      "community": 56,
       "norm_label": "select()"
+    },
+    {
+      "label": "Textarea()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/ui/Field.tsx",
+      "source_location": "L34",
+      "_origin": "ast",
+      "id": "ui_field_textarea",
+      "community": 56,
+      "norm_label": "textarea()"
     },
     {
       "label": "ToggleGroup.tsx",
@@ -3300,7 +3310,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "ui_togglegroup",
-      "community": 24,
+      "community": 56,
       "norm_label": "togglegroup.tsx"
     },
     {
@@ -3310,7 +3320,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "ui_togglegroup_toggleoption",
-      "community": 24,
+      "community": 56,
       "norm_label": "toggleoption"
     },
     {
@@ -3320,7 +3330,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "ui_togglegroup_togglegroupprops",
-      "community": 24,
+      "community": 56,
       "norm_label": "togglegroupprops"
     },
     {
@@ -3330,7 +3340,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "ui_togglegroup_togglegroup",
-      "community": 24,
+      "community": 56,
       "norm_label": "togglegroup()"
     },
     {
@@ -3340,7 +3350,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "context_sessioncontext",
-      "community": 8,
+      "community": 58,
       "norm_label": "sessioncontext.tsx"
     },
     {
@@ -3350,7 +3360,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "context_sessioncontext_camerastate",
-      "community": 8,
+      "community": 58,
       "norm_label": "camerastate"
     },
     {
@@ -3360,7 +3370,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "context_sessioncontext_sessionvalue",
-      "community": 8,
+      "community": 58,
       "norm_label": "sessionvalue"
     },
     {
@@ -3370,7 +3380,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "context_sessioncontext_sessionctx",
-      "community": 8,
+      "community": 58,
       "norm_label": "sessionctx"
     },
     {
@@ -3380,7 +3390,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "context_sessioncontext_sessionprovider",
-      "community": 8,
+      "community": 58,
       "norm_label": "sessionprovider()"
     },
     {
@@ -3570,7 +3580,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "hooks_usechatsocket_chatsocket",
-      "community": 8,
+      "community": 58,
       "norm_label": "chatsocket"
     },
     {
@@ -3590,7 +3600,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_useconfig",
-      "community": 24,
+      "community": 58,
       "norm_label": "useconfig.ts"
     },
     {
@@ -3600,7 +3610,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "hooks_useconfig_useconfig",
-      "community": 8,
+      "community": 58,
       "norm_label": "useconfig()"
     },
     {
@@ -3610,7 +3620,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usehologram",
-      "community": 8,
+      "community": 58,
       "norm_label": "usehologram.ts"
     },
     {
@@ -3620,7 +3630,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "hooks_usehologram_usehologramoptions",
-      "community": 8,
+      "community": 58,
       "norm_label": "usehologramoptions"
     },
     {
@@ -3630,7 +3640,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "hooks_usehologram_usehologram",
-      "community": 8,
+      "community": 58,
       "norm_label": "usehologram()"
     },
     {
@@ -3650,8 +3660,48 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "hooks_useproviders_useproviders",
-      "community": 24,
+      "community": 56,
       "norm_label": "useproviders()"
+    },
+    {
+      "label": "useUnevContent.ts",
+      "file_type": "code",
+      "source_file": "frontend/src/hooks/useUnevContent.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "hooks_useunevcontent",
+      "community": 32,
+      "norm_label": "useunevcontent.ts"
+    },
+    {
+      "label": "UnevProgram",
+      "file_type": "code",
+      "source_file": "frontend/src/hooks/useUnevContent.ts",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "hooks_useunevcontent_unevprogram",
+      "community": 32,
+      "norm_label": "unevprogram"
+    },
+    {
+      "label": "SaveResult",
+      "file_type": "code",
+      "source_file": "frontend/src/hooks/useUnevContent.ts",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "hooks_useunevcontent_saveresult",
+      "community": 32,
+      "norm_label": "saveresult"
+    },
+    {
+      "label": "useUnevContent()",
+      "file_type": "code",
+      "source_file": "frontend/src/hooks/useUnevContent.ts",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "hooks_useunevcontent_useunevcontent",
+      "community": 32,
+      "norm_label": "useunevcontent()"
     },
     {
       "label": "backend.ts",
@@ -3900,7 +3950,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "screens_assistantscreen",
-      "community": 46,
+      "community": 8,
       "norm_label": "assistantscreen.tsx"
     },
     {
@@ -3910,7 +3960,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "screens_assistantscreen_suggestions",
-      "community": 46,
+      "community": 8,
       "norm_label": "suggestions"
     },
     {
@@ -3920,7 +3970,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "screens_assistantscreen_highlighted",
-      "community": 46,
+      "community": 8,
       "norm_label": "highlighted()"
     },
     {
@@ -3930,8 +3980,38 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "screens_assistantscreen_assistantscreen",
-      "community": 46,
+      "community": 8,
       "norm_label": "assistantscreen()"
+    },
+    {
+      "label": "ContentScreen.tsx",
+      "file_type": "code",
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "screens_contentscreen",
+      "community": 56,
+      "norm_label": "contentscreen.tsx"
+    },
+    {
+      "label": "FIELD_LABELS",
+      "file_type": "code",
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "screens_contentscreen_field_labels",
+      "community": 56,
+      "norm_label": "field_labels"
+    },
+    {
+      "label": "ContentScreen()",
+      "file_type": "code",
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "screens_contentscreen_contentscreen",
+      "community": 8,
+      "norm_label": "contentscreen()"
     },
     {
       "label": "HomeScreen.tsx",
@@ -3970,7 +4050,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "screens_remotescreen",
-      "community": 33,
+      "community": 58,
       "norm_label": "remotescreen.tsx"
     },
     {
@@ -3980,7 +4060,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "screens_remotescreen_remotescreen",
-      "community": 33,
+      "community": 58,
       "norm_label": "remotescreen()"
     },
     {
@@ -3990,7 +4070,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "screens_settingsscreen",
-      "community": 24,
+      "community": 56,
       "norm_label": "settingsscreen.tsx"
     },
     {
@@ -4000,7 +4080,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "screens_settingsscreen_settingsscreen",
-      "community": 24,
+      "community": 56,
       "norm_label": "settingsscreen()"
     },
     {
@@ -4010,7 +4090,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "screens_teachingscreen",
-      "community": 58,
+      "community": 32,
       "norm_label": "teachingscreen.tsx"
     },
     {
@@ -4020,7 +4100,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "screens_teachingscreen_teachingscreen",
-      "community": 58,
+      "community": 8,
       "norm_label": "teachingscreen()"
     },
     {
@@ -4040,7 +4120,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_theme",
-      "community": 46,
+      "community": 8,
       "norm_label": "theme.ts"
     },
     {
@@ -4050,7 +4130,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_theme_colors",
-      "community": 46,
+      "community": 8,
       "norm_label": "colors"
     },
     {
@@ -4060,7 +4140,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_theme_assistantstate",
-      "community": 46,
+      "community": 8,
       "norm_label": "assistantstate"
     },
     {
@@ -4070,7 +4150,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_theme_voicemode",
-      "community": 46,
+      "community": 8,
       "norm_label": "voicemode"
     },
     {
@@ -4090,7 +4170,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "src_theme_orb_ring",
-      "community": 46,
+      "community": 8,
       "norm_label": "orb_ring"
     },
     {
@@ -4110,7 +4190,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_types_boundingbox",
-      "community": 58,
+      "community": 32,
       "norm_label": "boundingbox"
     },
     {
@@ -4120,7 +4200,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_types_savedobject",
-      "community": 24,
+      "community": 58,
       "norm_label": "savedobject"
     },
     {
@@ -4710,7 +4790,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hologram_controller",
-      "community": 6,
+      "community": 46,
       "norm_label": "hologram_controller.py"
     },
     {
@@ -4760,7 +4840,7 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_disconnect",
-      "community": 6,
+      "community": 46,
       "norm_label": ".disconnect()"
     },
     {
@@ -4890,7 +4970,7 @@
       "source_location": "L184",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_exit",
-      "community": 6,
+      "community": 46,
       "norm_label": ".__exit__()"
     },
     {
@@ -4900,7 +4980,7 @@
       "source_location": "L191",
       "_origin": "ast",
       "id": "hologram_controller_discover_devices",
-      "community": 6,
+      "community": 46,
       "norm_label": "discover_devices()"
     },
     {
@@ -4910,7 +4990,7 @@
       "source_location": "L251",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager",
-      "community": 6,
+      "community": 46,
       "norm_label": "hologramstatemanager"
     },
     {
@@ -4920,7 +5000,7 @@
       "source_location": "L273",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_init",
-      "community": 6,
+      "community": 46,
       "norm_label": ".__init__()"
     },
     {
@@ -4930,7 +5010,7 @@
       "source_location": "L299",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_start",
-      "community": 6,
+      "community": 46,
       "norm_label": ".start()"
     },
     {
@@ -4940,7 +5020,7 @@
       "source_location": "L310",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_set_state",
-      "community": 6,
+      "community": 46,
       "norm_label": ".set_state()"
     },
     {
@@ -4950,7 +5030,7 @@
       "source_location": "L320",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_close",
-      "community": 6,
+      "community": 46,
       "norm_label": ".close()"
     },
     {
@@ -4960,7 +5040,7 @@
       "source_location": "L339",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_run",
-      "community": 6,
+      "community": 46,
       "norm_label": "._run()"
     },
     {
@@ -4970,7 +5050,7 @@
       "source_location": "L355",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_apply",
-      "community": 6,
+      "community": 46,
       "norm_label": "._apply()"
     },
     {
@@ -4980,7 +5060,7 @@
       "source_location": "L377",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_ensure_connected",
-      "community": 6,
+      "community": 46,
       "norm_label": "._ensure_connected()"
     },
     {
@@ -4990,7 +5070,7 @@
       "source_location": "L402",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_drop_connection",
-      "community": 6,
+      "community": 46,
       "norm_label": "._drop_connection()"
     },
     {
@@ -5000,7 +5080,7 @@
       "source_location": "L411",
       "_origin": "ast",
       "id": "hologram_controller_create_hologram_manager",
-      "community": 6,
+      "community": 46,
       "norm_label": "create_hologram_manager()"
     },
     {
@@ -5010,7 +5090,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hologram_controller_rationale_1",
-      "community": 6,
+      "community": 46,
       "norm_label": "=============================================================  controlador pytho"
     },
     {
@@ -5060,7 +5140,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "hologram_controller_rationale_104",
-      "community": 6,
+      "community": 46,
       "norm_label": "cierra la conexion tcp limpiamente."
     },
     {
@@ -5180,7 +5260,7 @@
       "source_location": "L192",
       "_origin": "ast",
       "id": "hologram_controller_rationale_192",
-      "community": 6,
+      "community": 46,
       "norm_label": "escanea la red local buscando hologramas missyou en el puerto 50200.      util c"
     },
     {
@@ -5190,7 +5270,7 @@
       "source_location": "L252",
       "_origin": "ast",
       "id": "hologram_controller_rationale_252",
-      "community": 6,
+      "community": 46,
       "norm_label": "puente thread-safe entre los estados de la ia y los clips del holograma.      la"
     },
     {
@@ -5200,7 +5280,7 @@
       "source_location": "L300",
       "_origin": "ast",
       "id": "hologram_controller_rationale_300",
-      "community": 6,
+      "community": 46,
       "norm_label": "arranca el hilo de control y deja el holograma en idle. no-op si esta deshabilit"
     },
     {
@@ -5210,7 +5290,7 @@
       "source_location": "L311",
       "_origin": "ast",
       "id": "hologram_controller_rationale_311",
-      "community": 6,
+      "community": 46,
       "norm_label": "solicita un cambio de estado del holograma. no bloquea ni lanza excepciones."
     },
     {
@@ -5220,7 +5300,7 @@
       "source_location": "L321",
       "_origin": "ast",
       "id": "hologram_controller_rationale_321",
-      "community": 6,
+      "community": 46,
       "norm_label": "detiene el hilo, apaga el giro y cierra la conexion limpiamente."
     },
     {
@@ -5230,7 +5310,7 @@
       "source_location": "L412",
       "_origin": "ast",
       "id": "hologram_controller_rationale_412",
-      "community": 6,
+      "community": 46,
       "norm_label": "construye un hologramstatemanager a partir de variables de entorno.      variabl"
     },
     {
@@ -5617,7 +5697,7 @@
       "label": "_atomic_write_text()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L39",
+      "source_location": "L40",
       "_origin": "ast",
       "id": "main_atomic_write_text",
       "community": 28,
@@ -5627,7 +5707,7 @@
       "label": "lifespan()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L55",
+      "source_location": "L56",
       "_origin": "ast",
       "id": "main_lifespan",
       "community": 17,
@@ -5637,7 +5717,7 @@
       "label": "FastAPI",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L55",
+      "source_location": "L56",
       "_origin": "ast",
       "id": "fastapi",
       "community": 17,
@@ -5647,7 +5727,7 @@
       "label": "send_to_web_client()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L201",
+      "source_location": "L202",
       "_origin": "ast",
       "id": "main_send_to_web_client",
       "community": 17,
@@ -5657,10 +5737,10 @@
       "label": "ConfigUpdate",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L237",
+      "source_location": "L238",
       "_origin": "ast",
       "id": "main_configupdate",
-      "community": 28,
+      "community": 17,
       "norm_label": "configupdate"
     },
     {
@@ -5670,24 +5750,24 @@
       "source_location": "",
       "_origin": "ast",
       "id": "basemodel",
-      "community": 28,
+      "community": 17,
       "norm_label": "basemodel"
     },
     {
       "label": "BoundingBoxModel",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L258",
+      "source_location": "L259",
       "_origin": "ast",
       "id": "main_boundingboxmodel",
-      "community": 28,
+      "community": 17,
       "norm_label": "boundingboxmodel"
     },
     {
       "label": "TrainImagePayload",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L267",
+      "source_location": "L268",
       "_origin": "ast",
       "id": "main_trainimagepayload",
       "community": 28,
@@ -5697,7 +5777,7 @@
       "label": "VocabularyPayload",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L272",
+      "source_location": "L273",
       "_origin": "ast",
       "id": "main_vocabularypayload",
       "community": 28,
@@ -5707,7 +5787,7 @@
       "label": "get_config()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L280",
+      "source_location": "L281",
       "_origin": "ast",
       "id": "main_get_config",
       "community": 17,
@@ -5717,27 +5797,27 @@
       "label": "update_config()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L328",
+      "source_location": "L329",
       "_origin": "ast",
       "id": "main_update_config",
-      "community": 28,
+      "community": 17,
       "norm_label": "update_config()"
     },
     {
       "label": "LlmTestPayload",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L457",
+      "source_location": "L458",
       "_origin": "ast",
       "id": "main_llmtestpayload",
-      "community": 64,
+      "community": 17,
       "norm_label": "llmtestpayload"
     },
     {
       "label": "get_providers()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L465",
+      "source_location": "L466",
       "_origin": "ast",
       "id": "main_get_providers",
       "community": 17,
@@ -5747,27 +5827,47 @@
       "label": "test_llm()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L476",
+      "source_location": "L477",
       "_origin": "ast",
       "id": "main_test_llm",
-      "community": 64,
+      "community": 17,
       "norm_label": "test_llm()"
+    },
+    {
+      "label": "get_unev_content()",
+      "file_type": "code",
+      "source_file": "main.py",
+      "source_location": "L493",
+      "_origin": "ast",
+      "id": "main_get_unev_content",
+      "community": 4,
+      "norm_label": "get_unev_content()"
+    },
+    {
+      "label": "update_unev_content()",
+      "file_type": "code",
+      "source_file": "main.py",
+      "source_location": "L499",
+      "_origin": "ast",
+      "id": "main_update_unev_content",
+      "community": 28,
+      "norm_label": "update_unev_content()"
     },
     {
       "label": "SpeakPayload",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L491",
+      "source_location": "L514",
       "_origin": "ast",
       "id": "main_speakpayload",
-      "community": 28,
+      "community": 17,
       "norm_label": "speakpayload"
     },
     {
       "label": "get_voices()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L497",
+      "source_location": "L520",
       "_origin": "ast",
       "id": "main_get_voices",
       "community": 17,
@@ -5777,17 +5877,17 @@
       "label": "play_speak()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L509",
+      "source_location": "L532",
       "_origin": "ast",
       "id": "main_play_speak",
-      "community": 28,
+      "community": 17,
       "norm_label": "play_speak()"
     },
     {
       "label": "train_image()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L533",
+      "source_location": "L556",
       "_origin": "ast",
       "id": "main_train_image",
       "community": 28,
@@ -5797,7 +5897,7 @@
       "label": "get_training_metadata()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L586",
+      "source_location": "L609",
       "_origin": "ast",
       "id": "main_get_training_metadata",
       "community": 17,
@@ -5807,7 +5907,7 @@
       "label": "train_vocabulary()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L598",
+      "source_location": "L621",
       "_origin": "ast",
       "id": "main_train_vocabulary",
       "community": 28,
@@ -5817,7 +5917,7 @@
       "label": "HologramConnect",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L609",
+      "source_location": "L632",
       "_origin": "ast",
       "id": "main_hologramconnect",
       "community": 17,
@@ -5827,7 +5927,7 @@
       "label": "HologramCommand",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L614",
+      "source_location": "L637",
       "_origin": "ast",
       "id": "main_hologramcommand",
       "community": 17,
@@ -5837,7 +5937,7 @@
       "label": "_get_holo()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L624",
+      "source_location": "L647",
       "_origin": "ast",
       "id": "main_get_holo",
       "community": 17,
@@ -5847,7 +5947,7 @@
       "label": "holo_connect()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L634",
+      "source_location": "L657",
       "_origin": "ast",
       "id": "main_holo_connect",
       "community": 17,
@@ -5857,7 +5957,7 @@
       "label": "holo_disconnect()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L646",
+      "source_location": "L669",
       "_origin": "ast",
       "id": "main_holo_disconnect",
       "community": 17,
@@ -5867,7 +5967,7 @@
       "label": "holo_command()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L656",
+      "source_location": "L679",
       "_origin": "ast",
       "id": "main_holo_command",
       "community": 17,
@@ -5877,7 +5977,7 @@
       "label": "holo_status()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L693",
+      "source_location": "L716",
       "_origin": "ast",
       "id": "main_holo_status",
       "community": 17,
@@ -5887,7 +5987,7 @@
       "label": "pause_ai()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L706",
+      "source_location": "L729",
       "_origin": "ast",
       "id": "main_pause_ai",
       "community": 17,
@@ -5897,7 +5997,7 @@
       "label": "resume_ai()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L717",
+      "source_location": "L740",
       "_origin": "ast",
       "id": "main_resume_ai",
       "community": 17,
@@ -5907,27 +6007,27 @@
       "label": "_placeholder_jpeg()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L730",
+      "source_location": "L753",
       "_origin": "ast",
       "id": "main_placeholder_jpeg",
-      "community": 56,
+      "community": 17,
       "norm_label": "_placeholder_jpeg()"
     },
     {
       "label": "video_feed()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L748",
+      "source_location": "L771",
       "_origin": "ast",
       "id": "main_video_feed",
-      "community": 56,
+      "community": 17,
       "norm_label": "video_feed()"
     },
     {
       "label": "read_root()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L779",
+      "source_location": "L802",
       "_origin": "ast",
       "id": "main_read_root",
       "community": 17,
@@ -5937,7 +6037,7 @@
       "label": "read_all_other_paths()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L797",
+      "source_location": "L820",
       "_origin": "ast",
       "id": "main_read_all_other_paths",
       "community": 17,
@@ -5947,7 +6047,7 @@
       "label": "send_tts_status()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L812",
+      "source_location": "L835",
       "_origin": "ast",
       "id": "main_send_tts_status",
       "community": 59,
@@ -5957,7 +6057,7 @@
       "label": "WebSocket",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L812",
+      "source_location": "L835",
       "_origin": "ast",
       "id": "websocket",
       "community": 59,
@@ -5967,7 +6067,7 @@
       "label": "websocket_chat_endpoint()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L824",
+      "source_location": "L847",
       "_origin": "ast",
       "id": "main_websocket_chat_endpoint",
       "community": 59,
@@ -5977,9 +6077,9 @@
       "label": "Escritura at\u00f3mica: archivo temporal + os.replace.      Evita config.json / .env",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L40",
+      "source_location": "L41",
       "_origin": "ast",
-      "id": "main_rationale_40",
+      "id": "main_rationale_41",
       "community": 28,
       "norm_label": "escritura atomica: archivo temporal + os.replace.      evita config.json / .env"
     },
@@ -5987,9 +6087,9 @@
       "label": "Ciclo de vida de la aplicaci\u00f3n (reemplaza @app.on_event, deprecado).      Arranc",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L56",
+      "source_location": "L57",
       "_origin": "ast",
-      "id": "main_rationale_56",
+      "id": "main_rationale_57",
       "community": 17,
       "norm_label": "ciclo de vida de la aplicacion (reemplaza @app.on_event, deprecado).      arranc"
     },
@@ -5997,9 +6097,9 @@
       "label": "Lista de proveedores de IA con metadata segura (sin secretos).      La interfaz",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L466",
+      "source_location": "L467",
       "_origin": "ast",
-      "id": "main_rationale_466",
+      "id": "main_rationale_467",
       "community": 17,
       "norm_label": "lista de proveedores de ia con metadata segura (sin secretos).      la interfaz"
     },
@@ -6007,39 +6107,59 @@
       "label": "Prueba real de proveedor/modelo/key/URL sin guardar nada.      Devuelve un mensa",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L477",
+      "source_location": "L478",
       "_origin": "ast",
-      "id": "main_rationale_477",
-      "community": 64,
+      "id": "main_rationale_478",
+      "community": 17,
       "norm_label": "prueba real de proveedor/modelo/key/url sin guardar nada.      devuelve un mensa"
+    },
+    {
+      "label": "Contenido institucional de UNEV (fuente \u00fanica editable).",
+      "file_type": "rationale",
+      "source_file": "main.py",
+      "source_location": "L494",
+      "_origin": "ast",
+      "id": "main_rationale_494",
+      "community": 4,
+      "norm_label": "contenido institucional de unev (fuente unica editable)."
+    },
+    {
+      "label": "Valida y guarda el contenido de UNEV; recarga la fuente en caliente.      Devuel",
+      "file_type": "rationale",
+      "source_file": "main.py",
+      "source_location": "L500",
+      "_origin": "ast",
+      "id": "main_rationale_500",
+      "community": 28,
+      "norm_label": "valida y guarda el contenido de unev; recarga la fuente en caliente.      devuel"
     },
     {
       "label": "Build a simple 'no signal' JPEG so the <img> always shows something.",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L731",
+      "source_location": "L754",
       "_origin": "ast",
-      "id": "main_rationale_731",
-      "community": 56,
+      "id": "main_rationale_754",
+      "community": 17,
       "norm_label": "build a simple 'no signal' jpeg so the <img> always shows something."
     },
     {
       "label": "Stream the annotated YOLO camera frames to the web interface as MJPEG.",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L749",
+      "source_location": "L772",
       "_origin": "ast",
-      "id": "main_rationale_749",
-      "community": 56,
+      "id": "main_rationale_772",
+      "community": 17,
       "norm_label": "stream the annotated yolo camera frames to the web interface as mjpeg."
     },
     {
       "label": "Send host-side TTS status updates to the web client.",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L813",
+      "source_location": "L836",
       "_origin": "ast",
-      "id": "main_rationale_813",
+      "id": "main_rationale_836",
       "community": 59,
       "norm_label": "send host-side tts status updates to the web client."
     },
@@ -6894,6 +7014,156 @@
       "norm_label": "route_local_skill()"
     },
     {
+      "label": "unev_content.py",
+      "file_type": "code",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "skills_unev_content",
+      "community": 62,
+      "norm_label": "unev_content.py"
+    },
+    {
+      "label": "_coerce()",
+      "file_type": "code",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L196",
+      "_origin": "ast",
+      "id": "skills_unev_content_coerce",
+      "community": 62,
+      "norm_label": "_coerce()"
+    },
+    {
+      "label": "validate_unev_info()",
+      "file_type": "code",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L217",
+      "_origin": "ast",
+      "id": "skills_unev_content_validate_unev_info",
+      "community": 62,
+      "norm_label": "validate_unev_info()"
+    },
+    {
+      "label": "load_unev_info()",
+      "file_type": "code",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L237",
+      "_origin": "ast",
+      "id": "skills_unev_content_load_unev_info",
+      "community": 62,
+      "norm_label": "load_unev_info()"
+    },
+    {
+      "label": "Path",
+      "file_type": "code",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L237",
+      "_origin": "ast",
+      "id": "path",
+      "community": 16,
+      "norm_label": "path"
+    },
+    {
+      "label": "get_unev_info()",
+      "file_type": "code",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L248",
+      "_origin": "ast",
+      "id": "skills_unev_content_get_unev_info",
+      "community": 4,
+      "norm_label": "get_unev_info()"
+    },
+    {
+      "label": "reload()",
+      "file_type": "code",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L256",
+      "_origin": "ast",
+      "id": "skills_unev_content_reload",
+      "community": 62,
+      "norm_label": "reload()"
+    },
+    {
+      "label": "save_unev_info()",
+      "file_type": "code",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L263",
+      "_origin": "ast",
+      "id": "skills_unev_content_save_unev_info",
+      "community": 62,
+      "norm_label": "save_unev_info()"
+    },
+    {
+      "label": "Fuente \u00fanica y editable de la informaci\u00f3n institucional de UNEV.  Antes, los dat",
+      "file_type": "rationale",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "skills_unev_content_rationale_1",
+      "community": 62,
+      "norm_label": "fuente unica y editable de la informacion institucional de unev.  antes, los dat"
+    },
+    {
+      "label": "Normaliza ``data`` a la forma can\u00f3nica, rellenando faltantes con el respaldo.",
+      "file_type": "rationale",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L197",
+      "_origin": "ast",
+      "id": "skills_unev_content_rationale_197",
+      "community": 62,
+      "norm_label": "normaliza ``data`` a la forma canonica, rellenando faltantes con el respaldo."
+    },
+    {
+      "label": "Devuelve una lista de errores (vac\u00eda = v\u00e1lido) para mostrar al operador.",
+      "file_type": "rationale",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L218",
+      "_origin": "ast",
+      "id": "skills_unev_content_rationale_218",
+      "community": 62,
+      "norm_label": "devuelve una lista de errores (vacia = valido) para mostrar al operador."
+    },
+    {
+      "label": "Carga el contenido desde el JSON autoritativo; respaldo en c\u00f3digo si falla.",
+      "file_type": "rationale",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L238",
+      "_origin": "ast",
+      "id": "skills_unev_content_rationale_238",
+      "community": 62,
+      "norm_label": "carga el contenido desde el json autoritativo; respaldo en codigo si falla."
+    },
+    {
+      "label": "Contenido vigente (cacheado). Llamado por las skills en cada respuesta.",
+      "file_type": "rationale",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L249",
+      "_origin": "ast",
+      "id": "skills_unev_content_rationale_249",
+      "community": 4,
+      "norm_label": "contenido vigente (cacheado). llamado por las skills en cada respuesta."
+    },
+    {
+      "label": "Recarga desde disco (tras una edici\u00f3n) y actualiza la cach\u00e9.",
+      "file_type": "rationale",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L257",
+      "_origin": "ast",
+      "id": "skills_unev_content_rationale_257",
+      "community": 62,
+      "norm_label": "recarga desde disco (tras una edicion) y actualiza la cache."
+    },
+    {
+      "label": "Valida, escribe at\u00f3micamente el JSON autoritativo y recarga la cach\u00e9.      Lanza",
+      "file_type": "rationale",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L264",
+      "_origin": "ast",
+      "id": "skills_unev_content_rationale_264",
+      "community": 62,
+      "norm_label": "valida, escribe atomicamente el json autoritativo y recarga la cache.      lanza"
+    },
+    {
       "label": "university.py",
       "file_type": "code",
       "source_file": "skills/university.py",
@@ -6907,7 +7177,7 @@
       "label": "get_university_summary()",
       "file_type": "code",
       "source_file": "skills/university.py",
-      "source_location": "L209",
+      "source_location": "L9",
       "_origin": "ast",
       "id": "skills_university_get_university_summary",
       "community": 4,
@@ -6917,7 +7187,7 @@
       "label": "get_programs_summary()",
       "file_type": "code",
       "source_file": "skills/university.py",
-      "source_location": "L225",
+      "source_location": "L26",
       "_origin": "ast",
       "id": "skills_university_get_programs_summary",
       "community": 4,
@@ -6927,7 +7197,7 @@
       "label": "get_program_info()",
       "file_type": "code",
       "source_file": "skills/university.py",
-      "source_location": "L239",
+      "source_location": "L38",
       "_origin": "ast",
       "id": "skills_university_get_program_info",
       "community": 4,
@@ -6937,7 +7207,7 @@
       "label": "get_admission_info()",
       "file_type": "code",
       "source_file": "skills/university.py",
-      "source_location": "L254",
+      "source_location": "L53",
       "_origin": "ast",
       "id": "skills_university_get_admission_info",
       "community": 4,
@@ -6947,7 +7217,7 @@
       "label": "get_location_info()",
       "file_type": "code",
       "source_file": "skills/university.py",
-      "source_location": "L269",
+      "source_location": "L68",
       "_origin": "ast",
       "id": "skills_university_get_location_info",
       "community": 4,
@@ -6957,7 +7227,7 @@
       "label": "get_approval_info()",
       "file_type": "code",
       "source_file": "skills/university.py",
-      "source_location": "L276",
+      "source_location": "L73",
       "_origin": "ast",
       "id": "skills_university_get_approval_info",
       "community": 4,
@@ -6967,7 +7237,7 @@
       "label": "get_website_info()",
       "file_type": "code",
       "source_file": "skills/university.py",
-      "source_location": "L280",
+      "source_location": "L77",
       "_origin": "ast",
       "id": "skills_university_get_website_info",
       "community": 4,
@@ -6977,11 +7247,21 @@
       "label": "get_university_context()",
       "file_type": "code",
       "source_file": "skills/university.py",
-      "source_location": "L284",
+      "source_location": "L81",
       "_origin": "ast",
       "id": "skills_university_get_university_context",
-      "community": 5,
+      "community": 4,
       "norm_label": "get_university_context()"
+    },
+    {
+      "label": "Respuestas sobre UNEV. Los datos provienen de la fuente \u00fanica y editable ``skill",
+      "file_type": "rationale",
+      "source_file": "skills/university.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "skills_university_rationale_1",
+      "community": 4,
+      "norm_label": "respuestas sobre unev. los datos provienen de la fuente unica y editable ``skill"
     },
     {
       "label": "utils.py",
@@ -7000,7 +7280,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "skills_utils_normalize_text",
-      "community": 4,
+      "community": 7,
       "norm_label": "normalize_text()"
     },
     {
@@ -7010,7 +7290,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "skills_utils_rationale_4",
-      "community": 4,
+      "community": 7,
       "norm_label": "normalizes text by removing accents, lowercasing, and stripping whitespace."
     },
     {
@@ -7050,7 +7330,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "stt_listener_looks_like_hallucination",
-      "community": 27,
+      "community": 0,
       "norm_label": "_looks_like_hallucination()"
     },
     {
@@ -7060,7 +7340,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener",
-      "community": 27,
+      "community": 17,
       "norm_label": "whisperlistener"
     },
     {
@@ -7130,7 +7410,7 @@
       "source_location": "L424",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_is_available",
-      "community": 27,
+      "community": 17,
       "norm_label": ".is_available()"
     },
     {
@@ -7160,7 +7440,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "stt_listener_rationale_45",
-      "community": 27,
+      "community": 0,
       "norm_label": "return true if *text* is empty or a known whisper silence-hallucination."
     },
     {
@@ -7170,7 +7450,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "stt_listener_rationale_57",
-      "community": 27,
+      "community": 17,
       "norm_label": "record from the microphone and transcribe with faster-whisper.      parameters"
     },
     {
@@ -7230,7 +7510,7 @@
       "source_location": "L425",
       "_origin": "ast",
       "id": "stt_listener_rationale_425",
-      "community": 27,
+      "community": 17,
       "norm_label": "return true if sounddevice and faster-whisper are importable."
     },
     {
@@ -7904,6 +8184,106 @@
       "norm_label": "tests de las utilidades de seguridad (redaccion de secretos + saneo de texto)."
     },
     {
+      "label": "test_unev_content.py",
+      "file_type": "code",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_unev_content",
+      "community": 64,
+      "norm_label": "test_unev_content.py"
+    },
+    {
+      "label": "test_load_defaults_when_file_missing()",
+      "file_type": "code",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "tests_test_unev_content_test_load_defaults_when_file_missing",
+      "community": 64,
+      "norm_label": "test_load_defaults_when_file_missing()"
+    },
+    {
+      "label": "test_save_then_load_roundtrip()",
+      "file_type": "code",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L20",
+      "_origin": "ast",
+      "id": "tests_test_unev_content_test_save_then_load_roundtrip",
+      "community": 64,
+      "norm_label": "test_save_then_load_roundtrip()"
+    },
+    {
+      "label": "test_merge_fills_missing_keys_from_default()",
+      "file_type": "code",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "tests_test_unev_content_test_merge_fills_missing_keys_from_default",
+      "community": 64,
+      "norm_label": "test_merge_fills_missing_keys_from_default()"
+    },
+    {
+      "label": "test_program_keys_are_lowercased()",
+      "file_type": "code",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "tests_test_unev_content_test_program_keys_are_lowercased",
+      "community": 64,
+      "norm_label": "test_program_keys_are_lowercased()"
+    },
+    {
+      "label": "test_validation_reports_actionable_errors()",
+      "file_type": "code",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L44",
+      "_origin": "ast",
+      "id": "tests_test_unev_content_test_validation_reports_actionable_errors",
+      "community": 64,
+      "norm_label": "test_validation_reports_actionable_errors()"
+    },
+    {
+      "label": "test_save_rejects_invalid()",
+      "file_type": "code",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L52",
+      "_origin": "ast",
+      "id": "tests_test_unev_content_test_save_rejects_invalid",
+      "community": 64,
+      "norm_label": "test_save_rejects_invalid()"
+    },
+    {
+      "label": "test_save_updates_cache_and_university_reads_it()",
+      "file_type": "code",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L57",
+      "_origin": "ast",
+      "id": "tests_test_unev_content_test_save_updates_cache_and_university_reads_it",
+      "community": 64,
+      "norm_label": "test_save_updates_cache_and_university_reads_it()"
+    },
+    {
+      "label": "test_clamp_strips_control_chars_in_content()",
+      "file_type": "code",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L68",
+      "_origin": "ast",
+      "id": "tests_test_unev_content_test_clamp_strips_control_chars_in_content",
+      "community": 64,
+      "norm_label": "test_clamp_strips_control_chars_in_content()"
+    },
+    {
+      "label": "Tests de la fuente \u00fanica de contenido UNEV (skills/unev_content).  Puras: usan r",
+      "file_type": "rationale",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_unev_content_rationale_1",
+      "community": 64,
+      "norm_label": "tests de la fuente unica de contenido unev (skills/unev_content).  puras: usan r"
+    },
+    {
       "label": "utils.py",
       "file_type": "code",
       "source_file": "utils.py",
@@ -7950,7 +8330,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "utils_is_quiet",
-      "community": 16,
+      "community": 27,
       "norm_label": "_is_quiet()"
     },
     {
@@ -8000,7 +8380,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "utils_rationale_30",
-      "community": 16,
+      "community": 27,
       "norm_label": "returns true if hologram_quiet env var is set to 1/true/yes."
     },
     {
@@ -10125,6 +10505,17 @@
     {
       "relation": "calls",
       "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "call.py",
+      "source_location": "L170",
+      "weight": 1.0,
+      "source": "call_get_piper_command_args",
+      "target": "path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "call.py",
       "source_location": "L363",
@@ -10189,6 +10580,17 @@
     {
       "relation": "calls",
       "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "call.py",
+      "source_location": "L196",
+      "weight": 1.0,
+      "source": "call_get_piper_model_path",
+      "target": "path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "call.py",
       "source_location": "L365",
@@ -10232,6 +10634,17 @@
     {
       "relation": "calls",
       "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "call.py",
+      "source_location": "L219",
+      "weight": 1.0,
+      "source": "call_get_piper_sample_rate",
+      "target": "path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "call.py",
       "source_location": "L197",
@@ -10270,6 +10683,17 @@
       "confidence_score": 1.0,
       "source": "call_speak_chunk_os",
       "target": "call_is_wsl"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "call.py",
+      "source_location": "L249",
+      "weight": 1.0,
+      "source": "call_get_powershell_command",
+      "target": "path"
     },
     {
       "relation": "rationale_for",
@@ -10347,6 +10771,17 @@
       "target": "call_play_wav_with_windows"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "call.py",
+      "source_location": "L302",
+      "weight": 1.0,
+      "source": "call_play_wav_with_windows",
+      "target": "path"
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "call.py",
@@ -10400,6 +10835,17 @@
       "target": "call_play_wav_file"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "call.py",
+      "source_location": "L371",
+      "weight": 1.0,
+      "source": "call_piper_available",
+      "target": "path"
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "call.py",
@@ -10419,6 +10865,17 @@
       "confidence_score": 1.0,
       "source": "call_render_chunks",
       "target": "call_piper_available"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "call.py",
+      "source_location": "L386",
+      "weight": 1.0,
+      "source": "call_piper_synth_to_wav",
+      "target": "path"
     },
     {
       "relation": "calls",
@@ -13836,6 +14293,28 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/App.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "src_app",
+      "target": "screens_contentscreen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "src_app",
+      "target": "screens_contentscreen_contentscreen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
       "source_location": "L4",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -14982,6 +15461,17 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "screens_contentscreen",
+      "target": "ui_card",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L7",
       "weight": 1.0,
@@ -15034,6 +15524,17 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "screens_contentscreen",
+      "target": "ui_card_card",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L7",
       "weight": 1.0,
@@ -15045,12 +15546,34 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "screens_contentscreen",
+      "target": "ui_card_sectiontitle",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L7",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "screens_settingsscreen",
       "target": "ui_card_sectiontitle"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "screens_contentscreen",
+      "target": "ui_field",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -15098,11 +15621,32 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/components/ui/Field.tsx",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "ui_field",
+      "target": "ui_field_textarea",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ui/Field.tsx",
       "source_location": "L15",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "ui_field",
       "target": "ui_field_textinput"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "screens_contentscreen",
+      "target": "ui_field_field",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -15114,6 +15658,17 @@
       "confidence_score": 1.0,
       "source": "screens_settingsscreen",
       "target": "ui_field_field"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "screens_contentscreen",
+      "target": "ui_field_textinput",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -15136,6 +15691,17 @@
       "confidence_score": 1.0,
       "source": "screens_settingsscreen",
       "target": "ui_field_select"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "screens_contentscreen",
+      "target": "ui_field_textarea",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -15815,6 +16381,17 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "screens_contentscreen",
+      "target": "context_toastcontext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "frontend/src/screens/SettingsScreen.tsx",
       "source_location": "L5",
       "weight": 1.0,
@@ -15897,6 +16474,28 @@
       "source_location": "L38",
       "weight": 1.0,
       "source": "screens_assistantscreen_assistantscreen",
+      "target": "context_toastcontext_usetoast"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "screens_contentscreen",
+      "target": "context_toastcontext_usetoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "screens_contentscreen_contentscreen",
       "target": "context_toastcontext_usetoast"
     },
     {
@@ -16462,6 +17061,91 @@
       "weight": 1.0,
       "source": "screens_settingsscreen_settingsscreen",
       "target": "hooks_useproviders_useproviders"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/hooks/useUnevContent.ts",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "hooks_useunevcontent",
+      "target": "hooks_useunevcontent_saveresult",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/hooks/useUnevContent.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "hooks_useunevcontent",
+      "target": "hooks_useunevcontent_unevprogram",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/hooks/useUnevContent.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "hooks_useunevcontent",
+      "target": "hooks_useunevcontent_useunevcontent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/hooks/useUnevContent.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "hooks_useunevcontent",
+      "target": "lib_backend",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/hooks/useUnevContent.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "hooks_useunevcontent",
+      "target": "lib_backend_apifetch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "screens_contentscreen",
+      "target": "hooks_useunevcontent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "screens_contentscreen",
+      "target": "hooks_useunevcontent_useunevcontent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "screens_contentscreen_contentscreen",
+      "target": "hooks_useunevcontent_useunevcontent"
     },
     {
       "relation": "contains",
@@ -17067,6 +17751,26 @@
       "confidence_score": 1.0,
       "source": "screens_assistantscreen_assistantscreen",
       "target": "screens_assistantscreen_highlighted"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "screens_contentscreen",
+      "target": "screens_contentscreen_contentscreen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/screens/ContentScreen.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "screens_contentscreen",
+      "target": "screens_contentscreen_field_labels",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -19093,9 +19797,9 @@
       "source_file": "llm_backend.py",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "llm_backend",
-      "target": "security",
-      "confidence_score": 1.0
+      "target": "security"
     },
     {
       "relation": "imports",
@@ -19104,9 +19808,9 @@
       "source_file": "llm_backend.py",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "llm_backend",
-      "target": "security_redact_secrets",
-      "confidence_score": 1.0
+      "target": "security_redact_secrets"
     },
     {
       "relation": "imports",
@@ -19619,9 +20323,9 @@
       "source_file": "llm_backend.py",
       "source_location": "L93",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "llm_backend_rationale_93",
-      "target": "llm_backend_get_selected_backend",
-      "confidence_score": 1.0
+      "target": "llm_backend_get_selected_backend"
     },
     {
       "relation": "calls",
@@ -19663,9 +20367,9 @@
       "source_file": "llm_backend.py",
       "source_location": "L150",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "llm_backend_humanize_probe_error",
-      "target": "security_redact_secrets",
-      "confidence_score": 1.0
+      "target": "security_redact_secrets"
     },
     {
       "relation": "calls",
@@ -19684,9 +20388,9 @@
       "source_file": "llm_backend.py",
       "source_location": "L138",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "llm_backend_rationale_138",
-      "target": "llm_backend_humanize_probe_error",
-      "confidence_score": 1.0
+      "target": "llm_backend_humanize_probe_error"
     },
     {
       "relation": "calls",
@@ -19716,9 +20420,9 @@
       "source_file": "llm_backend.py",
       "source_location": "L154",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "llm_backend_rationale_154",
-      "target": "llm_backend_probe_backend",
-      "confidence_score": 1.0
+      "target": "llm_backend_probe_backend"
     },
     {
       "relation": "imports",
@@ -19891,9 +20595,9 @@
       "source_file": "llm_backend.py",
       "source_location": "L275",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "llm_backend_rationale_275",
-      "target": "llm_backend_require",
-      "confidence_score": 1.0
+      "target": "llm_backend_require"
     },
     {
       "relation": "calls",
@@ -19945,9 +20649,9 @@
       "source_file": "llm_backend.py",
       "source_location": "L299",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "llm_backend_rationale_299",
-      "target": "llm_backend_chat_with_openai_compatible",
-      "confidence_score": 1.0
+      "target": "llm_backend_chat_with_openai_compatible"
     },
     {
       "relation": "calls",
@@ -19977,9 +20681,9 @@
       "source_file": "llm_backend.py",
       "source_location": "L314",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "llm_backend_rationale_314",
-      "target": "llm_backend_strip_qwen_thinking",
-      "confidence_score": 1.0
+      "target": "llm_backend_strip_qwen_thinking"
     },
     {
       "relation": "calls",
@@ -20053,9 +20757,9 @@
       "source_file": "llm_backend.py",
       "source_location": "L396",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "llm_backend_rationale_396",
-      "target": "llm_backend_is_mostly_english",
-      "confidence_score": 1.0
+      "target": "llm_backend_is_mostly_english"
     },
     {
       "relation": "calls",
@@ -20074,9 +20778,9 @@
       "source_file": "llm_backend.py",
       "source_location": "L415",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "llm_backend_rationale_415",
-      "target": "llm_backend_postprocess_reply",
-      "confidence_score": 1.0
+      "target": "llm_backend_postprocess_reply"
     },
     {
       "relation": "calls",
@@ -20106,9 +20810,9 @@
       "source_file": "llm_backend.py",
       "source_location": "L496",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "llm_backend_rationale_496",
-      "target": "llm_backend_stream_llm_response",
-      "confidence_score": 1.0
+      "target": "llm_backend_stream_llm_response"
     },
     {
       "relation": "calls",
@@ -20245,6 +20949,16 @@
       "confidence_score": 1.0,
       "source": "main",
       "target": "main_get_training_metadata"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L493",
+      "weight": 1.0,
+      "source": "main",
+      "target": "main_get_unev_content",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -20480,6 +21194,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
+      "source_location": "L499",
+      "weight": 1.0,
+      "source": "main",
+      "target": "main_update_unev_content",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
       "source_location": "L524",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -20535,9 +21259,9 @@
       "source_file": "main.py",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "main",
-      "target": "security",
-      "confidence_score": 1.0
+      "target": "security"
     },
     {
       "relation": "imports",
@@ -20546,9 +21270,9 @@
       "source_file": "main.py",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "main",
-      "target": "security_clamp_text",
-      "confidence_score": 1.0
+      "target": "security_clamp_text"
     },
     {
       "relation": "imports",
@@ -20557,8 +21281,41 @@
       "source_file": "main.py",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "main",
-      "target": "security_redact_secrets",
+      "target": "security_redact_secrets"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "main",
+      "target": "skills_unev_content",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "main",
+      "target": "skills_unev_content_get_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "main",
+      "target": "skills_unev_content_save_unev_info",
       "confidence_score": 1.0
     },
     {
@@ -20576,9 +21333,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L40",
+      "source_location": "L41",
       "weight": 1.0,
-      "source": "main_rationale_40",
+      "source": "main_rationale_41",
       "target": "main_atomic_write_text",
       "confidence_score": 1.0
     },
@@ -20589,9 +21346,9 @@
       "source_file": "main.py",
       "source_location": "L578",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "main_train_image",
-      "target": "main_atomic_write_text",
-      "confidence_score": 1.0
+      "target": "main_atomic_write_text"
     },
     {
       "relation": "calls",
@@ -20600,9 +21357,9 @@
       "source_file": "main.py",
       "source_location": "L603",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "main_train_vocabulary",
-      "target": "main_atomic_write_text",
-      "confidence_score": 1.0
+      "target": "main_atomic_write_text"
     },
     {
       "relation": "calls",
@@ -20630,9 +21387,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L56",
+      "source_location": "L57",
       "weight": 1.0,
-      "source": "main_rationale_56",
+      "source": "main_rationale_57",
       "target": "main_lifespan",
       "confidence_score": 1.0
     },
@@ -20846,9 +21603,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L466",
+      "source_location": "L467",
       "weight": 1.0,
-      "source": "main_rationale_466",
+      "source": "main_rationale_467",
       "target": "main_get_providers",
       "confidence_score": 1.0
     },
@@ -20856,11 +21613,64 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L477",
+      "source_location": "L478",
       "weight": 1.0,
-      "source": "main_rationale_477",
+      "source": "main_rationale_478",
       "target": "main_test_llm",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "main.py",
+      "source_location": "L495",
+      "weight": 1.0,
+      "source": "main_get_unev_content",
+      "target": "skills_unev_content_get_unev_info"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L494",
+      "weight": 1.0,
+      "source": "main_rationale_494",
+      "target": "main_get_unev_content",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L500",
+      "weight": 1.0,
+      "source": "main_rationale_500",
+      "target": "main_update_unev_content",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "main.py",
+      "source_location": "L511",
+      "weight": 1.0,
+      "source": "main_update_unev_content",
+      "target": "security_redact_secrets"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "main.py",
+      "source_location": "L506",
+      "weight": 1.0,
+      "source": "main_update_unev_content",
+      "target": "skills_unev_content_save_unev_info"
     },
     {
       "relation": "references",
@@ -20882,6 +21692,17 @@
       "confidence_score": 0.5,
       "source": "main_speakpayload",
       "target": "stt_listener_whisperlistener"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "main.py",
+      "source_location": "L525",
+      "weight": 1.0,
+      "source": "main_get_voices",
+      "target": "path"
     },
     {
       "relation": "calls",
@@ -21039,9 +21860,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L731",
+      "source_location": "L754",
       "weight": 1.0,
-      "source": "main_rationale_731",
+      "source": "main_rationale_754",
       "target": "main_placeholder_jpeg",
       "confidence_score": 1.0
     },
@@ -21049,19 +21870,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L731",
+      "source_location": "L772",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "main_rationale_731",
-      "target": "main_video_feed"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "main.py",
-      "source_location": "L749",
-      "weight": 1.0,
-      "source": "main_rationale_749",
+      "source": "main_rationale_772",
       "target": "main_video_feed",
       "confidence_score": 1.0
     },
@@ -21069,9 +21880,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L813",
+      "source_location": "L836",
       "weight": 1.0,
-      "source": "main_rationale_813",
+      "source": "main_rationale_836",
       "target": "main_send_tts_status",
       "confidence_score": 1.0
     },
@@ -21997,9 +22808,9 @@
       "source_file": "security.py",
       "source_location": "L87",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security",
-      "target": "security_clamp_text",
-      "confidence_score": 1.0
+      "target": "security_clamp_text"
     },
     {
       "relation": "contains",
@@ -22007,9 +22818,9 @@
       "source_file": "security.py",
       "source_location": "L100",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security",
-      "target": "security_redact_iter",
-      "confidence_score": 1.0
+      "target": "security_redact_iter"
     },
     {
       "relation": "contains",
@@ -22017,9 +22828,9 @@
       "source_file": "security.py",
       "source_location": "L64",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security",
-      "target": "security_redact_secrets",
-      "confidence_score": 1.0
+      "target": "security_redact_secrets"
     },
     {
       "relation": "rationale_for",
@@ -22027,7 +22838,18 @@
       "source_file": "security.py",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_rationale_1",
+      "target": "security"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "skills_unev_content",
       "target": "security",
       "confidence_score": 1.0
     },
@@ -22038,9 +22860,9 @@
       "source_file": "tests/test_security.py",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security",
-      "target": "security",
-      "confidence_score": 1.0
+      "target": "security"
     },
     {
       "relation": "rationale_for",
@@ -22048,9 +22870,9 @@
       "source_file": "security.py",
       "source_location": "L65",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_rationale_65",
-      "target": "security_redact_secrets",
-      "confidence_score": 1.0
+      "target": "security_redact_secrets"
     },
     {
       "relation": "calls",
@@ -22059,9 +22881,9 @@
       "source_file": "security.py",
       "source_location": "L102",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_redact_iter",
-      "target": "security_redact_secrets",
-      "confidence_score": 1.0
+      "target": "security_redact_secrets"
     },
     {
       "relation": "rationale_for",
@@ -22069,7 +22891,29 @@
       "source_file": "security.py",
       "source_location": "L88",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_rationale_88",
+      "target": "security_clamp_text"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "skills_unev_content",
+      "target": "security_clamp_text",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L202",
+      "weight": 1.0,
+      "source": "skills_unev_content_coerce",
       "target": "security_clamp_text",
       "confidence_score": 1.0
     },
@@ -22079,9 +22923,9 @@
       "source_file": "security.py",
       "source_location": "L101",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_rationale_101",
-      "target": "security_redact_iter",
-      "confidence_score": 1.0
+      "target": "security_redact_iter"
     },
     {
       "relation": "rationale_for",
@@ -22601,6 +23445,411 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L196",
+      "weight": 1.0,
+      "source": "skills_unev_content",
+      "target": "skills_unev_content_coerce",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L248",
+      "weight": 1.0,
+      "source": "skills_unev_content",
+      "target": "skills_unev_content_get_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L237",
+      "weight": 1.0,
+      "source": "skills_unev_content",
+      "target": "skills_unev_content_load_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L256",
+      "weight": 1.0,
+      "source": "skills_unev_content",
+      "target": "skills_unev_content_reload",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L263",
+      "weight": 1.0,
+      "source": "skills_unev_content",
+      "target": "skills_unev_content_save_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L217",
+      "weight": 1.0,
+      "source": "skills_unev_content",
+      "target": "skills_unev_content_validate_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "skills_unev_content_rationale_1",
+      "target": "skills_unev_content",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "skills_university",
+      "target": "skills_unev_content",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "tests_test_unev_content",
+      "target": "skills_unev_content",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L242",
+      "weight": 1.0,
+      "source": "skills_unev_content_load_unev_info",
+      "target": "skills_unev_content_coerce",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L197",
+      "weight": 1.0,
+      "source": "skills_unev_content_rationale_197",
+      "target": "skills_unev_content_coerce",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L272",
+      "weight": 1.0,
+      "source": "skills_unev_content_save_unev_info",
+      "target": "skills_unev_content_coerce",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L229",
+      "weight": 1.0,
+      "source": "skills_unev_content_validate_unev_info",
+      "target": "skills_unev_content_coerce",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L218",
+      "weight": 1.0,
+      "source": "skills_unev_content_rationale_218",
+      "target": "skills_unev_content_validate_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L268",
+      "weight": 1.0,
+      "source": "skills_unev_content_save_unev_info",
+      "target": "skills_unev_content_validate_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L252",
+      "weight": 1.0,
+      "source": "skills_unev_content_get_unev_info",
+      "target": "skills_unev_content_load_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L237",
+      "weight": 1.0,
+      "source": "skills_unev_content_load_unev_info",
+      "target": "path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L238",
+      "weight": 1.0,
+      "source": "skills_unev_content_rationale_238",
+      "target": "skills_unev_content_load_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L259",
+      "weight": 1.0,
+      "source": "skills_unev_content_reload",
+      "target": "skills_unev_content_load_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L263",
+      "weight": 1.0,
+      "source": "skills_unev_content_save_unev_info",
+      "target": "path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "stt/listener.py",
+      "source_location": "L304",
+      "weight": 1.0,
+      "source": "stt_listener_whisperlistener_audio_to_wav_path",
+      "target": "path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "stt/listener.py",
+      "source_location": "L331",
+      "weight": 1.0,
+      "source": "stt_listener_whisperlistener_transcribe_file",
+      "target": "path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "stt/wakeword.py",
+      "source_location": "L132",
+      "weight": 1.0,
+      "source": "stt_wakeword_wakeworddetector_find_bundled_model",
+      "target": "path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "stt/wakeword.py",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "stt_wakeword_wakeworddetector_load_model",
+      "target": "path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "vision/camera.py",
+      "source_location": "L148",
+      "weight": 1.0,
+      "source": "vision_camera_camera_save_frame",
+      "target": "path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "vision/person_detector.py",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "vision_person_detector_yolopersondetector_load",
+      "target": "path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "vision/person_detector.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "vision_person_detector_yolopersondetector_load_training_data",
+      "target": "path"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L249",
+      "weight": 1.0,
+      "source": "skills_unev_content_rationale_249",
+      "target": "skills_unev_content_get_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "skills_university",
+      "target": "skills_unev_content_get_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "skills_university_get_approval_info",
+      "target": "skills_unev_content_get_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L69",
+      "weight": 1.0,
+      "source": "skills_university_get_location_info",
+      "target": "skills_unev_content_get_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "skills_university_get_program_info",
+      "target": "skills_unev_content_get_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "skills_university_get_programs_summary",
+      "target": "skills_unev_content_get_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L89",
+      "weight": 1.0,
+      "source": "skills_university_get_university_context",
+      "target": "skills_unev_content_get_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "skills_university_get_university_summary",
+      "target": "skills_unev_content_get_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L78",
+      "weight": 1.0,
+      "source": "skills_university_get_website_info",
+      "target": "skills_unev_content_get_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L257",
+      "weight": 1.0,
+      "source": "skills_unev_content_rationale_257",
+      "target": "skills_unev_content_reload",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/unev_content.py",
+      "source_location": "L264",
+      "weight": 1.0,
+      "source": "skills_unev_content_rationale_264",
+      "target": "skills_unev_content_save_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
       "source_location": "L259",
       "weight": 1.0,
@@ -22699,6 +23948,16 @@
       "confidence_score": 1.0,
       "source": "skills_university",
       "target": "skills_utils_normalize_text"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "skills_university_rationale_1",
+      "target": "skills_university",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -23481,9 +24740,9 @@
       "source_file": "tests/test_llm_backend.py",
       "source_location": "L77",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_llm_backend",
-      "target": "tests_test_llm_backend_test_humanize_probe_error_redacts_leaked_key_in_generic_branch",
-      "confidence_score": 1.0
+      "target": "tests_test_llm_backend_test_humanize_probe_error_redacts_leaked_key_in_generic_branch"
     },
     {
       "relation": "contains",
@@ -23841,9 +25100,9 @@
       "source_file": "tests/test_security.py",
       "source_location": "L55",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security",
-      "target": "tests_test_security_test_clamp_enforces_max_len",
-      "confidence_score": 1.0
+      "target": "tests_test_security_test_clamp_enforces_max_len"
     },
     {
       "relation": "contains",
@@ -23851,9 +25110,9 @@
       "source_file": "tests/test_security.py",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security",
-      "target": "tests_test_security_test_clamp_keeps_accents_and_newlines",
-      "confidence_score": 1.0
+      "target": "tests_test_security_test_clamp_keeps_accents_and_newlines"
     },
     {
       "relation": "contains",
@@ -23861,9 +25120,9 @@
       "source_file": "tests/test_security.py",
       "source_location": "L49",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security",
-      "target": "tests_test_security_test_clamp_truncates_and_strips_controls",
-      "confidence_score": 1.0
+      "target": "tests_test_security_test_clamp_truncates_and_strips_controls"
     },
     {
       "relation": "contains",
@@ -23871,9 +25130,9 @@
       "source_file": "tests/test_security.py",
       "source_location": "L37",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security",
-      "target": "tests_test_security_test_redact_accepts_non_str",
-      "confidence_score": 1.0
+      "target": "tests_test_security_test_redact_accepts_non_str"
     },
     {
       "relation": "contains",
@@ -23881,9 +25140,9 @@
       "source_file": "tests/test_security.py",
       "source_location": "L44",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security",
-      "target": "tests_test_security_test_redact_leaves_normal_text_untouched",
-      "confidence_score": 1.0
+      "target": "tests_test_security_test_redact_leaves_normal_text_untouched"
     },
     {
       "relation": "contains",
@@ -23891,9 +25150,9 @@
       "source_file": "tests/test_security.py",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security",
-      "target": "tests_test_security_test_redacts_exact_env_value_even_without_known_prefix",
-      "confidence_score": 1.0
+      "target": "tests_test_security_test_redacts_exact_env_value_even_without_known_prefix"
     },
     {
       "relation": "contains",
@@ -23901,9 +25160,9 @@
       "source_file": "tests/test_security.py",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security",
-      "target": "tests_test_security_test_redacts_known_api_key_shapes",
-      "confidence_score": 1.0
+      "target": "tests_test_security_test_redacts_known_api_key_shapes"
     },
     {
       "relation": "contains",
@@ -23911,9 +25170,9 @@
       "source_file": "tests/test_security.py",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security",
-      "target": "tests_test_security_test_short_env_value_is_not_masked",
-      "confidence_score": 1.0
+      "target": "tests_test_security_test_short_env_value_is_not_masked"
     },
     {
       "relation": "contains",
@@ -23921,9 +25180,9 @@
       "source_file": "tests/test_security.py",
       "source_location": "L64",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security",
-      "target": "tests_test_security_test_size_constants_are_sane",
-      "confidence_score": 1.0
+      "target": "tests_test_security_test_size_constants_are_sane"
     },
     {
       "relation": "rationale_for",
@@ -23931,8 +25190,98 @@
       "source_file": "tests/test_security.py",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security_rationale_1",
-      "target": "tests_test_security",
+      "target": "tests_test_security"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "tests_test_unev_content",
+      "target": "tests_test_unev_content_test_clamp_strips_control_chars_in_content",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "tests_test_unev_content",
+      "target": "tests_test_unev_content_test_load_defaults_when_file_missing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "tests_test_unev_content",
+      "target": "tests_test_unev_content_test_merge_fills_missing_keys_from_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "tests_test_unev_content",
+      "target": "tests_test_unev_content_test_program_keys_are_lowercased",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "tests_test_unev_content",
+      "target": "tests_test_unev_content_test_save_rejects_invalid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "tests_test_unev_content",
+      "target": "tests_test_unev_content_test_save_then_load_roundtrip",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "tests_test_unev_content",
+      "target": "tests_test_unev_content_test_save_updates_cache_and_university_reads_it",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "tests_test_unev_content",
+      "target": "tests_test_unev_content_test_validation_reports_actionable_errors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_unev_content.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "tests_test_unev_content_rationale_1",
+      "target": "tests_test_unev_content",
       "confidence_score": 1.0
     },
     {
@@ -25558,9 +26907,9 @@
       "source_file": "docs/CONFIG.md",
       "source_location": "L88",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_config_configuraci\u00f3n_de_ia_contrato_de_proveedor_y_modelo",
-      "target": "docs_config_endurecimiento_de_seguridad_fase_d_1",
-      "confidence_score": 1.0
+      "target": "docs_config_endurecimiento_de_seguridad_fase_d_1"
     },
     {
       "relation": "contains",
@@ -25688,9 +27037,9 @@
       "source_file": "docs/HANDOFF.md",
       "source_location": "L84",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_handoff_remaining_phases_pick_per_priority",
-      "target": "docs_handoff_d_security_operator_auth",
-      "confidence_score": 1.0
+      "target": "docs_handoff_d_security_operator_auth"
     },
     {
       "relation": "contains",
@@ -25824,5 +27173,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "f9939ecb728f24b700ede84cdaed22366b008932"
+  "built_at_commit": "5960d5178919179cde2736cc47c015fa7ec7f207"
 }

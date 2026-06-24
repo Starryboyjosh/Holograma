@@ -1,4 +1,9 @@
-import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes } from 'react';
+import type {
+  InputHTMLAttributes,
+  ReactNode,
+  SelectHTMLAttributes,
+  TextareaHTMLAttributes,
+} from 'react';
 import { INPUT, LABEL } from '../../theme';
 
 export function Field({ label, children }: { label: string; children: ReactNode }) {
@@ -24,4 +29,9 @@ export function Select(props: SelectHTMLAttributes<HTMLSelectElement>) {
       {children}
     </select>
   );
+}
+
+export function Textarea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  const { className = '', rows = 3, ...rest } = props;
+  return <textarea {...rest} rows={rows} className={`${INPUT} resize-y ${className}`} />;
 }

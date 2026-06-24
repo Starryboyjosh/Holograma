@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { to: '/', label: 'Inicio', end: true },
   { to: '/assistant', label: 'Hablar', end: false },
   { to: '/teaching', label: 'Entrenar Visión', shortLabel: 'Entrenar', end: false },
+  { to: '/content', label: 'Contenido', end: false },
   { to: '/remote', label: 'Control', end: false },
   { to: '/settings', label: 'Configuración', shortLabel: 'Ajustes', end: false },
 ];

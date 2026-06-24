@@ -10,8 +10,8 @@
     "semantic_hash": ""
   },
   "main.py": {
-    "mtime": 1782309113.361428,
-    "ast_hash": "c8ae2d7454f904dc8992373915ce9fa4",
+    "mtime": 1782310127.654342,
+    "ast_hash": "e1a7ec2fe56ea9db6318de222d67ae70",
     "semantic_hash": ""
   },
   "skills/__init__.py": {
@@ -45,8 +45,8 @@
     "semantic_hash": "6675e7103fcb623eb58c595dcfe982a1"
   },
   "skills/university.py": {
-    "mtime": 1781839643.5397632,
-    "ast_hash": "375638af1d122a6c942cb9fbfcfb63cb",
+    "mtime": 1782309985.0678337,
+    "ast_hash": "b81795ec9c249adf84b7eafafee2e362",
     "semantic_hash": ""
   },
   "stt/__init__.py": {
@@ -95,8 +95,8 @@
     "semantic_hash": ""
   },
   "data/unev_info.json": {
-    "mtime": 1780194881.6578746,
-    "ast_hash": "b4fa7fd874c9eb9c91058b879b763eab",
+    "mtime": 1782310013.8689835,
+    "ast_hash": "75c24220810ac1fb73e0128f662fcec1",
     "semantic_hash": ""
   },
   "frontend/eslint.config.js": {
@@ -110,8 +110,8 @@
     "semantic_hash": ""
   },
   "frontend/src/App.tsx": {
-    "mtime": 1782136807.9886622,
-    "ast_hash": "93c7cc0b4295a20e2f21e093d3ab8ae4",
+    "mtime": 1782310216.384202,
+    "ast_hash": "a0450a684264f1774d78d3e43ec18ffb",
     "semantic_hash": ""
   },
   "frontend/src/main.tsx": {
@@ -390,8 +390,8 @@
     "semantic_hash": ""
   },
   "frontend/src/components/AppShell.tsx": {
-    "mtime": 1782136523.3588998,
-    "ast_hash": "efcc8cdf28c39661b737f68ab2e827d6",
+    "mtime": 1782310218.450865,
+    "ast_hash": "63c29c77b44ae036597c607ac6364fcc",
     "semantic_hash": ""
   },
   "frontend/src/components/CameraFeed.tsx": {
@@ -420,8 +420,8 @@
     "semantic_hash": ""
   },
   "frontend/src/components/ui/Field.tsx": {
-    "mtime": 1782136435.032336,
-    "ast_hash": "e1ad93e7e85d4f389111d7f87fa383b9",
+    "mtime": 1782310157.374298,
+    "ast_hash": "c51f8112c414c7a4a72ef34ab1bdc360",
     "semantic_hash": ""
   },
   "frontend/src/components/ui/ToggleGroup.tsx": {
@@ -857,6 +857,26 @@
   "tests/test_security.py": {
     "mtime": 1782309001.7966795,
     "ast_hash": "24f2bc3c87a20c0ef85acb26ce01af26",
+    "semantic_hash": ""
+  },
+  "frontend/src/hooks/useUnevContent.ts": {
+    "mtime": 1782310179.9442627,
+    "ast_hash": "6fed1b6aa8b2760855b1be6bac3c74c8",
+    "semantic_hash": ""
+  },
+  "frontend/src/screens/ContentScreen.tsx": {
+    "mtime": 1782310205.5075538,
+    "ast_hash": "c41007a54f58d6a9b88b90caa60e6731",
+    "semantic_hash": ""
+  },
+  "skills/unev_content.py": {
+    "mtime": 1782309959.751185,
+    "ast_hash": "15cd3921eb2208629c2a79e2255003da",
+    "semantic_hash": ""
+  },
+  "tests/test_unev_content.py": {
+    "mtime": 1782310079.5577385,
+    "ast_hash": "8b979f13e1e8525c3a96033262eb2fac",
     "semantic_hash": ""
   }
 }

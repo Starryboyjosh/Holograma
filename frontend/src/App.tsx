@@ -6,6 +6,7 @@ import { AssistantScreen } from './screens/AssistantScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { RemoteScreen } from './screens/RemoteScreen';
 import { TeachingScreen } from './screens/TeachingScreen';
+import { ContentScreen } from './screens/ContentScreen';
 import { CameraWidget } from './widgets/CameraWidget';
 import { ChatWidget } from './widgets/ChatWidget';
 import { TranscriptWidget } from './widgets/TranscriptWidget';
@@ -35,6 +36,7 @@ export default function App() {
         <Route index element={<HomeScreen />} />
         <Route path="assistant" element={<AssistantScreen />} />
         <Route path="settings" element={<SettingsScreen />} />
+        <Route path="content" element={<ContentScreen />} />
         <Route path="remote" element={<RemoteScreen />} />
         <Route path="teaching" element={<TeachingScreen />} />
         <Route path="*" element={<HomeScreen />} />

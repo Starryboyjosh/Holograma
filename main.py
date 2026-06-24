@@ -25,6 +25,7 @@ from security import (
     clamp_text,
     redact_secrets,
 )
+from skills.unev_content import get_unev_info, save_unev_info
 
 # Regla de Oro A: rutas absolutas basadas en este archivo. Al ejecutarse como
 # sidecar de Tauri el CWD puede ser arbitrario, así que fijamos el directorio de
@@ -486,6 +487,28 @@ def test_llm(payload: LlmTestPayload):
         base_url=(payload.base_url or None),
     )
     return {"status": "ok" if result["ok"] else "error", "message": result["message"]}
+
+
+@app.get("/api/unev-content")
+def get_unev_content():
+    """Contenido institucional de UNEV (fuente única editable)."""
+    return {"status": "ok", "content": get_unev_info()}
+
+
+@app.post("/api/unev-content")
+def update_unev_content(payload: dict):
+    """Valida y guarda el contenido de UNEV; recarga la fuente en caliente.
+
+    Devuelve un mensaje accionable si el contenido es inválido. Es la única
+    forma autorizada de editar la información institucional desde la interfaz.
+    """
+    try:
+        merged = save_unev_info(payload)
+        return {"status": "ok", "content": merged}
+    except ValueError as e:
+        return {"status": "error", "message": str(e)}
+    except Exception as e:
+        return {"status": "error", "message": redact_secrets(e, os.environ)}
 
 
 class SpeakPayload(BaseModel):

@@ -108,11 +108,18 @@ The Settings AI-brain card is now driven by the live contract:
   strangler pattern (add seam, route through it, keep working). `call.py` (1265 L)
   and `main.py` (900 L) are the god-modules to split.
 
-### F. Single editable UNEV content source
-- Facts duplicated across `skills/university.py` (316 L), `data/unev_info.json`,
-  `skills/honduras.py`, prompts in `skills/event_mode.py`, and
-  `frontend/.../TeachingScreen.tsx`. Make one validated source (JSON + schema)
-  editable via UI; everything else reads from it.
+### F. Single editable UNEV content source  ✅ DONE (this commit)
+- `skills/unev_content.py` is now the single authoritative source: holds the
+  canonical content + a validated loader (`load/save/get/reload`, atomic write,
+  control-char clamp) with the in-code dict as emergency fallback only.
+- `data/unev_info.json` regenerated as the **complete** content (was a stale partial
+  copy → the running content used to be an ambiguous JSON+code mix). `university.py`
+  rewritten to read everything from `get_unev_info()` (8 tests; behaviour preserved).
+- Editable via UI: `GET/POST /api/unev-content` + a new **Contenido** screen
+  (`frontend/src/screens/ContentScreen.tsx` + `hooks/useUnevContent.ts`), nav wired.
+- Note: `event_mode.py` is persona/behaviour (no facts — correctly left alone).
+  Residual, separate concerns (not UNEV-fact duplication): `skills/honduras.py` is
+  general Honduras context; `TeachingScreen.tsx` has its own vision-demo labels.
 
 ### G. Legacy lint debt
 - `ruff check .` reports ~38 issues in untouched modules (call.py, vision/, stt/,
