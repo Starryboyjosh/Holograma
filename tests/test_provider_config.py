@@ -97,6 +97,32 @@ def test_custom_openai_needs_explicit_base_url():
     assert pc.resolve_base_url("custom_openai", {"OPENAI_COMPAT_BASE_URL": "http://h:8080/v1"}) == "http://h:8080/v1"
 
 
+def test_custom_openai_resolves_key_and_model_from_compat_env():
+    """El proveedor 'custom_openai' lee key/modelo de las variables OPENAI_COMPAT_*.
+
+    Son las que la interfaz de Ajustes persiste vía /api/config para un endpoint
+    propio compatible con OpenAI.
+    """
+    env = {
+        "OPENAI_COMPAT_API_KEY": "sk-local",
+        "OPENAI_COMPAT_MODEL": "my-served-model",
+        "OPENAI_COMPAT_BASE_URL": "http://127.0.0.1:8080/v1",
+    }
+    assert pc.resolve_api_key("custom_openai", env) == "sk-local"
+    assert pc.resolve_model("custom_openai", env) == "my-served-model"
+    # Sin OPENAI_COMPAT_MODEL, el modelo genérico (LLM_MODEL) sí aplica al endpoint.
+    assert pc.resolve_model("custom_openai", {"LLM_MODEL": "x"}) == "x"
+
+
+def test_custom_openai_public_info_flags_base_url_requirement():
+    info = {p["id"]: p for p in pc.all_providers_public_info(
+        {"OPENAI_COMPAT_BASE_URL": "http://h:8080/v1", "OPENAI_COMPAT_API_KEY": "sk-x"}
+    )}
+    assert info["custom_openai"]["needs_base_url"] is True
+    assert info["custom_openai"]["base_url"] == "http://h:8080/v1"
+    assert info["custom_openai"]["key_configured"] is True
+
+
 # --- metadata pública (sin secretos) -------------------------------------
 
 

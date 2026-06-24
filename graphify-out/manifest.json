@@ -5,13 +5,13 @@
     "semantic_hash": ""
   },
   "llm_backend.py": {
-    "mtime": 1782270580.9698677,
-    "ast_hash": "43fdb19406b4de0292f2daf142a0ca94",
+    "mtime": 1782309136.9816806,
+    "ast_hash": "cd921d5cedf891ea11cca45bde0ca9f3",
     "semantic_hash": ""
   },
   "main.py": {
-    "mtime": 1782270621.236509,
-    "ast_hash": "f4a959aceeb7f0b1cb76b799523afb4c",
+    "mtime": 1782309113.361428,
+    "ast_hash": "c8ae2d7454f904dc8992373915ce9fa4",
     "semantic_hash": ""
   },
   "skills/__init__.py": {
@@ -105,8 +105,8 @@
     "semantic_hash": ""
   },
   "frontend/package.json": {
-    "mtime": 1782137153.6917198,
-    "ast_hash": "3c571d43b4a356d793f6dd2ca5901530",
+    "mtime": 1782307809.006477,
+    "ast_hash": "252a41bdaf67e6146dd933f0f0d92f81",
     "semantic_hash": ""
   },
   "frontend/src/App.tsx": {
@@ -120,8 +120,8 @@
     "semantic_hash": ""
   },
   "frontend/tsconfig.app.json": {
-    "mtime": 1781839643.533596,
-    "ast_hash": "a160fee4ac8bd8456f0a920e9ba05313",
+    "mtime": 1782307814.159772,
+    "ast_hash": "80ca9497a50f404883b3107fa2e4ea3d",
     "semantic_hash": ""
   },
   "frontend/tsconfig.json": {
@@ -455,8 +455,8 @@
     "semantic_hash": ""
   },
   "frontend/src/hooks/useConfig.ts": {
-    "mtime": 1782270945.0396307,
-    "ast_hash": "49b5e17c726a4969f1d5840fe635cc01",
+    "mtime": 1782307548.7306125,
+    "ast_hash": "e1e6b75e7ff60778ec258fc4b16ed2ed",
     "semantic_hash": ""
   },
   "frontend/src/hooks/useHologram.ts": {
@@ -490,8 +490,8 @@
     "semantic_hash": ""
   },
   "frontend/src/screens/SettingsScreen.tsx": {
-    "mtime": 1782136634.4321358,
-    "ast_hash": "76ed7390abc2c595150ca892bc1c1eb2",
+    "mtime": 1782308667.4681966,
+    "ast_hash": "d6d88f0ed8bd6e2eb5e25b6c4bf24584",
     "semantic_hash": ""
   },
   "frontend/src/screens/TeachingScreen.tsx": {
@@ -505,8 +505,8 @@
     "semantic_hash": ""
   },
   "frontend/src/types.ts": {
-    "mtime": 1782094868.3337357,
-    "ast_hash": "c3ba8d4a24ed0e625d10f3a8880905b4",
+    "mtime": 1782307497.8368394,
+    "ast_hash": "76c03047172ccf86406735c3833eec6d",
     "semantic_hash": ""
   },
   "frontend/src/widgets/CameraWidget.tsx": {
@@ -785,23 +785,78 @@
     "semantic_hash": ""
   },
   "tests/test_llm_backend.py": {
-    "mtime": 1782270424.7332962,
-    "ast_hash": "0b215ba780c3715f73c03525bde25bc7",
+    "mtime": 1782309175.03539,
+    "ast_hash": "51c913c1ac6ab76ea67c33602f5ffdb3",
     "semantic_hash": ""
   },
   "tests/test_provider_config.py": {
-    "mtime": 1782270404.4666414,
-    "ast_hash": "bddfe07c654c3cff7094f03a4587685b",
+    "mtime": 1782307393.6739385,
+    "ast_hash": "258ef78737e9a8049b55cd96e2ddd4a8",
     "semantic_hash": ""
   },
   "docs/CONFIG.md": {
-    "mtime": 1782271052.852891,
-    "ast_hash": "66be52fbd14d12a22e8e69d4aab46313",
+    "mtime": 1782309244.7893198,
+    "ast_hash": "0114fc9c4f030263ca263c9ba0d3a274",
     "semantic_hash": ""
   },
   "docs/Manual de Marca - UNEV 1920x1080 - 2025.pdf": {
     "mtime": 1782267510.6023407,
     "ast_hash": "895b1e3b702045ba2f0f7231132894f7",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/ProviderConfigCard.test.tsx": {
+    "mtime": 1782307865.6227036,
+    "ast_hash": "a40d654b879cad4d1092fdc7522be43f",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/ProviderConfigCard.tsx": {
+    "mtime": 1782307669.04063,
+    "ast_hash": "34a6722edfcb605e8eadd19cb038045f",
+    "semantic_hash": ""
+  },
+  "frontend/src/hooks/useProviders.ts": {
+    "mtime": 1782307524.950452,
+    "ast_hash": "7575cd4e6bf3bfedd1bc9a3b28d61a3e",
+    "semantic_hash": ""
+  },
+  "frontend/src/lib/providerForm.test.ts": {
+    "mtime": 1782307835.336277,
+    "ast_hash": "536a8b60ab8363ca24af761a4a62f50c",
+    "semantic_hash": ""
+  },
+  "frontend/src/lib/providerForm.ts": {
+    "mtime": 1782307512.2103348,
+    "ast_hash": "bea3a743343fb41accfd0ae331722227",
+    "semantic_hash": ""
+  },
+  "frontend/src/test/setup.ts": {
+    "mtime": 1782307795.1932447,
+    "ast_hash": "079800536075abd01630a41087cf8298",
+    "semantic_hash": ""
+  },
+  "frontend/vitest.config.ts": {
+    "mtime": 1782307907.8090212,
+    "ast_hash": "0030ab476cec78d91c8e3d3c11b4d3f7",
+    "semantic_hash": ""
+  },
+  "docs/HANDOFF.md": {
+    "mtime": 1782309213.6590674,
+    "ast_hash": "8cfc5d966bec64e2f41c1fe858b8eb1d",
+    "semantic_hash": ""
+  },
+  "docs/Last_LLM.md": {
+    "mtime": 1782272144.6728594,
+    "ast_hash": "40ae7e94f648d3ade396fc436684c5ca",
+    "semantic_hash": ""
+  },
+  "security.py": {
+    "mtime": 1782308982.793443,
+    "ast_hash": "dde53a9792138180d347ad230dcd79db",
+    "semantic_hash": ""
+  },
+  "tests/test_security.py": {
+    "mtime": 1782309001.7966795,
+    "ast_hash": "24f2bc3c87a20c0ef85acb26ce01af26",
     "semantic_hash": ""
   }
 }

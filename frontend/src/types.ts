@@ -18,16 +18,40 @@ export interface SavedObject {
   thumbnail: string;
 }
 
-export const API_KEY_FIELD_BY_PROVIDER: Record<string, string> = {
-  openrouter: 'OPENROUTER_API_KEY',
-  openai: 'OPENAI_API_KEY',
-  claude_native: 'ANTHROPIC_API_KEY',
-  nvidia: 'NVIDIA_API_KEY',
-};
+// Mirror of provider_config.provider_public_info() (GET /api/providers). Carries
+// only safe metadata — never a secret, only whether a key is configured.
+export interface ProviderInfo {
+  id: string;
+  label: string;
+  description: string;
+  kind: 'cloud' | 'local';
+  default_model: string;
+  current_model: string;
+  supports_discovery: boolean;
+  needs_base_url: boolean;
+  base_url: string;
+  requires_key: boolean;
+  key_env: string | null;
+  key_configured: boolean;
+}
 
-export const DEFAULT_API_MODEL_BY_PROVIDER: Record<string, string> = {
-  openrouter: 'meta-llama/llama-3.3-70b-instruct',
-  openai: 'gpt-4o-mini',
-  claude_native: 'claude-3-5-sonnet-latest',
-  nvidia: 'moonshotai/kimi-k2.6',
-};
+// Editable LLM form state (the secret-bearing apiKey is write-only: '' = leave
+// the stored key untouched).
+export interface LlmConfigForm {
+  model: string;
+  apiKey: string;
+  baseUrl: string;
+}
+
+// Payload for POST /api/llm/test (non-persisting connection probe).
+export interface LlmTestInput {
+  provider: string;
+  model?: string;
+  api_key?: string;
+  base_url?: string;
+}
+
+export interface LlmTestResult {
+  status: 'ok' | 'error';
+  message: string;
+}

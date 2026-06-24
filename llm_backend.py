@@ -15,6 +15,7 @@ from provider_config import (
     resolve_model,
     select_backend,
 )
+from security import redact_secrets
 from utils import _env, _env_float
 
 load_dotenv()
@@ -145,7 +146,8 @@ def _humanize_probe_error(provider, error):
         return f"Límite o cuota agotada en {label}."
     if any(s in text for s in ("connection", "timed out", "timeout", "getaddrinfo", "name resolution", "refused")):
         return f"No se pudo conectar con {label}. Revisa internet o la URL base."
-    return f"Error con {label}: {error}"
+    # Fallback genérico: el error crudo del proveedor podría contener la key.
+    return redact_secrets(f"Error con {label}: {error}", os.environ)
 
 
 def probe_backend(provider, api_key=None, model=None, base_url=None, timeout=20.0):

@@ -6,8 +6,10 @@ import { useToast } from '../context/ToastContext';
 import { apiFetch } from '../lib/backend';
 import { Card, SectionTitle } from '../components/ui/Card';
 import { ToggleGroup } from '../components/ui/ToggleGroup';
-import { Field, Select, TextInput } from '../components/ui/Field';
-import { DEFAULT_API_MODEL_BY_PROVIDER } from '../types';
+import { Field, Select } from '../components/ui/Field';
+import { ProviderConfigCard } from '../components/ProviderConfigCard';
+import { buildLlmConfigPayload } from '../lib/providerForm';
+import { useProviders } from '../hooks/useProviders';
 import type { AppearanceTheme } from '../context/ThemeContext';
 
 export function SettingsScreen() {
@@ -15,6 +17,7 @@ export function SettingsScreen() {
   const showToast = useToast();
   const { config } = useSession();
   const { appearance, setAppearance } = useTheme();
+  const { providers, loading: providersLoading, testConnection } = useProviders();
   const [playingSample, setPlayingSample] = useState(false);
 
   const playVoicePreview = async () => {
@@ -35,7 +38,16 @@ export function SettingsScreen() {
   };
 
   const onSave = async () => {
-    const ok = await config.save({ HOLOGRAM_MODE: appearance });
+    const selected = providers.find((p) => p.id === config.llmProvider);
+    const llmPayload = selected
+      ? buildLlmConfigPayload(selected, {
+          model: config.model,
+          apiKey: config.apiKey,
+          baseUrl: config.baseUrl,
+        })
+      : { LLM_PROVIDER: config.llmProvider };
+
+    const ok = await config.save({ ...llmPayload, HOLOGRAM_MODE: appearance });
     if (ok) {
       showToast('Configuración aplicada con éxito.');
       navigate('/');
@@ -55,6 +67,22 @@ export function SettingsScreen() {
         </div>
       </div>
 
+      {/* AI brain (headline) — full width and driven by the live provider catalogue. */}
+      <ProviderConfigCard
+        llmProvider={config.llmProvider}
+        setLlmProvider={config.setLlmProvider}
+        model={config.model}
+        setModel={config.setModel}
+        apiKey={config.apiKey}
+        setApiKey={config.setApiKey}
+        baseUrl={config.baseUrl}
+        setBaseUrl={config.setBaseUrl}
+        providers={providers}
+        loading={providersLoading}
+        testConnection={testConnection}
+        showToast={showToast}
+      />
+
       <div className="columns-1 md:columns-2 gap-6 space-y-6 md:space-y-0 [column-fill:balance]">
         {/* Apariencia */}
         <Card masonry>
@@ -68,67 +96,6 @@ export function SettingsScreen() {
               { value: 'system', label: 'system' },
             ]}
           />
-        </Card>
-
-        {/* Cerebro de la IA */}
-        <Card masonry>
-          <SectionTitle>Modelo del Cerebro</SectionTitle>
-          <ToggleGroup
-            value={config.aiEngine}
-            onChange={config.setAiEngine}
-            options={[
-              { value: 'local', label: 'Local (Ollama)' },
-              { value: 'api', label: 'API Key' },
-            ]}
-          />
-
-          {config.aiEngine === 'local' ? (
-            <div className="pt-2">
-              <Field label="Seleccionar Modelo Ollama">
-                <Select value={config.selectedLocalModel} onChange={(e) => config.setSelectedLocalModel(e.target.value)}>
-                  <option value="gemma3:1b">Gemma 3 1B - Fallback rápido</option>
-                  <option value="gemma4:e4b">Gemma 4 E4B - Balance local</option>
-                  <option value="qwen3:8b">Qwen 3:8B - Razonamiento avanzado</option>
-                  <option value="llama3.2:3b">Llama 3.2 3b - Optimizado</option>
-                </Select>
-              </Field>
-            </div>
-          ) : (
-            <div className="space-y-3 pt-2">
-              <Field label="Proveedor API">
-                <Select
-                  value={config.apiProvider}
-                  onChange={(e) => {
-                    const next = e.target.value;
-                    config.setApiProvider(next);
-                    config.setApiModel(DEFAULT_API_MODEL_BY_PROVIDER[next] || config.apiModel);
-                    config.setApiKey('');
-                  }}
-                >
-                  <option value="openrouter">OpenRouter</option>
-                  <option value="openai">OpenAI</option>
-                  <option value="claude_native">Anthropic (Claude)</option>
-                  <option value="nvidia">NVIDIA NIM</option>
-                </Select>
-              </Field>
-              <Field label="Modelo Remoto">
-                <TextInput
-                  type="text"
-                  value={config.apiModel}
-                  onChange={(e) => config.setApiModel(e.target.value)}
-                  placeholder="meta-llama/llama-3.3-70b-instruct"
-                />
-              </Field>
-              <Field label="API Key">
-                <TextInput
-                  type="password"
-                  value={config.apiKey}
-                  onChange={(e) => config.setApiKey(e.target.value)}
-                  placeholder="••••••••••••••••"
-                />
-              </Field>
-            </div>
-          )}
         </Card>
 
         {/* YOLO */}
@@ -178,17 +145,19 @@ export function SettingsScreen() {
         <SectionTitle>Síntesis de Voz (Piper)</SectionTitle>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
           <div className="flex-1">
-            <Select value={config.piperVoice} onChange={(e) => config.setPiperVoice(e.target.value)}>
-              {config.voicesList.map((voice) => (
-                <option key={voice} value={voice}>
-                  {voice}
-                </option>
-              ))}
-            </Select>
+            <Field label="Voz">
+              <Select value={config.piperVoice} onChange={(e) => config.setPiperVoice(e.target.value)}>
+                {config.voicesList.map((voice) => (
+                  <option key={voice} value={voice}>
+                    {voice}
+                  </option>
+                ))}
+              </Select>
+            </Field>
           </div>
           <button
             onClick={playVoicePreview}
-            className={`px-5 py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shrink-0 ${
+            className={`px-5 py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shrink-0 self-end ${
               playingSample
                 ? 'bg-[#E25C1D]/20 text-[#E25C1D] border border-[#E25C1D]/50 animate-pulse'
                 : 'bg-gray-100 hover:bg-gray-200 border border-gray-200 text-gray-700 dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-slate-800 dark:text-slate-300'
@@ -202,9 +171,10 @@ export function SettingsScreen() {
       <div className="pt-4 flex justify-end">
         <button
           onClick={onSave}
-          className="w-full sm:w-auto px-8 py-4 bg-[#E25C1D] hover:bg-orange-600 text-white font-bold text-sm rounded-2xl shadow-xl shadow-[#E25C1D]/10 transition-all text-center"
+          disabled={providersLoading}
+          className="w-full sm:w-auto px-8 py-4 bg-[#E25C1D] hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-sm rounded-2xl shadow-xl shadow-[#E25C1D]/10 transition-all text-center"
         >
-          Guardar y aplicar cambios
+          {providersLoading ? 'Cargando proveedores…' : 'Guardar y aplicar cambios'}
         </button>
       </div>
     </div>

@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '../lib/backend';
-import { API_KEY_FIELD_BY_PROVIDER } from '../types';
 import type { SavedObject } from '../types';
 
-// Settings state + backend load/save, lifted from App.tsx fetchConfig/saveConfig.
+// Settings state + backend load/save. The LLM section is a single authoritative
+// provider (matching provider_config.py) instead of the old local/api split:
+// `llmProvider` is one of the contract ids, `model`/`baseUrl` are plain fields,
+// and `apiKey` is a write-only buffer ('' = leave the stored key untouched).
 // Appearance/theme lives in ThemeContext; pass it through save() as an override.
 export function useConfig() {
-  const [aiEngine, setAiEngine] = useState<'local' | 'api'>('local');
-  const [selectedLocalModel, setSelectedLocalModel] = useState('gemma3:1b');
-  const [apiProvider, setApiProvider] = useState('openrouter');
-  const [apiModel, setApiModel] = useState('meta-llama/llama-3.3-70b-instruct');
+  const [llmProvider, setLlmProvider] = useState('openrouter');
+  const [model, setModel] = useState('meta-llama/llama-3.3-70b-instruct');
   const [apiKey, setApiKey] = useState('');
+  const [baseUrl, setBaseUrl] = useState('');
   const [yoloInterval, setYoloInterval] = useState('1.0');
   const [yoloEnabled, setYoloEnabled] = useState(true);
   const [whisperSize, setWhisperSize] = useState('medium');
@@ -23,18 +24,19 @@ export function useConfig() {
       const res = await apiFetch('/api/config');
       if (res.ok) {
         const data = await res.json();
-        if (data.OLLAMA_MODEL) setSelectedLocalModel(data.OLLAMA_MODEL);
-        if (data.LLM_PROVIDER) {
-          setApiProvider(data.LLM_PROVIDER);
-          setAiEngine(
-            data.LLM_PROVIDER === 'ollama' || data.LLM_PROVIDER === 'local_only'
-              ? 'local'
-              : 'api',
-          );
-          const apiKeyField = API_KEY_FIELD_BY_PROVIDER[data.LLM_PROVIDER];
-          if (apiKeyField && data[apiKeyField]) setApiKey(data[apiKeyField]);
+        const provider = data.LLM_PROVIDER || 'openrouter';
+        setLlmProvider(provider);
+        // Each provider stores its model in a different field; show the right one.
+        if (provider === 'ollama') {
+          setModel(data.OLLAMA_MODEL || '');
+        } else if (provider !== 'local_only') {
+          setModel(data.LLM_MODEL || '');
+        } else {
+          setModel('');
         }
-        if (data.LLM_MODEL) setApiModel(data.LLM_MODEL);
+        setBaseUrl(data.OPENAI_COMPAT_BASE_URL || '');
+        // Keys are never returned by the backend; keep the buffer empty.
+        setApiKey('');
         if (data.HOLOGRAM_CAMERA) setYoloEnabled(data.HOLOGRAM_CAMERA === '1');
         if (data.YOLO_INTERVAL_SECONDS) setYoloInterval(data.YOLO_INTERVAL_SECONDS);
         if (data.WHISPER_MODEL) setWhisperSize(data.WHISPER_MODEL);
@@ -64,12 +66,13 @@ export function useConfig() {
     void fetchConfig();
   }, [fetchConfig]);
 
+  // Posts the non-LLM fields plus any overrides. The Settings screen builds the
+  // LLM slice from provider metadata (see lib/providerForm) and passes it here,
+  // so this hook stays unaware of per-provider env-var mapping.
   const save = useCallback(
     async (overrides: Record<string, string> = {}): Promise<boolean> => {
       try {
         const payload: Record<string, string> = {
-          OLLAMA_MODEL: aiEngine === 'local' ? selectedLocalModel : '',
-          LLM_PROVIDER: aiEngine === 'local' ? 'ollama' : apiProvider,
           HOLOGRAM_CAMERA: yoloEnabled ? '1' : '0',
           YOLO_INTERVAL_SECONDS: yoloInterval,
           YOLO_MODEL: 'yolo26n.pt',
@@ -77,12 +80,6 @@ export function useConfig() {
           PIPER_VOICE: piperVoice,
           ...overrides,
         };
-
-        if (aiEngine === 'api') {
-          payload.LLM_MODEL = apiModel;
-          const apiKeyField = API_KEY_FIELD_BY_PROVIDER[apiProvider];
-          if (apiKeyField && apiKey.trim()) payload[apiKeyField] = apiKey.trim();
-        }
 
         const res = await apiFetch('/api/config', {
           method: 'POST',
@@ -94,20 +91,18 @@ export function useConfig() {
         return false;
       }
     },
-    [aiEngine, selectedLocalModel, apiProvider, apiModel, apiKey, yoloEnabled, yoloInterval, whisperSize, piperVoice],
+    [yoloEnabled, yoloInterval, whisperSize, piperVoice],
   );
 
   return {
-    aiEngine,
-    setAiEngine,
-    selectedLocalModel,
-    setSelectedLocalModel,
-    apiProvider,
-    setApiProvider,
-    apiModel,
-    setApiModel,
+    llmProvider,
+    setLlmProvider,
+    model,
+    setModel,
     apiKey,
     setApiKey,
+    baseUrl,
+    setBaseUrl,
     yoloInterval,
     setYoloInterval,
     yoloEnabled,

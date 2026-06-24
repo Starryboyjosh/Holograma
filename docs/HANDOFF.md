@@ -14,11 +14,13 @@ the audit.
   1.96 present.
 - Workflow: **commit whole working tree directly to `main` and push** (no PRs).
 
-## Verify Phase 1 (already done)
+## Verify Phases 1 + A (already done)
 ```bash
-.venv/bin/pytest                                                  # 29 passing
+.venv/bin/pytest                                                  # 32 passing
 .venv/bin/ruff check provider_config.py llm_backend.py main.py tests/   # clean
 cd frontend && npx eslint . && npx tsc -p tsconfig.app.json --noEmit    # clean
+cd frontend && npm test                                          # 12 passing (vitest)
+cd frontend && npm run build                                     # tsc -b + vite build OK
 ```
 
 ## Phase 1 result (DONE) — the config/provider contract
@@ -36,21 +38,26 @@ cd frontend && npx eslint . && npx tsc -p tsconfig.app.json --noEmit    # clean
 
 ## Remaining phases (pick per priority)
 
-### A. Settings UX + wire test buttons  ← recommended next, fully doable here
-Build `frontend/src/screens/SettingsScreen.tsx` (+ `hooks/useConfig.ts`) on the
-NEW endpoints. Currently it hardcodes providers/models, blanks the key on every
-change, never shows configured state (ignores `*_API_KEY_SET`), no test button,
-no mic/speaker/camera selection.
-- Use `GET /api/providers` to render the picker (friendly labels/descriptions,
-  `key_configured`, `needs_base_url`, `supports_discovery`) and `POST /api/llm/test`
-  for a "Probar conexión" button with the returned message.
-- Add custom OpenAI endpoint (base_url field), model discovery where supported,
-  and a free-text model field fallback.
-- Add device pickers (`navigator.mediaDevices.enumerateDevices`) for mic/speaker/
-  camera; persist selection.
-- Validatable here: eslint/tsc + component tests (add vitest/RTL).
-- Acceptance: non-technical operator configures/replaces provider+key+model from
-  UI; invalid key/model explained; secrets never shown.
+### A. Settings UX + wire test buttons  ✅ DONE (this commit)  ← B or D recommended next
+The Settings AI-brain card is now driven by the live contract:
+- `components/ProviderConfigCard.tsx` renders ONE provider picker from
+  `GET /api/providers` (7 providers, grouped cloud/local, friendly labels +
+  descriptions, configured badge), a free-text model field (Ollama gets a
+  datalist), a base-url field for `custom_openai`, a write-only API-key field
+  (blank never wipes the stored key), and a **"Probar conexión"** button wired to
+  `POST /api/llm/test` that shows the actionable message.
+- `hooks/useProviders.ts` (catalogue + probe), rewritten `hooks/useConfig.ts`
+  (unified `llmProvider`/`model`/`apiKey`/`baseUrl`), pure `lib/providerForm.ts`
+  (form→contract mapping, unit-tested).
+- Backend: `ConfigUpdate`/`update_config` now persist `OPENAI_COMPAT_API_KEY` +
+  `OPENAI_COMPAT_BASE_URL`; `GET /api/config` round-trips the (non-secret) base URL.
+- Tests: vitest+RTL added (`npm test`, 12 tests) + 3 new provider_config tests.
+- **DEFERRED (do in a follow-up): device pickers for mic/speaker/camera.** Reason:
+  browser `enumerateDevices()` IDs don't map to the backend's OpenCV camera index
+  / `sounddevice` index, and the backend's device consumption can't be validated
+  in this env — a picker writing IDs the backend ignores would be a fake control.
+  Honest path: a numeric camera-index field bound to `HOLOGRAM_CAMERA_INDEX`
+  (verify the backend reads it first) + backend audio-device selection, together.
 
 ### B. Cancellation + camera release + per-session events  (touches call.py, higher risk)
 - "Camera off" must release the device: there is NO stop path —
@@ -74,12 +81,25 @@ no mic/speaker/camera selection.
   checksums, clean child-process shutdown (current `kill_backend` orphans Piper/
   audio), Windows+Linux CI. **Pin Python ~3.11/3.12** for wheel availability.
 
-### D. Security + operator auth  (mostly doable here)
-- Auth for privileged settings; split visitor vs privileged APIs; per-process
-  Tauri capability token for WS/REST; OS keyring for secrets (Windows Credential
-  Manager / Linux Secret Service) instead of plaintext `.env`/`config.json`; log
-  redaction; input size/schema validation; rate limits; prompt-injection guard on
-  editable vision labels / UNEV content; tighten CORS (`main.py:154` allow_origins=*).
+### D. Security + operator auth
+**D.1 — input hardening + secret hygiene ✅ DONE (this commit, fully testable here):**
+- `security.py` (pure, 10 tests): `redact_secrets(text, env)` masks API-key-shaped
+  tokens + exact values of known key envs; `clamp_text(text, max_len)` strips
+  control/zero-width/bidi chars and truncates; size constants.
+- Wired in `main.py`: WS chat `prompt` clamped (`MAX_PROMPT_CHARS`), `/api/speak`
+  text clamped, editable vision `label`/`desc` + vocabulary clamped (prompt-injection
+  surface), error responses (`update_config`, `speak`, train) redacted, atomic writes
+  for training files. `llm_backend._humanize_probe_error` redacts the raw provider
+  error. CORS is now configurable via `CORS_ALLOW_ORIGINS` (default `*` preserved).
+
+**D.2 — auth + secret storage (NOT done; needs the Tauri shell + a running backend):**
+- Per-process **Tauri capability token** for WS/REST (Rust passes it to backend env +
+  frontend; frontend sends it). HIGH breakage risk — must be validated in the desktop
+  app, can't be here. Split visitor vs privileged (settings/train) APIs behind it.
+- OS keyring for secrets (Windows Credential Manager / Linux Secret Service) instead
+  of plaintext `.env`/`config.json`.
+- Rate limits / concurrency caps on WS + LLM calls.
+- Lock down CORS to the validated WebView origin (set `CORS_ALLOW_ORIGINS`).
 
 ### E. De-monkey-patch into typed services  (refactor; do incrementally)
 - `main.py:38-78` patches `call.speak`, `WhisperListener.listen_once`,

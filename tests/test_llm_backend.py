@@ -72,3 +72,11 @@ def test_humanize_probe_error_maps_common_cases():
     assert "inválida" in lb._humanize_probe_error("openai", Exception("Error 401 unauthorized"))
     assert "no existe" in lb._humanize_probe_error("openai", Exception("model_not_found"))
     assert "conectar" in lb._humanize_probe_error("openai", Exception("Connection refused"))
+
+
+def test_humanize_probe_error_redacts_leaked_key_in_generic_branch(monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-proj-supersecret0123456789")
+    # un error inesperado (no mapeado) que arrastra la key cruda del proveedor
+    msg = lb._humanize_probe_error("openai", Exception("boom sk-proj-supersecret0123456789"))
+    assert "supersecret" not in msg
+    assert "***REDACTED***" in msg

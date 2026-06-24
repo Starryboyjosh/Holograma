@@ -17,6 +17,14 @@ from pydantic import BaseModel
 
 from llm_backend import probe_backend, stream_llm_response
 from provider_config import all_providers_public_info
+from security import (
+    MAX_LABEL_CHARS,
+    MAX_PROMPT_CHARS,
+    MAX_TTS_CHARS,
+    MAX_VOCAB_CHARS,
+    clamp_text,
+    redact_secrets,
+)
 
 # Regla de Oro A: rutas absolutas basadas en este archivo. Al ejecutarse como
 # sidecar de Tauri el CWD puede ser arbitrario, así que fijamos el directorio de
@@ -169,10 +177,18 @@ app = FastAPI(
 # cross-origin (p. ej. origen tauri://localhost o http://tauri.localhost) hacia
 # 127.0.0.1:<puerto>. allow_origins=["*"] junto a allow_credentials=True es una
 # combinación inválida que el navegador rechaza; como no usamos cookies/credenciales
-# dejamos credentials en False y permitimos cualquier origen local.
+# dejamos credentials en False.
+#
+# Por defecto se permite cualquier origen (comportamiento histórico, válido porque
+# el servidor solo escucha en localhost). Para endurecerlo en producción tras
+# validar el origen real del WebView, definir CORS_ALLOW_ORIGINS con una lista
+# separada por comas, p. ej.:
+#   CORS_ALLOW_ORIGINS=tauri://localhost,http://tauri.localhost,https://tauri.localhost
+_cors_env = os.getenv("CORS_ALLOW_ORIGINS", "").strip()
+_cors_origins = [o.strip() for o in _cors_env.split(",") if o.strip()] or ["*"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_cors_origins,
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -231,6 +247,10 @@ class ConfigUpdate(BaseModel):
     OPENAI_API_KEY: str | None = None
     ANTHROPIC_API_KEY: str | None = None
     NVIDIA_API_KEY: str | None = None
+    # Endpoint propio compatible con OpenAI (vLLM, LM Studio, gateway…): el
+    # proveedor "custom_openai" del contrato necesita key + URL base editables.
+    OPENAI_COMPAT_API_KEY: str | None = None
+    OPENAI_COMPAT_BASE_URL: str | None = None
     PIPER_VOICE: str | None = None
     HOLOGRAM_MODE: str | None = None
 
@@ -295,6 +315,10 @@ def get_config():
         "OPENAI_API_KEY_SET": bool(openai_key),
         "ANTHROPIC_API_KEY_SET": bool(anthropic_key),
         "NVIDIA_API_KEY_SET": bool(nvidia_key),
+        # URL base del endpoint propio compatible con OpenAI (no es secreto): se
+        # devuelve para que el formulario la pueda pre-rellenar. La key nunca.
+        "OPENAI_COMPAT_BASE_URL": os.getenv("OPENAI_COMPAT_BASE_URL")
+        or config_data.get("OPENAI_COMPAT_BASE_URL", ""),
         "PIPER_VOICE": config_data.get("PIPER_VOICE", "es_MX-claude-high.onnx"),
         "HOLOGRAM_MODE": config_data.get("HOLOGRAM_MODE", "dark"),
     }
@@ -348,6 +372,12 @@ def update_config(payload: ConfigUpdate):
     if payload.NVIDIA_API_KEY is not None:
         config_data["NVIDIA_API_KEY"] = payload.NVIDIA_API_KEY
         os.environ["NVIDIA_API_KEY"] = payload.NVIDIA_API_KEY
+    if payload.OPENAI_COMPAT_API_KEY is not None:
+        config_data["OPENAI_COMPAT_API_KEY"] = payload.OPENAI_COMPAT_API_KEY
+        os.environ["OPENAI_COMPAT_API_KEY"] = payload.OPENAI_COMPAT_API_KEY
+    if payload.OPENAI_COMPAT_BASE_URL is not None:
+        config_data["OPENAI_COMPAT_BASE_URL"] = payload.OPENAI_COMPAT_BASE_URL
+        os.environ["OPENAI_COMPAT_BASE_URL"] = payload.OPENAI_COMPAT_BASE_URL
     if payload.PIPER_VOICE is not None:
         config_data["PIPER_VOICE"] = payload.PIPER_VOICE
         os.environ["PIPER_VOICE"] = payload.PIPER_VOICE
@@ -404,6 +434,10 @@ def update_config(payload: ConfigUpdate):
             new_env_data["ANTHROPIC_API_KEY"] = payload.ANTHROPIC_API_KEY
         if payload.NVIDIA_API_KEY is not None:
             new_env_data["NVIDIA_API_KEY"] = payload.NVIDIA_API_KEY
+        if payload.OPENAI_COMPAT_API_KEY is not None:
+            new_env_data["OPENAI_COMPAT_API_KEY"] = payload.OPENAI_COMPAT_API_KEY
+        if payload.OPENAI_COMPAT_BASE_URL is not None:
+            new_env_data["OPENAI_COMPAT_BASE_URL"] = payload.OPENAI_COMPAT_BASE_URL
 
         _atomic_write_text(
             env_path, "".join(f"{k}={v}\n" for k, v in new_env_data.items())
@@ -416,7 +450,8 @@ def update_config(payload: ConfigUpdate):
         }
         return {"status": "ok", "config": safe_config}
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        # No filtrar una API key si apareciera en el mensaje de la excepción.
+        return {"status": "error", "message": redact_secrets(e, os.environ)}
 
 
 class LlmTestPayload(BaseModel):
@@ -482,7 +517,7 @@ def play_speak(payload: SpeakPayload):
                 voice_path = os.path.abspath(voice_path)
             os.environ["PIPER_MODEL_PATH"] = voice_path
 
-        speak(payload.text, blocking=False)
+        speak(clamp_text(payload.text, MAX_TTS_CHARS), blocking=False)
 
         if payload.voice and old_voice is not None:
             os.environ["PIPER_MODEL_PATH"] = old_voice
@@ -491,7 +526,7 @@ def play_speak(payload: SpeakPayload):
 
         return {"status": "ok"}
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        return {"status": "error", "message": redact_secrets(e, os.environ)}
 
 
 @app.post("/api/train/image")
@@ -527,8 +562,10 @@ def train_image(payload: TrainImagePayload):
             existing.append(
                 {
                     "id": new_id,
-                    "label": box.label,
-                    "desc": box.desc,
+                    # Acotar etiqueta/descr.: son editables y terminan en el prompt
+                    # del LLM, así que se limita la superficie de inyección/abuso.
+                    "label": clamp_text(box.label, MAX_LABEL_CHARS),
+                    "desc": clamp_text(box.desc, MAX_LABEL_CHARS),
                     "x": box.x,
                     "y": box.y,
                     "w": box.w,
@@ -538,12 +575,11 @@ def train_image(payload: TrainImagePayload):
                 }
             )
 
-        with open(meta_path, "w", encoding="utf-8") as f:
-            json.dump(existing, f, indent=4)
+        _atomic_write_text(meta_path, json.dumps(existing, indent=4))
 
         return {"status": "ok", "items": existing}
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        return {"status": "error", "message": redact_secrets(e, os.environ)}
 
 
 @app.get("/api/train/metadata")
@@ -560,14 +596,14 @@ def get_training_metadata():
 
 @app.post("/api/train/vocabulary")
 def train_vocabulary(payload: VocabularyPayload):
-    print(f"[YOLO Training] Received open-vocabulary updates: {payload.vocabulary}")
+    vocabulary = clamp_text(payload.vocabulary, MAX_VOCAB_CHARS)
+    print(f"[YOLO Training] Received open-vocabulary updates ({len(vocabulary)} chars).")
     try:
         os.makedirs("data", exist_ok=True)
-        with open("data/open_vocabulary.txt", "w", encoding="utf-8") as f:
-            f.write(payload.vocabulary)
+        _atomic_write_text("data/open_vocabulary.txt", vocabulary)
         return {"status": "ok"}
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        return {"status": "error", "message": redact_secrets(e, os.environ)}
 
 
 class HologramConnect(BaseModel):
@@ -839,11 +875,13 @@ async def websocket_chat_endpoint(websocket: WebSocket):
                     print(f"[WebSocket] No se pudo solicitar escucha: {e}")
                 continue
 
-            prompt = message_data.get("prompt", "")
+            # El prompt llega de un visitante: acotar tamaño y quitar caracteres
+            # de control antes de mandarlo al LLM (evita abuso de coste / DoS).
+            prompt = clamp_text(message_data.get("prompt", ""), MAX_PROMPT_CHARS)
             if not prompt:
                 continue
 
-            print(f"[WebSocket] Prompt recibido: {prompt}")
+            print(f"[WebSocket] Prompt recibido ({len(prompt)} chars).")
 
             # Notifica que se inicia el streaming del LLM
             await websocket.send_json({"type": "status", "status": "streaming_started"})
