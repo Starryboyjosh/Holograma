@@ -47,7 +47,14 @@ class YoloPersonDetector:
         # Último cuadro anotado (JPEG) para transmitir al frontend vía MJPEG.
         self._latest_jpeg: bytes | None = None
         self._jpeg_lock = threading.Lock()
+        # Señal cooperativa de parada: al activarla, run_continuous sale del bucle
+        # y el context manager de Camera libera el dispositivo (apagar = liberar).
+        self._stop_event = threading.Event()
         self._load_training_data()
+
+    def stop(self):
+        """Solicita que run_continuous termine y libere la cámara."""
+        self._stop_event.set()
 
     def load(self):
         """Load the YOLO model.  Downloads weights automatically on first run."""
@@ -385,8 +392,9 @@ class YoloPersonDetector:
 
         print(f"[YOLO] Iniciando detección continua (cámara {camera_index})...")
 
+        self._stop_event.clear()
         with Camera(source=camera_index) as cam:
-            while True:
+            while not self._stop_event.is_set():
                 frame = cam.read_frame()
                 if frame is None:
                     time.sleep(0.1)

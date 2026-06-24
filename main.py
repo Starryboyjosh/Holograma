@@ -511,6 +511,31 @@ def update_unev_content(payload: dict):
         return {"status": "error", "message": redact_secrets(e, os.environ)}
 
 
+class CameraToggle(BaseModel):
+    enabled: bool
+
+
+@app.post("/api/camera")
+def set_camera(payload: CameraToggle):
+    """Enciende o **apaga** la cámara liberando el dispositivo.
+
+    Apagar no solo oculta el video: detiene el hilo de detección para que la
+    cámara quede libre (la luz se apaga, otra app puede usarla).
+    """
+    try:
+        if payload.enabled:
+            from call import start_camera_thread
+
+            start_camera_thread()
+        else:
+            from call import stop_camera_thread
+
+            stop_camera_thread()
+        return {"status": "ok", "enabled": payload.enabled}
+    except Exception as e:
+        return {"status": "error", "message": redact_secrets(e, os.environ)}
+
+
 class SpeakPayload(BaseModel):
     text: str
     voice: str | None = None

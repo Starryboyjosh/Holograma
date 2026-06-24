@@ -4,6 +4,7 @@ import { useToast } from './ToastContext';
 import { useChatSocket } from '../hooks/useChatSocket';
 import { useConfig } from '../hooks/useConfig';
 import { useHologram } from '../hooks/useHologram';
+import { apiFetch } from '../lib/backend';
 import type { ChatSocket } from '../hooks/useChatSocket';
 
 interface CameraState {
@@ -36,18 +37,26 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const [cameraOn, setCameraOnState] = useState(true);
   const [feedNonce, setFeedNonce] = useState(0);
 
-  const setCameraOn = useCallback((on: boolean) => {
-    setCameraOnState(on);
-    if (on) setFeedNonce((n) => n + 1); // reconnect the stream when turning back on.
+  // Tell the backend to actually start/stop the capture device — turning the
+  // camera "off" must release it, not just hide the <img>. Fire-and-forget.
+  const applyCameraDevice = useCallback((on: boolean) => {
+    apiFetch('/api/camera', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ enabled: on }),
+    }).catch(() => {});
   }, []);
 
-  const toggleCamera = useCallback(() => {
-    setCameraOnState((prev) => {
-      const next = !prev;
-      if (next) setFeedNonce((n) => n + 1);
-      return next;
-    });
-  }, []);
+  const setCameraOn = useCallback(
+    (on: boolean) => {
+      setCameraOnState(on);
+      if (on) setFeedNonce((n) => n + 1); // reconnect the stream when turning back on.
+      applyCameraDevice(on);
+    },
+    [applyCameraDevice],
+  );
+
+  const toggleCamera = useCallback(() => setCameraOn(!cameraOn), [cameraOn, setCameraOn]);
 
   const camera = useMemo<CameraState>(
     () => ({ cameraOn, setCameraOn, toggleCamera, feedNonce }),

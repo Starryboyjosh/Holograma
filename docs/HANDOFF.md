@@ -60,19 +60,27 @@ The Settings AI-brain card is now driven by the live contract:
   (verify the backend reads it first) + backend audio-device selection, together.
 
 ### B. Cancellation + camera release + per-session events  (touches call.py, higher risk)
-- "Camera off" must release the device: there is NO stop path —
-  `call.py:971 start_camera_thread` runs `run_continuous` forever;
-  `vision/person_detector.py` needs a stop flag + capture release; only encode
-  MJPEG when a consumer is attached (`main.py:654 video_feed`).
-- Pause/stop must cancel in-flight work: `call.py:83 pause_hologram` is a Linux-
-  only `killall` flag; `voice_loop` (`call.py:1140`) checks `_hologram_paused`
-  only between turns. Add cooperative cancellation tokens to listen/LLM/TTS.
-- TTS completion is faked: `main.py` WS sends `completed` right after
-  `speak(blocking=False)` returns (`call.py:659`). Signal real playback end.
-- Per-session WS: `send_to_web_client` broadcasts to all (`main.py` global
-  `active_connections`); add request/session ids.
-- Hard to validate without ML stack → lean on unit tests with mocked detector/
-  listener/TTS.
+**Camera-off truly releases the device ✅ DONE (this commit):**
+- `YoloPersonDetector` got a cooperative stop: `stop()` + `_stop_event`;
+  `run_continuous` loops `while not self._stop_event.is_set()`, so the `Camera`
+  context manager releases the device on exit. Unit-tested with a fake Camera
+  (`tests/test_camera_stop.py`) — verifies the loop ends AND the device is released.
+- `call.py`: `stop_camera_thread()` (signals stop + joins) and a double-start guard
+  in `start_camera_thread()`. New `POST /api/camera {enabled}` wires it; the frontend
+  camera toggle (`SessionContext`) now calls it, so "off" frees the camera (not just
+  hides the `<img>`). Backend path is additive + compiles, but needs the running
+  backend + a real camera to validate end-to-end.
+
+**Still open (need the running backend — NOT done):**
+- Pause/stop must cancel in-flight work: `pause_hologram` is a Linux-only `killall`
+  flag; `voice_loop` checks `_hologram_paused` only between turns. Needs cooperative
+  cancellation tokens threaded through listen/LLM/TTS (rewriting `voice_loop`/`speak`
+  blind is too risky without being able to run it).
+- TTS completion is faked: WS sends `completed` right after `speak(blocking=False)`
+  returns. Signal real playback end (Piper subprocess completion callback).
+- Per-session WS: `send_to_web_client` broadcasts to all `active_connections`; add
+  request/session ids.
+- Only encode MJPEG when a consumer is attached (`video_feed`).
 
 ### C. Windows-first sidecar packaging  (cannot finish here; needs Windows runner)
 - Tauri still spawns `python3 main.py` from source (`frontend/src-tauri/src/lib.rs:57`);

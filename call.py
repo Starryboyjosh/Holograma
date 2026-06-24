@@ -896,6 +896,8 @@ _last_custom_speak_times = {}
 
 # Instancia activa del detector de cámara (para exponer el feed anotado al frontend).
 _camera_detector = None
+# Hilo activo de la cámara, para poder detenerlo y liberar el dispositivo.
+_camera_thread = None
 
 
 def get_latest_camera_jpeg():
@@ -985,7 +987,13 @@ def start_camera_thread():
         )
         return None
 
-    global _camera_detector
+    global _camera_detector, _camera_thread
+
+    # Evitar dos hilos de cámara compitiendo por el mismo dispositivo.
+    if _camera_thread is not None and _camera_thread.is_alive():
+        print("[Cámara] La detección ya estaba activa.")
+        return _camera_thread
+
     detector = YoloPersonDetector()
     _camera_detector = detector
 
@@ -996,8 +1004,30 @@ def start_camera_thread():
         name="yolo-camera",
     )
     thread.start()
+    _camera_thread = thread
     print("[Cámara] Detección de personas con YOLO iniciada en segundo plano.")
     return thread
+
+
+def stop_camera_thread(timeout=5.0):
+    """Detén la detección y libera la cámara (apagar la cámara = liberarla).
+
+    Señala la parada cooperativa del detector; el bucle sale y el context manager
+    de ``Camera`` libera el dispositivo. Idempotente.
+    """
+    global _camera_detector, _camera_thread
+
+    detector = _camera_detector
+    thread = _camera_thread
+    if detector is not None:
+        detector.stop()
+    if thread is not None and thread.is_alive():
+        thread.join(timeout=timeout)
+
+    _camera_thread = None
+    _camera_detector = None
+    print("[Cámara] Detección detenida y cámara liberada.")
+    return True
 
 
 # ======================================================================

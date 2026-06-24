@@ -1,7 +1,7 @@
 {
   "call.py": {
-    "mtime": 1782310515.24023,
-    "ast_hash": "151ebb678ad6ce950771f882e3a8e1ae",
+    "mtime": 1782310791.9928212,
+    "ast_hash": "770d58a19bc5378da32e238772e1683e",
     "semantic_hash": ""
   },
   "llm_backend.py": {
@@ -10,8 +10,8 @@
     "semantic_hash": ""
   },
   "main.py": {
-    "mtime": 1782310127.654342,
-    "ast_hash": "e1a7ec2fe56ea9db6318de222d67ae70",
+    "mtime": 1782310823.3760643,
+    "ast_hash": "5c598e17a47a9beec681ecd29ed0a2fa",
     "semantic_hash": ""
   },
   "skills/__init__.py": {
@@ -75,8 +75,8 @@
     "semantic_hash": ""
   },
   "vision/person_detector.py": {
-    "mtime": 1782310488.6536283,
-    "ast_hash": "e565348076d8c19c4f712691910c040c",
+    "mtime": 1782310727.4730034,
+    "ast_hash": "2a00f62d781fdccff697f1523f16065f",
     "semantic_hash": ""
   },
   ".claude/settings.json": {
@@ -430,8 +430,8 @@
     "semantic_hash": ""
   },
   "frontend/src/context/SessionContext.tsx": {
-    "mtime": 1782136402.1923912,
-    "ast_hash": "3947637c635cd7e5c086f44788dab687",
+    "mtime": 1782310863.8459466,
+    "ast_hash": "9cb8e2f25fb590f2656c85d0396f546f",
     "semantic_hash": ""
   },
   "frontend/src/context/ThemeContext.tsx": {
@@ -840,8 +840,8 @@
     "semantic_hash": ""
   },
   "docs/HANDOFF.md": {
-    "mtime": 1782310563.0034435,
-    "ast_hash": "96e0db43d64fd7cbf5362ddc3265962c",
+    "mtime": 1782310976.0756123,
+    "ast_hash": "6a5c02405c32e2a179653002e0faed11",
     "semantic_hash": ""
   },
   "docs/Last_LLM.md": {
@@ -877,6 +877,11 @@
   "tests/test_unev_content.py": {
     "mtime": 1782310079.5577385,
     "ast_hash": "8b979f13e1e8525c3a96033262eb2fac",
+    "semantic_hash": ""
+  },
+  "tests/test_camera_stop.py": {
+    "mtime": 1782310905.8658226,
+    "ast_hash": "9c0c859430837793e338c899bbe8c8ae",
     "semantic_hash": ""
   }
 }
