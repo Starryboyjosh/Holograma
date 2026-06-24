@@ -8,7 +8,9 @@ interface UseHologramOptions {
 // TCP control of the physical MISSYOU hologram fan, lifted from App.tsx.
 export function useHologram(options: UseHologramOptions = {}) {
   const onToastRef = useRef(options.onToast);
-  onToastRef.current = options.onToast;
+  useEffect(() => {
+    onToastRef.current = options.onToast;
+  });
 
   const [holoIp, setHoloIp] = useState('');
   const [holoPort, setHoloPort] = useState(50200);
@@ -36,6 +38,9 @@ export function useHologram(options: UseHologramOptions = {}) {
   }, []);
 
   useEffect(() => {
+    // Carga inicial del estado del holograma desde el backend (sincronización con
+    // un sistema externo). El setState ocurre tras el await, no de forma síncrona.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void fetchStatus();
   }, [fetchStatus]);
 

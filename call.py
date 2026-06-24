@@ -66,16 +66,19 @@ speak_lock = threading.Lock()
 ai_busy = False
 _hologram_paused = False
 
+
 def stop_all_tts_processes():
     """Attempt to terminate any running TTS or audio players on Linux."""
     import platform
     import subprocess
+
     if platform.system() == "Linux":
         for proc in ["aplay", "paplay", "piper", "espeak-ng", "espeak", "spd-say"]:
             try:
                 subprocess.run(["killall", "-9", proc], capture_output=True)
             except Exception:
                 pass
+
 
 def pause_hologram():
     """Pause hologram activity: stop speaking, listening and seeing."""
@@ -84,11 +87,13 @@ def pause_hologram():
     stop_all_tts_processes()
     print("[Holograma] IA Pausada por completo.")
 
+
 def resume_hologram():
     """Resume hologram activity."""
     global _hologram_paused
     _hologram_paused = False
     print("[Holograma] IA Reanudada.")
+
 
 # Puente con el ventilador holográfico físico (TCP). Deshabilitado (no-op) si
 # HOLOGRAM_TCP_IP no está definida — la IA corre igual sin dispositivo conectado.
@@ -275,7 +280,7 @@ def run_powershell(script):
         )
     except Exception as error:
         if not _is_quiet():
-                    print(f"Error ejecutando PowerShell: {error}")
+            print(f"Error ejecutando PowerShell: {error}")
         return False
 
     if result.stdout.strip():
@@ -443,7 +448,9 @@ def speak_with_piper(text):
     wav_path = _piper_synth_to_wav(text)
     if wav_path is None:
         if not _is_quiet():
-            print("AVISO: No pude generar voz con Piper. Intentaré una voz nativa del sistema.")
+            print(
+                "AVISO: No pude generar voz con Piper. Intentaré una voz nativa del sistema."
+            )
             print(get_piper_install_hint())
         return False
     try:
@@ -581,7 +588,10 @@ def _speak_chunk_os(chunk):
             if speak_with_windows_voice(chunk):
                 return True
         if system_name == "Linux" and tts_backend in (
-            "auto", "linux", "native", "espeak"
+            "auto",
+            "linux",
+            "native",
+            "espeak",
         ):
             if speak_with_linux_tts(chunk):
                 return True
@@ -688,17 +698,37 @@ _last_camera_analysis = {}
 _last_person_time = 0
 _cached_person_analysis = {}
 _visual_keywords = [
-    "ves", "mir", "cámar", "frent", "describe", "descríbeme",
-    "qué hay", "qué ves", "que ves", "que hay",
-    "delante", "enfrente", "visible", "veo", "ven",
-    "algo ahí", "alguien", "quién está", "quien esta",
-    "objeto", "detect", "yolo", "persona", "gente",
+    "ves",
+    "mir",
+    "cámar",
+    "frent",
+    "describe",
+    "descríbeme",
+    "qué hay",
+    "qué ves",
+    "que ves",
+    "que hay",
+    "delante",
+    "enfrente",
+    "visible",
+    "veo",
+    "ven",
+    "algo ahí",
+    "alguien",
+    "quién está",
+    "quien esta",
+    "objeto",
+    "detect",
+    "yolo",
+    "persona",
+    "gente",
 ]
+
 
 def _build_camera_context(analysis):
     global _last_person_time, _cached_person_analysis
     import time
-    
+
     if analysis.get("person_count", 0) > 0:
         _last_person_time = time.time()
         _cached_person_analysis = analysis.copy()
@@ -721,10 +751,13 @@ def _build_camera_context(analysis):
     co = active_analysis.get("custom_objects", [])
     if co:
         labels = list({o["label"] for o in co})
-        parts.append(f"Objetos que reconozco visualmente frente a ti: {', '.join(labels[:5])}")
+        parts.append(
+            f"Objetos que reconozco visualmente frente a ti: {', '.join(labels[:5])}"
+        )
     if not parts:
         parts.append("No veo a nadie frente a ti en este momento.")
     return "\n".join(parts)
+
 
 def _is_visual_question(user_input):
     text = user_input.lower().strip()
@@ -733,16 +766,28 @@ def _is_visual_question(user_input):
             return True
     return False
 
+
 def _is_greeting(user_input):
     text = user_input.lower().strip()
     greeting_keywords = [
-        "hola", "buenos dias", "buenos días", "buenas tardes", "buenas noches",
-        "saludo", "cómo estás", "como estas", "qué tal", "que tal", "buen dia", "buen día"
+        "hola",
+        "buenos dias",
+        "buenos días",
+        "buenas tardes",
+        "buenas noches",
+        "saludo",
+        "cómo estás",
+        "como estas",
+        "qué tal",
+        "que tal",
+        "buen dia",
+        "buen día",
     ]
     for kw in greeting_keywords:
         if kw in text:
             return True
     return False
+
 
 def ask_ai(user_input, mode=None):
     mode = mode or CURRENT_MODE
@@ -899,24 +944,27 @@ def _camera_detection_callback(event, count, analysis=None):
     elif event == "custom_object_detected":
         custom_objs = analysis.get("custom_objects", [])
         labels = list({o["label"] for o in custom_objs})
-        
+
         # Cooldown per class to avoid repetitive announcements
         now = time.time()
         labels_to_speak = [
-            lbl for lbl in labels
-            if now - _last_custom_speak_times.get(lbl, 0) > 60.0
+            lbl for lbl in labels if now - _last_custom_speak_times.get(lbl, 0) > 60.0
         ]
-        
+
         if labels_to_speak:
             for lbl in labels_to_speak:
                 _last_custom_speak_times[lbl] = now
             desc = ", ".join(labels_to_speak[:3])
+
             # Delay slightly to avoid lock collision if person_entered fired simultaneously
             def _delayed_speak():
                 import time
+
                 time.sleep(1.0)
                 speak(f"¡Mira, detecto a {desc}!", blocking=False)
+
             import threading
+
             threading.Thread(target=_delayed_speak, daemon=True).start()
 
 
@@ -967,7 +1015,9 @@ def chat_to_voice():
     )
     print("Modes: 'modo jueces', 'modo expo', 'modo admisiones', 'modo normal'.")
     print(get_backend_status())
-    print("Ollama recomendado para este equipo: gemma3:1b (el mas rapido en CPU; modelos mayores hacen timeout).")
+    print(
+        "Ollama recomendado para este equipo: gemma3:1b (el mas rapido en CPU; modelos mayores hacen timeout)."
+    )
 
     while True:
         hologram.set_state("idle")
@@ -1124,7 +1174,9 @@ def voice_loop():
         print("Habla al micrófono. Di 'salir' o 'exit' para terminar.")
     print(get_stt_status())
     print(get_backend_status())
-    print("Ollama recomendado para este equipo: gemma3:1b (el mas rapido en CPU; modelos mayores hacen timeout).")
+    print(
+        "Ollama recomendado para este equipo: gemma3:1b (el mas rapido en CPU; modelos mayores hacen timeout)."
+    )
 
     # Pre-load the Whisper model so the first utterance is fast
     if not _is_quiet():

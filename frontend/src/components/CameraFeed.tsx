@@ -29,8 +29,10 @@ export function CameraFeed({
   const base = useBackendUrl(); // re-render once the Tauri port resolves.
   const [error, setError] = useState(false);
 
-  // A new nonce means a deliberate reconnect — clear any stale error.
+  // A new nonce/base means a deliberate reconnect — clear any stale error so the
+  // <img> retries. Reset-on-prop-change es intencional aquí.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setError(false);
   }, [nonce, base]);
 

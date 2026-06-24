@@ -28,11 +28,16 @@ export interface ChatSocket {
 export function useChatSocket(options: UseChatSocketOptions = {}): ChatSocket {
   const { onToast } = options;
   const onToastRef = useRef(onToast);
-  onToastRef.current = onToast;
+  useEffect(() => {
+    onToastRef.current = onToast;
+  });
 
   const socketRef = useRef<WebSocket | null>(null);
   const reconnectRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closedByUnmount = useRef(false);
+  // Referencia a la última `connect` para reconectar desde onclose sin que la
+  // callback se referencie a sí misma (evita el acceso antes de declararla).
+  const connectRef = useRef<() => void>(() => {});
 
   const [wsConnected, setWsConnected] = useState(false);
   const [assistantState, setAssistantState] = useState<AssistantState>('idle');
@@ -101,12 +106,16 @@ export function useChatSocket(options: UseChatSocketOptions = {}): ChatSocket {
     ws.onclose = () => {
       setWsConnected(false);
       if (!closedByUnmount.current) {
-        reconnectRef.current = setTimeout(() => void connect(), 3000);
+        reconnectRef.current = setTimeout(() => connectRef.current(), 3000);
       }
     };
 
     socketRef.current = ws;
   }, []);
+
+  useEffect(() => {
+    connectRef.current = connect;
+  }, [connect]);
 
   useEffect(() => {
     closedByUnmount.current = false;

@@ -58,6 +58,9 @@ export function useConfig() {
   }, []);
 
   useEffect(() => {
+    // Carga inicial de la configuración desde el backend (sincronización con un
+    // sistema externo). El setState ocurre tras el await, no de forma síncrona.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void fetchConfig();
   }, [fetchConfig]);
 

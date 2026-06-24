@@ -3,7 +3,10 @@ import json
 import os
 import time
 from contextlib import asynccontextmanager
-from typing import List, Optional
+from typing import TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    from hologram_controller import HologramFanController
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -12,7 +15,8 @@ from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from llm_backend import stream_llm_response
+from llm_backend import probe_backend, stream_llm_response
+from provider_config import all_providers_public_info
 
 # Regla de Oro A: rutas absolutas basadas en este archivo. Al ejecutarse como
 # sidecar de Tauri el CWD puede ser arbitrario, así que fijamos el directorio de
@@ -22,6 +26,21 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 os.chdir(BASE_DIR)
 
 load_dotenv(os.path.join(BASE_DIR, ".env"))
+
+
+def _atomic_write_text(path: str, text: str) -> None:
+    """Escritura atómica: archivo temporal + os.replace.
+
+    Evita config.json / .env truncados si el proceso muere a mitad de escritura
+    (corte de luz en el kiosko, cierre de la app, etc.).
+    """
+    directory = os.path.dirname(os.path.abspath(path)) or "."
+    tmp = os.path.join(directory, f".{os.path.basename(path)}.tmp")
+    with open(tmp, "w", encoding="utf-8") as f:
+        f.write(text)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp, path)
 
 
 @asynccontextmanager
@@ -84,7 +103,7 @@ async def lifespan(app: FastAPI):
     config_data = {}
     if os.path.exists(config_path):
         try:
-            with open(config_path, "r", encoding="utf-8") as f:
+            with open(config_path, encoding="utf-8") as f:
                 config_data = json.load(f)
         except Exception:
             pass
@@ -159,7 +178,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-active_connections: List[WebSocket] = []
+active_connections: list[WebSocket] = []
 running_loop = None
 
 
@@ -200,20 +219,20 @@ def send_to_web_client(type_name: str, text: str, user_text: str = None, count: 
 
 # --- Modelos Pydantic ---
 class ConfigUpdate(BaseModel):
-    OLLAMA_MODEL: Optional[str] = None
-    LLM_MODEL: Optional[str] = None
-    WHISPER_MODEL: Optional[str] = None
-    HOLOGRAM_INPUT: Optional[str] = None
-    HOLOGRAM_CAMERA: Optional[str] = None
-    YOLO_MODEL: Optional[str] = None
-    YOLO_INTERVAL_SECONDS: Optional[str] = None
-    LLM_PROVIDER: Optional[str] = None
-    OPENROUTER_API_KEY: Optional[str] = None
-    OPENAI_API_KEY: Optional[str] = None
-    ANTHROPIC_API_KEY: Optional[str] = None
-    NVIDIA_API_KEY: Optional[str] = None
-    PIPER_VOICE: Optional[str] = None
-    HOLOGRAM_MODE: Optional[str] = None
+    OLLAMA_MODEL: str | None = None
+    LLM_MODEL: str | None = None
+    WHISPER_MODEL: str | None = None
+    HOLOGRAM_INPUT: str | None = None
+    HOLOGRAM_CAMERA: str | None = None
+    YOLO_MODEL: str | None = None
+    YOLO_INTERVAL_SECONDS: str | None = None
+    LLM_PROVIDER: str | None = None
+    OPENROUTER_API_KEY: str | None = None
+    OPENAI_API_KEY: str | None = None
+    ANTHROPIC_API_KEY: str | None = None
+    NVIDIA_API_KEY: str | None = None
+    PIPER_VOICE: str | None = None
+    HOLOGRAM_MODE: str | None = None
 
 
 class BoundingBoxModel(BaseModel):
@@ -227,7 +246,7 @@ class BoundingBoxModel(BaseModel):
 
 class TrainImagePayload(BaseModel):
     image: str
-    boundingBoxes: List[BoundingBoxModel]
+    boundingBoxes: list[BoundingBoxModel]
 
 
 class VocabularyPayload(BaseModel):
@@ -243,7 +262,7 @@ def get_config():
     config_data = {}
     if os.path.exists(config_path):
         try:
-            with open(config_path, "r", encoding="utf-8") as f:
+            with open(config_path, encoding="utf-8") as f:
                 config_data = json.load(f)
         except Exception as e:
             print(f"Error reading config.json: {e}")
@@ -287,7 +306,7 @@ def update_config(payload: ConfigUpdate):
     config_data = {}
     if os.path.exists(config_path):
         try:
-            with open(config_path, "r", encoding="utf-8") as f:
+            with open(config_path, encoding="utf-8") as f:
                 config_data = json.load(f)
         except Exception:
             pass
@@ -358,14 +377,13 @@ def update_config(payload: ConfigUpdate):
             config_data[k] = v
 
     try:
-        with open(config_path, "w", encoding="utf-8") as f:
-            json.dump(config_data, f, indent=4)
+        _atomic_write_text(config_path, json.dumps(config_data, indent=4))
 
         # Also write to .env for persistence
         env_path = ".env"
         env_lines = []
         if os.path.exists(env_path):
-            with open(env_path, "r", encoding="utf-8") as f:
+            with open(env_path, encoding="utf-8") as f:
                 env_lines = f.readlines()
 
         new_env_data = {}
@@ -387,18 +405,57 @@ def update_config(payload: ConfigUpdate):
         if payload.NVIDIA_API_KEY is not None:
             new_env_data["NVIDIA_API_KEY"] = payload.NVIDIA_API_KEY
 
-        with open(env_path, "w", encoding="utf-8") as f:
-            for k, v in new_env_data.items():
-                f.write(f"{k}={v}\n")
+        _atomic_write_text(
+            env_path, "".join(f"{k}={v}\n" for k, v in new_env_data.items())
+        )
 
-        return {"status": "ok", "config": config_data}
+        # No devolver secretos al navegador: redacta las API keys de la respuesta.
+        safe_config = {
+            k: ("***" if k.endswith("_API_KEY") and v else v)
+            for k, v in config_data.items()
+        }
+        return {"status": "ok", "config": safe_config}
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
 
+class LlmTestPayload(BaseModel):
+    provider: str
+    model: str | None = None
+    api_key: str | None = None
+    base_url: str | None = None
+
+
+@app.get("/api/providers")
+def get_providers():
+    """Lista de proveedores de IA con metadata segura (sin secretos).
+
+    La interfaz la usa para pintar el selector con descripciones amistosas, el
+    estado 'configurado/no configurado' de cada key y si admite descubrimiento de
+    modelos o requiere URL base.
+    """
+    return {"providers": all_providers_public_info(os.environ)}
+
+
+@app.post("/api/llm/test")
+def test_llm(payload: LlmTestPayload):
+    """Prueba real de proveedor/modelo/key/URL sin guardar nada.
+
+    Devuelve un mensaje accionable ('API key inválida', 'modelo no existe',
+    'no se pudo conectar', …). Nunca persiste ni devuelve la key enviada.
+    """
+    result = probe_backend(
+        payload.provider,
+        api_key=(payload.api_key or None),
+        model=(payload.model or None),
+        base_url=(payload.base_url or None),
+    )
+    return {"status": "ok" if result["ok"] else "error", "message": result["message"]}
+
+
 class SpeakPayload(BaseModel):
     text: str
-    voice: Optional[str] = None
+    voice: str | None = None
 
 
 @app.get("/api/voices")
@@ -448,7 +505,7 @@ def train_image(payload: TrainImagePayload):
         meta_path = "data/training_metadata.json"
         existing = []
         if os.path.exists(meta_path):
-            with open(meta_path, "r", encoding="utf-8") as f:
+            with open(meta_path, encoding="utf-8") as f:
                 existing = json.load(f)
 
         # Save image
@@ -494,9 +551,9 @@ def get_training_metadata():
     meta_path = "data/training_metadata.json"
     if os.path.exists(meta_path):
         try:
-            with open(meta_path, "r", encoding="utf-8") as f:
+            with open(meta_path, encoding="utf-8") as f:
                 return {"status": "ok", "items": json.load(f)}
-        except:
+        except Exception:
             pass
     return {"status": "ok", "items": []}
 
@@ -515,12 +572,12 @@ def train_vocabulary(payload: VocabularyPayload):
 
 class HologramConnect(BaseModel):
     ip: str
-    port: Optional[int] = 50200
+    port: int | None = 50200
 
 
 class HologramCommand(BaseModel):
     command: str
-    index: Optional[int] = None
+    index: int | None = None
 
 
 # --- Control Remoto del Holograma (singleton TCP) ---

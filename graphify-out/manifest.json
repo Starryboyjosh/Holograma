@@ -1,17 +1,17 @@
 {
   "call.py": {
-    "mtime": 1782086997.0565906,
-    "ast_hash": "bdd3279aaff02eaecf629f5ec0fbf34d",
+    "mtime": 1782267007.2198877,
+    "ast_hash": "2e151e4101eecb348360dc8406f92145",
     "semantic_hash": ""
   },
   "llm_backend.py": {
-    "mtime": 1782086276.4197094,
-    "ast_hash": "c7a6ba654a88518cf241d950ef7346ff",
+    "mtime": 1782270580.9698677,
+    "ast_hash": "43fdb19406b4de0292f2daf142a0ca94",
     "semantic_hash": ""
   },
   "main.py": {
-    "mtime": 1782094598.8434339,
-    "ast_hash": "b12c2a2c4f7d217425f118fa1cf3f573",
+    "mtime": 1782270621.236509,
+    "ast_hash": "f4a959aceeb7f0b1cb76b799523afb4c",
     "semantic_hash": ""
   },
   "skills/__init__.py": {
@@ -100,8 +100,8 @@
     "semantic_hash": ""
   },
   "frontend/eslint.config.js": {
-    "mtime": 1781839643.5316274,
-    "ast_hash": "0355276bc79439afe3c53e3a2470ca1e",
+    "mtime": 1782270872.3896792,
+    "ast_hash": "9e0809aa26f0cc233f120eabaf37792d",
     "semantic_hash": ""
   },
   "frontend/package.json": {
@@ -172,16 +172,6 @@
   "skills/utils.py": {
     "mtime": 1781839643.5397632,
     "ast_hash": "7b839af978e4e2661fe42545eb249735",
-    "semantic_hash": ""
-  },
-  "tests/go.mod": {
-    "mtime": 1781630926.433195,
-    "ast_hash": "56d662e62c9ac37f48bf786150a44bd7",
-    "semantic_hash": ""
-  },
-  "tests/holograma_test.go": {
-    "mtime": 1781839643.5477448,
-    "ast_hash": "0908f41381d9217c603fb72509b6ead4",
     "semantic_hash": ""
   },
   "utils.py": {
@@ -405,8 +395,8 @@
     "semantic_hash": ""
   },
   "frontend/src/components/CameraFeed.tsx": {
-    "mtime": 1782136450.5256476,
-    "ast_hash": "000a6d21e06180434db5c586cd865e33",
+    "mtime": 1782270956.5196228,
+    "ast_hash": "77bf4bb2795d37e22fe0c6d9c33cc958",
     "semantic_hash": ""
   },
   "frontend/src/components/DetachButton.tsx": {
@@ -460,18 +450,18 @@
     "semantic_hash": ""
   },
   "frontend/src/hooks/useChatSocket.ts": {
-    "mtime": 1782094837.2237096,
-    "ast_hash": "c668a11cabd0ced5301ba1f61c148c77",
+    "mtime": 1782270904.2929914,
+    "ast_hash": "6cc84e64b5d6b1d9bb99b20e9a0cf7a2",
     "semantic_hash": ""
   },
   "frontend/src/hooks/useConfig.ts": {
-    "mtime": 1782094886.9837503,
-    "ast_hash": "6774e8bcc397c4d2649b123cbe18f8fd",
+    "mtime": 1782270945.0396307,
+    "ast_hash": "49b5e17c726a4969f1d5840fe635cc01",
     "semantic_hash": ""
   },
   "frontend/src/hooks/useHologram.ts": {
-    "mtime": 1782094904.18043,
-    "ast_hash": "56eb13101ba8fafefcef8adba9c1e26a",
+    "mtime": 1782270933.5629716,
+    "ast_hash": "ac4a9633acddf02595f19e5d8c03e426",
     "semantic_hash": ""
   },
   "frontend/src/lib/backend.ts": {
@@ -542,16 +532,6 @@
   "frontend/src/widgets/WidgetFrame.tsx": {
     "mtime": 1782136744.3120465,
     "ast_hash": "7a4c8f94d05c8e9ce4acecdc4b1f8147",
-    "semantic_hash": ""
-  },
-  "TARUI_IMPLEMENTATION.md": {
-    "mtime": 1782095022.2971718,
-    "ast_hash": "f229db81ccee4c4fac8a3991b55c7fe3",
-    "semantic_hash": ""
-  },
-  "TAURI_EJECUCION_TEMP.md": {
-    "mtime": 1782093901.4810555,
-    "ast_hash": "ff249e7d31a76505a1f2d4d855fd8127",
     "semantic_hash": ""
   },
   "frontend/src-tauri/README.md": {
@@ -797,6 +777,31 @@
   "frontend/src-tauri/icons/ios/AppIcon-83.5x83.5@2x.png": {
     "mtime": 1782137121.528412,
     "ast_hash": "c5fb1b0f726ed68d73e4463e8e8cea1f",
+    "semantic_hash": ""
+  },
+  "provider_config.py": {
+    "mtime": 1782270504.2665818,
+    "ast_hash": "617b3d99ece7e73779d0c80863ccfec0",
+    "semantic_hash": ""
+  },
+  "tests/test_llm_backend.py": {
+    "mtime": 1782270424.7332962,
+    "ast_hash": "0b215ba780c3715f73c03525bde25bc7",
+    "semantic_hash": ""
+  },
+  "tests/test_provider_config.py": {
+    "mtime": 1782270404.4666414,
+    "ast_hash": "bddfe07c654c3cff7094f03a4587685b",
+    "semantic_hash": ""
+  },
+  "docs/CONFIG.md": {
+    "mtime": 1782271052.852891,
+    "ast_hash": "66be52fbd14d12a22e8e69d4aab46313",
+    "semantic_hash": ""
+  },
+  "docs/Manual de Marca - UNEV 1920x1080 - 2025.pdf": {
+    "mtime": 1782267510.6023407,
+    "ast_hash": "895b1e3b702045ba2f0f7231132894f7",
     "semantic_hash": ""
   }
 }

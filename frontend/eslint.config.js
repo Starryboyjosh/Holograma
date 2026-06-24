@@ -19,4 +19,14 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    // Los contextos exponen a propósito su hook (useToast/useSession/…) junto al
+    // Provider en el mismo archivo. La regla react-refresh solo afecta al HMR de
+    // desarrollo (no a la corrección en runtime), así que la relajamos aquí en
+    // lugar de fragmentar cada contexto en dos archivos.
+    files: ['src/context/**/*.{ts,tsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
 ])
