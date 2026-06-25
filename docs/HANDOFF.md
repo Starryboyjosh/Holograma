@@ -14,11 +14,13 @@ the audit.
   1.96 present.
 - Workflow: **commit whole working tree directly to `main` and push** (no PRs).
 
-## Verify Phase 1 (already done)
+## Verify Phases 1 + A (already done)
 ```bash
-.venv/bin/pytest                                                  # 29 passing
+.venv/bin/pytest                                                  # 64 passing
 .venv/bin/ruff check provider_config.py llm_backend.py main.py tests/   # clean
 cd frontend && npx eslint . && npx tsc -p tsconfig.app.json --noEmit    # clean
+cd frontend && npm test                                          # vitest (incl. AssistantScreen)
+cd frontend && npm run build                                     # tsc -b + vite build OK
 ```
 
 ## Phase 1 result (DONE) — the config/provider contract
@@ -32,74 +34,104 @@ cd frontend && npx eslint . && npx tsc -p tsconfig.app.json --noEmit    # clean
   `POST /api/llm/test` (non-persisting test-connection) + atomic config/.env
   writes + redacted config responses.
 - Contract reference: **`docs/CONFIG.md`**. Env reference: `.env.example`.
-- Removed obsolete `tests/holograma_test.go` (drove the dead vanilla-HTML UI).
 
 ## Remaining phases (pick per priority)
 
-### A. Settings UX + wire test buttons  ← recommended next, fully doable here
-Build `frontend/src/screens/SettingsScreen.tsx` (+ `hooks/useConfig.ts`) on the
-NEW endpoints. Currently it hardcodes providers/models, blanks the key on every
-change, never shows configured state (ignores `*_API_KEY_SET`), no test button,
-no mic/speaker/camera selection.
-- Use `GET /api/providers` to render the picker (friendly labels/descriptions,
-  `key_configured`, `needs_base_url`, `supports_discovery`) and `POST /api/llm/test`
-  for a "Probar conexión" button with the returned message.
-- Add custom OpenAI endpoint (base_url field), model discovery where supported,
-  and a free-text model field fallback.
-- Add device pickers (`navigator.mediaDevices.enumerateDevices`) for mic/speaker/
-  camera; persist selection.
-- Validatable here: eslint/tsc + component tests (add vitest/RTL).
-- Acceptance: non-technical operator configures/replaces provider+key+model from
-  UI; invalid key/model explained; secrets never shown.
+### A. Settings UX + wire test buttons  ✅ DONE
+The Settings AI-brain card is driven by the live contract:
+- `components/ProviderConfigCard.tsx` renders ONE provider picker from
+  `GET /api/providers` (7 providers, grouped cloud/local, friendly labels +
+  descriptions, configured badge), a free-text model field (Ollama gets a
+  datalist), a base-url field for `custom_openai`, a write-only API-key field
+  (blank never wipes the stored key), and a **"Probar conexión"** button wired to
+  `POST /api/llm/test`.
+- `hooks/useProviders.ts` + rewritten `hooks/useConfig.ts` + pure
+  `lib/providerForm.ts` (form→contract mapping, unit-tested). vitest+RTL added.
+- **DEFERRED (follow-up): device pickers for mic/speaker/camera.** Browser
+  `enumerateDevices()` IDs don't map to the backend OpenCV camera index /
+  `sounddevice` index, and device consumption can't be validated in this env.
+  Honest path: a numeric camera-index field bound to `HOLOGRAM_CAMERA_INDEX`
+  (verify the backend reads it first) + backend audio-device selection, together.
 
 ### B. Cancellation + camera release + per-session events  (touches call.py, higher risk)
-- "Camera off" must release the device: there is NO stop path —
-  `call.py:971 start_camera_thread` runs `run_continuous` forever;
-  `vision/person_detector.py` needs a stop flag + capture release; only encode
-  MJPEG when a consumer is attached (`main.py:654 video_feed`).
-- Pause/stop must cancel in-flight work: `call.py:83 pause_hologram` is a Linux-
-  only `killall` flag; `voice_loop` (`call.py:1140`) checks `_hologram_paused`
-  only between turns. Add cooperative cancellation tokens to listen/LLM/TTS.
-- TTS completion is faked: `main.py` WS sends `completed` right after
-  `speak(blocking=False)` returns (`call.py:659`). Signal real playback end.
-- Per-session WS: `send_to_web_client` broadcasts to all (`main.py` global
-  `active_connections`); add request/session ids.
-- Hard to validate without ML stack → lean on unit tests with mocked detector/
-  listener/TTS.
+**Physical MISSYOU hologram — TCP state manager ✅ DONE:**
+- `hologram_controller.py` has `HologramStateManager`: a thread-safe, fail-soft
+  bridge that maps AI state → playlist clip index and sends `0x5B 0x06 N` (one
+  command per packet, `min_send_gap`, dedupe, auto-reconnect w/ backoff). The IA
+  runs identically with or without a device attached. `create_hologram_manager()`
+  builds it from env; `call.py` already drives `set_state(idle/listening/speaking/
+  thinking)`.
+- The state→clip map is **configurable** (`resolve_state_clips` + `HOLOGRAM_CLIP_*`)
+  so it matches whatever order the operator loaded clips in the HoloMissYou app —
+  the one real fragility, since `N` is a playlist position, not a filename.
+- `main.py`: the 4 `/api/hologram/*` endpoints share `call.hologram`; IP/port
+  persist to config+`.env` and hot-reconfigure; manager started in the FastAPI
+  lifespan. Frontend: `HologramConnection.tsx` + `useHologram.ts` (Settings card).
+- Tests: `tests/test_hologram_controller.py` (state map, invalid settings, clip
+  overrides). **Full guide + protocol + media rules: [`docs/HOLOGRAM.md`](HOLOGRAM.md).**
+- Validate on hardware: splicing propagation to the 3 host units; no real lip-sync.
+
+**Camera-off truly releases the device ✅ DONE:**
+- `YoloPersonDetector` got a cooperative stop (`stop()` + `_stop_event`);
+  `run_continuous` loops `while not self._stop_event.is_set()`, so the `Camera`
+  context manager releases the device on exit (unit-tested with a fake Camera).
+- `call.py`: `stop_camera_thread()` + double-start guard; `POST /api/camera
+  {enabled}` wires it; the frontend camera toggle frees the camera (not just hides
+  the `<img>`). Needs the running backend + a real camera for end-to-end proof.
+
+**Still open (need the running backend — NOT done):**
+- Pause/stop must cancel in-flight work: `pause_hologram` is a flag checked only
+  between turns. Needs cooperative cancellation tokens through listen/LLM/TTS.
+- TTS completion is faked: WS sends `completed` right after `speak(blocking=False)`
+  returns. Signal real Piper playback end.
+- Per-session WS: `send_to_web_client` broadcasts to all `active_connections`.
+- Only encode MJPEG when a consumer is attached (`video_feed`).
 
 ### C. Windows-first sidecar packaging  (cannot finish here; needs Windows runner)
-- Tauri still spawns `python3 main.py` from source (`frontend/src-tauri/src/lib.rs:57`);
-  no `externalBin`. Build a PyInstaller sidecar, wire `tauri.conf.json` bundle,
-  resource lookup post-install, OS app-data/config/cache dirs, model assets with
-  checksums, clean child-process shutdown (current `kill_backend` orphans Piper/
-  audio), Windows+Linux CI. **Pin Python ~3.11/3.12** for wheel availability.
+- **Documented with concrete steps + a starter PyInstaller `.spec` in
+  [`docs/PACKAGING.md`](PACKAGING.md).** Tauri spawns `python3 main.py` (no
+  `externalBin`); `kill_backend` does `child.kill()` only (orphans Piper/audio).
+- Remaining (on a Windows+Linux runner): build the sidecar, wire `externalBin`,
+  switch `spawn_backend` to it in release, kill the process **tree**, move
+  config/cache to OS app-data, CI. **Pin Python ~3.11/3.12** for wheels.
 
-### D. Security + operator auth  (mostly doable here)
-- Auth for privileged settings; split visitor vs privileged APIs; per-process
-  Tauri capability token for WS/REST; OS keyring for secrets (Windows Credential
-  Manager / Linux Secret Service) instead of plaintext `.env`/`config.json`; log
-  redaction; input size/schema validation; rate limits; prompt-injection guard on
-  editable vision labels / UNEV content; tighten CORS (`main.py:154` allow_origins=*).
+### D. Security + operator auth
+**D.1 — input hardening + secret hygiene ✅ DONE (fully testable here):**
+- `security.py` (pure, tested): `redact_secrets` masks API-key-shaped tokens +
+  known key envs; `clamp_text` strips control/zero-width/bidi chars + truncates.
+- Wired in `main.py`: WS chat prompt clamped, `/api/speak` clamped, editable
+  vision label/desc + vocabulary clamped, error responses redacted, atomic writes.
+  CORS configurable via `CORS_ALLOW_ORIGINS` (default `*` preserved).
 
-### E. De-monkey-patch into typed services  (refactor; do incrementally)
-- `main.py:38-78` patches `call.speak`, `WhisperListener.listen_once`,
-  `_camera_detection_callback` at startup; globals everywhere. Migrate toward
-  `application/` services (conversation/config/device) + an event bus, using the
-  strangler pattern (add seam, route through it, keep working). `call.py` (1265 L)
-  and `main.py` (900 L) are the god-modules to split.
+**D.2 — opt-in API-token gate ✅ PARTIAL:**
+- `auth_token.py` (pure, tested): reads pass; privileged **writes** require
+  `X-API-Token` (constant-time compare). `main.py` HTTP middleware gated on
+  `HOLOGRAM_API_TOKEN` (empty = current behavior, no breakage).
+- **Still open (needs the Tauri shell / running backend):** deliver the token from
+  Rust → frontend on every privileged call; WS capability token; OS keyring for
+  secrets instead of plaintext `.env`/`config.json`; rate limits; lock CORS to the
+  validated WebView origin.
 
-### F. Single editable UNEV content source
-- Facts duplicated across `skills/university.py` (316 L), `data/unev_info.json`,
-  `skills/honduras.py`, prompts in `skills/event_mode.py`, and
-  `frontend/.../TeachingScreen.tsx`. Make one validated source (JSON + schema)
-  editable via UI; everything else reads from it.
+### E. De-monkey-patch into typed services  (refactor; INTENTIONALLY DEFERRED)
+- Highest-risk item, **not safe blind**: rewriting startup monkey-patching +
+  globals into services changes `call.py`/`main.py` hot paths that can't run in
+  this env (no ML stack). `main.py` patches `call.speak`,
+  `WhisperListener.listen_once`, `_camera_detection_callback` at startup. Migrate
+  toward `application/` services + an event bus, strangler-style.
 
-### G. Legacy lint debt
-- `ruff check .` reports ~38 issues in untouched modules (call.py, vision/, stt/,
-  scripts/). Sweep with `ruff check --fix` + review once those modules can be run.
+### F. Single editable UNEV content source  ✅ DONE
+- `skills/unev_content.py` is the single authoritative source (canonical content +
+  validated `load/save/get/reload`, atomic write, control-char clamp).
+  `data/unev_info.json` regenerated complete; `university.py` reads everything from
+  `get_unev_info()`. Editable via `GET/POST /api/unev-content` + a **Contenido**
+  screen. `event_mode.py` is persona/behaviour (no facts — left alone).
+
+### G. Legacy lint debt  ✅ DONE
+- `ruff check .` is **clean** (was 36 issues). Behavior-preserving fixes only
+  (import sort, unused imports, `Optional→| None`, relocated misplaced imports,
+  `# noqa: B904` on a user-facing ConnectionError). Heavy modules compile + import.
 
 ## Reusable knobs already in the contract
 Providers: openrouter, openai, claude_native, nvidia, custom_openai, ollama,
 local_only. Model precedence: provider-specific env (`OPENAI_MODEL`…) > `LLM_MODEL`
 > default (ollama never inherits `LLM_MODEL`). `LLM_BACKEND` is deprecated alias.
-

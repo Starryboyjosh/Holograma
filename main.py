@@ -1,40 +1,233 @@
-Anaimport asyncio
+import asyncio
 import json
 import os
 import time
-from typing import List, Optional
+from contextlib import asynccontextmanager
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from hologram_controller import HologramStateManager
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import (
+    FileResponse,
+    HTMLResponse,
+    JSONResponse,
+    StreamingResponse,
+)
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from llm_backend import stream_llm_response
+from auth_token import request_authorized
+from llm_backend import probe_backend, stream_llm_response
+from provider_config import all_providers_public_info
+from security import (
+    MAX_LABEL_CHARS,
+    MAX_PROMPT_CHARS,
+    MAX_TTS_CHARS,
+    MAX_VOCAB_CHARS,
+    clamp_text,
+    redact_secrets,
+)
+from skills.unev_content import get_unev_info, save_unev_info
 
-load_dotenv()
+# Regla de Oro A: rutas absolutas basadas en este archivo. Al ejecutarse como
+# sidecar de Tauri el CWD puede ser arbitrario, así que fijamos el directorio de
+# trabajo al del proyecto para que config.json, .env, static/, data/ y los
+# modelos (.pt/.onnx) relativos se resuelvan siempre de la misma forma.
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+os.chdir(BASE_DIR)
+
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+
+
+def _atomic_write_text(path: str, text: str) -> None:
+    """Escritura atómica: archivo temporal + os.replace.
+
+    Evita config.json / .env truncados si el proceso muere a mitad de escritura
+    (corte de luz en el kiosko, cierre de la app, etc.).
+    """
+    directory = os.path.dirname(os.path.abspath(path)) or "."
+    tmp = os.path.join(directory, f".{os.path.basename(path)}.tmp")
+    with open(tmp, "w", encoding="utf-8") as f:
+        f.write(text)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp, path)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Ciclo de vida de la aplicación (reemplaza @app.on_event, deprecado).
+
+    Arranca: expone el event loop al hilo de TTS/cámara, parchea call.py para
+    transmitir al frontend e inicia los hilos de cámara YOLO y voz STT.
+    Apaga: cierra el controlador del holograma físico y limpia conexiones.
+    """
+    global running_loop
+    running_loop = asyncio.get_running_loop()
+
+    # Parchear/monkey-patch las funciones de call.py para que transmitan al frontend
+    try:
+        import call
+        from stt.listener import WhisperListener
+
+        # El audio se procesa en el servidor: marcar modo web para que
+        # voice_loop no lea stdin como push-to-talk (el botón llega por WS).
+        call.WEB_MODE = True
+
+        # 1. Parchear speak
+        original_speak = call.speak
+
+        def custom_speak(text, blocking=True):
+            send_to_web_client("status", "streaming_started")
+            send_to_web_client("text_chunk", text)
+            send_to_web_client("text_done", text)
+            original_speak(text, blocking)
+
+        call.speak = custom_speak
+
+        # 2. Parchear listen_once para capturar transcripciones
+        original_listen_once = WhisperListener.listen_once
+
+        def custom_listen_once(self):
+            user_input = original_listen_once(self)
+            if user_input:
+                send_to_web_client("stt_transcript", user_input)
+            return user_input
+
+        WhisperListener.listen_once = custom_listen_once
+
+        # 3. Parchear callback de cámara
+        original_callback = call._camera_detection_callback
+
+        def custom_callback(event, count, analysis=None):
+            send_to_web_client("camera_event", event, count=count)
+            original_callback(event, count, analysis)
+
+        call._camera_detection_callback = custom_callback
+
+        # En modo web call.main() no se ejecuta, por lo que el gestor físico debe
+        # arrancarse explícitamente dentro del ciclo de vida de FastAPI.
+        call.hologram.start()
+
+        print("[Startup] Monkey-patching de call.py y WhisperListener completado.")
+    except Exception as e:
+        print(f"[Startup] Error al aplicar monkey-patch de call.py: {e}")
+
+    # Leer config.json
+    config_path = "config.json"
+    config_data = {}
+    if os.path.exists(config_path):
+        try:
+            with open(config_path, encoding="utf-8") as f:
+                config_data = json.load(f)
+        except Exception:
+            pass
+
+    use_voice = (
+        os.getenv("HOLOGRAM_INPUT", config_data.get("HOLOGRAM_INPUT", "")).lower()
+        == "voice"
+    )
+    use_camera = (
+        os.getenv("HOLOGRAM_CAMERA", config_data.get("HOLOGRAM_CAMERA", "")) == "1"
+    )
+
+    if use_camera:
+        try:
+            from call import start_camera_thread
+
+            start_camera_thread()
+            print("[Startup] Hilo de cámara YOLO iniciado con éxito.")
+        except Exception as e:
+            print(f"[Startup] Error al iniciar hilo de cámara: {e}")
+
+    if use_voice:
+        try:
+            import threading
+
+            from call import voice_loop
+
+            stt_thread = threading.Thread(
+                target=voice_loop, daemon=True, name="stt-voice-loop"
+            )
+            stt_thread.start()
+            print("[Startup] Hilo de escucha de voz STT iniciado con éxito.")
+        except Exception as e:
+            print(f"[Startup] Error al iniciar hilo de voz STT: {e}")
+
+    yield
+
+    # --- Apagado ordenado ---
+    for ws in list(active_connections):
+        try:
+            await ws.close()
+        except Exception:
+            pass
+    active_connections.clear()
+    try:
+        import call
+
+        call.hologram.close()
+    except Exception:
+        pass
+    print("[Shutdown] Aplicación detenida limpiamente.")
+
 
 app = FastAPI(
     title="UNEV Hologram API",
     description="Unified async LLM streaming service and WebSocket chat server",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
-# Configurar middleware de CORS
+# Configurar middleware de CORS.
+# El backend solo escucha en localhost. El WebView de Tauri hace peticiones
+# cross-origin (p. ej. origen tauri://localhost o http://tauri.localhost) hacia
+# 127.0.0.1:<puerto>. allow_origins=["*"] junto a allow_credentials=True es una
+# combinación inválida que el navegador rechaza; como no usamos cookies/credenciales
+# dejamos credentials en False.
+#
+# Por defecto se permite cualquier origen (comportamiento histórico, válido porque
+# el servidor solo escucha en localhost). Para endurecerlo en producción tras
+# validar el origen real del WebView, definir CORS_ALLOW_ORIGINS con una lista
+# separada por comas, p. ej.:
+#   CORS_ALLOW_ORIGINS=tauri://localhost,http://tauri.localhost,https://tauri.localhost
+_cors_env = os.getenv("CORS_ALLOW_ORIGINS", "").strip()
+_cors_origins = [o.strip() for o in _cors_env.split(",") if o.strip()] or ["*"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=_cors_origins,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-active_connections: List[WebSocket] = []
+# Token de capacidad opcional para endpoints privilegiados (ajustes, contenido,
+# cámara, entrenamiento). Apagado por defecto (HOLOGRAM_API_TOKEN vacío) para no
+# romper la app actual; al activarlo, las escrituras exigen el header X-API-Token.
+# La shell de Tauri debe entregar el token al frontend (ver docs/HANDOFF.md, D.2).
+_API_TOKEN = os.getenv("HOLOGRAM_API_TOKEN", "").strip()
+
+
+@app.middleware("http")
+async def _api_token_gate(request, call_next):
+    if _API_TOKEN and not request_authorized(
+        request.url.path, request.method, request.headers.get("x-api-token"), _API_TOKEN
+    ):
+        return JSONResponse(
+            {"status": "error", "message": "No autorizado: falta o no coincide X-API-Token."},
+            status_code=401,
+        )
+    return await call_next(request)
+
+active_connections: list[WebSocket] = []
 running_loop = None
 
 
-def send_to_web_client(type_name: str, text: str, user_text: str = None):
+def send_to_web_client(type_name: str, text: str, user_text: str = None, count: int = None):
     if not running_loop:
         return
 
@@ -52,6 +245,8 @@ def send_to_web_client(type_name: str, text: str, user_text: str = None):
         payload["text"] = text
     elif type_name == "camera_event":
         payload["event"] = text
+        if count is not None:
+            payload["count"] = count
 
     if user_text:
         payload["user_text"] = user_text
@@ -69,20 +264,26 @@ def send_to_web_client(type_name: str, text: str, user_text: str = None):
 
 # --- Modelos Pydantic ---
 class ConfigUpdate(BaseModel):
-    OLLAMA_MODEL: Optional[str] = None
-    LLM_MODEL: Optional[str] = None
-    WHISPER_MODEL: Optional[str] = None
-    HOLOGRAM_INPUT: Optional[str] = None
-    HOLOGRAM_CAMERA: Optional[str] = None
-    YOLO_MODEL: Optional[str] = None
-    YOLO_INTERVAL_SECONDS: Optional[str] = None
-    LLM_PROVIDER: Optional[str] = None
-    OPENROUTER_API_KEY: Optional[str] = None
-    OPENAI_API_KEY: Optional[str] = None
-    ANTHROPIC_API_KEY: Optional[str] = None
-    NVIDIA_API_KEY: Optional[str] = None
-    PIPER_VOICE: Optional[str] = None
-    HOLOGRAM_MODE: Optional[str] = None
+    OLLAMA_MODEL: str | None = None
+    LLM_MODEL: str | None = None
+    WHISPER_MODEL: str | None = None
+    HOLOGRAM_INPUT: str | None = None
+    HOLOGRAM_CAMERA: str | None = None
+    YOLO_MODEL: str | None = None
+    YOLO_INTERVAL_SECONDS: str | None = None
+    LLM_PROVIDER: str | None = None
+    OPENROUTER_API_KEY: str | None = None
+    OPENAI_API_KEY: str | None = None
+    ANTHROPIC_API_KEY: str | None = None
+    NVIDIA_API_KEY: str | None = None
+    # Endpoint propio compatible con OpenAI (vLLM, LM Studio, gateway…): el
+    # proveedor "custom_openai" del contrato necesita key + URL base editables.
+    OPENAI_COMPAT_API_KEY: str | None = None
+    OPENAI_COMPAT_BASE_URL: str | None = None
+    PIPER_VOICE: str | None = None
+    HOLOGRAM_MODE: str | None = None
+    HOLOGRAM_TCP_IP: str | None = None
+    HOLOGRAM_TCP_PORT: int | None = None
 
 
 class BoundingBoxModel(BaseModel):
@@ -96,7 +297,7 @@ class BoundingBoxModel(BaseModel):
 
 class TrainImagePayload(BaseModel):
     image: str
-    boundingBoxes: List[BoundingBoxModel]
+    boundingBoxes: list[BoundingBoxModel]
 
 
 class VocabularyPayload(BaseModel):
@@ -112,7 +313,7 @@ def get_config():
     config_data = {}
     if os.path.exists(config_path):
         try:
-            with open(config_path, "r", encoding="utf-8") as f:
+            with open(config_path, encoding="utf-8") as f:
                 config_data = json.load(f)
         except Exception as e:
             print(f"Error reading config.json: {e}")
@@ -145,8 +346,16 @@ def get_config():
         "OPENAI_API_KEY_SET": bool(openai_key),
         "ANTHROPIC_API_KEY_SET": bool(anthropic_key),
         "NVIDIA_API_KEY_SET": bool(nvidia_key),
+        # URL base del endpoint propio compatible con OpenAI (no es secreto): se
+        # devuelve para que el formulario la pueda pre-rellenar. La key nunca.
+        "OPENAI_COMPAT_BASE_URL": os.getenv("OPENAI_COMPAT_BASE_URL")
+        or config_data.get("OPENAI_COMPAT_BASE_URL", ""),
         "PIPER_VOICE": config_data.get("PIPER_VOICE", "es_MX-claude-high.onnx"),
         "HOLOGRAM_MODE": config_data.get("HOLOGRAM_MODE", "dark"),
+        "HOLOGRAM_TCP_IP": os.getenv("HOLOGRAM_TCP_IP")
+        or config_data.get("HOLOGRAM_TCP_IP", ""),
+        "HOLOGRAM_TCP_PORT": os.getenv("HOLOGRAM_TCP_PORT")
+        or config_data.get("HOLOGRAM_TCP_PORT", "50200"),
     }
 
 
@@ -156,7 +365,7 @@ def update_config(payload: ConfigUpdate):
     config_data = {}
     if os.path.exists(config_path):
         try:
-            with open(config_path, "r", encoding="utf-8") as f:
+            with open(config_path, encoding="utf-8") as f:
                 config_data = json.load(f)
         except Exception:
             pass
@@ -198,12 +407,24 @@ def update_config(payload: ConfigUpdate):
     if payload.NVIDIA_API_KEY is not None:
         config_data["NVIDIA_API_KEY"] = payload.NVIDIA_API_KEY
         os.environ["NVIDIA_API_KEY"] = payload.NVIDIA_API_KEY
+    if payload.OPENAI_COMPAT_API_KEY is not None:
+        config_data["OPENAI_COMPAT_API_KEY"] = payload.OPENAI_COMPAT_API_KEY
+        os.environ["OPENAI_COMPAT_API_KEY"] = payload.OPENAI_COMPAT_API_KEY
+    if payload.OPENAI_COMPAT_BASE_URL is not None:
+        config_data["OPENAI_COMPAT_BASE_URL"] = payload.OPENAI_COMPAT_BASE_URL
+        os.environ["OPENAI_COMPAT_BASE_URL"] = payload.OPENAI_COMPAT_BASE_URL
     if payload.PIPER_VOICE is not None:
         config_data["PIPER_VOICE"] = payload.PIPER_VOICE
         os.environ["PIPER_VOICE"] = payload.PIPER_VOICE
     if payload.HOLOGRAM_MODE is not None:
         config_data["HOLOGRAM_MODE"] = payload.HOLOGRAM_MODE
         os.environ["HOLOGRAM_MODE"] = payload.HOLOGRAM_MODE
+    if payload.HOLOGRAM_TCP_IP is not None:
+        config_data["HOLOGRAM_TCP_IP"] = payload.HOLOGRAM_TCP_IP.strip()
+        os.environ["HOLOGRAM_TCP_IP"] = payload.HOLOGRAM_TCP_IP.strip()
+    if payload.HOLOGRAM_TCP_PORT is not None:
+        config_data["HOLOGRAM_TCP_PORT"] = str(payload.HOLOGRAM_TCP_PORT)
+        os.environ["HOLOGRAM_TCP_PORT"] = str(payload.HOLOGRAM_TCP_PORT)
 
     # Agrega parámetros por defecto si faltan en config_data
     default_config = {
@@ -221,20 +442,21 @@ def update_config(payload: ConfigUpdate):
         "NVIDIA_API_KEY": "",
         "PIPER_VOICE": "es_MX-claude-high.onnx",
         "HOLOGRAM_MODE": "dark",
+        "HOLOGRAM_TCP_IP": "",
+        "HOLOGRAM_TCP_PORT": "50200",
     }
     for k, v in default_config.items():
         if k not in config_data:
             config_data[k] = v
 
     try:
-        with open(config_path, "w", encoding="utf-8") as f:
-            json.dump(config_data, f, indent=4)
+        _atomic_write_text(config_path, json.dumps(config_data, indent=4))
 
         # Also write to .env for persistence
         env_path = ".env"
         env_lines = []
         if os.path.exists(env_path):
-            with open(env_path, "r", encoding="utf-8") as f:
+            with open(env_path, encoding="utf-8") as f:
                 env_lines = f.readlines()
 
         new_env_data = {}
@@ -255,19 +477,124 @@ def update_config(payload: ConfigUpdate):
             new_env_data["ANTHROPIC_API_KEY"] = payload.ANTHROPIC_API_KEY
         if payload.NVIDIA_API_KEY is not None:
             new_env_data["NVIDIA_API_KEY"] = payload.NVIDIA_API_KEY
+        if payload.OPENAI_COMPAT_API_KEY is not None:
+            new_env_data["OPENAI_COMPAT_API_KEY"] = payload.OPENAI_COMPAT_API_KEY
+        if payload.OPENAI_COMPAT_BASE_URL is not None:
+            new_env_data["OPENAI_COMPAT_BASE_URL"] = payload.OPENAI_COMPAT_BASE_URL
+        if payload.HOLOGRAM_TCP_IP is not None:
+            new_env_data["HOLOGRAM_TCP_IP"] = payload.HOLOGRAM_TCP_IP.strip()
+        if payload.HOLOGRAM_TCP_PORT is not None:
+            new_env_data["HOLOGRAM_TCP_PORT"] = str(payload.HOLOGRAM_TCP_PORT)
 
-        with open(env_path, "w", encoding="utf-8") as f:
-            for k, v in new_env_data.items():
-                f.write(f"{k}={v}\n")
+        _atomic_write_text(
+            env_path, "".join(f"{k}={v}\n" for k, v in new_env_data.items())
+        )
 
-        return {"status": "ok", "config": config_data}
+        # Aplicar el destino físico en caliente; no hace falta reiniciar FastAPI.
+        if payload.HOLOGRAM_TCP_IP is not None or payload.HOLOGRAM_TCP_PORT is not None:
+            manager = _get_holo_manager()
+            ip = str(config_data.get("HOLOGRAM_TCP_IP", "")).strip()
+            port = int(config_data.get("HOLOGRAM_TCP_PORT", "50200"))
+            if ip:
+                manager.configure(ip, port)
+            else:
+                manager.disable()
+
+        # No devolver secretos al navegador: redacta las API keys de la respuesta.
+        safe_config = {
+            k: ("***" if k.endswith("_API_KEY") and v else v)
+            for k, v in config_data.items()
+        }
+        return {"status": "ok", "config": safe_config}
     except Exception as e:
+        # No filtrar una API key si apareciera en el mensaje de la excepción.
+        return {"status": "error", "message": redact_secrets(e, os.environ)}
+
+
+class LlmTestPayload(BaseModel):
+    provider: str
+    model: str | None = None
+    api_key: str | None = None
+    base_url: str | None = None
+
+
+@app.get("/api/providers")
+def get_providers():
+    """Lista de proveedores de IA con metadata segura (sin secretos).
+
+    La interfaz la usa para pintar el selector con descripciones amistosas, el
+    estado 'configurado/no configurado' de cada key y si admite descubrimiento de
+    modelos o requiere URL base.
+    """
+    return {"providers": all_providers_public_info(os.environ)}
+
+
+@app.post("/api/llm/test")
+def test_llm(payload: LlmTestPayload):
+    """Prueba real de proveedor/modelo/key/URL sin guardar nada.
+
+    Devuelve un mensaje accionable ('API key inválida', 'modelo no existe',
+    'no se pudo conectar', …). Nunca persiste ni devuelve la key enviada.
+    """
+    result = probe_backend(
+        payload.provider,
+        api_key=(payload.api_key or None),
+        model=(payload.model or None),
+        base_url=(payload.base_url or None),
+    )
+    return {"status": "ok" if result["ok"] else "error", "message": result["message"]}
+
+
+@app.get("/api/unev-content")
+def get_unev_content():
+    """Contenido institucional de UNEV (fuente única editable)."""
+    return {"status": "ok", "content": get_unev_info()}
+
+
+@app.post("/api/unev-content")
+def update_unev_content(payload: dict):
+    """Valida y guarda el contenido de UNEV; recarga la fuente en caliente.
+
+    Devuelve un mensaje accionable si el contenido es inválido. Es la única
+    forma autorizada de editar la información institucional desde la interfaz.
+    """
+    try:
+        merged = save_unev_info(payload)
+        return {"status": "ok", "content": merged}
+    except ValueError as e:
         return {"status": "error", "message": str(e)}
+    except Exception as e:
+        return {"status": "error", "message": redact_secrets(e, os.environ)}
+
+
+class CameraToggle(BaseModel):
+    enabled: bool
+
+
+@app.post("/api/camera")
+def set_camera(payload: CameraToggle):
+    """Enciende o **apaga** la cámara liberando el dispositivo.
+
+    Apagar no solo oculta el video: detiene el hilo de detección para que la
+    cámara quede libre (la luz se apaga, otra app puede usarla).
+    """
+    try:
+        if payload.enabled:
+            from call import start_camera_thread
+
+            start_camera_thread()
+        else:
+            from call import stop_camera_thread
+
+            stop_camera_thread()
+        return {"status": "ok", "enabled": payload.enabled}
+    except Exception as e:
+        return {"status": "error", "message": redact_secrets(e, os.environ)}
 
 
 class SpeakPayload(BaseModel):
     text: str
-    voice: Optional[str] = None
+    voice: str | None = None
 
 
 @app.get("/api/voices")
@@ -294,7 +621,7 @@ def play_speak(payload: SpeakPayload):
                 voice_path = os.path.abspath(voice_path)
             os.environ["PIPER_MODEL_PATH"] = voice_path
 
-        speak(payload.text, blocking=False)
+        speak(clamp_text(payload.text, MAX_TTS_CHARS), blocking=False)
 
         if payload.voice and old_voice is not None:
             os.environ["PIPER_MODEL_PATH"] = old_voice
@@ -303,7 +630,7 @@ def play_speak(payload: SpeakPayload):
 
         return {"status": "ok"}
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        return {"status": "error", "message": redact_secrets(e, os.environ)}
 
 
 @app.post("/api/train/image")
@@ -317,7 +644,7 @@ def train_image(payload: TrainImagePayload):
         meta_path = "data/training_metadata.json"
         existing = []
         if os.path.exists(meta_path):
-            with open(meta_path, "r", encoding="utf-8") as f:
+            with open(meta_path, encoding="utf-8") as f:
                 existing = json.load(f)
 
         # Save image
@@ -339,8 +666,10 @@ def train_image(payload: TrainImagePayload):
             existing.append(
                 {
                     "id": new_id,
-                    "label": box.label,
-                    "desc": box.desc,
+                    # Acotar etiqueta/descr.: son editables y terminan en el prompt
+                    # del LLM, así que se limita la superficie de inyección/abuso.
+                    "label": clamp_text(box.label, MAX_LABEL_CHARS),
+                    "desc": clamp_text(box.desc, MAX_LABEL_CHARS),
                     "x": box.x,
                     "y": box.y,
                     "w": box.w,
@@ -350,12 +679,11 @@ def train_image(payload: TrainImagePayload):
                 }
             )
 
-        with open(meta_path, "w", encoding="utf-8") as f:
-            json.dump(existing, f, indent=4)
+        _atomic_write_text(meta_path, json.dumps(existing, indent=4))
 
         return {"status": "ok", "items": existing}
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        return {"status": "error", "message": redact_secrets(e, os.environ)}
 
 
 @app.get("/api/train/metadata")
@@ -363,57 +691,57 @@ def get_training_metadata():
     meta_path = "data/training_metadata.json"
     if os.path.exists(meta_path):
         try:
-            with open(meta_path, "r", encoding="utf-8") as f:
+            with open(meta_path, encoding="utf-8") as f:
                 return {"status": "ok", "items": json.load(f)}
-        except:
+        except Exception:
             pass
     return {"status": "ok", "items": []}
 
 
 @app.post("/api/train/vocabulary")
 def train_vocabulary(payload: VocabularyPayload):
-    print(f"[YOLO Training] Received open-vocabulary updates: {payload.vocabulary}")
+    vocabulary = clamp_text(payload.vocabulary, MAX_VOCAB_CHARS)
+    print(f"[YOLO Training] Received open-vocabulary updates ({len(vocabulary)} chars).")
     try:
         os.makedirs("data", exist_ok=True)
-        with open("data/open_vocabulary.txt", "w", encoding="utf-8") as f:
-            f.write(payload.vocabulary)
+        _atomic_write_text("data/open_vocabulary.txt", vocabulary)
         return {"status": "ok"}
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        return {"status": "error", "message": redact_secrets(e, os.environ)}
 
 
 class HologramConnect(BaseModel):
     ip: str
-    port: Optional[int] = 50200
+    port: int | None = 50200
 
 
 class HologramCommand(BaseModel):
     command: str
-    index: Optional[int] = None
+    index: int | None = None
 
 
-# --- Control Remoto del Holograma (singleton TCP) ---
-
-_holo_controller: Optional["HologramFanController"] = None
+# --- Conexión del holograma y compatibilidad de comandos TCP ---
 
 
-def _get_holo():
-    global _holo_controller
-    if _holo_controller is None:
-        from hologram_controller import HologramFanController
+def _get_holo_manager() -> "HologramStateManager":
+    import call
 
-        _holo_controller = HologramFanController(verbose=False)
-    return _holo_controller
+    return call.hologram
 
 
 @app.post("/api/hologram/connect")
 def holo_connect(payload: HologramConnect):
     try:
-        fan = _get_holo()
-        fan.ip = payload.ip
-        fan.port = payload.port or 50200
-        fan.connect()
-        return {"status": "ok", "ip": payload.ip, "port": fan.port}
+        manager = _get_holo_manager()
+        manager.configure(payload.ip, payload.port or 50200)
+        # La conexión física ocurre en el worker fail-soft; la interfaz consulta
+        # el estado periódicamente mientras continúan los reintentos.
+        return {
+            "status": "ok",
+            "connected": manager.is_connected,
+            "ip": manager.ip,
+            "port": manager.port,
+        }
     except Exception as e:
         return {"status": "error", "message": str(e), "ip": payload.ip}
 
@@ -421,8 +749,7 @@ def holo_connect(payload: HologramConnect):
 @app.post("/api/hologram/disconnect")
 def holo_disconnect():
     try:
-        fan = _get_holo()
-        fan.disconnect()
+        _get_holo_manager().disable()
         return {"status": "ok"}
     except Exception as e:
         return {"status": "error", "message": str(e)}
@@ -431,35 +758,8 @@ def holo_disconnect():
 @app.post("/api/hologram/command")
 def holo_command(payload: HologramCommand):
     try:
-        fan = _get_holo()
         cmd = payload.command.lower()
-        if cmd == "start":
-            fan.start()
-        elif cmd == "shutdown":
-            fan.shutdown()
-        elif cmd == "pause":
-            fan.pause()
-        elif cmd == "play":
-            fan.play()
-        elif cmd == "loop_current":
-            fan.loop_current()
-        elif cmd == "play_file":
-            if payload.index is None:
-                return {
-                    "status": "error",
-                    "message": "Se requiere 'index' para play_file",
-                }
-            fan.play_file(payload.index)
-        elif cmd == "next_file":
-            fan.next_file()
-        elif cmd == "prev_file":
-            fan.prev_file()
-        elif cmd == "brightness_up":
-            fan.brightness_up()
-        elif cmd == "brightness_down":
-            fan.brightness_down()
-        else:
-            return {"status": "error", "message": f"Comando desconocido: {cmd}"}
+        _get_holo_manager().execute(cmd, payload.index)
         return {"status": "ok", "command": cmd, "index": payload.index}
     except Exception as e:
         return {"status": "error", "message": str(e)}
@@ -467,13 +767,13 @@ def holo_command(payload: HologramCommand):
 
 @app.get("/api/hologram/status")
 def holo_status():
-    fan = _get_holo()
     import call
 
+    manager = call.hologram
     return {
-        "connected": fan.is_connected,
-        "ip": getattr(fan, "ip", ""),
-        "port": getattr(fan, "port", 50200),
+        "connected": manager.is_connected,
+        "ip": manager.ip or "",
+        "port": manager.port,
         "ai_paused": getattr(call, "_hologram_paused", False),
     }
 
@@ -498,6 +798,54 @@ def resume_ai():
         return {"status": "ok", "ai_paused": False}
     except Exception as e:
         return {"status": "error", "message": str(e)}
+
+
+# --- Transmisión de video YOLO en vivo (MJPEG) ---
+
+
+def _placeholder_jpeg(message: str = "Esperando camara..."):
+    """Build a simple 'no signal' JPEG so the <img> always shows something."""
+    try:
+        import cv2
+        import numpy as np
+    except ImportError:
+        return None
+    frame = np.zeros((360, 640, 3), dtype=np.uint8)
+    frame[:] = (25, 18, 11)  # tono oscuro acorde a la interfaz
+    cv2.putText(
+        frame, message, (60, 190),
+        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (29, 92, 226), 2, cv2.LINE_AA,
+    )
+    ok, buffer = cv2.imencode(".jpg", frame)
+    return buffer.tobytes() if ok else None
+
+
+@app.get("/api/video_feed")
+def video_feed():
+    """Stream the annotated YOLO camera frames to the web interface as MJPEG."""
+    import call
+
+    def generate():
+        placeholder = _placeholder_jpeg()
+        while True:
+            jpeg = call.get_latest_camera_jpeg()
+            if jpeg is None:
+                jpeg = placeholder
+                if jpeg is None:
+                    time.sleep(0.2)
+                    continue
+                time.sleep(0.2)
+            else:
+                time.sleep(0.04)  # ~25 fps
+            yield (
+                b"--frame\r\n"
+                b"Content-Type: image/jpeg\r\n\r\n" + jpeg + b"\r\n"
+            )
+
+    return StreamingResponse(
+        generate(),
+        media_type="multipart/x-mixed-replace; boundary=frame",
+    )
 
 
 # --- Rutas de Archivos Estáticos (Frontend) ---
@@ -554,19 +902,62 @@ async def websocket_chat_endpoint(websocket: WebSocket):
     active_connections.append(websocket)
     print("[WebSocket] Cliente conectado al chat principal.")
     try:
+        # Informar al cliente del modo de voz actual (ptt / presentation / auto).
+        try:
+            from call import get_trigger_mode
+
+            await websocket.send_json(
+                {"type": "voice_mode", "mode": get_trigger_mode()}
+            )
+        except Exception:
+            pass
+
         while True:
             # Espera mensaje del cliente
             data = await websocket.receive_text()
             try:
                 message_data = json.loads(data)
-                prompt = message_data.get("prompt", "")
             except ValueError:
-                prompt = data
+                message_data = {"prompt": data}
 
+            # Cambiar el modo de activación de voz en caliente desde la WebApp.
+            if message_data.get("type") == "set_mode":
+                try:
+                    from call import set_trigger_mode
+
+                    new_mode = set_trigger_mode(message_data.get("mode", ""))
+                    for ws in list(active_connections):
+                        try:
+                            await ws.send_json(
+                                {"type": "voice_mode", "mode": new_mode}
+                            )
+                        except Exception:
+                            pass
+                except Exception as e:
+                    print(f"[WebSocket] No se pudo cambiar el modo: {e}")
+                continue
+
+            # Push-to-talk desde la WebApp: dispara la escucha del micrófono del
+            # servidor (Whisper). El hilo voice_loop transcribe y responde.
+            if message_data.get("type") == "listen":
+                try:
+                    from call import request_listen
+
+                    request_listen()
+                    await websocket.send_json(
+                        {"type": "status", "status": "listening"}
+                    )
+                except Exception as e:
+                    print(f"[WebSocket] No se pudo solicitar escucha: {e}")
+                continue
+
+            # El prompt llega de un visitante: acotar tamaño y quitar caracteres
+            # de control antes de mandarlo al LLM (evita abuso de coste / DoS).
+            prompt = clamp_text(message_data.get("prompt", ""), MAX_PROMPT_CHARS)
             if not prompt:
                 continue
 
-            print(f"[WebSocket] Prompt recibido: {prompt}")
+            print(f"[WebSocket] Prompt recibido ({len(prompt)} chars).")
 
             # Notifica que se inicia el streaming del LLM
             await websocket.send_json({"type": "status", "status": "streaming_started"})
@@ -618,94 +1009,35 @@ async def websocket_chat_endpoint(websocket: WebSocket):
             active_connections.remove(websocket)
 
 
-@app.on_event("startup")
-async def startup_event():
-    global running_loop
-    running_loop = asyncio.get_running_loop()
-
-    # Parchear/monkey-patch las funciones de call.py para que transmitan al frontend
-    try:
-        import call
-        from stt.listener import WhisperListener
-
-        # 1. Parchear speak
-        original_speak = call.speak
-
-        def custom_speak(text, blocking=True):
-            send_to_web_client("status", "streaming_started")
-            send_to_web_client("text_chunk", text)
-            send_to_web_client("text_done", text)
-            original_speak(text, blocking)
-
-        call.speak = custom_speak
-
-        # 2. Parchear listen_once para capturar transcripciones
-        original_listen_once = WhisperListener.listen_once
-
-        def custom_listen_once(self):
-            user_input = original_listen_once(self)
-            if user_input:
-                send_to_web_client("stt_transcript", user_input)
-            return user_input
-
-        WhisperListener.listen_once = custom_listen_once
-
-        # 3. Parchear callback de cámara
-        original_callback = call._camera_detection_callback
-
-        def custom_callback(event, count, analysis=None):
-            send_to_web_client("camera_event", event)
-            original_callback(event, count, analysis)
-
-        call._camera_detection_callback = custom_callback
-
-        print("[Startup] Monkey-patching de call.py y WhisperListener completado.")
-    except Exception as e:
-        print(f"[Startup] Error al aplicar monkey-patch de call.py: {e}")
-
-    # Leer config.json
-    config_path = "config.json"
-    config_data = {}
-    if os.path.exists(config_path):
-        try:
-            with open(config_path, "r", encoding="utf-8") as f:
-                config_data = json.load(f)
-        except Exception:
-            pass
-
-    use_voice = (
-        os.getenv("HOLOGRAM_INPUT", config_data.get("HOLOGRAM_INPUT", "")).lower()
-        == "voice"
-    )
-    use_camera = (
-        os.getenv("HOLOGRAM_CAMERA", config_data.get("HOLOGRAM_CAMERA", "")) == "1"
-    )
-
-    if use_camera:
-        try:
-            from call import start_camera_thread
-
-            start_camera_thread()
-            print("[Startup] Hilo de cámara YOLO iniciado con éxito.")
-        except Exception as e:
-            print(f"[Startup] Error al iniciar hilo de cámara: {e}")
-
-    if use_voice:
-        try:
-            import threading
-
-            from call import voice_loop
-
-            stt_thread = threading.Thread(
-                target=voice_loop, daemon=True, name="stt-voice-loop"
-            )
-            stt_thread.start()
-            print("[Startup] Hilo de escucha de voz STT iniciado con éxito.")
-        except Exception as e:
-            print(f"[Startup] Error al iniciar hilo de voz STT: {e}")
 
 
 if __name__ == "__main__":
+    import argparse
+
     import uvicorn
 
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    # Puerto/host configurables para poder arrancar como sidecar de Tauri, que
+    # elige un puerto libre y lo pasa por --port (o variable HOLOGRAM_PORT).
+    # reload va apagado por defecto: el modo recarga lanza un subproceso que el
+    # shell de Tauri no podría cerrar limpiamente. Para desarrollo web normal
+    # se puede pasar --reload.
+    parser = argparse.ArgumentParser(description="UNEV Hologram API server")
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=int(os.getenv("HOLOGRAM_PORT", "8000")),
+        help="Puerto TCP donde sirve FastAPI (default 8000 / $HOLOGRAM_PORT)",
+    )
+    parser.add_argument(
+        "--host",
+        default=os.getenv("HOLOGRAM_HOST", "127.0.0.1"),
+        help="Host de escucha (default 127.0.0.1)",
+    )
+    parser.add_argument(
+        "--reload",
+        action="store_true",
+        help="Activa autorecarga de uvicorn (solo desarrollo web)",
+    )
+    args = parser.parse_args()
+
+    uvicorn.run("main:app", host=args.host, port=args.port, reload=args.reload)

@@ -10,7 +10,7 @@
     "semantic_hash": ""
   },
   "main.py": {
-    "mtime": 1782313332.245648,
+    "mtime": 1782359672.3971171,
     "ast_hash": "ff0e3b4d13b913114e94978fbf0185e2",
     "semantic_hash": ""
   },
@@ -820,8 +820,8 @@
     "semantic_hash": ""
   },
   "docs/HANDOFF.md": {
-    "mtime": 1782358438.770569,
-    "ast_hash": "5ab782b1715fa3b224c21df0efdd33a0",
+    "mtime": 1782358922.0951622,
+    "ast_hash": "262c79cbfb75e40d352b1b12028efe6d",
     "semantic_hash": ""
   },
   "security.py": {

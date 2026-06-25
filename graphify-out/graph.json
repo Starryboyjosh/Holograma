@@ -1930,7 +1930,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "schemas_linux_schema",
-      "community": 30,
+      "community": 69,
       "norm_label": "linux-schema.json"
     },
     {
@@ -1940,7 +1940,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "schemas_linux_schema_schema",
-      "community": 30,
+      "community": 69,
       "norm_label": "$schema"
     },
     {
@@ -1950,7 +1950,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "schemas_linux_schema_title",
-      "community": 30,
+      "community": 69,
       "norm_label": "title"
     },
     {
@@ -1960,7 +1960,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "schemas_linux_schema_description",
-      "community": 30,
+      "community": 69,
       "norm_label": "description"
     },
     {
@@ -1970,7 +1970,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "schemas_linux_schema_anyof",
-      "community": 30,
+      "community": 69,
       "norm_label": "anyof"
     },
     {
@@ -2510,7 +2510,7 @@
       "source_location": "L2239",
       "_origin": "ast",
       "id": "schemas_linux_schema_definitions_value",
-      "community": 69,
+      "community": 30,
       "norm_label": "value"
     },
     {
@@ -2520,7 +2520,7 @@
       "source_location": "L2240",
       "_origin": "ast",
       "id": "schemas_linux_schema_value_description",
-      "community": 69,
+      "community": 30,
       "norm_label": "description"
     },
     {
@@ -2530,7 +2530,7 @@
       "source_location": "L2241",
       "_origin": "ast",
       "id": "schemas_linux_schema_value_anyof",
-      "community": 69,
+      "community": 30,
       "norm_label": "anyof"
     },
     {
@@ -9917,27 +9917,27 @@
       "label": "Remaining phases (pick per priority)",
       "file_type": "document",
       "source_file": "docs/HANDOFF.md",
-      "source_location": "L39",
+      "source_location": "L38",
       "_origin": "ast",
       "id": "docs_handoff_remaining_phases_pick_per_priority",
       "community": 26,
       "norm_label": "remaining phases (pick per priority)"
     },
     {
-      "label": "A. Settings UX + wire test buttons  \u2705 DONE (this commit)  \u2190 B or D recommended next",
+      "label": "A. Settings UX + wire test buttons  \u2705 DONE",
       "file_type": "document",
       "source_file": "docs/HANDOFF.md",
-      "source_location": "L41",
+      "source_location": "L40",
       "_origin": "ast",
-      "id": "docs_handoff_a_settings_ux_wire_test_buttons_done_this_commit_b_or_d_recommended_next",
+      "id": "docs_handoff_a_settings_ux_wire_test_buttons_done",
       "community": 26,
-      "norm_label": "a. settings ux + wire test buttons  \u2705 done (this commit)  \u2190 b or d recommended next"
+      "norm_label": "a. settings ux + wire test buttons  \u2705 done"
     },
     {
       "label": "B. Cancellation + camera release + per-session events  (touches call.py, higher risk)",
       "file_type": "document",
       "source_file": "docs/HANDOFF.md",
-      "source_location": "L62",
+      "source_location": "L56",
       "_origin": "ast",
       "id": "docs_handoff_b_cancellation_camera_release_per_session_events_touches_call_py_higher_risk",
       "community": 26,
@@ -9947,7 +9947,7 @@
       "label": "C. Windows-first sidecar packaging  (cannot finish here; needs Windows runner)",
       "file_type": "document",
       "source_file": "docs/HANDOFF.md",
-      "source_location": "L103",
+      "source_location": "L90",
       "_origin": "ast",
       "id": "docs_handoff_c_windows_first_sidecar_packaging_cannot_finish_here_needs_windows_runner",
       "community": 26,
@@ -9957,7 +9957,7 @@
       "label": "D. Security + operator auth",
       "file_type": "document",
       "source_file": "docs/HANDOFF.md",
-      "source_location": "L112",
+      "source_location": "L98",
       "_origin": "ast",
       "id": "docs_handoff_d_security_operator_auth",
       "community": 26,
@@ -9967,37 +9967,37 @@
       "label": "E. De-monkey-patch into typed services  (refactor; INTENTIONALLY DEFERRED)",
       "file_type": "document",
       "source_file": "docs/HANDOFF.md",
-      "source_location": "L139",
+      "source_location": "L115",
       "_origin": "ast",
       "id": "docs_handoff_e_de_monkey_patch_into_typed_services_refactor_intentionally_deferred",
       "community": 26,
       "norm_label": "e. de-monkey-patch into typed services  (refactor; intentionally deferred)"
     },
     {
-      "label": "F. Single editable UNEV content source  \u2705 DONE (this commit)",
+      "label": "F. Single editable UNEV content source  \u2705 DONE",
       "file_type": "document",
       "source_file": "docs/HANDOFF.md",
-      "source_location": "L150",
+      "source_location": "L122",
       "_origin": "ast",
-      "id": "docs_handoff_f_single_editable_unev_content_source_done_this_commit",
+      "id": "docs_handoff_f_single_editable_unev_content_source_done",
       "community": 26,
-      "norm_label": "f. single editable unev content source  \u2705 done (this commit)"
+      "norm_label": "f. single editable unev content source  \u2705 done"
     },
     {
-      "label": "G. Legacy lint debt  \u2705 DONE (this commit)",
+      "label": "G. Legacy lint debt  \u2705 DONE",
       "file_type": "document",
       "source_file": "docs/HANDOFF.md",
-      "source_location": "L163",
+      "source_location": "L129",
       "_origin": "ast",
-      "id": "docs_handoff_g_legacy_lint_debt_done_this_commit",
+      "id": "docs_handoff_g_legacy_lint_debt_done",
       "community": 26,
-      "norm_label": "g. legacy lint debt  \u2705 done (this commit)"
+      "norm_label": "g. legacy lint debt  \u2705 done"
     },
     {
       "label": "Reusable knobs already in the contract",
       "file_type": "document",
       "source_file": "docs/HANDOFF.md",
-      "source_location": "L172",
+      "source_location": "L134",
       "_origin": "ast",
       "id": "docs_handoff_reusable_knobs_already_in_the_contract",
       "community": 26,
@@ -18916,9 +18916,9 @@
       "source_file": "hologram_controller.py",
       "source_location": "L256",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hologram_controller",
-      "target": "hologram_controller_resolve_state_clips",
-      "confidence_score": 1.0
+      "target": "hologram_controller_resolve_state_clips"
     },
     {
       "relation": "rationale_for",
@@ -19640,9 +19640,9 @@
       "source_file": "hologram_controller.py",
       "source_location": "L552",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hologram_controller_create_hologram_manager",
-      "target": "hologram_controller_resolve_state_clips",
-      "confidence_score": 1.0
+      "target": "hologram_controller_resolve_state_clips"
     },
     {
       "relation": "rationale_for",
@@ -19650,9 +19650,9 @@
       "source_file": "hologram_controller.py",
       "source_location": "L257",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hologram_controller_rationale_257",
-      "target": "hologram_controller_resolve_state_clips",
-      "confidence_score": 1.0
+      "target": "hologram_controller_resolve_state_clips"
     },
     {
       "relation": "uses",
@@ -19801,9 +19801,9 @@
       "source_file": "hologram_controller.py",
       "source_location": "L293",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hologram_controller_rationale_293",
-      "target": "hologram_controller_hologramstatemanager",
-      "confidence_score": 1.0
+      "target": "hologram_controller_hologramstatemanager"
     },
     {
       "relation": "imports",
@@ -19922,9 +19922,9 @@
       "source_file": "hologram_controller.py",
       "source_location": "L344",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hologram_controller_rationale_344",
-      "target": "hologram_controller_hologramstatemanager_is_connected",
-      "confidence_score": 1.0
+      "target": "hologram_controller_hologramstatemanager_is_connected"
     },
     {
       "relation": "calls",
@@ -19965,9 +19965,9 @@
       "source_file": "hologram_controller.py",
       "source_location": "L349",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hologram_controller_rationale_349",
-      "target": "hologram_controller_hologramstatemanager_configure",
-      "confidence_score": 1.0
+      "target": "hologram_controller_hologramstatemanager_configure"
     },
     {
       "relation": "calls",
@@ -19986,9 +19986,9 @@
       "source_file": "hologram_controller.py",
       "source_location": "L379",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hologram_controller_rationale_379",
-      "target": "hologram_controller_hologramstatemanager_disable",
-      "confidence_score": 1.0
+      "target": "hologram_controller_hologramstatemanager_disable"
     },
     {
       "relation": "calls",
@@ -20017,9 +20017,9 @@
       "source_file": "hologram_controller.py",
       "source_location": "L386",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hologram_controller_rationale_386",
-      "target": "hologram_controller_hologramstatemanager_execute",
-      "confidence_score": 1.0
+      "target": "hologram_controller_hologramstatemanager_execute"
     },
     {
       "relation": "calls",
@@ -20049,9 +20049,9 @@
       "source_file": "hologram_controller.py",
       "source_location": "L414",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hologram_controller_rationale_414",
-      "target": "hologram_controller_hologramstatemanager_start",
-      "confidence_score": 1.0
+      "target": "hologram_controller_hologramstatemanager_start"
     },
     {
       "relation": "rationale_for",
@@ -20059,9 +20059,9 @@
       "source_file": "hologram_controller.py",
       "source_location": "L425",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hologram_controller_rationale_425",
-      "target": "hologram_controller_hologramstatemanager_set_state",
-      "confidence_score": 1.0
+      "target": "hologram_controller_hologramstatemanager_set_state"
     },
     {
       "relation": "rationale_for",
@@ -20069,9 +20069,9 @@
       "source_file": "hologram_controller.py",
       "source_location": "L436",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hologram_controller_rationale_436",
-      "target": "hologram_controller_hologramstatemanager_close",
-      "confidence_score": 1.0
+      "target": "hologram_controller_hologramstatemanager_close"
     },
     {
       "relation": "calls",
@@ -20112,9 +20112,9 @@
       "source_file": "hologram_controller.py",
       "source_location": "L535",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hologram_controller_rationale_535",
-      "target": "hologram_controller_create_hologram_manager",
-      "confidence_score": 1.0
+      "target": "hologram_controller_create_hologram_manager"
     },
     {
       "relation": "contains",
@@ -25494,9 +25494,9 @@
       "source_file": "tests/test_hologram_controller.py",
       "source_location": "L118",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_hologram_controller",
-      "target": "tests_test_hologram_controller_test_configured_manager_uses_custom_clip_map",
-      "confidence_score": 1.0
+      "target": "tests_test_hologram_controller_test_configured_manager_uses_custom_clip_map"
     },
     {
       "relation": "contains",
@@ -25514,9 +25514,9 @@
       "source_file": "tests/test_hologram_controller.py",
       "source_location": "L92",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_hologram_controller",
-      "target": "tests_test_hologram_controller_test_resolve_state_clips_defaults_when_env_empty",
-      "confidence_score": 1.0
+      "target": "tests_test_hologram_controller_test_resolve_state_clips_defaults_when_env_empty"
     },
     {
       "relation": "contains",
@@ -25524,9 +25524,9 @@
       "source_file": "tests/test_hologram_controller.py",
       "source_location": "L96",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_hologram_controller",
-      "target": "tests_test_hologram_controller_test_resolve_state_clips_honors_playlist_order_overrides",
-      "confidence_score": 1.0
+      "target": "tests_test_hologram_controller_test_resolve_state_clips_honors_playlist_order_overrides"
     },
     {
       "relation": "contains",
@@ -25534,9 +25534,9 @@
       "source_file": "tests/test_hologram_controller.py",
       "source_location": "L109",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_hologram_controller",
-      "target": "tests_test_hologram_controller_test_resolve_state_clips_ignores_invalid_values",
-      "confidence_score": 1.0
+      "target": "tests_test_hologram_controller_test_resolve_state_clips_ignores_invalid_values"
     },
     {
       "relation": "contains",
@@ -25696,9 +25696,9 @@
       "source_file": "tests/test_hologram_controller.py",
       "source_location": "L128",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_hologram_controller_test_configured_manager_uses_custom_clip_map",
-      "target": "tests_test_hologram_controller_wait_for_event",
-      "confidence_score": 1.0
+      "target": "tests_test_hologram_controller_wait_for_event"
     },
     {
       "relation": "contains",
@@ -28011,11 +28011,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/HANDOFF.md",
-      "source_location": "L41",
+      "source_location": "L40",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "docs_handoff_remaining_phases_pick_per_priority",
-      "target": "docs_handoff_a_settings_ux_wire_test_buttons_done_this_commit_b_or_d_recommended_next"
+      "target": "docs_handoff_a_settings_ux_wire_test_buttons_done",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -28061,21 +28061,21 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/HANDOFF.md",
-      "source_location": "L111",
+      "source_location": "L122",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "docs_handoff_remaining_phases_pick_per_priority",
-      "target": "docs_handoff_f_single_editable_unev_content_source_done_this_commit"
+      "target": "docs_handoff_f_single_editable_unev_content_source_done",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/HANDOFF.md",
-      "source_location": "L124",
+      "source_location": "L129",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "docs_handoff_remaining_phases_pick_per_priority",
-      "target": "docs_handoff_g_legacy_lint_debt_done_this_commit"
+      "target": "docs_handoff_g_legacy_lint_debt_done",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -28083,9 +28083,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram",
-      "target": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp",
-      "confidence_score": 1.0
+      "target": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp"
     },
     {
       "relation": "contains",
@@ -28093,9 +28093,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp",
-      "target": "docs_hologram_arquitectura_del_c\u00f3digo",
-      "confidence_score": 1.0
+      "target": "docs_hologram_arquitectura_del_c\u00f3digo"
     },
     {
       "relation": "contains",
@@ -28103,9 +28103,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L111",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp",
-      "target": "docs_hologram_autor\u00eda_de_los_clips_condiciona_toda_la_parte_visual",
-      "confidence_score": 1.0
+      "target": "docs_hologram_autor\u00eda_de_los_clips_condiciona_toda_la_parte_visual"
     },
     {
       "relation": "contains",
@@ -28113,9 +28113,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L124",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp",
-      "target": "docs_hologram_conexi\u00f3n",
-      "confidence_score": 1.0
+      "target": "docs_hologram_conexi\u00f3n"
     },
     {
       "relation": "contains",
@@ -28123,9 +28123,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L85",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp",
-      "target": "docs_hologram_mapeo_estado_de_la_ia_clip_y_por_qu\u00e9_se_hizo_configurable",
-      "confidence_score": 1.0
+      "target": "docs_hologram_mapeo_estado_de_la_ia_clip_y_por_qu\u00e9_se_hizo_configurable"
     },
     {
       "relation": "contains",
@@ -28133,9 +28133,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L133",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp",
-      "target": "docs_hologram_pendientes_opcional_no_hechos_a_prop\u00f3sito",
-      "confidence_score": 1.0
+      "target": "docs_hologram_pendientes_opcional_no_hechos_a_prop\u00f3sito"
     },
     {
       "relation": "contains",
@@ -28143,9 +28143,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp",
-      "target": "docs_hologram_reparto_de_responsabilidades_app_holomissyou_este_controlador",
-      "confidence_score": 1.0
+      "target": "docs_hologram_reparto_de_responsabilidades_app_holomissyou_este_controlador"
     },
     {
       "relation": "contains",
@@ -28153,9 +28153,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp",
-      "target": "docs_hologram_tl_dr_cambiar_el_video_por_\u00edndice_ya_es_el_mecanismo",
-      "confidence_score": 1.0
+      "target": "docs_hologram_tl_dr_cambiar_el_video_por_\u00edndice_ya_es_el_mecanismo"
     },
     {
       "relation": "contains",
@@ -28163,9 +28163,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L70",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram_arquitectura_del_c\u00f3digo",
-      "target": "docs_hologram_endpoints_main_py",
-      "confidence_score": 1.0
+      "target": "docs_hologram_endpoints_main_py"
     },
     {
       "relation": "contains",
@@ -28329,5 +28329,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "f6bf8ab99890d3822a1c6cfc6ec17b549bf9e588"
+  "built_at_commit": "89e71f3c302bede59a7a263447945b1d3210042a"
 }

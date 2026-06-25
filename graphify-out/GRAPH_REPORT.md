@@ -1,7 +1,7 @@
 # Graph Report - Holograma  (2026-06-24)
 
 ## Corpus Check
-- 100 files · ~109,171 words
+- 100 files · ~108,757 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f6bf8ab9`
+- Built from commit: `89e71f3c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -213,7 +213,7 @@ Nodes (11): configure_vision(), print_header(), Flujo interactivo para configura
 
 ### Community 26 - "Community 26"
 Cohesion: 0.14
-Nodes (13): A. Settings UX + wire test buttons  ✅ DONE (this commit)  ← B or D recommended next, B. Cancellation + camera release + per-session events  (touches call.py, higher risk), C. Windows-first sidecar packaging  (cannot finish here; needs Windows runner), D. Security + operator auth, E. De-monkey-patch into typed services  (refactor; INTENTIONALLY DEFERRED), F. Single editable UNEV content source  ✅ DONE (this commit), G. Legacy lint debt  ✅ DONE (this commit), Hard environment constraints (read first) (+5 more)
+Nodes (13): A. Settings UX + wire test buttons  ✅ DONE, B. Cancellation + camera release + per-session events  (touches call.py, higher risk), C. Windows-first sidecar packaging  (cannot finish here; needs Windows runner), D. Security + operator auth, E. De-monkey-patch into typed services  (refactor; INTENTIONALLY DEFERRED), F. Single editable UNEV content source  ✅ DONE, G. Legacy lint debt  ✅ DONE, Hard environment constraints (read first) (+5 more)
 
 ### Community 27 - "Community 27"
 Cohesion: 0.15
@@ -228,8 +228,8 @@ Cohesion: 0.13
 Nodes (14): anyOf, definitions, Number, Target, Value, description, anyOf, description (+6 more)
 
 ### Community 30 - "Community 30"
-Cohesion: 0.13
-Nodes (14): anyOf, definitions, Number, PermissionEntry, Target, description, anyOf, description (+6 more)
+Cohesion: 0.15
+Nodes (13): definitions, Number, PermissionEntry, Target, Value, anyOf, description, anyOf (+5 more)
 
 ### Community 32 - "Community 32"
 Cohesion: 0.05
@@ -352,8 +352,8 @@ Cohesion: 0.67
 Nodes (3): PermissionEntry, anyOf, description
 
 ### Community 69 - "Community 69"
-Cohesion: 0.67
-Nodes (3): Value, anyOf, description
+Cohesion: 0.40
+Nodes (4): anyOf, description, $schema, title
 
 ### Community 71 - "Community 71"
 Cohesion: 0.50
