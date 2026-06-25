@@ -6,11 +6,9 @@ import { useSession } from '../context/SessionContext';
 import { CameraFeed } from './CameraFeed';
 
 const NAV_ITEMS = [
-  { to: '/', label: 'Inicio', end: true },
   { to: '/assistant', label: 'Hablar', end: false },
   { to: '/teaching', label: 'Entrenar Visión', shortLabel: 'Entrenar', end: false },
-  { to: '/content', label: 'Contenido', end: false },
-  { to: '/remote', label: 'Control', end: false },
+  { to: '/content', label: 'Información UNEV', shortLabel: 'Información', end: false },
   { to: '/settings', label: 'Configuración', shortLabel: 'Ajustes', end: false },
 ];
 
@@ -56,7 +54,7 @@ export function AppShell() {
     <div className="min-h-screen font-sans flex flex-col justify-between">
       {/* HEADER */}
       <header className="sticky top-0 z-40 backdrop-blur-md border-b transition-colors bg-white/90 border-gray-200 dark:bg-[#0B0F19]/90 dark:border-slate-800 py-4 px-6 md:px-12 flex justify-between items-center">
-        <button className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
+        <button className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/assistant')} aria-label="Ir a Hablar">
           <div className="w-9 h-9 rounded-xl bg-[#1C2D5A] border border-[#E25C1D]/20 flex items-center justify-center shadow-lg shadow-[#1C2D5A]/30">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="#E25C1D" className="w-5 h-5">
               <path
@@ -130,7 +128,7 @@ export function AppShell() {
           onMouseMove={onPipDragMove}
           onMouseUp={() => setDrag(null)}
           onMouseLeave={() => setDrag(null)}
-          className="fixed w-64 p-3 rounded-2xl shadow-2xl backdrop-blur-md bg-slate-900/95 border border-[#E25C1D]/30 select-none z-50 cursor-grab flex items-stretch gap-2"
+          className="fixed hidden w-64 p-3 rounded-2xl shadow-2xl backdrop-blur-md bg-slate-900/95 border border-[#E25C1D]/30 select-none z-50 cursor-grab md:flex items-stretch gap-2"
         >
           <div
             onMouseDown={(e) => setDrag({ x: e.clientX, y: e.clientY, px: pipPosition.x, py: pipPosition.y })}

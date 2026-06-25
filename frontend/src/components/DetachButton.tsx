@@ -8,8 +8,7 @@ interface DetachButtonProps {
 }
 
 // "Pop out ⧉" affordance. In Tauri it opens a real OS window; in the browser it
-// falls back to window.open (see lib/windows). Used on the assistant camera
-// panel and the control console.
+// falls back to window.open (see lib/windows).
 export function DetachButton({ widget, title = 'Abrir en ventana aparte', className = '' }: DetachButtonProps) {
   return (
     <button

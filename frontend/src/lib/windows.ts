@@ -7,7 +7,7 @@
 
 import { backendBase, isTauriRuntime } from './backend';
 
-export type WidgetName = 'camera' | 'chat' | 'transcript' | 'controls';
+export type WidgetName = 'camera' | 'chat' | 'transcript';
 
 interface WidgetMeta {
   title: string;
@@ -19,7 +19,6 @@ const WIDGET_META: Record<WidgetName, WidgetMeta> = {
   camera: { title: 'Cámara · Holograma UNEV', width: 480, height: 860 },
   chat: { title: 'Conversación · Holograma UNEV', width: 460, height: 680 },
   transcript: { title: 'Transcripción · Holograma UNEV', width: 460, height: 540 },
-  controls: { title: 'Control del Holograma · UNEV', width: 540, height: 760 },
 };
 
 // HashRouter keeps deep links working under Tauri's asset protocol, the bundled

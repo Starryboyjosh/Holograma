@@ -8,6 +8,7 @@ import { Card, SectionTitle } from '../components/ui/Card';
 import { ToggleGroup } from '../components/ui/ToggleGroup';
 import { Field, Select } from '../components/ui/Field';
 import { ProviderConfigCard } from '../components/ProviderConfigCard';
+import { HologramConnection } from '../components/HologramConnection';
 import { buildLlmConfigPayload } from '../lib/providerForm';
 import { useProviders } from '../hooks/useProviders';
 import type { AppearanceTheme } from '../context/ThemeContext';
@@ -15,7 +16,7 @@ import type { AppearanceTheme } from '../context/ThemeContext';
 export function SettingsScreen() {
   const navigate = useNavigate();
   const showToast = useToast();
-  const { config } = useSession();
+  const { config, hologram } = useSession();
   const { appearance, setAppearance } = useTheme();
   const { providers, loading: providersLoading, testConnection } = useProviders();
   const [playingSample, setPlayingSample] = useState(false);
@@ -47,10 +48,15 @@ export function SettingsScreen() {
         })
       : { LLM_PROVIDER: config.llmProvider };
 
-    const ok = await config.save({ ...llmPayload, HOLOGRAM_MODE: appearance });
+    const ok = await config.save({
+      ...llmPayload,
+      HOLOGRAM_MODE: appearance,
+      HOLOGRAM_TCP_IP: hologram.holoIp.trim(),
+      HOLOGRAM_TCP_PORT: String(hologram.holoPort),
+    });
     if (ok) {
       showToast('Configuración aplicada con éxito.');
-      navigate('/');
+      navigate('/assistant');
     } else {
       showToast('Error al guardar la configuración.');
     }
@@ -60,12 +66,14 @@ export function SettingsScreen() {
     <div className="w-full max-w-4xl space-y-6 py-4 text-slate-800 dark:text-slate-100">
       <div className="flex justify-between items-center pb-4 border-b border-gray-200 dark:border-slate-800">
         <div>
-          <h1 className="text-2xl font-black text-[#1C2D5A] dark:text-white">Portal de Configuración</h1>
+          <h1 className="text-2xl font-black text-[#1C2D5A] dark:text-white">Configuración</h1>
           <p className="text-xs text-gray-600 dark:text-gray-400">
-            Establece preferencias del Cerebro de la IA y el hardware
+            Conecta el holograma y ajusta la IA, la voz y la visión.
           </p>
         </div>
       </div>
+
+      <HologramConnection holo={hologram} />
 
       {/* AI brain (headline) — full width and driven by the live provider catalogue. */}
       <ProviderConfigCard

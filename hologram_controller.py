@@ -239,12 +239,54 @@ def discover_devices(subnet: str = "192.168.1", port: int = 50200, timeout: floa
 # (Ver Holograma_MISSYOU_Referencia_IA.pdf, sección 3 "Notas para el brainstorming")
 #   Clip 0 — loop en espera        Clip 2 — boca / onda en movimiento
 #   Clip 1 — animación de escucha   Clip 3 — animación de proceso
+#
+# IMPORTANTE: estos índices son el ORDEN en que cargaste los clips en la app
+# HoloMissYou. El número N del comando `0x5B 0x06 N` es la posición del archivo
+# en la playlist del dispositivo, no el nombre del archivo. Si cargas los clips
+# en otro orden, redefine el mapeo con las variables HOLOGRAM_CLIP_* (ver
+# resolve_state_clips) para que cada estado de la IA apunte al clip correcto.
 DEFAULT_STATE_CLIPS = {
     "idle": 0,
     "listening": 1,
     "speaking": 2,
     "thinking": 3,
 }
+
+
+def resolve_state_clips(env: dict | None = None) -> dict:
+    """
+    Construye el mapeo estado→índice respetando el orden real de la playlist.
+
+    Lee, por cada estado, una variable de entorno opcional que sobreescribe el
+    índice por defecto. Así el operador alinea el mapeo con el ORDEN en que cargó
+    los clips en la app HoloMissYou (que es lo que fija el N de `0x5B 0x06 N`):
+
+        HOLOGRAM_CLIP_IDLE       (default 0)
+        HOLOGRAM_CLIP_LISTENING  (default 1)
+        HOLOGRAM_CLIP_SPEAKING   (default 2)
+        HOLOGRAM_CLIP_THINKING   (default 3)
+
+    Pura y env-inyectable (para tests): pasa un dict en `env` o usa os.environ.
+    Un valor inválido (no entero o fuera de 0–255) se ignora y conserva el
+    default, registrando un aviso — nunca rompe el arranque de la IA.
+    """
+    if env is None:
+        env = os.environ
+    clips = dict(DEFAULT_STATE_CLIPS)
+    for state in clips:
+        raw = str(env.get(f"HOLOGRAM_CLIP_{state.upper()}", "")).strip()
+        if not raw:
+            continue
+        try:
+            index = int(raw)
+        except ValueError:
+            print(f"[Holograma] HOLOGRAM_CLIP_{state.upper()}={raw!r} no es un entero; usando {clips[state]}.")
+            continue
+        if not 0 <= index <= 255:
+            print(f"[Holograma] HOLOGRAM_CLIP_{state.upper()}={index} fuera de 0–255; usando {clips[state]}.")
+            continue
+        clips[state] = index
+    return clips
 
 
 class HologramStateManager:
@@ -288,16 +330,89 @@ class HologramStateManager:
         self._thread: threading.Thread | None = None
         self._fan: HologramFanController | None = None
         self._last_state: str | None = None
+        self._desired_state: str | None = None
         self._last_send = 0.0
         self._reconnect_delay = 1.0
         self._next_reconnect = 0.0
         self._stop = threading.Event()
+        self._fan_lock = threading.RLock()
 
     # ── API pública (la llama la IA desde cualquier hilo) ────────────────
 
+    @property
+    def is_connected(self) -> bool:
+        """True cuando el gestor automático tiene un socket TCP activo."""
+        with self._fan_lock:
+            return self._fan is not None and self._fan.is_connected
+
+    def configure(self, ip: str, port: int = 50200):
+        """Aplica un destino TCP nuevo y activa el cambio automático de clips."""
+        ip = ip.strip()
+        if not ip:
+            raise ValueError("La dirección IP del holograma es obligatoria.")
+        if not 1 <= port <= 65535:
+            raise ValueError("El puerto debe estar entre 1 y 65535.")
+
+        if (
+            self.enabled
+            and self.ip == ip
+            and self.port == port
+            and self._thread is not None
+            and self._thread.is_alive()
+        ):
+            self.set_state("idle")
+            return
+
+        self.close()
+        self.ip = ip
+        self.port = port
+        self.enabled = True
+        self._queue = queue.Queue()
+        self._last_state = None
+        self._desired_state = None
+        self._last_send = 0.0
+        self._reconnect_delay = 1.0
+        self._next_reconnect = 0.0
+        self.start()
+
+    def disable(self):
+        """Desconecta el dispositivo y desactiva los reintentos automáticos."""
+        self.close()
+        self.enabled = False
+        self.ip = None
+        self._queue = queue.Queue()
+
+    def execute(self, command: str, index: int | None = None):
+        """Compatibilidad con la API: ejecuta un comando usando la conexión compartida."""
+        with self._fan_lock:
+            if not self.enabled or not self._ensure_connected():
+                raise ConnectionError("El holograma no está conectado.")
+
+            commands = {
+                "start": self._fan.start,
+                "shutdown": self._fan.shutdown,
+                "pause": self._fan.pause,
+                "play": self._fan.play,
+                "loop_current": self._fan.loop_current,
+                "next_file": self._fan.next_file,
+                "prev_file": self._fan.prev_file,
+                "brightness_up": self._fan.brightness_up,
+                "brightness_down": self._fan.brightness_down,
+            }
+            if command == "play_file":
+                if index is None:
+                    raise ValueError("Se requiere 'index' para play_file.")
+                self._fan.play_file(index)
+                self._last_state = None
+            elif command in commands:
+                commands[command]()
+            else:
+                raise ValueError(f"Comando desconocido: {command}")
+            self._last_send = time.monotonic()
+
     def start(self):
         """Arranca el hilo de control y deja el holograma en idle. No-op si está deshabilitado."""
-        if not self.enabled or self._thread is not None:
+        if not self.enabled or (self._thread is not None and self._thread.is_alive()):
             return
         self._stop.clear()
         self._thread = threading.Thread(
@@ -314,24 +429,28 @@ class HologramStateManager:
             if self.verbose:
                 print(f"[Holograma] Estado desconocido ignorado: {state!r}")
             return
+        self._desired_state = state
         self._queue.put(state)
 
     def close(self):
         """Detiene el hilo, apaga el giro y cierra la conexión limpiamente."""
-        if not self.enabled:
+        if self._thread is None and self._fan is None:
             return
         self._stop.set()
         self._queue.put(None)  # despierta al worker
         if self._thread is not None:
-            self._thread.join(timeout=3.0)
+            self._thread.join(timeout=6.0)
             self._thread = None
-        if self._fan is not None:
-            try:
-                self._fan.shutdown()
-            except OSError:
-                pass
-            self._fan.disconnect()
-            self._fan = None
+        with self._fan_lock:
+            if self._fan is not None:
+                try:
+                    self._fan.shutdown()
+                except OSError:
+                    pass
+                self._fan.disconnect()
+                self._fan = None
+            self._last_state = None
+            self._desired_state = None
 
     # ── Hilo en segundo plano ────────────────────────────────────────────
 
@@ -340,36 +459,41 @@ class HologramStateManager:
             try:
                 state = self._queue.get(timeout=0.5)
             except queue.Empty:
-                continue
+                # Si una conexión falló, volver a intentar el último estado
+                # solicitado. _ensure_connected aplica el backoff exponencial.
+                state = self._desired_state
             # Coalescer: si se acumularon varios cambios, quedarnos con el último.
             while True:
                 try:
                     state = self._queue.get_nowait()
                 except queue.Empty:
                     break
-            if state is None:  # sentinela de cierre
-                break
+            if state is None:
+                if self._stop.is_set():  # sentinela de cierre
+                    break
+                continue
             self._apply(state)
 
     def _apply(self, state: str):
-        if state == self._last_state:
-            return  # dedupe: no reenviar el clip que ya está en pantalla
-        if not self._ensure_connected():
-            return  # sin conexión; se reintentará en el próximo cambio de estado
-        clip = self.state_clips[state]
-        # Respetar la separación mínima entre paquetes (regla del protocolo).
-        gap = self.min_send_gap - (time.monotonic() - self._last_send)
-        if gap > 0:
-            time.sleep(gap)
-        try:
-            self._fan.play_file(clip)
-            self._last_send = time.monotonic()
-            self._last_state = state
-            if self.verbose:
-                print(f"[Holograma] Estado → {state} (clip {clip})")
-        except OSError as e:
-            print(f"[Holograma] Error enviando estado '{state}': {e}. Reintentaré.")
-            self._drop_connection()
+        with self._fan_lock:
+            if state == self._last_state:
+                return  # dedupe: no reenviar el clip que ya está en pantalla
+            if not self._ensure_connected():
+                return  # sin conexión; se reintentará en el próximo cambio de estado
+            clip = self.state_clips[state]
+            # Respetar la separación mínima entre paquetes (regla del protocolo).
+            gap = self.min_send_gap - (time.monotonic() - self._last_send)
+            if gap > 0:
+                time.sleep(gap)
+            try:
+                self._fan.play_file(clip)
+                self._last_send = time.monotonic()
+                self._last_state = state
+                if self.verbose:
+                    print(f"[Holograma] Estado → {state} (clip {clip})")
+            except OSError as e:
+                print(f"[Holograma] Error enviando estado '{state}': {e}. Reintentaré.")
+                self._drop_connection()
 
     # ── Conexión con reintentos y backoff exponencial ────────────────────
 
@@ -424,7 +548,9 @@ def create_hologram_manager(verbose: bool = False) -> HologramStateManager:
     ip = os.getenv("HOLOGRAM_TCP_IP", "").strip() or None
     port = int(os.getenv("HOLOGRAM_TCP_PORT", "50200"))
     verbose = verbose or os.getenv("HOLOGRAM_TCP_VERBOSE", "").strip() == "1"
-    manager = HologramStateManager(ip=ip, port=port, verbose=verbose)
+    manager = HologramStateManager(
+        ip=ip, port=port, state_clips=resolve_state_clips(), verbose=verbose
+    )
     if not manager.enabled:
         print(
             "[Holograma] HOLOGRAM_TCP_IP no configurada; control del dispositivo "

@@ -133,6 +133,10 @@ ollama pull gemma3:1b
 | `HOLOGRAM_CAMERA` | `0` | Poner en `1` para activar visión artificial |
 | `HOLOGRAM_CAMERA_INDEX` | `0` | Índice de la cámara a usar |
 | `HOLOGRAM_CAMERA_BACKEND` | `auto` | Backend OpenCV: `dshow`, `msmf`, `v4l2` |
+| `HOLOGRAM_TCP_IP` | *(vacío)* | IP del ventilador físico MISSYOU. Vacío = IA en modo solo-software (no toca el dispositivo). `10.10.10.1` por WiFi directo. Ver [`docs/HOLOGRAM.md`](docs/HOLOGRAM.md) |
+| `HOLOGRAM_TCP_PORT` | `50200` | Puerto TCP del dispositivo (fijo en el protocolo) |
+| `HOLOGRAM_TCP_VERBOSE` | `0` | `1` registra cada comando de 3 bytes enviado al dispositivo |
+| `HOLOGRAM_CLIP_IDLE` / `_LISTENING` / `_SPEAKING` / `_THINKING` | `0` / `1` / `2` / `3` | Índice de clip en la playlist por estado de la IA. Es el ORDEN en que cargaste los MP4 en la app HoloMissYou. Sólo redefínelo si no los cargaste en ese orden |
 | `YOLO_MODEL` | `yoloe26.pt` | Modelo YOLO (`yoloe26.pt`) |
 | `YOLO_CONFIDENCE` | `0.5` | Umbral de confianza para detección |
 | `YOLO_INTERVAL_SECONDS` | `1.0` | Segundos entre ciclos de detección |

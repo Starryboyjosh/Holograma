@@ -16,7 +16,6 @@ export function useHologram(options: UseHologramOptions = {}) {
   const [holoPort, setHoloPort] = useState(50200);
   const [holoConnected, setHoloConnected] = useState(false);
   const [holoStatusMsg, setHoloStatusMsg] = useState<string | null>(null);
-  const [clipNumber, setClipNumber] = useState(0);
 
   const toast = (msg: string) => onToastRef.current?.(msg);
 
@@ -25,10 +24,12 @@ export function useHologram(options: UseHologramOptions = {}) {
       const res = await apiFetch('/api/hologram/status');
       const data = await res.json();
       setHoloConnected(data.connected);
+      if (data.ip) setHoloIp(data.ip);
+      if (data.port) setHoloPort(data.port);
       if (data.connected) {
-        setHoloIp(data.ip);
-        setHoloPort(data.port);
         setHoloStatusMsg(`Conectado a ${data.ip}:${data.port}`);
+      } else if (data.ip) {
+        setHoloStatusMsg(`Configurado para ${data.ip}:${data.port}; reintentando…`);
       } else {
         setHoloStatusMsg('Desconectado');
       }
@@ -42,6 +43,8 @@ export function useHologram(options: UseHologramOptions = {}) {
     // un sistema externo). El setState ocurre tras el await, no de forma síncrona.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void fetchStatus();
+    const interval = window.setInterval(() => void fetchStatus(), 5000);
+    return () => window.clearInterval(interval);
   }, [fetchStatus]);
 
   const connect = useCallback(async () => {
@@ -57,9 +60,13 @@ export function useHologram(options: UseHologramOptions = {}) {
       });
       const data = await res.json();
       if (data.status === 'ok') {
-        setHoloConnected(true);
-        setHoloStatusMsg(`Conectado a ${data.ip}:${data.port}`);
-        toast(`Conectado a ${data.ip}`);
+        setHoloConnected(Boolean(data.connected));
+        setHoloStatusMsg(
+          data.connected
+            ? `Conectado a ${data.ip}:${data.port}`
+            : `Conexión configurada para ${data.ip}:${data.port}; reintentando…`,
+        );
+        toast(data.connected ? `Conectado a ${data.ip}` : 'Conexión configurada; el holograma reintentará automáticamente.');
       } else {
         setHoloConnected(false);
         toast(`Error: ${data.message}`);
@@ -83,26 +90,6 @@ export function useHologram(options: UseHologramOptions = {}) {
     }
   }, []);
 
-  const command = useCallback(async (cmd: string, index?: number) => {
-    try {
-      const body: Record<string, unknown> = { command: cmd };
-      if (index !== undefined) body.index = index;
-      const res = await apiFetch('/api/hologram/command', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const data = await res.json();
-      if (data.status === 'ok') {
-        toast(`Comando: ${cmd}${index !== undefined ? ' #' + index : ''}`);
-      } else {
-        toast(`Error: ${data.message}`);
-      }
-    } catch {
-      toast('Error enviando comando');
-    }
-  }, []);
-
   return {
     holoIp,
     setHoloIp,
@@ -110,10 +97,7 @@ export function useHologram(options: UseHologramOptions = {}) {
     setHoloPort,
     holoConnected,
     holoStatusMsg,
-    clipNumber,
-    setClipNumber,
     connect,
     disconnect,
-    command,
   };
 }

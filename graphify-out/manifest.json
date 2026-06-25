@@ -10,8 +10,8 @@
     "semantic_hash": ""
   },
   "main.py": {
-    "mtime": 1782311132.5772579,
-    "ast_hash": "c614879643654fc86b31881b3804fcec",
+    "mtime": 1782313332.245648,
+    "ast_hash": "ff0e3b4d13b913114e94978fbf0185e2",
     "semantic_hash": ""
   },
   "skills/__init__.py": {
@@ -110,8 +110,8 @@
     "semantic_hash": ""
   },
   "frontend/src/App.tsx": {
-    "mtime": 1782310216.384202,
-    "ast_hash": "a0450a684264f1774d78d3e43ec18ffb",
+    "mtime": 1782313127.4126716,
+    "ast_hash": "99e07db28bab19db14f4618a790a4148",
     "semantic_hash": ""
   },
   "frontend/src/main.tsx": {
@@ -140,8 +140,8 @@
     "semantic_hash": ""
   },
   "hologram_controller.py": {
-    "mtime": 1782310490.6436236,
-    "ast_hash": "df80682561b89bb854455950d2a6467c",
+    "mtime": 1782358282.4034946,
+    "ast_hash": "44ff0633ffa11fe343ffefcee6f62f2a",
     "semantic_hash": ""
   },
   "pyrightconfig.json": {
@@ -285,8 +285,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1782087067.9899478,
-    "ast_hash": "c94cb2ca1ee5957d0c04f1d3f63900a8",
+    "mtime": 1782358358.033692,
+    "ast_hash": "fcc229e543d2411e5f8eafe5b86f24a2",
     "semantic_hash": ""
   },
   "frontend/README.md": {
@@ -390,8 +390,8 @@
     "semantic_hash": ""
   },
   "frontend/src/components/AppShell.tsx": {
-    "mtime": 1782310218.450865,
-    "ast_hash": "63c29c77b44ae036597c607ac6364fcc",
+    "mtime": 1782313581.0387602,
+    "ast_hash": "e7bacf61d49473b1536efded2e7bdf82",
     "semantic_hash": ""
   },
   "frontend/src/components/CameraFeed.tsx": {
@@ -400,13 +400,8 @@
     "semantic_hash": ""
   },
   "frontend/src/components/DetachButton.tsx": {
-    "mtime": 1782136476.935615,
-    "ast_hash": "5a5dd0ddd0b852cded9daf2987827c0c",
-    "semantic_hash": ""
-  },
-  "frontend/src/components/HologramControls.tsx": {
-    "mtime": 1782136666.3521097,
-    "ast_hash": "c856425b2e4c32a45787624ea071e5db",
+    "mtime": 1782313127.4160047,
+    "ast_hash": "160cd2e856258fc7e366526d5ebb716c",
     "semantic_hash": ""
   },
   "frontend/src/components/Orb.tsx": {
@@ -415,8 +410,8 @@
     "semantic_hash": ""
   },
   "frontend/src/components/ui/Card.tsx": {
-    "mtime": 1782136414.7157016,
-    "ast_hash": "52c75166cb2e385fed6875b33bee68ea",
+    "mtime": 1782313332.2489812,
+    "ast_hash": "1c4ef067c56ce019185f8e5abc9d92e7",
     "semantic_hash": ""
   },
   "frontend/src/components/ui/Field.tsx": {
@@ -430,8 +425,8 @@
     "semantic_hash": ""
   },
   "frontend/src/context/SessionContext.tsx": {
-    "mtime": 1782310863.8459466,
-    "ast_hash": "9cb8e2f25fb590f2656c85d0396f546f",
+    "mtime": 1782313127.4126716,
+    "ast_hash": "0f03f3b619bcb215f8421a7b3090ed8c",
     "semantic_hash": ""
   },
   "frontend/src/context/ThemeContext.tsx": {
@@ -460,8 +455,8 @@
     "semantic_hash": ""
   },
   "frontend/src/hooks/useHologram.ts": {
-    "mtime": 1782270933.5629716,
-    "ast_hash": "ac4a9633acddf02595f19e5d8c03e426",
+    "mtime": 1782313332.2489812,
+    "ast_hash": "25d6516b529a680ac0f224e6cee307c7",
     "semantic_hash": ""
   },
   "frontend/src/lib/backend.ts": {
@@ -470,28 +465,18 @@
     "semantic_hash": ""
   },
   "frontend/src/lib/windows.ts": {
-    "mtime": 1782094783.5703268,
-    "ast_hash": "6a5aca0a1e0fe632cf0936793ad54954",
+    "mtime": 1782313127.4160047,
+    "ast_hash": "9e9c4a0a2cd9cee278b551894acae0fc",
     "semantic_hash": ""
   },
   "frontend/src/screens/AssistantScreen.tsx": {
-    "mtime": 1782136601.315497,
-    "ast_hash": "1c646c4ddd43789912636ed70a474cd4",
-    "semantic_hash": ""
-  },
-  "frontend/src/screens/HomeScreen.tsx": {
-    "mtime": 1782136554.2222044,
-    "ast_hash": "4f2bfc173a913a0e8fce02d674039f64",
-    "semantic_hash": ""
-  },
-  "frontend/src/screens/RemoteScreen.tsx": {
-    "mtime": 1782136673.6721036,
-    "ast_hash": "146eaae830ae54dad080778cc105e969",
+    "mtime": 1782313540.3787842,
+    "ast_hash": "ae3e19fae2452006bb6d2b7c12613c90",
     "semantic_hash": ""
   },
   "frontend/src/screens/SettingsScreen.tsx": {
-    "mtime": 1782308667.4681966,
-    "ast_hash": "d6d88f0ed8bd6e2eb5e25b6c4bf24584",
+    "mtime": 1782313159.2026026,
+    "ast_hash": "e70a38596e7fbc3b53cbf72addb61ccc",
     "semantic_hash": ""
   },
   "frontend/src/screens/TeachingScreen.tsx": {
@@ -517,11 +502,6 @@
   "frontend/src/widgets/ChatWidget.tsx": {
     "mtime": 1782136762.4986987,
     "ast_hash": "4baf352c6117ee444f467b88fffc991d",
-    "semantic_hash": ""
-  },
-  "frontend/src/widgets/ControlsWidget.tsx": {
-    "mtime": 1782136776.1653543,
-    "ast_hash": "c4b15e8ba3ae0395abcf46fc63642bdf",
     "semantic_hash": ""
   },
   "frontend/src/widgets/TranscriptWidget.tsx": {
@@ -840,13 +820,8 @@
     "semantic_hash": ""
   },
   "docs/HANDOFF.md": {
-    "mtime": 1782311262.5830445,
-    "ast_hash": "0ec1606cecccba184c9243af11cb2c0d",
-    "semantic_hash": ""
-  },
-  "docs/Last_LLM.md": {
-    "mtime": 1782272144.6728594,
-    "ast_hash": "40ae7e94f648d3ade396fc436684c5ca",
+    "mtime": 1782358438.770569,
+    "ast_hash": "5ab782b1715fa3b224c21df0efdd33a0",
     "semantic_hash": ""
   },
   "security.py": {
@@ -887,6 +862,36 @@
   "docs/PACKAGING.md": {
     "mtime": 1782311193.431813,
     "ast_hash": "8e66e0b3df5d3002a5ec72178c42e5cf",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/HologramConnection.tsx": {
+    "mtime": 1782313332.2489812,
+    "ast_hash": "0fe7ed99c7a7811a8bfe783889724a8d",
+    "semantic_hash": ""
+  },
+  "frontend/src/screens/AssistantScreen.test.tsx": {
+    "mtime": 1782313521.0287971,
+    "ast_hash": "45e1735395af7e3f561d0ce13164ce44",
+    "semantic_hash": ""
+  },
+  "tests/test_hologram_controller.py": {
+    "mtime": 1782358295.5701957,
+    "ast_hash": "c350bf32a333be3a4a2b697ae900e667",
+    "semantic_hash": ""
+  },
+  "docs/HOLOGRAM.md": {
+    "mtime": 1782358404.8804808,
+    "ast_hash": "b47b5a52e8a4724bc3c0f32484edfc41",
+    "semantic_hash": ""
+  },
+  "media/UNEV_prueba_3_paneles_preview.png": {
+    "mtime": 1782338954.9877803,
+    "ast_hash": "977bd05323f49cbd43818ed6b83fdb5d",
+    "semantic_hash": ""
+  },
+  "media/UNEV_prueba_3_paneles.mp4": {
+    "mtime": 1782338954.6113977,
+    "ast_hash": "bfbce46b1bc52c9f3d75f94ed3d6c009",
     "semantic_hash": ""
   }
 }

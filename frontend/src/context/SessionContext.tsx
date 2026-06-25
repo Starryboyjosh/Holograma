@@ -25,7 +25,7 @@ interface SessionValue {
 const SessionCtx = createContext<SessionValue | null>(null);
 
 // Single shared instance of the live state machine (chat socket, hologram TCP,
-// config, camera) for the main window's five screens. Detachable widget windows
+// config, camera) for the main window's screens. Detachable widget windows
 // run in their own React root and instantiate their own hooks instead.
 export function SessionProvider({ children }: { children: ReactNode }) {
   const showToast = useToast();

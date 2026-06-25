@@ -65,13 +65,16 @@ export function AssistantScreen() {
   ];
 
   return (
-    <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-5 animate-fade-in">
+    <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-5">
       {/* CONVERSACIÓN */}
       <div className="lg:col-span-7 rounded-3xl p-6 md:p-8 relative min-h-[560px] flex flex-col bg-[#0B0F19]/80 backdrop-blur-xl border border-white/10 shadow-2xl text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#E25C1D]"></span>
-            <span className="text-[#E25C1D] font-bold text-sm tracking-wide">UNEV AI Assistant</span>
+            <div>
+              <h1 className="text-sm font-bold tracking-wide text-white">Hablar con el asistente</h1>
+              <p className="text-[10px] text-slate-400">UNEV · Voz y texto</p>
+            </div>
           </div>
           <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold border ${stateMeta.chip}`}>
             <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${stateMeta.dot}`}></span>
@@ -99,9 +102,9 @@ export function AssistantScreen() {
             ))}
           </div>
 
-          <h2 className="text-xl md:text-2xl font-normal leading-relaxed text-slate-100 tracking-wide max-w-xl">
+          <div className="text-xl md:text-2xl font-normal leading-relaxed text-slate-100 tracking-wide max-w-xl" aria-live="polite">
             {highlighted(chat.aiSpokenText, chat.highlightKeyword)}
-          </h2>
+          </div>
           <div className="flex items-center justify-center gap-2 text-xs text-slate-400 font-medium mt-4">
             {chat.assistantState === 'thinking' && (
               <svg className="w-4 h-4 text-[#E25C1D] animate-spin" fill="none" viewBox="0 0 24 24">

@@ -8,7 +8,7 @@ interface CardProps {
   className?: string;
 }
 
-// The repeated settings/remote panel: rounded-3xl bordered surface that works in
+// The repeated settings panel: rounded-3xl bordered surface that works in
 // both themes via the shared CARD token. `masonry` adds the column-break guard.
 export function Card({ children, masonry = false, className = '' }: CardProps) {
   return (
