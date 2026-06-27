@@ -40,6 +40,22 @@ En orden:
 
 Aliases aceptados en `LLM_PROVIDER`: `local`→`ollama`, `anthropic`/`claude`→`claude_native`.
 
+## Límite de tokens y robustez de la respuesta
+
+- **`LLM_MAX_TOKENS`** (entero, por defecto **450**) — único límite de longitud para
+  **todos** los backends. Antes cada ruta tenía su propio número (350 en Ollama,
+  450 en la nube, 1024 en streaming de Claude, sin límite en otra) y las respuestas
+  se cortaban de forma incoherente. Ahora `_max_tokens()` lo centraliza; un valor
+  inválido o ≤0 cae al defecto.
+- **No se descartan respuestas válidas.** El filtro anti-inglés ya **no tira** la
+  respuesta cuando sospecha que vino en inglés: registra un aviso y la entrega
+  igual. Descartarla era la causa del síntoma "no puedo responder en este momento".
+- **Selección de backend fuera del event loop.** En la ruta async
+  (`stream_llm_response`, la del WebSocket) la elección de backend —que incluye el
+  sondeo de Ollama, cacheado con `OLLAMA_READY_TTL_SECONDS`— corre en
+  `asyncio.to_thread`, para que el sondeo nunca congele el loop (síntoma de
+  "freeze"). La generación ya usa clientes async (`AsyncOpenAI`/`AsyncAnthropic`).
+
 ## Endpoints relacionados
 
 - `GET /api/providers` — metadata segura para la interfaz: etiqueta amistosa,
@@ -74,7 +90,7 @@ precedencia de modelo y los mensajes de "Probar conexión". Se ejecutan sin la
 pila de ML (no requieren `torch`/`whisper`):
 
 ```bash
-.venv/bin/pytest            # 32 pruebas
+.venv/bin/pytest            # 91 pruebas
 .venv/bin/ruff check .      # estilo del backend
 ```
 
@@ -82,7 +98,7 @@ En el frontend, la lógica del formulario y la tarjeta de proveedor tienen prueb
 con Vitest + Testing Library:
 
 ```bash
-cd frontend && npm test     # 12 pruebas (providerForm + ProviderConfigCard)
+cd frontend && npm test     # Vitest: providerForm + ProviderConfigCard + AssistantScreen
 ```
 
 ## Endurecimiento de seguridad (Fase D.1)

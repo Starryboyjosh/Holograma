@@ -82,9 +82,14 @@ async def lifespan(app: FastAPI):
         original_speak = call.speak
 
         def custom_speak(text, blocking=True):
-            send_to_web_client("status", "streaming_started")
-            send_to_web_client("text_chunk", text)
-            send_to_web_client("text_done", text)
+            # NO reemitir streaming_started/text_chunk/text_done aquí. El handler
+            # del WebSocket YA emitió esos eventos para el texto del LLM (con
+            # await, canal inmediato). custom_speak corre en el hilo de TTS y
+            # reenviaba los mismos eventos por un canal diferido
+            # (run_coroutine_threadsafe), creando una carrera con
+            # `audio_status: completed`: la UI quedaba atascada en "hablando" y el
+            # texto parpadeaba (aparecía, se borraba y reaparecía). El TTS solo
+            # reproduce el audio; el WebSocket es el único emisor de texto.
             original_speak(text, blocking)
 
         call.speak = custom_speak

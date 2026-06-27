@@ -5,13 +5,13 @@
     "semantic_hash": ""
   },
   "llm_backend.py": {
-    "mtime": 1782309136.9816806,
-    "ast_hash": "cd921d5cedf891ea11cca45bde0ca9f3",
+    "mtime": 1782603203.6563637,
+    "ast_hash": "fdec361b9f7379fff762aaca7ad60319",
     "semantic_hash": ""
   },
   "main.py": {
-    "mtime": 1782359672.3971171,
-    "ast_hash": "ff0e3b4d13b913114e94978fbf0185e2",
+    "mtime": 1782600331.2546213,
+    "ast_hash": "e3ee874cb6d3175deb17ac5a5710481d",
     "semantic_hash": ""
   },
   "skills/__init__.py": {
@@ -75,8 +75,8 @@
     "semantic_hash": ""
   },
   "vision/person_detector.py": {
-    "mtime": 1782310727.4730034,
-    "ast_hash": "2a00f62d781fdccff697f1523f16065f",
+    "mtime": 1782600320.0046008,
+    "ast_hash": "8d18b9dd6882d5743a6de6878909e97d",
     "semantic_hash": ""
   },
   ".claude/settings.json": {
@@ -280,8 +280,8 @@
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1781578673.0986757,
-    "ast_hash": "82efb97a359f5c7290bf2513d14686be",
+    "mtime": 1782532426.3734436,
+    "ast_hash": "e55e84abfc1a2ee7fdde9da07fb13126",
     "semantic_hash": ""
   },
   "README.md": {
@@ -445,8 +445,8 @@
     "semantic_hash": ""
   },
   "frontend/src/hooks/useChatSocket.ts": {
-    "mtime": 1782270904.2929914,
-    "ast_hash": "6cc84e64b5d6b1d9bb99b20e9a0cf7a2",
+    "mtime": 1782600500.8815756,
+    "ast_hash": "bbafc1a5fb12dbffbf9a26673bcbeb38",
     "semantic_hash": ""
   },
   "frontend/src/hooks/useConfig.ts": {
@@ -892,6 +892,61 @@
   "media/UNEV_prueba_3_paneles.mp4": {
     "mtime": 1782338954.6113977,
     "ast_hash": "bfbce46b1bc52c9f3d75f94ed3d6c009",
+    "semantic_hash": ""
+  },
+  "tests/test_llm_unify.py": {
+    "mtime": 1782601161.6391168,
+    "ast_hash": "54076e7f59b14c9a44e1e45f23df864c",
+    "semantic_hash": ""
+  },
+  "tests/test_ollama_ready_cache.py": {
+    "mtime": 1782600617.9784203,
+    "ast_hash": "6cb4e8af1942e6efa8825df296fe7197",
+    "semantic_hash": ""
+  },
+  "tests/test_person_presence.py": {
+    "mtime": 1782600599.181726,
+    "ast_hash": "0443f0640e94f53391541476f2a27e45",
+    "semantic_hash": ""
+  },
+  "ANALISIS_Y_PLAN_DE_MEJORA.md": {
+    "mtime": 1782587316.8425617,
+    "ast_hash": "0d5f5e1112ee5f77589ac611f752ae88",
+    "semantic_hash": ""
+  },
+  "app/__init__.py": {
+    "mtime": 1782603212.1497014,
+    "ast_hash": "39954e67a3c95b92535a5b3e0e2b4406",
+    "semantic_hash": ""
+  },
+  "app/connection.py": {
+    "mtime": 1782603221.996373,
+    "ast_hash": "85314168e6d1c45eab965c9069f3df13",
+    "semantic_hash": ""
+  },
+  "app/services/__init__.py": {
+    "mtime": 1782603222.9797068,
+    "ast_hash": "a1359cfd12937be1a1e2322ddb1274e0",
+    "semantic_hash": ""
+  },
+  "app/services/conversation.py": {
+    "mtime": 1782603309.9964194,
+    "ast_hash": "583b562a65fa55ed3397d247ececabe2",
+    "semantic_hash": ""
+  },
+  "app/services/llm.py": {
+    "mtime": 1782603309.9964194,
+    "ast_hash": "d7c8e2b0347f75f43173f1e655ab96dd",
+    "semantic_hash": ""
+  },
+  "app/services/vision.py": {
+    "mtime": 1782603309.993086,
+    "ast_hash": "cef5ad87c3734e0584a817e1808e2a18",
+    "semantic_hash": ""
+  },
+  "tests/test_app_services.py": {
+    "mtime": 1782603283.8397386,
+    "ast_hash": "517b208130fe738847a0c1e41daa9b76",
     "semantic_hash": ""
   }
 }

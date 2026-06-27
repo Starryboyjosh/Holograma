@@ -2,6 +2,14 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { resolveBackendUrl, wsUrl } from '../lib/backend';
 import type { AssistantState } from '../theme';
 
+// Red de seguridad: si el backend deja de enviar eventos mientras el asistente
+// está "pensando"/"hablando" (p. ej. se pierde un `audio_status: completed`, o el
+// TTS falla en el host), la UI quedaría atascada para siempre en ese estado.
+// Tras este tiempo SIN actividad en un estado ocupado, forzamos `idle`. Cada
+// evento de progreso (chunk de texto, estado de audio, transcripción…) reinicia
+// el contador, así que una respuesta larga que sigue llegando nunca se corta.
+const STUCK_STATE_TIMEOUT_MS = 20_000;
+
 interface UseChatSocketOptions {
   /** Surface camera/error events as toasts in the host UI. */
   onToast?: (msg: string) => void;
@@ -38,6 +46,8 @@ export function useChatSocket(options: UseChatSocketOptions = {}): ChatSocket {
   // Referencia a la última `connect` para reconectar desde onclose sin que la
   // callback se referencie a sí misma (evita el acceso antes de declararla).
   const connectRef = useRef<() => void>(() => {});
+  // Temporizador "perro guardián" (ver STUCK_STATE_TIMEOUT_MS).
+  const watchdogRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [wsConnected, setWsConnected] = useState(false);
   const [assistantState, setAssistantState] = useState<AssistantState>('idle');
@@ -46,6 +56,26 @@ export function useChatSocket(options: UseChatSocketOptions = {}): ChatSocket {
   const [highlightKeyword, setHighlightKeyword] = useState('');
   const [voiceMode, setVoiceMode] = useState('ptt');
   const [personCount, setPersonCount] = useState(0);
+
+  // Reinicia el perro guardián: cancela el anterior y arma uno nuevo. Se llama en
+  // cada evento de progreso del backend, de modo que solo dispara tras un silencio
+  // real de STUCK_STATE_TIMEOUT_MS en un estado ocupado.
+  const armWatchdog = useCallback(() => {
+    if (watchdogRef.current) clearTimeout(watchdogRef.current);
+    watchdogRef.current = setTimeout(() => {
+      // Solo forzamos idle si seguimos atascados en un estado ocupado; nunca
+      // sacamos al usuario de "listening" (push-to-talk) ni de "idle".
+      setAssistantState((s) => (s === 'thinking' || s === 'speaking' ? 'idle' : s));
+      setUserSpokenText('');
+    }, STUCK_STATE_TIMEOUT_MS);
+  }, []);
+
+  const clearWatchdog = useCallback(() => {
+    if (watchdogRef.current) {
+      clearTimeout(watchdogRef.current);
+      watchdogRef.current = null;
+    }
+  }, []);
 
   const connect = useCallback(async () => {
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) return;
@@ -65,24 +95,30 @@ export function useChatSocket(options: UseChatSocketOptions = {}): ChatSocket {
           setAiSpokenText('');
           setHighlightKeyword('');
           setUserSpokenText('Generando respuesta...');
+          armWatchdog();
         } else if (data.type === 'text_chunk') {
           setAssistantState('speaking');
           setAiSpokenText((prev) => prev + data.text);
+          armWatchdog();
         } else if (data.type === 'text_done') {
           setAssistantState('speaking');
+          armWatchdog();
         } else if (data.type === 'voice_mode') {
           setVoiceMode(data.mode);
         } else if (data.type === 'audio_status') {
           if (data.status === 'processing') {
             setAssistantState('speaking');
             setUserSpokenText('Respondiendo…');
+            armWatchdog();
           } else if (data.status === 'completed') {
             setAssistantState('idle');
             setUserSpokenText('');
+            clearWatchdog();
           }
         } else if (data.type === 'stt_transcript') {
           setUserSpokenText(`Escuchado: "${data.text}"`);
           setAssistantState('thinking');
+          armWatchdog();
         } else if (data.type === 'camera_event') {
           if (typeof data.count === 'number') setPersonCount(data.count);
           if (data.event === 'person_entered') {
@@ -97,6 +133,7 @@ export function useChatSocket(options: UseChatSocketOptions = {}): ChatSocket {
           onToastRef.current?.(`Error: ${data.message}`);
           setUserSpokenText('Error en el backend.');
           setAssistantState('idle');
+          clearWatchdog();
         }
       } catch {
         setAiSpokenText(event.data);
@@ -111,7 +148,7 @@ export function useChatSocket(options: UseChatSocketOptions = {}): ChatSocket {
     };
 
     socketRef.current = ws;
-  }, []);
+  }, [armWatchdog, clearWatchdog]);
 
   useEffect(() => {
     connectRef.current = connect;
@@ -123,6 +160,7 @@ export function useChatSocket(options: UseChatSocketOptions = {}): ChatSocket {
     return () => {
       closedByUnmount.current = true;
       if (reconnectRef.current) clearTimeout(reconnectRef.current);
+      if (watchdogRef.current) clearTimeout(watchdogRef.current);
       socketRef.current?.close();
     };
   }, [connect]);

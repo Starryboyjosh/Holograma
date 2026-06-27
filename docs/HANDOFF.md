@@ -5,6 +5,44 @@ UNEV-only product. **Do not** build multi-tenancy/white-label. Read `CLAUDE.md`
 after code changes). This doc is the onboarding shortcut so you don't re-derive
 the audit.
 
+## Latest session (2026-06-27) — symptom fixes + Phase 3 foundation
+Implemented `ANALISIS_Y_PLAN_DE_MEJORA.md` Phases 0–2 (the freeze / "stuck on
+hablando" / "no puedo responder" symptoms) plus the **testable foundation of
+Phase 3** (de-monkey-patch, see §E). Verified by `pytest` (**91 passing**) +
+`ruff` clean. The ML backend still can't run here, so runtime-only items are
+flagged below, not closed.
+
+- **Phase 0 — symptom fixes (DONE, tested):**
+  - `vision/person_detector.py`: removed the `was_present` clobber so a 1-frame
+    blink no longer re-greets; object-detection failure is logged + disabled once
+    instead of `except: pass`. (`tests/test_person_presence.py`)
+  - `call.py` `custom_speak` no longer re-emits `streaming_started/text_chunk/
+    text_done` — that double-emit was the "hablando" stuck state (symptom B).
+  - `llm_backend._ollama_ready()` is cached with a TTL (`OLLAMA_READY_TTL_SECONDS`,
+    default 10s) so the readiness probe stops hammering the loop.
+    (`tests/test_ollama_ready_cache.py`)
+  - Frontend `hooks/useChatSocket.ts`: 20s watchdog forces `idle` if a busy state
+    goes silent (failsafe for a dropped `completed`).
+- **Phase 1 — event-loop relief (PARTIAL, tested):** backend selection inside
+  `stream_llm_response` now runs via `asyncio.to_thread`, so the cached Ollama
+  probe never blocks the loop (symptom A: freeze). **Deliberate deviation:** the
+  async generation path *already* uses `AsyncOpenAI`/`AsyncAnthropic`, so the
+  plan's wholesale urllib→httpx rewrite buys the loop nothing and was NOT done.
+  (`tests/test_llm_unify.py` asserts selection runs off the loop thread.)
+- **Phase 2 — answer quality (PARTIAL, tested):** unified `max_tokens` via
+  `LLM_MAX_TOKENS` (default 450) across every backend (was a mix of 350/450/1024/
+  unbounded); the anti-English filter no longer **discards** a valid reply — it
+  logs a warning and returns the text (symptom C: "no puedo responder").
+  (`tests/test_llm_unify.py`)
+- **Phase 3 — de-monkey-patch (PARTIAL, tested): see §E below.** New additive
+  `app/` service layer; nothing imports it yet, so it is zero-risk to the running
+  server. (`tests/test_app_services.py`, 10 tests.)
+
+**Still runtime-gated (do next, on real hardware):** wire the `app/` services into
+`main.py` and delete the `lifespan` monkey-patching; route the voice loop through
+the async service and delete sync `generate_reply`; async `video_feed`; §8 folder
+move (`app/` + `core/`). None of these are safe to do blind without the ML stack.
+
 ## Hard environment constraints (read first)
 - `.venv` is **Python 3.14, zero runtime deps installed**. The ML/STT/TTS/vision
   backend (torch, ultralytics, faster-whisper, sounddevice, piper, fastapi) is
@@ -14,10 +52,10 @@ the audit.
   1.96 present.
 - Workflow: **commit whole working tree directly to `main` and push** (no PRs).
 
-## Verify Phases 1 + A (already done)
+## Verify (already done)
 ```bash
-.venv/bin/pytest                                                  # 64 passing
-.venv/bin/ruff check provider_config.py llm_backend.py main.py tests/   # clean
+.venv/bin/pytest                                                  # 91 passing
+.venv/bin/ruff check .                                            # clean
 cd frontend && npx eslint . && npx tsc -p tsconfig.app.json --noEmit    # clean
 cd frontend && npm test                                          # vitest (incl. AssistantScreen)
 cd frontend && npm run build                                     # tsc -b + vite build OK
@@ -112,12 +150,35 @@ The Settings AI-brain card is driven by the live contract:
   secrets instead of plaintext `.env`/`config.json`; rate limits; lock CORS to the
   validated WebView origin.
 
-### E. De-monkey-patch into typed services  (refactor; INTENTIONALLY DEFERRED)
-- Highest-risk item, **not safe blind**: rewriting startup monkey-patching +
-  globals into services changes `call.py`/`main.py` hot paths that can't run in
-  this env (no ML stack). `main.py` patches `call.speak`,
-  `WhisperListener.listen_once`, `_camera_detection_callback` at startup. Migrate
-  toward `application/` services + an event bus, strangler-style.
+### E. De-monkey-patch into typed services  ✅ FOUNDATION DONE (wiring is runtime-gated)
+The strangler-fig foundation is built and **fully unit-tested** (`tests/
+test_app_services.py`, 10 tests). It is **additive**: no existing module imports
+`app/` yet, so the running server is untouched. What exists now:
+- **`app/connection.py` — `ConnectionManager`:** one async event emitter
+  (`register/unregister/broadcast`, async lock, auto-purges dead sockets). The
+  target replacement for `send_to_web_client` + `run_coroutine_threadsafe`.
+- **`app/services/llm.py` — `LLMService`:** injectable wrapper over the single
+  async path (`stream_llm_response`); default is a lazy import so tests pass a fake
+  stream.
+- **`app/services/vision.py` — `CameraContextProvider`:** the one explicit, testable
+  seam for the `call ↔ llm_backend` cycle. Holds the last analysis and builds
+  context in one place; the orchestrator injects it into the LLM.
+- **`app/services/conversation.py` — `ConversationService`:** the heart. One turn,
+  one emitter, the exact frontend sequence (`streaming_started → text_chunk* →
+  text_done → audio_status:processing → completed`). Encodes the structural fixes:
+  **TTS never re-emits text** (kills symptom B), TTS runs via `asyncio.to_thread`,
+  state is **injected not global**, errors → `error` event.
+- **Cycle-break shipped in prod code:** `stream_llm_response(prompt,
+  camera_context=None)` now takes an optional injected context; when given, it does
+  NOT reach into `call` (test proves `call._build_camera_context` is never called).
+  Default `None` preserves the legacy path, so this is backward-compatible.
+
+**Still open (needs the running backend — NOT safe blind):** wire these into
+`main.py`, delete the `lifespan` monkey-patching of `call.speak` /
+`WhisperListener.listen_once` / `_camera_detection_callback`, remove `os.chdir`,
+move the Qt env fix off import-time, route the voice loop through
+`ConversationService`, then the §8 folder move (one move per commit, `pytest`
+between). Do this on hardware where you can actually start the backend.
 
 ### F. Single editable UNEV content source  ✅ DONE
 - `skills/unev_content.py` is the single authoritative source (canonical content +

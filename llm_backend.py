@@ -1,6 +1,9 @@
+import asyncio
 import json
 import os
 import re
+import threading
+import time
 import urllib.error
 import urllib.request
 from collections.abc import AsyncGenerator
@@ -33,6 +36,24 @@ def _ollama_base_url():
 
 def _ollama_model_name():
     return _env("OLLAMA_MODEL") or DEFAULT_OLLAMA_MODEL
+
+
+def _max_tokens() -> int:
+    """Límite de tokens de salida, configurable y unificado para todos los backends.
+
+    Antes cada backend traía su propio número mágico (350 / 450 / 1024 / sin
+    límite), así que la longitud de la respuesta cambiaba según el proveedor —y
+    entre voz y web. Ahora todos leen ``LLM_MAX_TOKENS`` (450 por defecto); un
+    valor ausente o inválido cae al de por defecto.
+    """
+    raw = _env("LLM_MAX_TOKENS")
+    if not raw:
+        return 450
+    try:
+        value = int(raw)
+    except ValueError:
+        return 450
+    return value if value > 0 else 450
 
 
 def _ollama_request(path, payload=None, timeout=30.0):
@@ -85,8 +106,43 @@ def _ollama_model_available(model=None):
     return model in model_names
 
 
-def _ollama_ready():
-    return _ollama_server_available() and _ollama_model_available()
+# Readiness de Ollama cacheada con TTL. Antes `_ollama_ready()` se invocaba 2–4
+# veces por mensaje (get_selected_backend + _candidate_backends) y cada
+# invocación lanzaba DOS sondas HTTP bloqueantes a /api/tags (1.5 s c/u). Sobre
+# el event loop, bajo carga, eso congelaba TODO el servidor. Ahora una sola sonda
+# combinada se memoiza durante OLLAMA_READY_TTL_SECONDS.
+_OLLAMA_READY_CACHE: dict[str, object] = {"value": None, "expires": 0.0}
+_OLLAMA_READY_LOCK = threading.Lock()
+
+
+def _ollama_ready(force: bool = False) -> bool:
+    """¿Ollama está listo (servidor arriba + modelo instalado)?  Cacheado.
+
+    El resultado se memoiza ``OLLAMA_READY_TTL_SECONDS`` (10 s por defecto) para
+    no sondear en cada mensaje.  ``force=True`` ignora la caché.
+    """
+    now = time.monotonic()
+    with _OLLAMA_READY_LOCK:
+        cached = _OLLAMA_READY_CACHE["value"]
+        expires = _OLLAMA_READY_CACHE["expires"]
+        if not force and cached is not None and now < expires:
+            return bool(cached)
+
+    # Sonda única combinada (servidor + modelo) fuera del lock: una sola llamada
+    # a /api/tags responde ambas preguntas, en vez de dos sondas separadas.
+    model = _ollama_model_name()
+    try:
+        tags = _ollama_tags(timeout=_env_float("OLLAMA_STATUS_TIMEOUT_SECONDS", 1.5))
+        model_names = [item.get("name") for item in tags.get("models", [])]
+        ready = model in model_names
+    except Exception:
+        ready = False
+
+    ttl = _env_float("OLLAMA_READY_TTL_SECONDS", 10.0)
+    with _OLLAMA_READY_LOCK:
+        _OLLAMA_READY_CACHE["value"] = ready
+        _OLLAMA_READY_CACHE["expires"] = time.monotonic() + ttl
+    return ready
 
 
 def get_selected_backend():
@@ -305,7 +361,7 @@ def _chat_with_openai_compatible(provider, messages):
         model=model,
         messages=messages,
         temperature=0.6,
-        max_tokens=450,
+        max_tokens=_max_tokens(),
     )
     return (response.choices[0].message.content or "").strip()
 
@@ -341,7 +397,7 @@ def _chat_with_ollama(messages):
         "options": {
             "temperature": 0.6,
             "top_p": 0.9,
-            "num_predict": 350,
+            "num_predict": _max_tokens(),
         },
     }
 
@@ -383,7 +439,7 @@ def _chat_with_claude_native(messages):
 
     response = client.messages.create(
         model=model,
-        max_tokens=450,
+        max_tokens=_max_tokens(),
         system=system_content,
         messages=formatted_messages,
         temperature=0.6
@@ -419,11 +475,11 @@ def _postprocess_reply(text):
         return "Lo siento, no pude generar una respuesta. ¿Podrías repetir tu pregunta?"
     # Detectar respuestas en inglés y reemplazarlas
     if _is_mostly_english(text):
-        print(f"[LLM] AVISO: Respuesta detectada en inglés, descartando: {text[:80]}...")
-        return (
-            "Disculpa, tuve un problema al generar mi respuesta. "
-            "¿Podrías repetir tu pregunta?"
-        )
+        # Antes esto DESCARTABA la respuesta y devolvía un "tuve un problema",
+        # convirtiendo una respuesta válida en una no-respuesta (síntoma C). El
+        # refuerzo de idioma ya vive en el prompt (`_build_messages`); aquí solo
+        # registramos el aviso y entregamos el texto del modelo tal cual.
+        print(f"[LLM] AVISO: respuesta posiblemente en inglés (se entrega igual): {text[:80]}...")
     return text
 
 
@@ -463,7 +519,7 @@ async def _stream_backend_response(backend, messages):
 
         async with client.messages.stream(
             model=model,
-            max_tokens=1024,
+            max_tokens=_max_tokens(),
             system=system_content,
             messages=formatted_messages,
             temperature=0.6,
@@ -484,6 +540,7 @@ async def _stream_backend_response(backend, messages):
         model=model,
         messages=messages,
         temperature=0.6,
+        max_tokens=_max_tokens(),
         stream=True,
     )
     async for chunk in response:
@@ -492,8 +549,16 @@ async def _stream_backend_response(backend, messages):
             yield content
 
 
-async def stream_llm_response(prompt: str) -> AsyncGenerator[str, None]:
-    """Generador asíncrono para transmitir la respuesta del LLM en tiempo real."""
+async def stream_llm_response(
+    prompt: str, camera_context: str | None = None
+) -> AsyncGenerator[str, None]:
+    """Generador asíncrono para transmitir la respuesta del LLM en tiempo real.
+
+    ``camera_context`` lo puede inyectar el llamador (p. ej. el
+    ``ConversationService`` de ``app/``). Si llega como ``None`` se recurre al
+    import perezoso de ``call`` por compatibilidad con la ruta heredada; inyectarlo
+    rompe el ciclo ``call ↔ llm_backend``.
+    """
     try:
         from skills.event_mode import get_system_prompt
         from skills.university import get_university_context
@@ -503,18 +568,27 @@ async def stream_llm_response(prompt: str) -> AsyncGenerator[str, None]:
         system_prompt = "Eres un asistente de la UNEV."
         university_context = ""
 
-    # Obtener contexto de la cámara si hay una pregunta visual o un saludo
-    camera_context = None
-    try:
-        from call import _build_camera_context, _last_camera_analysis
-        if _last_camera_analysis:
-            camera_context = _build_camera_context(_last_camera_analysis)
-    except ImportError:
-        pass
+    # Contexto de cámara: si el llamador no lo inyectó, recurrimos al import
+    # perezoso de `call` (ruta heredada). Mantener este fallback aquí evita romper
+    # el voice loop actual mientras la nueva capa de servicios inyecta el contexto.
+    if camera_context is None:
+        try:
+            from call import _build_camera_context, _last_camera_analysis
+            if _last_camera_analysis:
+                camera_context = _build_camera_context(_last_camera_analysis)
+        except ImportError:
+            pass
 
     messages = _build_messages(prompt, system_prompt, university_context, camera_context)
 
-    for backend in _candidate_backends(get_selected_backend()):
+    # La selección de backend sondea la readiness de Ollama (HTTP bloqueante, aun
+    # estando cacheada con TTL). Sacarla del hilo del event loop con `to_thread`
+    # evita que un sondeo ocasional congele el video y los demás mensajes mientras
+    # Python espera el `urlopen` (síntoma A).
+    backends = await asyncio.to_thread(
+        lambda: _candidate_backends(get_selected_backend())
+    )
+    for backend in backends:
         if backend == "local_only":
             yield _local_only_reply(prompt)
             return

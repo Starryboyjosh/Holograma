@@ -44,6 +44,11 @@ class YoloPersonDetector:
         self._custom_classes: list[str] = []
         self._custom_vocabulary: list[str] = []
         self._last_reload_time = 0
+        # Prompts de texto YOLOE/YOLO-World: si el modelo cargado no los soporta
+        # (p. ej. un yolo26n estándar), detect_custom_objects falla. Lo detectamos
+        # una sola vez y desactivamos esa ruta para no repetir el error ni saturar
+        # el log (ver detect_custom_objects).
+        self._custom_detect_disabled = False
         # Último cuadro anotado (JPEG) para transmitir al frontend vía MJPEG.
         self._latest_jpeg: bytes | None = None
         self._jpeg_lock = threading.Lock()
@@ -150,6 +155,11 @@ class YoloPersonDetector:
 
     def detect_custom_objects(self, frame):
         """Detect custom objects using YOLOE text prompts from training data."""
+        # Si una llamada previa falló porque el modelo no soporta prompts de
+        # texto, no reintentamos: ahorra CPU y evita spam de logs en cada cuadro.
+        if self._custom_detect_disabled:
+            return []
+
         # Reload training data every 5 seconds if needed
         current_time = time.time()
         if current_time - getattr(self, "_last_reload_time", 0) > 5.0:
@@ -176,8 +186,17 @@ class YoloPersonDetector:
                             "confidence": confidence,
                             "box": (x1, y1, x2, y2),
                         })
-        except Exception:
-            pass
+        except Exception as error:
+            # Un yolo26n estándar NO acepta `text=` (eso es de YOLOE/YOLO-World).
+            # Antes el error se tragaba con `except Exception: pass`, ocultando
+            # por completo el fallo. Lo registramos una vez y desactivamos la
+            # ruta para no repetirlo en cada cuadro del bucle continuo.
+            print(
+                "[YOLO] Detección de objetos personalizados desactivada: el "
+                f"modelo no soporta prompts de texto ({error})."
+            )
+            self._custom_detect_disabled = True
+            return []
         return objects
 
     # ------------------------------------------------------------------
@@ -441,8 +460,16 @@ class YoloPersonDetector:
                     if new_labels:
                         callback("custom_object_detected", len(new_labels), analysis)
 
-                    was_present = is_present
-                    last_count = count
+                    # `was_present` lo gestiona la máquina de estados de arriba
+                    # (entrada -> True; salida solo cuando la ausencia supera el
+                    # período de gracia). NO lo reasignamos aquí: hacerlo
+                    # (was_present = is_present) anulaba la gracia y un parpadeo de
+                    # YOLO re-disparaba "person_entered" -> la cámara volvía a
+                    # saludar a la misma persona.
+                    # `last_count` solo se actualiza con presencia real para que un
+                    # cuadro perdido no reinicie la base de tamaño de grupo.
+                    if is_present:
+                        last_count = count
                     last_custom_labels = current_custom_labels
 
                 # Publica el cuadro actual con las cajas del análisis más reciente.
