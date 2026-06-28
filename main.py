@@ -38,13 +38,21 @@ from security import (
 from skills.unev_content import get_unev_info, save_unev_info
 
 # Regla de Oro A: rutas absolutas basadas en este archivo. Al ejecutarse como
-# sidecar de Tauri el CWD puede ser arbitrario, así que fijamos el directorio de
-# trabajo al del proyecto para que config.json, .env, static/, data/ y los
-# modelos (.pt/.onnx) relativos se resuelvan siempre de la misma forma.
+# sidecar de Tauri el CWD puede ser arbitrario, así que anclamos CADA ruta a
+# BASE_DIR en vez de mutar el CWD global del proceso con os.chdir() (efecto
+# secundario a nivel de import que contaminaba a todo el proceso). config.json,
+# .env, static/, data/ y los modelos se resuelven igual sin importar desde dónde
+# se lance. Los módulos importados (call.py, vision/, stt/, skills/) ya anclan
+# sus rutas a su propio __file__, así que tampoco dependen del CWD.
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-os.chdir(BASE_DIR)
+ENV_PATH = os.path.join(BASE_DIR, ".env")
+CONFIG_PATH = os.path.join(BASE_DIR, "config.json")
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+DATA_DIR = os.path.join(BASE_DIR, "data")
+MODELS_DIR = os.path.join(BASE_DIR, "models")
+INDEX_HTML = os.path.join(STATIC_DIR, "index.html")
 
-load_dotenv(os.path.join(BASE_DIR, ".env"))
+load_dotenv(ENV_PATH)
 
 
 def _atomic_write_text(path: str, text: str) -> None:
@@ -128,7 +136,7 @@ async def lifespan(app: FastAPI):
         print(f"[Startup] Error al aplicar monkey-patch de call.py: {e}")
 
     # Leer config.json
-    config_path = "config.json"
+    config_path = CONFIG_PATH
     config_data = {}
     if os.path.exists(config_path):
         try:
@@ -309,7 +317,7 @@ class VocabularyPayload(BaseModel):
 
 @app.get("/api/config")
 def get_config():
-    config_path = "config.json"
+    config_path = CONFIG_PATH
     config_data = {}
     if os.path.exists(config_path):
         try:
@@ -361,7 +369,7 @@ def get_config():
 
 @app.post("/api/config")
 def update_config(payload: ConfigUpdate):
-    config_path = "config.json"
+    config_path = CONFIG_PATH
     config_data = {}
     if os.path.exists(config_path):
         try:
@@ -453,7 +461,7 @@ def update_config(payload: ConfigUpdate):
         _atomic_write_text(config_path, json.dumps(config_data, indent=4))
 
         # Also write to .env for persistence
-        env_path = ".env"
+        env_path = ENV_PATH
         env_lines = []
         if os.path.exists(env_path):
             with open(env_path, encoding="utf-8") as f:
@@ -602,7 +610,7 @@ def get_voices():
     import glob
     from pathlib import Path
 
-    onnx_files = glob.glob("models/es_*.onnx")
+    onnx_files = glob.glob(os.path.join(MODELS_DIR, "es_*.onnx"))
     voices = [Path(f).name for f in onnx_files]
     if not voices:
         voices = ["es_MX-claude-high.onnx"]
@@ -618,7 +626,9 @@ def play_speak(payload: SpeakPayload):
         if payload.voice:
             voice_path = payload.voice
             if not os.path.isabs(voice_path):
-                voice_path = os.path.abspath(voice_path)
+                # Antes os.path.abspath() resolvía contra el CWD (que os.chdir
+                # forzaba a BASE_DIR); ahora anclamos explícitamente a BASE_DIR.
+                voice_path = os.path.join(BASE_DIR, voice_path)
             os.environ["PIPER_MODEL_PATH"] = voice_path
 
         speak(clamp_text(payload.text, MAX_TTS_CHARS), blocking=False)
@@ -639,9 +649,9 @@ def train_image(payload: TrainImagePayload):
         f"[YOLO Training] Received training image with {len(payload.boundingBoxes)} bounding boxes."
     )
     try:
-        os.makedirs("data", exist_ok=True)
-        os.makedirs("data/images", exist_ok=True)
-        meta_path = "data/training_metadata.json"
+        os.makedirs(DATA_DIR, exist_ok=True)
+        os.makedirs(os.path.join(DATA_DIR, "images"), exist_ok=True)
+        meta_path = os.path.join(DATA_DIR, "training_metadata.json")
         existing = []
         if os.path.exists(meta_path):
             with open(meta_path, encoding="utf-8") as f:
@@ -652,7 +662,7 @@ def train_image(payload: TrainImagePayload):
         import base64
 
         image_filename = f"image_{int(time.time())}.jpg"
-        image_path = os.path.join("data/images", image_filename)
+        image_path = os.path.join(DATA_DIR, "images", image_filename)
 
         if image_data and "base64," in image_data:
             header, encoded = image_data.split("base64,", 1)
@@ -688,7 +698,7 @@ def train_image(payload: TrainImagePayload):
 
 @app.get("/api/train/metadata")
 def get_training_metadata():
-    meta_path = "data/training_metadata.json"
+    meta_path = os.path.join(DATA_DIR, "training_metadata.json")
     if os.path.exists(meta_path):
         try:
             with open(meta_path, encoding="utf-8") as f:
@@ -703,8 +713,8 @@ def train_vocabulary(payload: VocabularyPayload):
     vocabulary = clamp_text(payload.vocabulary, MAX_VOCAB_CHARS)
     print(f"[YOLO Training] Received open-vocabulary updates ({len(vocabulary)} chars).")
     try:
-        os.makedirs("data", exist_ok=True)
-        _atomic_write_text("data/open_vocabulary.txt", vocabulary)
+        os.makedirs(DATA_DIR, exist_ok=True)
+        _atomic_write_text(os.path.join(DATA_DIR, "open_vocabulary.txt"), vocabulary)
         return {"status": "ok"}
     except Exception as e:
         return {"status": "error", "message": redact_secrets(e, os.environ)}
@@ -853,8 +863,8 @@ def video_feed():
 
 @app.get("/")
 def read_root():
-    if os.path.exists("static/index.html"):
-        return FileResponse("static/index.html")
+    if os.path.exists(INDEX_HTML):
+        return FileResponse(INDEX_HTML)
     return HTMLResponse(
         content="<h2>UNEV Hologram - Compilando frontend, por favor espera...</h2>",
         status_code=200,
@@ -862,23 +872,27 @@ def read_root():
 
 
 # Crear directorio de assets si no existe y montar de forma segura
-os.makedirs("static/assets", exist_ok=True)
-app.mount("/assets", StaticFiles(directory="static/assets"), name="assets")
+os.makedirs(os.path.join(STATIC_DIR, "assets"), exist_ok=True)
+app.mount(
+    "/assets",
+    StaticFiles(directory=os.path.join(STATIC_DIR, "assets")),
+    name="assets",
+)
 
-os.makedirs("data", exist_ok=True)
-app.mount("/data", StaticFiles(directory="data"), name="data")
+os.makedirs(DATA_DIR, exist_ok=True)
+app.mount("/data", StaticFiles(directory=DATA_DIR), name="data")
 
 
 @app.get("/{path:path}")
 def read_all_other_paths(path: str):
     # Si es una ruta de asset o estático directo
-    static_file_path = os.path.join("static", path)
+    static_file_path = os.path.join(STATIC_DIR, path)
     if os.path.exists(static_file_path) and os.path.isfile(static_file_path):
         return FileResponse(static_file_path)
 
     # De lo contrario, fallback a index.html para SPA router
-    if os.path.exists("static/index.html"):
-        return FileResponse("static/index.html")
+    if os.path.exists(INDEX_HTML):
+        return FileResponse(INDEX_HTML)
     return HTMLResponse(
         content="<h2>UNEV Hologram - Compilando frontend, por favor espera...</h2>",
         status_code=200,

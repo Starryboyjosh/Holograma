@@ -21,7 +21,9 @@ from provider_config import (
 from security import redact_secrets
 from utils import _env, _env_float
 
-load_dotenv()
+# Anclar .env a ESTE archivo (no al CWD): este módulo se importa antes de que
+# main.py ancle nada, y al lanzarse como sidecar de Tauri el CWD es arbitrario.
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
 DEFAULT_OLLAMA_MODEL = PROVIDERS["ollama"].default_model
 

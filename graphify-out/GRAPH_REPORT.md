@@ -1,7 +1,7 @@
 # Graph Report - Holograma  (2026-06-27)
 
 ## Corpus Check
-- 112 files · ~119,471 words
+- 112 files · ~119,596 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `97a885f7`
+- Built from commit: `9fe1eb2a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -77,8 +77,8 @@
 - [[_COMMUNITY_Community 61|Community 61]]
 - [[_COMMUNITY_Community 62|Community 62]]
 - [[_COMMUNITY_Community 63|Community 63]]
+- [[_COMMUNITY_Community 64|Community 64]]
 - [[_COMMUNITY_Community 65|Community 65]]
-- [[_COMMUNITY_Community 66|Community 66]]
 - [[_COMMUNITY_Community 69|Community 69]]
 - [[_COMMUNITY_Community 70|Community 70]]
 - [[_COMMUNITY_Community 71|Community 71]]
@@ -235,12 +235,12 @@ Cohesion: 0.20
 Nodes (9): Arquitectura del código, Autoría de los clips (condiciona toda la parte visual), Conexión, Endpoints (`main.py`), Holograma físico MISSYOU — integración por TCP, Mapeo estado de la IA → clip (y por qué se hizo configurable), Pendientes / opcional (no hechos a propósito), Reparto de responsabilidades: app HoloMissYou ↔ este controlador (+1 more)
 
 ### Community 29 - "Community 29"
-Cohesion: 0.15
-Nodes (13): definitions, Number, PermissionEntry, Target, Value, anyOf, description, anyOf (+5 more)
+Cohesion: 0.13
+Nodes (14): anyOf, definitions, Number, PermissionEntry, Target, description, anyOf, description (+6 more)
 
 ### Community 30 - "Community 30"
-Cohesion: 0.13
-Nodes (14): anyOf, definitions, Number, Target, Value, description, anyOf, description (+6 more)
+Cohesion: 0.15
+Nodes (13): definitions, Number, PermissionEntry, Target, Value, anyOf, description, anyOf (+5 more)
 
 ### Community 31 - "Community 31"
 Cohesion: 0.25
@@ -339,8 +339,8 @@ Cohesion: 0.16
 Nodes (17): Hologram, HologramConnection(), SaveResult, UnevProgram, useUnevContent(), ContentScreen(), FIELD_LABELS, Card() (+9 more)
 
 ### Community 58 - "Community 58"
-Cohesion: 0.67
-Nodes (3): PermissionEntry, anyOf, description
+Cohesion: 0.40
+Nodes (4): anyOf, description, $schema, title
 
 ### Community 59 - "Community 59"
 Cohesion: 0.50
@@ -362,13 +362,13 @@ Nodes (12): Speech-to-text listener using Faster-Whisper and sounddevice.  Regla
 Cohesion: 0.15
 Nodes (18): Orb(), OrbProps, useToast(), useChatSocket(), AssistantScreen(), highlighted(), SUGGESTIONS, requestServerListen (+10 more)
 
+### Community 64 - "Community 64"
+Cohesion: 0.67
+Nodes (3): Value, anyOf, description
+
 ### Community 65 - "Community 65"
 Cohesion: 0.15
 Nodes (8): _inject_fake_call(), Unificación de la ruta de LLM (Fases 1 y 2 del plan de mejora).  Cubre tres arre, Una respuesta en inglés debe entregarse, no convertirse en un error., Evita el import perezoso real de ``call`` (efectos globales: chdir, Qt…)., `_candidate_backends` debe ejecutarse en un hilo distinto al del loop.      El l, test_backend_selection_runs_off_event_loop(), test_postprocess_keeps_english_response(), test_stream_local_only_yields_canned_reply()
-
-### Community 66 - "Community 66"
-Cohesion: 0.40
-Nodes (4): anyOf, description, $schema, title
 
 ### Community 69 - "Community 69"
 Cohesion: 0.21
