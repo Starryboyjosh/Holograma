@@ -9,8 +9,11 @@ the audit.
 Implemented `ANALISIS_Y_PLAN_DE_MEJORA.md` Phases 0–2 (the freeze / "stuck on
 hablando" / "no puedo responder" symptoms) plus the **testable foundation of
 Phase 3** (de-monkey-patch, see §E). Verified by `pytest` (**91 passing**) +
-`ruff` clean. The ML backend still can't run here, so runtime-only items are
-flagged below, not closed.
+`ruff` clean. **Correction (verified 2026-06-27):** the backend DOES run on this
+machine (full `.venv`, cameras + audio present, `main.py` boots) — the deferred
+items below are NOT hardware-gated; they were left for a fresh session with budget
+to do them safely, one-step-per-commit. Surgical plan:
+[`PHASE3_WIRING.md`](PHASE3_WIRING.md).
 
 - **Phase 0 — symptom fixes (DONE, tested):**
   - `vision/person_detector.py`: removed the `was_present` clobber so a 1-frame
@@ -38,10 +41,12 @@ flagged below, not closed.
   `app/` service layer; nothing imports it yet, so it is zero-risk to the running
   server. (`tests/test_app_services.py`, 10 tests.)
 
-**Still runtime-gated (do next, on real hardware):** wire the `app/` services into
-`main.py` and delete the `lifespan` monkey-patching; route the voice loop through
-the async service and delete sync `generate_reply`; async `video_feed`; §8 folder
-move (`app/` + `core/`). None of these are safe to do blind without the ML stack.
+**Still to do (next session — see [`PHASE3_WIRING.md`](PHASE3_WIRING.md)):** wire the
+`app/` services into `main.py` and delete the `lifespan` monkey-patching; route the
+voice loop through the async service and delete sync `generate_reply`; async
+`video_feed`; §8 folder move (`app/` + `core/`). These CAN be validated here (the
+backend boots); they were deferred only for session budget, and must go
+one-step-per-commit with the smoke test between.
 
 ## Hard environment constraints (read first)
 - `.venv` is **Python 3.14, zero runtime deps installed**. The ML/STT/TTS/vision
@@ -178,7 +183,9 @@ test_app_services.py`, 10 tests). It is **additive**: no existing module imports
 `WhisperListener.listen_once` / `_camera_detection_callback`, remove `os.chdir`,
 move the Qt env fix off import-time, route the voice loop through
 `ConversationService`, then the §8 folder move (one move per commit, `pytest`
-between). Do this on hardware where you can actually start the backend.
+between). **Step-by-step grounded in the current `main.py`:
+[`docs/PHASE3_WIRING.md`](PHASE3_WIRING.md).** The backend boots here — this is no
+longer blind; start the server and validate each step.
 
 ### F. Single editable UNEV content source  ✅ DONE
 - `skills/unev_content.py` is the single authoritative source (canonical content +
