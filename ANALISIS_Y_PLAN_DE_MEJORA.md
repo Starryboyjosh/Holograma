@@ -2,7 +2,7 @@
 
 ## Estado de implementación (actualizado 2026-06-28)
 
-Avance verificado con `pytest` (**107 pruebas**) + `ruff` limpio. El backend **sí**
+Avance verificado con `pytest` (**112 pruebas**) + `ruff` limpio. El backend **sí**
 corre en este entorno (`.venv` completo: torch/YOLO/whisper/piper/fastapi, cámara y
 audio presentes), así que cada paso se valida levantando el servidor real (receta de
 humo en [`README.md`](README.md) → "Pruebas recomendadas en laptop"). Sólo el
@@ -14,13 +14,14 @@ ventilador físico (TCP externo) y *oír* por micrófono siguen necesitando al o
 | **1 — Event loop** | ◐ Parcial | Selección de backend en `asyncio.to_thread` (el sondeo ya no congela el loop); `video_feed` convertido a `StreamingResponse` **async** (commit `9e8d5d3`), ya no retiene workers del threadpool. **Desvío deliberado:** la ruta async ya usa `AsyncOpenAI`/`AsyncAnthropic`, así que la reescritura urllib→httpx no aporta nada al loop y NO se hizo. Falta: pasar los endpoints CRUD a `async def`. |
 | **2 — Calidad** | ◐ Parcial | `max_tokens` unificado vía `LLM_MAX_TOKENS` (450); el filtro anti-inglés ya no descarta respuestas (síntoma C "no puedo responder"); **cadena de fallback multi-proveedor** antes de degradar a Ollama/`local_only` (`configured_cloud_providers` + `_candidate_backends`; commit `3a320ce`). Falta: borrar el `generate_reply` sync. |
 | **3 — De-monkey-patch** | ✅ Hecho | Capa `app/` **cableada en `main.py`** por estrangulamiento (Pasos A–D; commits `2c2567b`/`97a885f`/`9fe1eb2`/`9b2afa0`): registro único de sockets vía `ConnectionManager` (+ puente hilo→loop `bind_loop`/`broadcast_threadsafe` para voz/cámara), el turno WS pasa por `ConversationService` (emisor único), monkey-patch de texto retirado, ciclo `call↔llm_backend` cortado vía `stream_llm_response(camera_context=...)`, y `os.chdir` global eliminado (rutas ancladas a `BASE_DIR`). **Validado contra servidor real lanzado desde un CWD ajeno.** Pendiente: reescribir `call.py`/`llm_backend.py` (§9, futuro). |
-| **4 — Rendimiento** | ◐ Parcial | JPEG del feed solo si hay suscriptores (el detector se salta `imencode` con cero clientes; commits `179a0b4`/`9e8d5d3`); debounce de entrada en la detección de personas (`PRESENCE_ENTER_SECONDS`, anti-rebote de un cuadro; commit `e2cce0b`). Falta (necesita micrófono/altavoz): TTS en proceso no bloqueante y `audio_status: completed` real. |
+| **4 — Rendimiento** | ◐ Parcial | JPEG del feed solo si hay suscriptores (el detector se salta `imencode` con cero clientes; commits `179a0b4`/`9e8d5d3`); debounce de entrada en la detección de personas (`PRESENCE_ENTER_SECONDS`, anti-rebote de un cuadro; commit `e2cce0b`); inferencia de objetos custom (YOLOE) en su propio intervalo con caché entre corridas (`HOLOGRAM_CUSTOM_OBJECT_INTERVAL`, def. 2 s). Falta (necesita micrófono/altavoz): TTS en proceso no bloqueante y `audio_status: completed` real. |
 | **§8 — Reorg** | ☐ Diferido | Movimiento de carpetas (`app/` + `core/`) **diferido a su propia sesión** por decisión (2026-06-27): rompe imports en todo el repo y cambia el punto de entrada del sidecar de Tauri (`main.py`→`app/main.py`); además su árbol presupone el reescribir de `call.py`/`llm_backend.py` (§9) que aún no se hizo. Hacer con A–D ya verdes, un commit por movimiento. |
 
 Pruebas (acumuladas): `tests/test_person_presence.py` (incl. debounce de entrada),
 `tests/test_ollama_ready_cache.py`, `tests/test_llm_unify.py` (incl. cadena de
 fallback multi-proveedor), `tests/test_app_services.py`, `tests/test_provider_config.py`
-(incl. `configured_cloud_providers`) y `tests/test_camera_feed_gate.py` (gating del MJPEG).
+(incl. `configured_cloud_providers`), `tests/test_camera_feed_gate.py` (gating del MJPEG)
+y `tests/test_custom_object_interval.py` (throttle de la inferencia YOLOE custom).
 
 > Documento maestro. Reúne (1) el diagnóstico de cada síntoma reportado con la
 > línea de código exacta que lo causa, (2) el catálogo completo de errores,
@@ -545,8 +546,9 @@ subsistemas buenos — empiezas con orquestación nueva pero reciclas los motore
 - [ ] TTS en proceso (evaluar Supertonic ONNX como en `tutor_v3.py`, o Piper vía
       binding en proceso) con reproducción no bloqueante; reemplazar el
       `killall -9` por gestión de los procesos propios.
-- [x] JPEG del feed solo si hay suscriptores — commits `179a0b4`/`9e8d5d3`;
-      inferencia de objetos custom en su propio intervalo (pendiente).
+- [x] JPEG del feed solo si hay suscriptores — commits `179a0b4`/`9e8d5d3`.
+- [x] Inferencia de objetos custom (YOLOE) en su propio intervalo, con caché del
+      último resultado entre corridas — `HOLOGRAM_CUSTOM_OBJECT_INTERVAL` (def. 2 s).
 - [ ] `audio_status: completed` cuando el audio **termina** de verdad.
 - [x] Debounce de entrada en la detección de personas — commit `e2cce0b`
       (`PRESENCE_ENTER_SECONDS`, anti-rebote de un cuadro).
@@ -574,7 +576,7 @@ subsistemas buenos — empiezas con orquestación nueva pero reciclas los motore
 | `docs/HANDOFF.md` | ✅ **Borrado** | Notas de traspaso efímeras y ya contradictorias internamente; su §E (de-monkey-patch) está hecha y la receta de humo se rescató al README. |
 | `docs/PHASE3_WIRING.md` | ✅ **Borrado** | Plan de ejecución histórico; los Pasos A–D están hechos y su validación (§0) se rescató al README. |
 | `docs/HOLOGRAM.md` | **Conservar** (revisado 2026-06-28) | *Desvío del plan original:* NO es un duplicado del docstring — es la guía autoritativa del hardware MISSYOU (protocolo TCP, mapeo estado→clip, reglas de autoría de clips 5:12, hotspot WiFi) y está **enlazada desde `README.md`**. Borrarla perdería información que el código no contiene. |
-| `docs/CONFIG.md` | **Conservar** (revisado 2026-06-28) | *Desvío del plan original:* NO duplica `.env.example` — es la referencia del **contrato** proveedor/modelo (reglas de `select_backend`, endpoints `/api/providers` · `/api/llm/test` · `/api/config`, UI de Ajustes, endurecimiento §D.1). Refrescada a 107 pruebas. |
+| `docs/CONFIG.md` | **Conservar** (revisado 2026-06-28) | *Desvío del plan original:* NO duplica `.env.example` — es la referencia del **contrato** proveedor/modelo (reglas de `select_backend`, endpoints `/api/providers` · `/api/llm/test` · `/api/config`, UI de Ajustes, endurecimiento §D.1). Refrescada a 112 pruebas. |
 | `docs/PACKAGING.md` | **Conservar** (o mover a `README`) | Info de empaquetado Tauri; útil pero cabe en el README. |
 | `AGENTS.md` / `CLAUDE.md` / `.claude/CLAUDE.md` | **Conservar** | Reglas para agentes; vigentes. |
 | `graphify-out/GRAPH_REPORT.md` | **Conservar** | Útil para revisión de arquitectura. |

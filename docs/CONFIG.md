@@ -90,7 +90,7 @@ precedencia de modelo y los mensajes de "Probar conexión". Se ejecutan sin la
 pila de ML (no requieren `torch`/`whisper`):
 
 ```bash
-.venv/bin/pytest            # 107 pruebas
+.venv/bin/pytest            # 112 pruebas
 .venv/bin/ruff check .      # estilo del backend
 ```
 

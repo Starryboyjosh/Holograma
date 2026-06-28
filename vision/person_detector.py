@@ -49,6 +49,13 @@ class YoloPersonDetector:
         # una sola vez y desactivamos esa ruta para no repetir el error ni saturar
         # el log (ver detect_custom_objects).
         self._custom_detect_disabled = False
+        # La inferencia de objetos personalizados (YOLOE) es cara; correrla en cada
+        # cuadro (~30 fps) desperdicia CPU. La limitamos a su propio intervalo y
+        # reusamos el último resultado entre corridas (Fase 4). Configurable con
+        # HOLOGRAM_CUSTOM_OBJECT_INTERVAL (segundos; 0 = sin throttle, cada cuadro).
+        self._custom_interval = _env_float("HOLOGRAM_CUSTOM_OBJECT_INTERVAL", 2.0)
+        self._last_custom_time = 0.0
+        self._last_custom_objects: list[dict] = []
         # Último cuadro anotado (JPEG) para transmitir al frontend vía MJPEG.
         self._latest_jpeg: bytes | None = None
         self._jpeg_lock = threading.Lock()
@@ -175,6 +182,12 @@ class YoloPersonDetector:
         if not prompt:
             return []
 
+        # Throttle: la inferencia YOLOE corre en su propio intervalo, no en cada
+        # cuadro. Entre corridas devolvemos el último resultado cacheado, así el
+        # bucle de personas (~30 fps) no arrastra el coste de los objetos custom.
+        if current_time - self._last_custom_time < self._custom_interval:
+            return self._last_custom_objects
+
         self._ensure_loaded()
         objects = []
         try:
@@ -202,6 +215,8 @@ class YoloPersonDetector:
             )
             self._custom_detect_disabled = True
             return []
+        self._last_custom_time = current_time
+        self._last_custom_objects = objects
         return objects
 
     # ------------------------------------------------------------------

@@ -75,8 +75,8 @@
     "semantic_hash": ""
   },
   "vision/person_detector.py": {
-    "mtime": 1782674924.2807748,
-    "ast_hash": "16babc844eef8cbb7a5dea7ab092e673",
+    "mtime": 1782677562.7030258,
+    "ast_hash": "83d468b10b2054a2465fa2925d82b666",
     "semantic_hash": ""
   },
   ".claude/settings.json": {
@@ -285,8 +285,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1782676763.6159337,
-    "ast_hash": "11e5d4faca9f2897d46de6daa7a4399f",
+    "mtime": 1782677694.742621,
+    "ast_hash": "ba8eab4cfc7efc23e9814b4a8fb49206",
     "semantic_hash": ""
   },
   "frontend/README.md": {
@@ -775,8 +775,8 @@
     "semantic_hash": ""
   },
   "docs/CONFIG.md": {
-    "mtime": 1782676769.8659055,
-    "ast_hash": "248e0ae03ca6d6daec402b3a5cc9d69d",
+    "mtime": 1782677682.315992,
+    "ast_hash": "f0eb05d635a1c5f558d717f9ce6cd1d5",
     "semantic_hash": ""
   },
   "docs/Manual de Marca - UNEV 1920x1080 - 2025.pdf": {
@@ -905,8 +905,8 @@
     "semantic_hash": ""
   },
   "ANALISIS_Y_PLAN_DE_MEJORA.md": {
-    "mtime": 1782676982.9983482,
-    "ast_hash": "d2fcf9e9b2b65baeef7a3d6cec995380",
+    "mtime": 1782677738.645822,
+    "ast_hash": "4f3ff3c4b5f6dfb979b2d4461faea4e3",
     "semantic_hash": ""
   },
   "app/__init__.py": {
@@ -947,6 +947,11 @@
   "tests/test_camera_feed_gate.py": {
     "mtime": 1782674992.1807067,
     "ast_hash": "f2dcc59a03741674df5dfd4f71a2d79f",
+    "semantic_hash": ""
+  },
+  "tests/test_custom_object_interval.py": {
+    "mtime": 1782677620.9661791,
+    "ast_hash": "f15c5508d76777a44e4c11f2fb6961c3",
     "semantic_hash": ""
   }
 }
