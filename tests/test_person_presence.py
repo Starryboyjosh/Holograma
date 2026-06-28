@@ -20,15 +20,29 @@ def _analysis(count):
     return {"person_count": count, "persons": persons, "custom_objects": []}
 
 
-def _drive(monkeypatch, counts, absence_seconds=5.0):
+def _drive(monkeypatch, counts, absence_seconds=5.0, enter_seconds=0.0, frame_dt=1.0):
     """Corre `run_continuous` sobre una secuencia de conteos y devuelve los eventos.
 
     *counts* es un conteo de personas por cuadro. Cuando se agota, el bucle se
     detiene solo. Todo se ejecuta en memoria y sin esperas reales.
+
+    El reloj es determinista: `time.time()` avanza *frame_dt* segundos por
+    iteración (el bucle lo lee una vez por cuadro). Así los temporizadores de
+    gracia de entrada/salida son reproducibles sin depender del reloj de pared.
+    *enter_seconds* fija `PRESENCE_ENTER_SECONDS`; con 0.0 la entrada es inmediata.
     """
     monkeypatch.setenv("PRESENCE_ABSENCE_SECONDS", str(absence_seconds))
+    monkeypatch.setenv("PRESENCE_ENTER_SECONDS", str(enter_seconds))
     # El bucle duerme 0.03 s por cuadro; lo anulamos para que el test sea instantáneo.
     monkeypatch.setattr(pd.time, "sleep", lambda *a, **k: None)
+    # Reloj determinista: cada iteración del bucle llama time.time() una vez.
+    clock = {"t": 0.0}
+
+    def fake_time():
+        clock["t"] += frame_dt
+        return clock["t"]
+
+    monkeypatch.setattr(pd.time, "time", fake_time)
 
     class FakeCamera:
         def __init__(self, *args, **kwargs):
@@ -86,4 +100,26 @@ def test_real_departure_and_return_greets_again(monkeypatch):
 def test_group_detected_once_for_sustained_group(monkeypatch):
     """Un grupo (>3) dispara group_detected una sola vez mientras se mantiene."""
     events = _drive(monkeypatch, [5, 5, 5], absence_seconds=5.0)
+    assert events == ["group_detected"]
+
+
+def test_single_frame_false_positive_does_not_greet(monkeypatch):
+    """Un único cuadro con persona (falso positivo de YOLO) NO debe saludar.
+
+    Con un anti-rebote de entrada de 2 s y cuadros separados 1 s, una detección
+    de un solo cuadro nunca se sostiene lo suficiente para confirmar la entrada.
+    """
+    events = _drive(monkeypatch, [0, 1, 0, 0], enter_seconds=2.0, frame_dt=1.0)
+    assert events == []
+
+
+def test_sustained_presence_greets_after_grace(monkeypatch):
+    """Una presencia sostenida supera el anti-rebote y confirma la entrada una vez."""
+    events = _drive(monkeypatch, [1, 1, 1], enter_seconds=1.5, frame_dt=1.0)
+    assert events == ["person_entered"]
+
+
+def test_group_entry_is_debounced_too(monkeypatch):
+    """El anti-rebote de entrada también aplica a grupos: confirma una sola vez."""
+    events = _drive(monkeypatch, [5, 5, 5], enter_seconds=1.5, frame_dt=1.0)
     assert events == ["group_detected"]

@@ -408,6 +408,13 @@ class YoloPersonDetector:
         # por un cuadro perdido (giro de cabeza, oclusión, parpadeo del detector).
         absent_since = None
         absence_grace = _env_float("PRESENCE_ABSENCE_SECONDS", 5.0)
+        # Anti-rebote de ENTRADA, simétrico al de salida: instante del primer
+        # cuadro con persona. Solo confirmamos "person_entered"/"group_detected"
+        # cuando la presencia se sostiene >= enter_grace, para que un único falso
+        # positivo de YOLO (un cuadro suelto) no dispare un saludo. Con 0.0 la
+        # entrada es inmediata (comportamiento previo a la Fase 4).
+        present_since = None
+        enter_grace = _env_float("PRESENCE_ENTER_SECONDS", 0.8)
 
         print(f"[YOLO] Iniciando detección continua (cámara {camera_index})...")
 
@@ -434,8 +441,16 @@ class YoloPersonDetector:
                     if is_present:
                         absent_since = None  # sigue (o vuelve a estar) presente
                         if not was_present:
-                            event = "group_detected" if count > 3 else "person_entered"
-                            was_present = True
+                            # Candidato a entrada: arrancar/continuar el temporizador
+                            # y confirmar solo cuando la presencia se sostenga.
+                            if present_since is None:
+                                present_since = now
+                            if now - present_since >= enter_grace:
+                                event = (
+                                    "group_detected" if count > 3 else "person_entered"
+                                )
+                                was_present = True
+                                present_since = None
                         elif count > 3 and last_count <= 3:
                             event = "group_detected"
                         else:
@@ -449,6 +464,10 @@ class YoloPersonDetector:
                             event = "person_left"
                             was_present = False
                             absent_since = None
+                    else:
+                        # Ausencia sin entrada confirmada aún: el candidato no llegó
+                        # a sostenerse (rebote), así que se descarta.
+                        present_since = None
 
                     if event != "no_person" and event != "person_still_present":
                         callback(event, count, analysis)

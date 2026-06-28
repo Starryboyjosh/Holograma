@@ -141,6 +141,7 @@ ollama pull gemma3:1b
 | `YOLO_CONFIDENCE` | `0.5` | Umbral de confianza para detección |
 | `YOLO_INTERVAL_SECONDS` | `1.0` | Segundos entre ciclos de detección |
 | `HOLOGRAM_FACE_ANALYSIS` | `0` | Poner en `1` para contar rostros visibles de forma segura con OpenCV |
+| `PRESENCE_ENTER_SECONDS` | `0.8` | Presencia sostenida (s) antes de saludar a quien entra (anti-rebote de entrada: evita saludar por un falso positivo de un solo cuadro). `0` = saludo inmediato |
 | `PRESENCE_ABSENCE_SECONDS` | `5` | Ausencia sostenida (s) antes de declarar que la persona se fue (anti-rebote: evita cortes por un cuadro perdido) |
 | `PRESENCE_GREETING_COOLDOWN` | `40` | Segundos mínimos entre saludos de presencia |
 | `PRESENCE_GROUP_COOLDOWN` | `180` | Segundos mínimos entre saludos a grupos |
