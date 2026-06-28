@@ -21,6 +21,9 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from app.connection import ConnectionManager
+from app.services.conversation import ConversationService
+from app.services.llm import LLMService
+from app.services.vision import CameraContextProvider
 from auth_token import request_authorized
 from llm_backend import probe_backend, stream_llm_response
 from provider_config import all_providers_public_info
@@ -111,6 +114,10 @@ async def lifespan(app: FastAPI):
 
         def custom_callback(event, count, analysis=None):
             send_to_web_client("camera_event", event, count=count)
+            # Alimenta el proveedor de visión para que el ConversationService pueda
+            # inyectar el contexto de cámara al LLM (rompe el ciclo call↔llm_backend
+            # cuando hay análisis; si no, stream_llm_response usa el fallback legado).
+            camera_provider.update(analysis)
             original_callback(event, count, analysis)
 
         call._camera_detection_callback = custom_callback
@@ -229,6 +236,34 @@ async def _api_token_gate(request, call_next):
 # tanto el endpoint async como los hilos de voz/cámara emiten por este manager.
 manager = ConnectionManager()
 running_loop = None
+
+# --- Capa de servicios de la Fase 3 (estado inyectado, sin globals mutables) ---
+# Singletons a nivel de módulo. El proveedor de cámara DEBE ser único: el callback
+# del hilo de cámara (provider.update) y el turno de conversación
+# (provider.build_context) comparten el mismo análisis a través de esta instancia.
+camera_provider = CameraContextProvider()
+
+
+def _host_speak(text: str) -> None:
+    """TTS en el host del holograma.
+
+    Import perezoso de `call` (evita cargar la CLI al importar main) y usa el
+    `call.speak` vigente. El ConversationService lo ejecuta con asyncio.to_thread,
+    así que Piper (bloqueante) nunca corre sobre el event loop.
+    """
+    import call
+
+    call.speak(text)
+
+
+# Orquestador de un turno: emite por `manager`, inyecta contexto de cámara desde
+# `camera_provider` y delega el TTS en `_host_speak`. Sin monkey-patching.
+conversation = ConversationService(
+    LLMService(stream_fn=stream_llm_response),
+    connection=manager,
+    camera=camera_provider,
+    speak=_host_speak,
+)
 
 
 def send_to_web_client(type_name: str, text: str, user_text: str = None, count: int = None):
@@ -885,17 +920,6 @@ def read_all_other_paths(path: str):
     )
 
 
-async def send_tts_status(websocket: WebSocket, status: str, message: str):
-    """Send host-side TTS status updates to the web client."""
-    await websocket.send_json(
-        {
-            "type": "audio_status",
-            "status": status,
-            "message": message,
-        }
-    )
-
-
 @app.websocket("/ws/chat")
 async def websocket_chat_endpoint(websocket: WebSocket):
     await websocket.accept()
@@ -953,46 +977,13 @@ async def websocket_chat_endpoint(websocket: WebSocket):
 
             print(f"[WebSocket] Prompt recibido ({len(prompt)} chars).")
 
-            # Notifica que se inicia el streaming del LLM
-            await websocket.send_json({"type": "status", "status": "streaming_started"})
-
-            full_response = ""
-            try:
-                # Transmite los fragmentos de texto en tiempo real
-                async for chunk in stream_llm_response(prompt):
-                    full_response += chunk
-                    await websocket.send_json({"type": "text_chunk", "text": chunk})
-
-                # Notifica que finalizó el streaming de texto
-                await websocket.send_json(
-                    {"type": "text_done", "full_text": full_response}
-                )
-                print(
-                    f"[WebSocket] Stream finalizado. Respuesta completa: {full_response[:60]}..."
-                )
-
-                # Reproducir voz en el host del holograma
-                await send_tts_status(
-                    websocket, "processing", "Enviando respuesta al TTS local..."
-                )
-                try:
-                    from call import speak
-
-                    speak(full_response, blocking=False)
-                    await send_tts_status(
-                        websocket, "completed", "Respuesta enviada a Piper/TTS local."
-                    )
-                except Exception as e:
-                    print(f"[WebSocket] Error reproduciendo voz en el host: {e}")
-                    await send_tts_status(
-                        websocket, "error", f"No se pudo iniciar el TTS local: {e}"
-                    )
-
-            except Exception as e:
-                print(f"[WebSocket] Error procesando la petición del LLM: {e}")
-                await websocket.send_json(
-                    {"type": "error", "message": f"Error del backend de LLM: {str(e)}"}
-                )
+            # Un turno completo lo orquesta ConversationService: emite por el
+            # ConnectionManager la secuencia streaming_started → text_chunk* →
+            # text_done → audio_status(processing/completed), inyecta el contexto de
+            # cámara y corre el TTS (bloqueante) fuera del event loop con to_thread.
+            # Difunde a TODOS los clientes conectados (igual que el voice loop), no
+            # solo a este socket: todas las vistas del mismo holograma ven el turno.
+            await conversation.handle_prompt(prompt)
 
     except WebSocketDisconnect:
         print("[WebSocket] Cliente desconectado.")
