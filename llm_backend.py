@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 from provider_config import (
     PROVIDERS,
     VALID_BACKENDS,
+    configured_cloud_providers,
     resolve_api_key,
     resolve_base_url,
     resolve_model,
@@ -268,10 +269,27 @@ def probe_backend(provider, api_key=None, model=None, base_url=None, timeout=20.
 
 
 def _candidate_backends(primary_backend):
-    candidates = []
-    for backend in [primary_backend, "ollama" if _ollama_ready() else None, "local_only"]:
+    """Orden de intentos del LLM, de más a menos preferente.
+
+    primario -> otros proveedores en la nube con credenciales configuradas ->
+    Ollama (si responde) -> local_only (último recurso, siempre presente).
+
+    Antes era ``[primario, ollama, local_only]``: si el primario fallaba y había
+    OTRA API key válida configurada, se saltaba directo a Ollama/local en vez de
+    aprovechar el proveedor de respaldo. Ahora esos proveedores entran como
+    fallback intermedio, en orden determinista, sin duplicar el primario.
+    """
+    candidates: list[str] = []
+
+    def add(backend):
         if backend and backend not in candidates:
             candidates.append(backend)
+
+    add(primary_backend)
+    for provider in configured_cloud_providers():
+        add(provider)
+    add("ollama" if _ollama_ready() else None)
+    add("local_only")
     return candidates
 
 

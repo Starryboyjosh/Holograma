@@ -252,6 +252,36 @@ def resolve_base_url(provider: str, env: Mapping[str, str] | None = None) -> str
     return (p.default_base_url or "").rstrip("/")
 
 
+def configured_cloud_providers(env: Mapping[str, str] | None = None) -> list[str]:
+    """IDs de proveedores en la nube con credenciales utilizables (key + modelo).
+
+    Sirve para construir la cadena de fallback del LLM: si el proveedor primario
+    falla (saldo agotado, red caída, 5xx) pero hay OTRA API key válida configurada,
+    conviene intentar ese proveedor antes de degradar a Ollama/local. El orden
+    sigue ``AUTODETECT_ORDER`` (determinista) y luego cualquier otro proveedor en la
+    nube no listado allí, en el orden del registro.
+
+    Un proveedor entra solo si su key y su modelo se resuelven a algo no vacío
+    (``custom_openai`` además necesita base-url); así no se encolan intentos que de
+    todos modos fallarían al resolver el backend.
+    """
+    env = os.environ if env is None else env
+    ordered = list(AUTODETECT_ORDER) + [
+        pid for pid in CLOUD_PROVIDERS if pid not in AUTODETECT_ORDER
+    ]
+    ready: list[str] = []
+    for pid in ordered:
+        provider = PROVIDERS.get(pid)
+        if provider is None or provider.kind != "cloud":
+            continue
+        if not resolve_api_key(pid, env) or not resolve_model(pid, env):
+            continue
+        if pid == "custom_openai" and not resolve_base_url(pid, env):
+            continue
+        ready.append(pid)
+    return ready
+
+
 def provider_public_info(provider: str, env: Mapping[str, str] | None = None) -> dict:
     """Metadata segura para la interfaz (sin secretos)."""
     env = os.environ if env is None else env

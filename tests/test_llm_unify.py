@@ -109,3 +109,38 @@ def test_backend_selection_runs_off_event_loop(monkeypatch):
     assert seen["thread"] != loop_thread, (
         "la selección de backend debe correr fuera del hilo del event loop"
     )
+
+
+# --------------------------------------------------------------------------- #
+# _candidate_backends(): cadena de fallback (Fase 2)
+# --------------------------------------------------------------------------- #
+def test_candidate_backends_inserts_cloud_fallback_before_local(monkeypatch):
+    """primario -> otros proveedores con key -> ollama (si responde) -> local_only.
+
+    El primario no se duplica aunque también aparezca en la lista de configurados.
+    """
+    monkeypatch.setattr(lb, "configured_cloud_providers", lambda: ["openrouter", "nvidia"])
+    monkeypatch.setattr(lb, "_ollama_ready", lambda *a, **k: True)
+    assert lb._candidate_backends("openrouter") == [
+        "openrouter",
+        "nvidia",
+        "ollama",
+        "local_only",
+    ]
+
+
+def test_candidate_backends_skips_ollama_when_not_ready(monkeypatch):
+    monkeypatch.setattr(lb, "configured_cloud_providers", lambda: ["openai"])
+    monkeypatch.setattr(lb, "_ollama_ready", lambda *a, **k: False)
+    assert lb._candidate_backends("openai") == ["openai", "local_only"]
+
+
+def test_candidate_backends_keeps_primary_when_not_in_configured(monkeypatch):
+    """Un primario explícito sin key (p. ej. claude_native) sigue siendo el primer intento."""
+    monkeypatch.setattr(lb, "configured_cloud_providers", lambda: ["openrouter"])
+    monkeypatch.setattr(lb, "_ollama_ready", lambda *a, **k: False)
+    assert lb._candidate_backends("claude_native") == [
+        "claude_native",
+        "openrouter",
+        "local_only",
+    ]

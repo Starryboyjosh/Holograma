@@ -123,6 +123,35 @@ def test_custom_openai_public_info_flags_base_url_requirement():
     assert info["custom_openai"]["key_configured"] is True
 
 
+# --- proveedores en la nube con credenciales (cadena de fallback) --------
+
+
+def test_configured_cloud_providers_empty_without_keys():
+    assert pc.configured_cloud_providers({}) == []
+
+
+def test_configured_cloud_providers_single_key():
+    assert pc.configured_cloud_providers({"OPENROUTER_API_KEY": "sk-r"}) == ["openrouter"]
+
+
+def test_configured_cloud_providers_follows_autodetect_order():
+    """Con varias keys, el orden es determinista (AUTODETECT_ORDER), no el del dict."""
+    env = {
+        "OPENAI_API_KEY": "c",
+        "OPENROUTER_API_KEY": "a",
+        "NVIDIA_API_KEY": "b",
+    }
+    assert pc.configured_cloud_providers(env) == ["openrouter", "nvidia", "openai"]
+
+
+def test_configured_cloud_providers_excludes_custom_openai_without_base_url():
+    """custom_openai necesita key, modelo y base-url; sin base-url no se encola."""
+    no_url = {"OPENAI_COMPAT_API_KEY": "k", "OPENAI_COMPAT_MODEL": "m"}
+    assert "custom_openai" not in pc.configured_cloud_providers(no_url)
+    with_url = {**no_url, "OPENAI_COMPAT_BASE_URL": "http://h:8080/v1"}
+    assert pc.configured_cloud_providers(with_url) == ["custom_openai"]
+
+
 # --- metadata pública (sin secretos) -------------------------------------
 
 
