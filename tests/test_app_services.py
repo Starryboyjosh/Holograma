@@ -11,6 +11,8 @@ Blinda los contratos del refactor sin necesidad del backend real:
 
 import asyncio
 import sys
+import threading
+import time
 import types
 
 import llm_backend as lb
@@ -85,6 +87,47 @@ def test_connection_manager_drops_dead_socket():
     remaining = asyncio.run(run())
     assert good.sent == [{"type": "x"}]
     assert remaining == 1  # el socket caído se purgó
+
+
+def test_broadcast_threadsafe_bridges_thread_to_loop():
+    """Puente hilo→loop: un hilo no-async difunde encolando en el loop ligado.
+
+    Es exactamente lo que hacen los productores de voz/cámara tras retirar
+    `send_to_web_client`; el manager es ahora dueño del salto con `bind_loop`.
+    """
+    cm = ConnectionManager()
+    ws = FakeWS()
+    loop = asyncio.new_event_loop()
+
+    def run_loop():
+        asyncio.set_event_loop(loop)
+        loop.run_forever()
+
+    worker = threading.Thread(target=run_loop, daemon=True)
+    worker.start()
+    try:
+        # register() usa un asyncio.Lock, así que se ejecuta dentro del loop.
+        asyncio.run_coroutine_threadsafe(cm.register(ws), loop).result(timeout=2)
+        cm.bind_loop(loop)
+
+        # Desde ESTE hilo (no-async), difundir vía el puente.
+        cm.broadcast_threadsafe({"type": "camera_event", "event": "x", "count": 1})
+
+        deadline = time.time() + 2
+        while not ws.sent and time.time() < deadline:
+            time.sleep(0.01)
+    finally:
+        loop.call_soon_threadsafe(loop.stop)
+        worker.join(timeout=2)
+        loop.close()
+
+    assert ws.sent == [{"type": "camera_event", "event": "x", "count": 1}]
+
+
+def test_broadcast_threadsafe_is_silent_without_bound_loop():
+    """Sin loop ligado (arranque incompleto), no revienta el hilo; se descarta."""
+    cm = ConnectionManager()
+    cm.broadcast_threadsafe({"type": "x"})  # no debe lanzar
 
 
 # --------------------------------------------------------------------------- #

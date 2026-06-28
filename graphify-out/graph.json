@@ -87,7 +87,7 @@
       "label": ".count()",
       "file_type": "code",
       "source_file": "app/connection.py",
-      "source_location": "L30",
+      "source_location": "L35",
       "_origin": "ast",
       "id": "app_connection_connectionmanager_count",
       "community": 81,
@@ -97,7 +97,7 @@
       "label": ".register()",
       "file_type": "code",
       "source_file": "app/connection.py",
-      "source_location": "L33",
+      "source_location": "L38",
       "_origin": "ast",
       "id": "app_connection_connectionmanager_register",
       "community": 81,
@@ -107,7 +107,7 @@
       "label": ".unregister()",
       "file_type": "code",
       "source_file": "app/connection.py",
-      "source_location": "L37",
+      "source_location": "L42",
       "_origin": "ast",
       "id": "app_connection_connectionmanager_unregister",
       "community": 81,
@@ -117,17 +117,47 @@
       "label": ".broadcast()",
       "file_type": "code",
       "source_file": "app/connection.py",
-      "source_location": "L41",
+      "source_location": "L46",
       "_origin": "ast",
       "id": "app_connection_connectionmanager_broadcast",
       "community": 81,
       "norm_label": ".broadcast()"
     },
     {
+      "label": ".bind_loop()",
+      "file_type": "code",
+      "source_file": "app/connection.py",
+      "source_location": "L68",
+      "_origin": "ast",
+      "id": "app_connection_connectionmanager_bind_loop",
+      "community": 81,
+      "norm_label": ".bind_loop()"
+    },
+    {
+      "label": "AbstractEventLoop",
+      "file_type": "code",
+      "source_file": "app/connection.py",
+      "source_location": "L68",
+      "_origin": "ast",
+      "id": "abstracteventloop",
+      "community": 81,
+      "norm_label": "abstracteventloop"
+    },
+    {
+      "label": ".broadcast_threadsafe()",
+      "file_type": "code",
+      "source_file": "app/connection.py",
+      "source_location": "L77",
+      "_origin": "ast",
+      "id": "app_connection_connectionmanager_broadcast_threadsafe",
+      "community": 81,
+      "norm_label": ".broadcast_threadsafe()"
+    },
+    {
       "label": ".close_all()",
       "file_type": "code",
       "source_file": "app/connection.py",
-      "source_location": "L63",
+      "source_location": "L90",
       "_origin": "ast",
       "id": "app_connection_connectionmanager_close_all",
       "community": 81,
@@ -167,19 +197,39 @@
       "label": "Env\u00eda *message* a todas las conexiones; descarta las que fallen.          Se tom",
       "file_type": "rationale",
       "source_file": "app/connection.py",
-      "source_location": "L42",
+      "source_location": "L47",
       "_origin": "ast",
-      "id": "app_connection_rationale_42",
+      "id": "app_connection_rationale_47",
       "community": 81,
       "norm_label": "envia *message* a todas las conexiones; descarta las que fallen.          se tom"
+    },
+    {
+      "label": "Captura el event loop del servidor para emitir desde hilos no-async.          Se",
+      "file_type": "rationale",
+      "source_file": "app/connection.py",
+      "source_location": "L69",
+      "_origin": "ast",
+      "id": "app_connection_rationale_69",
+      "community": 81,
+      "norm_label": "captura el event loop del servidor para emitir desde hilos no-async.          se"
+    },
+    {
+      "label": "Difunde *message* desde un hilo (voz/c\u00e1mara) hacia el event loop.          Los p",
+      "file_type": "rationale",
+      "source_file": "app/connection.py",
+      "source_location": "L78",
+      "_origin": "ast",
+      "id": "app_connection_rationale_78",
+      "community": 81,
+      "norm_label": "difunde *message* desde un hilo (voz/camara) hacia el event loop.          los p"
     },
     {
       "label": "Cierra y olvida todas las conexiones (apagado ordenado del servidor).          E",
       "file_type": "rationale",
       "source_file": "app/connection.py",
-      "source_location": "L64",
+      "source_location": "L91",
       "_origin": "ast",
-      "id": "app_connection_rationale_64",
+      "id": "app_connection_rationale_91",
       "community": 81,
       "norm_label": "cierra y olvida todas las conexiones (apagado ordenado del servidor).          e"
     },
@@ -330,7 +380,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_llm",
-      "community": 24,
+      "community": 17,
       "norm_label": "llm.py"
     },
     {
@@ -340,7 +390,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "services_llm_llmservice",
-      "community": 24,
+      "community": 17,
       "norm_label": "llmservice"
     },
     {
@@ -350,7 +400,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "services_llm_llmservice_init",
-      "community": 24,
+      "community": 17,
       "norm_label": ".__init__()"
     },
     {
@@ -360,7 +410,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "streamfn",
-      "community": 24,
+      "community": 17,
       "norm_label": "streamfn"
     },
     {
@@ -370,7 +420,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "services_llm_llmservice_stream",
-      "community": 24,
+      "community": 17,
       "norm_label": ".stream()"
     },
     {
@@ -380,7 +430,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_llm_rationale_1",
-      "community": 24,
+      "community": 17,
       "norm_label": "servicio de llm: envuelve la **unica** ruta async de generacion.  `llm_backend.s"
     },
     {
@@ -390,7 +440,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_vision",
-      "community": 86,
+      "community": 24,
       "norm_label": "vision.py"
     },
     {
@@ -460,7 +510,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "services_vision_cameracontextprovider_default_builder",
-      "community": 86,
+      "community": 24,
       "norm_label": "._default_builder()"
     },
     {
@@ -470,7 +520,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_vision_rationale_1",
-      "community": 86,
+      "community": 24,
       "norm_label": "proveedor del contexto de camara para el llm.  hoy `llm_backend.stream_llm_respo"
     },
     {
@@ -530,7 +580,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "call_clean_for_tts",
-      "community": 5,
+      "community": 50,
       "norm_label": "clean_for_tts()"
     },
     {
@@ -570,7 +620,7 @@
       "source_location": "L218",
       "_origin": "ast",
       "id": "call_get_piper_sample_rate",
-      "community": 27,
+      "community": 16,
       "norm_label": "get_piper_sample_rate()"
     },
     {
@@ -680,7 +730,7 @@
       "source_location": "L539",
       "_origin": "ast",
       "id": "call_split_into_chunks",
-      "community": 5,
+      "community": 50,
       "norm_label": "_split_into_chunks()"
     },
     {
@@ -720,7 +770,7 @@
       "source_location": "L727",
       "_origin": "ast",
       "id": "call_build_camera_context",
-      "community": 86,
+      "community": 5,
       "norm_label": "_build_camera_context()"
     },
     {
@@ -820,7 +870,7 @@
       "source_location": "L1012",
       "_origin": "ast",
       "id": "call_stop_camera_thread",
-      "community": 58,
+      "community": 17,
       "norm_label": "stop_camera_thread()"
     },
     {
@@ -870,7 +920,7 @@
       "source_location": "L1127",
       "_origin": "ast",
       "id": "call_stdin_ptt_reader",
-      "community": 5,
+      "community": 45,
       "norm_label": "_stdin_ptt_reader()"
     },
     {
@@ -950,7 +1000,7 @@
       "source_location": "L110",
       "_origin": "ast",
       "id": "call_rationale_110",
-      "community": 5,
+      "community": 50,
       "norm_label": "remove characters that can sound awkward when read by a tts engine."
     },
     {
@@ -990,7 +1040,7 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "call_rationale_219",
-      "community": 27,
+      "community": 16,
       "norm_label": "read piper sample rate from the model json sidecar when available."
     },
     {
@@ -1100,7 +1150,7 @@
       "source_location": "L540",
       "_origin": "ast",
       "id": "call_rationale_540",
-      "community": 5,
+      "community": 50,
       "norm_label": "divide el texto en fragmentos listos para tts.     el primero usa clausulas para"
     },
     {
@@ -1170,7 +1220,7 @@
       "source_location": "L1013",
       "_origin": "ast",
       "id": "call_rationale_1013",
-      "community": 58,
+      "community": 17,
       "norm_label": "deten la deteccion y libera la camara (apagar la camara = liberarla).      senal"
     },
     {
@@ -1220,7 +1270,7 @@
       "source_location": "L1128",
       "_origin": "ast",
       "id": "call_rationale_1128",
-      "community": 5,
+      "community": 45,
       "norm_label": "lee enter de la terminal y solicita una escucha (push-to-talk en cli)."
     },
     {
@@ -2410,7 +2460,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "schemas_linux_schema",
-      "community": 64,
+      "community": 30,
       "norm_label": "linux-schema.json"
     },
     {
@@ -2420,7 +2470,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "schemas_linux_schema_schema",
-      "community": 64,
+      "community": 30,
       "norm_label": "$schema"
     },
     {
@@ -2430,7 +2480,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "schemas_linux_schema_title",
-      "community": 64,
+      "community": 30,
       "norm_label": "title"
     },
     {
@@ -2440,7 +2490,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "schemas_linux_schema_description",
-      "community": 64,
+      "community": 30,
       "norm_label": "description"
     },
     {
@@ -2450,7 +2500,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "schemas_linux_schema_anyof",
-      "community": 64,
+      "community": 30,
       "norm_label": "anyof"
     },
     {
@@ -2940,7 +2990,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "schemas_linux_schema_definitions_permissionentry",
-      "community": 30,
+      "community": 58,
       "norm_label": "permissionentry"
     },
     {
@@ -2950,7 +3000,7 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "schemas_linux_schema_permissionentry_description",
-      "community": 30,
+      "community": 58,
       "norm_label": "description"
     },
     {
@@ -2960,7 +3010,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "schemas_linux_schema_permissionentry_anyof",
-      "community": 30,
+      "community": 58,
       "norm_label": "anyof"
     },
     {
@@ -5860,7 +5910,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "llm_backend",
-      "community": 87,
+      "community": 0,
       "norm_label": "llm_backend.py"
     },
     {
@@ -5900,7 +5950,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "llm_backend_ollama_model_name",
-      "community": 87,
+      "community": 0,
       "norm_label": "_ollama_model_name()"
     },
     {
@@ -5920,7 +5970,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "llm_backend_ollama_request",
-      "community": 87,
+      "community": 0,
       "norm_label": "_ollama_request()"
     },
     {
@@ -5930,7 +5980,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "llm_backend_ollama_tags",
-      "community": 87,
+      "community": 0,
       "norm_label": "_ollama_tags()"
     },
     {
@@ -5940,7 +5990,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "llm_backend_ollama_server_available",
-      "community": 87,
+      "community": 0,
       "norm_label": "_ollama_server_available()"
     },
     {
@@ -5950,7 +6000,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "llm_backend_ollama_model_available",
-      "community": 87,
+      "community": 0,
       "norm_label": "_ollama_model_available()"
     },
     {
@@ -5960,7 +6010,7 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "llm_backend_ollama_ready",
-      "community": 87,
+      "community": 0,
       "norm_label": "_ollama_ready()"
     },
     {
@@ -5970,7 +6020,7 @@
       "source_location": "L148",
       "_origin": "ast",
       "id": "llm_backend_get_selected_backend",
-      "community": 87,
+      "community": 0,
       "norm_label": "get_selected_backend()"
     },
     {
@@ -5980,7 +6030,7 @@
       "source_location": "L163",
       "_origin": "ast",
       "id": "llm_backend_get_backend_status",
-      "community": 87,
+      "community": 0,
       "norm_label": "get_backend_status()"
     },
     {
@@ -5990,7 +6040,7 @@
       "source_location": "L193",
       "_origin": "ast",
       "id": "llm_backend_humanize_probe_error",
-      "community": 87,
+      "community": 0,
       "norm_label": "_humanize_probe_error()"
     },
     {
@@ -6000,7 +6050,7 @@
       "source_location": "L209",
       "_origin": "ast",
       "id": "llm_backend_probe_backend",
-      "community": 87,
+      "community": 0,
       "norm_label": "probe_backend()"
     },
     {
@@ -6010,7 +6060,7 @@
       "source_location": "L268",
       "_origin": "ast",
       "id": "llm_backend_candidate_backends",
-      "community": 87,
+      "community": 0,
       "norm_label": "_candidate_backends()"
     },
     {
@@ -6070,7 +6120,7 @@
       "source_location": "L369",
       "_origin": "ast",
       "id": "llm_backend_strip_qwen_thinking",
-      "community": 50,
+      "community": 0,
       "norm_label": "_strip_qwen_thinking()"
     },
     {
@@ -6100,7 +6150,7 @@
       "source_location": "L451",
       "_origin": "ast",
       "id": "llm_backend_is_mostly_english",
-      "community": 50,
+      "community": 0,
       "norm_label": "_is_mostly_english()"
     },
     {
@@ -6110,7 +6160,7 @@
       "source_location": "L470",
       "_origin": "ast",
       "id": "llm_backend_postprocess_reply",
-      "community": 50,
+      "community": 0,
       "norm_label": "_postprocess_reply()"
     },
     {
@@ -6160,7 +6210,7 @@
       "source_location": "L119",
       "_origin": "ast",
       "id": "llm_backend_rationale_119",
-      "community": 87,
+      "community": 0,
       "norm_label": "\u00bfollama esta listo (servidor arriba + modelo instalado)?  cacheado.      el resu"
     },
     {
@@ -6170,7 +6220,7 @@
       "source_location": "L149",
       "_origin": "ast",
       "id": "llm_backend_rationale_149",
-      "community": 87,
+      "community": 0,
       "norm_label": "backend efectivo segun la configuracion actual.      delega en :func:`provider_c"
     },
     {
@@ -6180,7 +6230,7 @@
       "source_location": "L194",
       "_origin": "ast",
       "id": "llm_backend_rationale_194",
-      "community": 87,
+      "community": 0,
       "norm_label": "traduce errores de proveedor a un mensaje accionable para el operador."
     },
     {
@@ -6190,7 +6240,7 @@
       "source_location": "L210",
       "_origin": "ast",
       "id": "llm_backend_rationale_210",
-      "community": 87,
+      "community": 0,
       "norm_label": "prueba real de conexion a un proveedor sin persistir nada.      devuelve ``{\"ok\""
     },
     {
@@ -6220,7 +6270,7 @@
       "source_location": "L370",
       "_origin": "ast",
       "id": "llm_backend_rationale_370",
-      "community": 50,
+      "community": 0,
       "norm_label": "remove reasoning/thinking blocks so they are not spoken by tts.      cubre vario"
     },
     {
@@ -6230,7 +6280,7 @@
       "source_location": "L452",
       "_origin": "ast",
       "id": "llm_backend_rationale_452",
-      "community": 50,
+      "community": 0,
       "norm_label": "heuristic: return true only when the text is clearly english.      se exige evid"
     },
     {
@@ -6240,7 +6290,7 @@
       "source_location": "L471",
       "_origin": "ast",
       "id": "llm_backend_rationale_471",
-      "community": 50,
+      "community": 0,
       "norm_label": "clean up llm response: strip thinking blocks and handle language issues."
     },
     {
@@ -6280,7 +6330,7 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "main_lifespan",
-      "community": 88,
+      "community": 24,
       "norm_label": "lifespan()"
     },
     {
@@ -6290,14 +6340,14 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "fastapi",
-      "community": 88,
+      "community": 24,
       "norm_label": "fastapi"
     },
     {
       "label": "_api_token_gate()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L224",
+      "source_location": "L221",
       "_origin": "ast",
       "id": "main_api_token_gate",
       "community": 17,
@@ -6307,27 +6357,17 @@
       "label": "_host_speak()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L247",
+      "source_location": "L243",
       "_origin": "ast",
       "id": "main_host_speak",
       "community": 17,
       "norm_label": "_host_speak()"
     },
     {
-      "label": "send_to_web_client()",
-      "file_type": "code",
-      "source_file": "main.py",
-      "source_location": "L269",
-      "_origin": "ast",
-      "id": "main_send_to_web_client",
-      "community": 17,
-      "norm_label": "send_to_web_client()"
-    },
-    {
       "label": "ConfigUpdate",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L301",
+      "source_location": "L266",
       "_origin": "ast",
       "id": "main_configupdate",
       "community": 17,
@@ -6347,7 +6387,7 @@
       "label": "BoundingBoxModel",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L324",
+      "source_location": "L289",
       "_origin": "ast",
       "id": "main_boundingboxmodel",
       "community": 17,
@@ -6357,7 +6397,7 @@
       "label": "TrainImagePayload",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L333",
+      "source_location": "L298",
       "_origin": "ast",
       "id": "main_trainimagepayload",
       "community": 17,
@@ -6367,7 +6407,7 @@
       "label": "VocabularyPayload",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L338",
+      "source_location": "L303",
       "_origin": "ast",
       "id": "main_vocabularypayload",
       "community": 17,
@@ -6377,7 +6417,7 @@
       "label": "get_config()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L346",
+      "source_location": "L311",
       "_origin": "ast",
       "id": "main_get_config",
       "community": 17,
@@ -6387,7 +6427,7 @@
       "label": "update_config()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L398",
+      "source_location": "L363",
       "_origin": "ast",
       "id": "main_update_config",
       "community": 17,
@@ -6397,37 +6437,37 @@
       "label": "LlmTestPayload",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L549",
+      "source_location": "L514",
       "_origin": "ast",
       "id": "main_llmtestpayload",
-      "community": 81,
+      "community": 17,
       "norm_label": "llmtestpayload"
     },
     {
       "label": "get_providers()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L557",
+      "source_location": "L522",
       "_origin": "ast",
       "id": "main_get_providers",
-      "community": 80,
+      "community": 17,
       "norm_label": "get_providers()"
     },
     {
       "label": "test_llm()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L568",
+      "source_location": "L533",
       "_origin": "ast",
       "id": "main_test_llm",
-      "community": 81,
+      "community": 17,
       "norm_label": "test_llm()"
     },
     {
       "label": "get_unev_content()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L584",
+      "source_location": "L549",
       "_origin": "ast",
       "id": "main_get_unev_content",
       "community": 85,
@@ -6437,37 +6477,37 @@
       "label": "update_unev_content()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L590",
+      "source_location": "L555",
       "_origin": "ast",
       "id": "main_update_unev_content",
-      "community": 17,
+      "community": 85,
       "norm_label": "update_unev_content()"
     },
     {
       "label": "CameraToggle",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L605",
+      "source_location": "L570",
       "_origin": "ast",
       "id": "main_cameratoggle",
-      "community": 58,
+      "community": 17,
       "norm_label": "cameratoggle"
     },
     {
       "label": "set_camera()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L610",
+      "source_location": "L575",
       "_origin": "ast",
       "id": "main_set_camera",
-      "community": 58,
+      "community": 17,
       "norm_label": "set_camera()"
     },
     {
       "label": "SpeakPayload",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L630",
+      "source_location": "L595",
       "_origin": "ast",
       "id": "main_speakpayload",
       "community": 17,
@@ -6477,7 +6517,7 @@
       "label": "get_voices()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L636",
+      "source_location": "L601",
       "_origin": "ast",
       "id": "main_get_voices",
       "community": 16,
@@ -6487,7 +6527,7 @@
       "label": "play_speak()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L648",
+      "source_location": "L613",
       "_origin": "ast",
       "id": "main_play_speak",
       "community": 17,
@@ -6497,7 +6537,7 @@
       "label": "train_image()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L672",
+      "source_location": "L637",
       "_origin": "ast",
       "id": "main_train_image",
       "community": 17,
@@ -6507,7 +6547,7 @@
       "label": "get_training_metadata()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L725",
+      "source_location": "L690",
       "_origin": "ast",
       "id": "main_get_training_metadata",
       "community": 17,
@@ -6517,7 +6557,7 @@
       "label": "train_vocabulary()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L737",
+      "source_location": "L702",
       "_origin": "ast",
       "id": "main_train_vocabulary",
       "community": 17,
@@ -6527,7 +6567,7 @@
       "label": "HologramConnect",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L748",
+      "source_location": "L713",
       "_origin": "ast",
       "id": "main_hologramconnect",
       "community": 17,
@@ -6537,7 +6577,7 @@
       "label": "HologramCommand",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L753",
+      "source_location": "L718",
       "_origin": "ast",
       "id": "main_hologramcommand",
       "community": 17,
@@ -6547,7 +6587,7 @@
       "label": "_get_holo_manager()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L761",
+      "source_location": "L726",
       "_origin": "ast",
       "id": "main_get_holo_manager",
       "community": 17,
@@ -6557,7 +6597,7 @@
       "label": "holo_connect()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L768",
+      "source_location": "L733",
       "_origin": "ast",
       "id": "main_holo_connect",
       "community": 17,
@@ -6567,7 +6607,7 @@
       "label": "holo_disconnect()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L785",
+      "source_location": "L750",
       "_origin": "ast",
       "id": "main_holo_disconnect",
       "community": 17,
@@ -6577,7 +6617,7 @@
       "label": "holo_command()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L794",
+      "source_location": "L759",
       "_origin": "ast",
       "id": "main_holo_command",
       "community": 17,
@@ -6587,7 +6627,7 @@
       "label": "holo_status()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L804",
+      "source_location": "L769",
       "_origin": "ast",
       "id": "main_holo_status",
       "community": 17,
@@ -6597,7 +6637,7 @@
       "label": "pause_ai()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L817",
+      "source_location": "L782",
       "_origin": "ast",
       "id": "main_pause_ai",
       "community": 17,
@@ -6607,7 +6647,7 @@
       "label": "resume_ai()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L828",
+      "source_location": "L793",
       "_origin": "ast",
       "id": "main_resume_ai",
       "community": 17,
@@ -6617,7 +6657,7 @@
       "label": "_placeholder_jpeg()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L841",
+      "source_location": "L806",
       "_origin": "ast",
       "id": "main_placeholder_jpeg",
       "community": 17,
@@ -6627,7 +6667,7 @@
       "label": "video_feed()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L859",
+      "source_location": "L824",
       "_origin": "ast",
       "id": "main_video_feed",
       "community": 17,
@@ -6637,7 +6677,7 @@
       "label": "read_root()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L890",
+      "source_location": "L855",
       "_origin": "ast",
       "id": "main_read_root",
       "community": 17,
@@ -6647,7 +6687,7 @@
       "label": "read_all_other_paths()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L908",
+      "source_location": "L873",
       "_origin": "ast",
       "id": "main_read_all_other_paths",
       "community": 17,
@@ -6657,7 +6697,7 @@
       "label": "websocket_chat_endpoint()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L924",
+      "source_location": "L889",
       "_origin": "ast",
       "id": "main_websocket_chat_endpoint",
       "community": 45,
@@ -6667,7 +6707,7 @@
       "label": "WebSocket",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L924",
+      "source_location": "L889",
       "_origin": "ast",
       "id": "websocket",
       "community": 45,
@@ -6690,16 +6730,16 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "main_rationale_67",
-      "community": 88,
+      "community": 24,
       "norm_label": "ciclo de vida de la aplicacion (reemplaza @app.on_event, deprecado).      arranc"
     },
     {
       "label": "TTS en el host del holograma.      Import perezoso de `call` (evita cargar la CL",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L248",
+      "source_location": "L244",
       "_origin": "ast",
-      "id": "main_rationale_248",
+      "id": "main_rationale_244",
       "community": 17,
       "norm_label": "tts en el host del holograma.      import perezoso de `call` (evita cargar la cl"
     },
@@ -6707,29 +6747,29 @@
       "label": "Lista de proveedores de IA con metadata segura (sin secretos).      La interfaz",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L558",
+      "source_location": "L523",
       "_origin": "ast",
-      "id": "main_rationale_558",
-      "community": 80,
+      "id": "main_rationale_523",
+      "community": 17,
       "norm_label": "lista de proveedores de ia con metadata segura (sin secretos).      la interfaz"
     },
     {
       "label": "Prueba real de proveedor/modelo/key/URL sin guardar nada.      Devuelve un mensa",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L569",
+      "source_location": "L534",
       "_origin": "ast",
-      "id": "main_rationale_569",
-      "community": 81,
+      "id": "main_rationale_534",
+      "community": 17,
       "norm_label": "prueba real de proveedor/modelo/key/url sin guardar nada.      devuelve un mensa"
     },
     {
       "label": "Contenido institucional de UNEV (fuente \u00fanica editable).",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L585",
+      "source_location": "L550",
       "_origin": "ast",
-      "id": "main_rationale_585",
+      "id": "main_rationale_550",
       "community": 85,
       "norm_label": "contenido institucional de unev (fuente unica editable)."
     },
@@ -6737,29 +6777,29 @@
       "label": "Valida y guarda el contenido de UNEV; recarga la fuente en caliente.      Devuel",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L591",
+      "source_location": "L556",
       "_origin": "ast",
-      "id": "main_rationale_591",
-      "community": 17,
+      "id": "main_rationale_556",
+      "community": 85,
       "norm_label": "valida y guarda el contenido de unev; recarga la fuente en caliente.      devuel"
     },
     {
       "label": "Enciende o **apaga** la c\u00e1mara liberando el dispositivo.      Apagar no solo ocu",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L611",
+      "source_location": "L576",
       "_origin": "ast",
-      "id": "main_rationale_611",
-      "community": 58,
+      "id": "main_rationale_576",
+      "community": 17,
       "norm_label": "enciende o **apaga** la camara liberando el dispositivo.      apagar no solo ocu"
     },
     {
       "label": "Build a simple 'no signal' JPEG so the <img> always shows something.",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L842",
+      "source_location": "L807",
       "_origin": "ast",
-      "id": "main_rationale_842",
+      "id": "main_rationale_807",
       "community": 17,
       "norm_label": "build a simple 'no signal' jpeg so the <img> always shows something."
     },
@@ -6767,9 +6807,9 @@
       "label": "Stream the annotated YOLO camera frames to the web interface as MJPEG.",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L860",
+      "source_location": "L825",
       "_origin": "ast",
-      "id": "main_rationale_860",
+      "id": "main_rationale_825",
       "community": 17,
       "norm_label": "stream the annotated yolo camera frames to the web interface as mjpeg."
     },
@@ -6780,7 +6820,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "provider_config",
-      "community": 80,
+      "community": 0,
       "norm_label": "provider_config.py"
     },
     {
@@ -6790,7 +6830,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "provider_config_provider",
-      "community": 80,
+      "community": 0,
       "norm_label": "provider"
     },
     {
@@ -6800,7 +6840,7 @@
       "source_location": "L160",
       "_origin": "ast",
       "id": "provider_config_norm",
-      "community": 80,
+      "community": 0,
       "norm_label": "_norm()"
     },
     {
@@ -6810,7 +6850,7 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "provider_config_canonical_provider",
-      "community": 80,
+      "community": 0,
       "norm_label": "_canonical_provider()"
     },
     {
@@ -6820,7 +6860,7 @@
       "source_location": "L170",
       "_origin": "ast",
       "id": "provider_config_select_backend",
-      "community": 80,
+      "community": 0,
       "norm_label": "select_backend()"
     },
     {
@@ -6830,7 +6870,7 @@
       "source_location": "L208",
       "_origin": "ast",
       "id": "provider_config_resolve_model",
-      "community": 87,
+      "community": 0,
       "norm_label": "resolve_model()"
     },
     {
@@ -6840,7 +6880,7 @@
       "source_location": "L235",
       "_origin": "ast",
       "id": "provider_config_resolve_api_key",
-      "community": 80,
+      "community": 0,
       "norm_label": "resolve_api_key()"
     },
     {
@@ -6850,7 +6890,7 @@
       "source_location": "L243",
       "_origin": "ast",
       "id": "provider_config_resolve_base_url",
-      "community": 80,
+      "community": 0,
       "norm_label": "resolve_base_url()"
     },
     {
@@ -6860,7 +6900,7 @@
       "source_location": "L255",
       "_origin": "ast",
       "id": "provider_config_provider_public_info",
-      "community": 80,
+      "community": 0,
       "norm_label": "provider_public_info()"
     },
     {
@@ -6870,7 +6910,7 @@
       "source_location": "L275",
       "_origin": "ast",
       "id": "provider_config_all_providers_public_info",
-      "community": 80,
+      "community": 0,
       "norm_label": "all_providers_public_info()"
     },
     {
@@ -6880,7 +6920,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "provider_config_rationale_1",
-      "community": 80,
+      "community": 0,
       "norm_label": "unified llm provider/model configuration contract for holograma unev.  antes de"
     },
     {
@@ -6890,7 +6930,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "provider_config_rationale_34",
-      "community": 80,
+      "community": 0,
       "norm_label": "descripcion de un proveedor de llm y como alcanzarlo."
     },
     {
@@ -6900,7 +6940,7 @@
       "source_location": "L174",
       "_origin": "ast",
       "id": "provider_config_rationale_174",
-      "community": 80,
+      "community": 0,
       "norm_label": "devuelve el backend a usar segun la configuracion. determinista.      reglas (en"
     },
     {
@@ -6910,7 +6950,7 @@
       "source_location": "L209",
       "_origin": "ast",
       "id": "provider_config_rationale_209",
-      "community": 87,
+      "community": 0,
       "norm_label": "modelo efectivo para un proveedor.      precedencia: variable especifica del pro"
     },
     {
@@ -6920,7 +6960,7 @@
       "source_location": "L256",
       "_origin": "ast",
       "id": "provider_config_rationale_256",
-      "community": 80,
+      "community": 0,
       "norm_label": "metadata segura para la interfaz (sin secretos)."
     },
     {
@@ -7250,7 +7290,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "security",
-      "community": 17,
+      "community": 0,
       "norm_label": "security.py"
     },
     {
@@ -7260,7 +7300,7 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "security_redact_secrets",
-      "community": 17,
+      "community": 0,
       "norm_label": "redact_secrets()"
     },
     {
@@ -7270,7 +7310,7 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "security_clamp_text",
-      "community": 17,
+      "community": 85,
       "norm_label": "clamp_text()"
     },
     {
@@ -7280,7 +7320,7 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "security_redact_iter",
-      "community": 17,
+      "community": 0,
       "norm_label": "redact_iter()"
     },
     {
@@ -7290,7 +7330,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "security_rationale_1",
-      "community": 17,
+      "community": 0,
       "norm_label": "utilidades de seguridad para holograma unev.  funciones puras (sin red, sin esta"
     },
     {
@@ -7300,7 +7340,7 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "security_rationale_65",
-      "community": 17,
+      "community": 0,
       "norm_label": "devuelve ``text`` con cualquier secreto enmascarado.      enmascara (1) los valo"
     },
     {
@@ -7310,7 +7350,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "security_rationale_88",
-      "community": 17,
+      "community": 85,
       "norm_label": "sanea texto no confiable: elimina caracteres de control y trunca a ``max_len``."
     },
     {
@@ -7320,7 +7360,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "security_rationale_101",
-      "community": 17,
+      "community": 0,
       "norm_label": "aplica :func:`redact_secrets` a una coleccion (util para listas de logs)."
     },
     {
@@ -7860,7 +7900,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "skills_university_get_university_context",
-      "community": 5,
+      "community": 85,
       "norm_label": "get_university_context()"
     },
     {
@@ -7950,7 +7990,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener",
-      "community": 17,
+      "community": 27,
       "norm_label": "whisperlistener"
     },
     {
@@ -8020,7 +8060,7 @@
       "source_location": "L421",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_is_available",
-      "community": 17,
+      "community": 27,
       "norm_label": ".is_available()"
     },
     {
@@ -8060,7 +8100,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "stt_listener_rationale_54",
-      "community": 17,
+      "community": 27,
       "norm_label": "record from the microphone and transcribe with faster-whisper.      parameters"
     },
     {
@@ -8120,7 +8160,7 @@
       "source_location": "L422",
       "_origin": "ast",
       "id": "stt_listener_rationale_422",
-      "community": 17,
+      "community": 27,
       "norm_label": "return true if sounddevice and faster-whisper are importable."
     },
     {
@@ -8160,7 +8200,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_init",
-      "community": 62,
+      "community": 16,
       "norm_label": ".__init__()"
     },
     {
@@ -8210,7 +8250,7 @@
       "source_location": "L229",
       "_origin": "ast",
       "id": "stt_wakeword_get_wakeword_status",
-      "community": 5,
+      "community": 62,
       "norm_label": "get_wakeword_status()"
     },
     {
@@ -8270,7 +8310,7 @@
       "source_location": "L230",
       "_origin": "ast",
       "id": "stt_wakeword_rationale_230",
-      "community": 5,
+      "community": 62,
       "norm_label": "return a human-readable status string for the wake-word subsystem."
     },
     {
@@ -8287,37 +8327,37 @@
       "label": "FakeWS",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L26",
+      "source_location": "L28",
       "_origin": "ast",
       "id": "tests_test_app_services_fakews",
-      "community": 24,
+      "community": 81,
       "norm_label": "fakews"
     },
     {
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L27",
+      "source_location": "L29",
       "_origin": "ast",
       "id": "tests_test_app_services_fakews_init",
-      "community": 24,
+      "community": 81,
       "norm_label": ".__init__()"
     },
     {
       "label": ".send_json()",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L31",
+      "source_location": "L33",
       "_origin": "ast",
       "id": "tests_test_app_services_fakews_send_json",
-      "community": 24,
+      "community": 81,
       "norm_label": ".send_json()"
     },
     {
       "label": "RecordingConnection",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L37",
+      "source_location": "L39",
       "_origin": "ast",
       "id": "tests_test_app_services_recordingconnection",
       "community": 24,
@@ -8327,7 +8367,7 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L38",
+      "source_location": "L40",
       "_origin": "ast",
       "id": "tests_test_app_services_recordingconnection_init",
       "community": 24,
@@ -8337,7 +8377,7 @@
       "label": ".broadcast()",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L41",
+      "source_location": "L43",
       "_origin": "ast",
       "id": "tests_test_app_services_recordingconnection_broadcast",
       "community": 24,
@@ -8347,7 +8387,7 @@
       "label": "FakeLLM",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L45",
+      "source_location": "L47",
       "_origin": "ast",
       "id": "tests_test_app_services_fakellm",
       "community": 24,
@@ -8357,7 +8397,7 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L46",
+      "source_location": "L48",
       "_origin": "ast",
       "id": "tests_test_app_services_fakellm_init",
       "community": 24,
@@ -8367,7 +8407,7 @@
       "label": ".stream()",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L50",
+      "source_location": "L52",
       "_origin": "ast",
       "id": "tests_test_app_services_fakellm_stream",
       "community": 24,
@@ -8377,27 +8417,47 @@
       "label": "test_connection_manager_broadcasts_to_all()",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L61",
+      "source_location": "L63",
       "_origin": "ast",
       "id": "tests_test_app_services_test_connection_manager_broadcasts_to_all",
-      "community": 24,
+      "community": 81,
       "norm_label": "test_connection_manager_broadcasts_to_all()"
     },
     {
       "label": "test_connection_manager_drops_dead_socket()",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L75",
+      "source_location": "L77",
       "_origin": "ast",
       "id": "tests_test_app_services_test_connection_manager_drops_dead_socket",
-      "community": 24,
+      "community": 81,
       "norm_label": "test_connection_manager_drops_dead_socket()"
+    },
+    {
+      "label": "test_broadcast_threadsafe_bridges_thread_to_loop()",
+      "file_type": "code",
+      "source_file": "tests/test_app_services.py",
+      "source_location": "L92",
+      "_origin": "ast",
+      "id": "tests_test_app_services_test_broadcast_threadsafe_bridges_thread_to_loop",
+      "community": 81,
+      "norm_label": "test_broadcast_threadsafe_bridges_thread_to_loop()"
+    },
+    {
+      "label": "test_broadcast_threadsafe_is_silent_without_bound_loop()",
+      "file_type": "code",
+      "source_file": "tests/test_app_services.py",
+      "source_location": "L127",
+      "_origin": "ast",
+      "id": "tests_test_app_services_test_broadcast_threadsafe_is_silent_without_bound_loop",
+      "community": 81,
+      "norm_label": "test_broadcast_threadsafe_is_silent_without_bound_loop()"
     },
     {
       "label": "test_llm_service_passes_camera_context_through()",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L93",
+      "source_location": "L136",
       "_origin": "ast",
       "id": "tests_test_app_services_test_llm_service_passes_camera_context_through",
       "community": 24,
@@ -8407,7 +8467,7 @@
       "label": "test_camera_context_builds_with_injected_builder()",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L108",
+      "source_location": "L151",
       "_origin": "ast",
       "id": "tests_test_app_services_test_camera_context_builds_with_injected_builder",
       "community": 24,
@@ -8417,7 +8477,7 @@
       "label": "test_camera_context_is_none_without_analysis()",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L114",
+      "source_location": "L157",
       "_origin": "ast",
       "id": "tests_test_app_services_test_camera_context_is_none_without_analysis",
       "community": 24,
@@ -8427,7 +8487,7 @@
       "label": "test_conversation_web_only_emits_text_exactly_once()",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L122",
+      "source_location": "L165",
       "_origin": "ast",
       "id": "tests_test_app_services_test_conversation_web_only_emits_text_exactly_once",
       "community": 24,
@@ -8437,7 +8497,7 @@
       "label": "test_conversation_with_tts_emits_audio_progress_and_speaks_once()",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L140",
+      "source_location": "L183",
       "_origin": "ast",
       "id": "tests_test_app_services_test_conversation_with_tts_emits_audio_progress_and_speaks_once",
       "community": 24,
@@ -8447,7 +8507,7 @@
       "label": "test_conversation_injects_camera_context_into_llm()",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L164",
+      "source_location": "L207",
       "_origin": "ast",
       "id": "tests_test_app_services_test_conversation_injects_camera_context_into_llm",
       "community": 24,
@@ -8457,7 +8517,7 @@
       "label": "test_conversation_emits_error_on_llm_failure()",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L175",
+      "source_location": "L218",
       "_origin": "ast",
       "id": "tests_test_app_services_test_conversation_emits_error_on_llm_failure",
       "community": 24,
@@ -8467,7 +8527,7 @@
       "label": "test_stream_skips_call_import_when_context_injected()",
       "file_type": "code",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L194",
+      "source_location": "L237",
       "_origin": "ast",
       "id": "tests_test_app_services_test_stream_skips_call_import_when_context_injected",
       "community": 24,
@@ -8484,12 +8544,32 @@
       "norm_label": "capa de servicios de fase 3 (`app/`).  blinda los contratos del refactor sin nec"
     },
     {
+      "label": "Puente hilo\u2192loop: un hilo no-async difunde encolando en el loop ligado.      Es",
+      "file_type": "rationale",
+      "source_file": "tests/test_app_services.py",
+      "source_location": "L93",
+      "_origin": "ast",
+      "id": "tests_test_app_services_rationale_93",
+      "community": 81,
+      "norm_label": "puente hilo\u2192loop: un hilo no-async difunde encolando en el loop ligado.      es"
+    },
+    {
+      "label": "Sin loop ligado (arranque incompleto), no revienta el hilo; se descarta.",
+      "file_type": "rationale",
+      "source_file": "tests/test_app_services.py",
+      "source_location": "L128",
+      "_origin": "ast",
+      "id": "tests_test_app_services_rationale_128",
+      "community": 81,
+      "norm_label": "sin loop ligado (arranque incompleto), no revienta el hilo; se descarta."
+    },
+    {
       "label": "Con `camera_context` inyectado, NO se construye contexto desde `call`.",
       "file_type": "rationale",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L195",
+      "source_location": "L238",
       "_origin": "ast",
-      "id": "tests_test_app_services_rationale_195",
+      "id": "tests_test_app_services_rationale_238",
       "community": 24,
       "norm_label": "con `camera_context` inyectado, no se construye contexto desde `call`."
     },
@@ -9800,7 +9880,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "utils_is_quiet",
-      "community": 27,
+      "community": 2,
       "norm_label": "_is_quiet()"
     },
     {
@@ -9850,7 +9930,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "utils_rationale_31",
-      "community": 27,
+      "community": 2,
       "norm_label": "returns true if hologram_quiet env var is set to 1/true/yes."
     },
     {
@@ -10310,7 +10390,7 @@
       "source_location": "L268",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_count_persons_in_frame",
-      "community": 76,
+      "community": 1,
       "norm_label": ".count_persons_in_frame()"
     },
     {
@@ -10330,7 +10410,7 @@
       "source_location": "L289",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_count_persons_once",
-      "community": 76,
+      "community": 1,
       "norm_label": ".count_persons_once()"
     },
     {
@@ -10510,7 +10590,7 @@
       "source_location": "L269",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_269",
-      "community": 76,
+      "community": 1,
       "norm_label": "return the number of people detected in *frame*."
     },
     {
@@ -10530,7 +10610,7 @@
       "source_location": "L290",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_290",
-      "community": 76,
+      "community": 1,
       "norm_label": "open the camera, read one frame, and return the person count."
     },
     {
@@ -12044,11 +12124,31 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "app/connection.py",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "app_connection_connectionmanager",
+      "target": "app_connection_connectionmanager_bind_loop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/connection.py",
       "source_location": "L41",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "app_connection_connectionmanager",
       "target": "app_connection_connectionmanager_broadcast"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/connection.py",
+      "source_location": "L77",
+      "weight": 1.0,
+      "source": "app_connection_connectionmanager",
+      "target": "app_connection_connectionmanager_broadcast_threadsafe",
+      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -12267,6 +12367,28 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_app_services.py",
+      "source_location": "L98",
+      "weight": 1.0,
+      "source": "tests_test_app_services_test_broadcast_threadsafe_bridges_thread_to_loop",
+      "target": "app_connection_connectionmanager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_services.py",
+      "source_location": "L129",
+      "weight": 1.0,
+      "source": "tests_test_app_services_test_broadcast_threadsafe_is_silent_without_bound_loop",
+      "target": "app_connection_connectionmanager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_services.py",
       "source_location": "L62",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -12295,14 +12417,56 @@
       "target": "app_connection_connectionmanager"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/connection.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "app_connection_connectionmanager_broadcast_threadsafe",
+      "target": "app_connection_connectionmanager_broadcast",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "app/connection.py",
-      "source_location": "L42",
+      "source_location": "L47",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "app_connection_rationale_42",
-      "target": "app_connection_connectionmanager_broadcast"
+      "source": "app_connection_rationale_47",
+      "target": "app_connection_connectionmanager_broadcast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "app/connection.py",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "app_connection_connectionmanager_bind_loop",
+      "target": "abstracteventloop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "app/connection.py",
+      "source_location": "L69",
+      "weight": 1.0,
+      "source": "app_connection_rationale_69",
+      "target": "app_connection_connectionmanager_bind_loop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "app/connection.py",
+      "source_location": "L78",
+      "weight": 1.0,
+      "source": "app_connection_rationale_78",
+      "target": "app_connection_connectionmanager_broadcast_threadsafe",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -12319,11 +12483,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "app/connection.py",
-      "source_location": "L64",
+      "source_location": "L91",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "app_connection_rationale_64",
-      "target": "app_connection_connectionmanager_close_all"
+      "source": "app_connection_rationale_91",
+      "target": "app_connection_connectionmanager_close_all",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -12487,9 +12651,9 @@
       "source_file": "main.py",
       "source_location": "L24",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "fastapi",
-      "target": "services_conversation_conversationservice",
-      "confidence_score": 0.5
+      "target": "services_conversation_conversationservice"
     },
     {
       "relation": "imports",
@@ -12498,9 +12662,9 @@
       "source_file": "main.py",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "main",
-      "target": "services_conversation_conversationservice",
-      "confidence_score": 1.0
+      "target": "services_conversation_conversationservice"
     },
     {
       "relation": "uses",
@@ -12508,9 +12672,9 @@
       "source_file": "main.py",
       "source_location": "L24",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_boundingboxmodel",
-      "target": "services_conversation_conversationservice",
-      "confidence_score": 0.5
+      "target": "services_conversation_conversationservice"
     },
     {
       "relation": "uses",
@@ -12518,9 +12682,9 @@
       "source_file": "main.py",
       "source_location": "L24",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_cameratoggle",
-      "target": "services_conversation_conversationservice",
-      "confidence_score": 0.5
+      "target": "services_conversation_conversationservice"
     },
     {
       "relation": "uses",
@@ -12528,9 +12692,9 @@
       "source_file": "main.py",
       "source_location": "L24",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_configupdate",
-      "target": "services_conversation_conversationservice",
-      "confidence_score": 0.5
+      "target": "services_conversation_conversationservice"
     },
     {
       "relation": "uses",
@@ -12538,9 +12702,9 @@
       "source_file": "main.py",
       "source_location": "L24",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_hologramcommand",
-      "target": "services_conversation_conversationservice",
-      "confidence_score": 0.5
+      "target": "services_conversation_conversationservice"
     },
     {
       "relation": "uses",
@@ -12548,9 +12712,9 @@
       "source_file": "main.py",
       "source_location": "L24",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_hologramconnect",
-      "target": "services_conversation_conversationservice",
-      "confidence_score": 0.5
+      "target": "services_conversation_conversationservice"
     },
     {
       "relation": "uses",
@@ -12558,9 +12722,9 @@
       "source_file": "main.py",
       "source_location": "L24",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_llmtestpayload",
-      "target": "services_conversation_conversationservice",
-      "confidence_score": 0.5
+      "target": "services_conversation_conversationservice"
     },
     {
       "relation": "uses",
@@ -12568,9 +12732,9 @@
       "source_file": "main.py",
       "source_location": "L24",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_speakpayload",
-      "target": "services_conversation_conversationservice",
-      "confidence_score": 0.5
+      "target": "services_conversation_conversationservice"
     },
     {
       "relation": "uses",
@@ -12578,9 +12742,9 @@
       "source_file": "main.py",
       "source_location": "L24",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_trainimagepayload",
-      "target": "services_conversation_conversationservice",
-      "confidence_score": 0.5
+      "target": "services_conversation_conversationservice"
     },
     {
       "relation": "uses",
@@ -12588,9 +12752,9 @@
       "source_file": "main.py",
       "source_location": "L24",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_vocabularypayload",
-      "target": "services_conversation_conversationservice",
-      "confidence_score": 0.5
+      "target": "services_conversation_conversationservice"
     },
     {
       "relation": "method",
@@ -12703,9 +12867,9 @@
       "source_file": "main.py",
       "source_location": "L24",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "websocket",
-      "target": "services_conversation_conversationservice",
-      "confidence_score": 0.5
+      "target": "services_conversation_conversationservice"
     },
     {
       "relation": "rationale_for",
@@ -12743,9 +12907,9 @@
       "source_file": "main.py",
       "source_location": "L25",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "fastapi",
-      "target": "services_llm_llmservice",
-      "confidence_score": 0.5
+      "target": "services_llm_llmservice"
     },
     {
       "relation": "imports",
@@ -12754,9 +12918,9 @@
       "source_file": "main.py",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "main",
-      "target": "services_llm_llmservice",
-      "confidence_score": 1.0
+      "target": "services_llm_llmservice"
     },
     {
       "relation": "uses",
@@ -12764,9 +12928,9 @@
       "source_file": "main.py",
       "source_location": "L25",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_boundingboxmodel",
-      "target": "services_llm_llmservice",
-      "confidence_score": 0.5
+      "target": "services_llm_llmservice"
     },
     {
       "relation": "uses",
@@ -12774,9 +12938,9 @@
       "source_file": "main.py",
       "source_location": "L25",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_cameratoggle",
-      "target": "services_llm_llmservice",
-      "confidence_score": 0.5
+      "target": "services_llm_llmservice"
     },
     {
       "relation": "uses",
@@ -12784,9 +12948,9 @@
       "source_file": "main.py",
       "source_location": "L25",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_configupdate",
-      "target": "services_llm_llmservice",
-      "confidence_score": 0.5
+      "target": "services_llm_llmservice"
     },
     {
       "relation": "uses",
@@ -12794,9 +12958,9 @@
       "source_file": "main.py",
       "source_location": "L25",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_hologramcommand",
-      "target": "services_llm_llmservice",
-      "confidence_score": 0.5
+      "target": "services_llm_llmservice"
     },
     {
       "relation": "uses",
@@ -12804,9 +12968,9 @@
       "source_file": "main.py",
       "source_location": "L25",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_hologramconnect",
-      "target": "services_llm_llmservice",
-      "confidence_score": 0.5
+      "target": "services_llm_llmservice"
     },
     {
       "relation": "uses",
@@ -12814,9 +12978,9 @@
       "source_file": "main.py",
       "source_location": "L25",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_llmtestpayload",
-      "target": "services_llm_llmservice",
-      "confidence_score": 0.5
+      "target": "services_llm_llmservice"
     },
     {
       "relation": "uses",
@@ -12824,9 +12988,9 @@
       "source_file": "main.py",
       "source_location": "L25",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_speakpayload",
-      "target": "services_llm_llmservice",
-      "confidence_score": 0.5
+      "target": "services_llm_llmservice"
     },
     {
       "relation": "uses",
@@ -12834,9 +12998,9 @@
       "source_file": "main.py",
       "source_location": "L25",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_trainimagepayload",
-      "target": "services_llm_llmservice",
-      "confidence_score": 0.5
+      "target": "services_llm_llmservice"
     },
     {
       "relation": "uses",
@@ -12844,9 +13008,9 @@
       "source_file": "main.py",
       "source_location": "L25",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_vocabularypayload",
-      "target": "services_llm_llmservice",
-      "confidence_score": 0.5
+      "target": "services_llm_llmservice"
     },
     {
       "relation": "method",
@@ -12926,9 +13090,9 @@
       "source_file": "main.py",
       "source_location": "L25",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "websocket",
-      "target": "services_llm_llmservice",
-      "confidence_score": 0.5
+      "target": "services_llm_llmservice"
     },
     {
       "relation": "references",
@@ -12978,9 +13142,9 @@
       "source_file": "main.py",
       "source_location": "L26",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "fastapi",
-      "target": "services_vision_cameracontextprovider",
-      "confidence_score": 0.5
+      "target": "services_vision_cameracontextprovider"
     },
     {
       "relation": "imports",
@@ -12989,9 +13153,9 @@
       "source_file": "main.py",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "main",
-      "target": "services_vision_cameracontextprovider",
-      "confidence_score": 1.0
+      "target": "services_vision_cameracontextprovider"
     },
     {
       "relation": "uses",
@@ -12999,9 +13163,9 @@
       "source_file": "main.py",
       "source_location": "L26",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_boundingboxmodel",
-      "target": "services_vision_cameracontextprovider",
-      "confidence_score": 0.5
+      "target": "services_vision_cameracontextprovider"
     },
     {
       "relation": "uses",
@@ -13009,9 +13173,9 @@
       "source_file": "main.py",
       "source_location": "L26",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_cameratoggle",
-      "target": "services_vision_cameracontextprovider",
-      "confidence_score": 0.5
+      "target": "services_vision_cameracontextprovider"
     },
     {
       "relation": "uses",
@@ -13019,9 +13183,9 @@
       "source_file": "main.py",
       "source_location": "L26",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_configupdate",
-      "target": "services_vision_cameracontextprovider",
-      "confidence_score": 0.5
+      "target": "services_vision_cameracontextprovider"
     },
     {
       "relation": "uses",
@@ -13029,9 +13193,9 @@
       "source_file": "main.py",
       "source_location": "L26",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_hologramcommand",
-      "target": "services_vision_cameracontextprovider",
-      "confidence_score": 0.5
+      "target": "services_vision_cameracontextprovider"
     },
     {
       "relation": "uses",
@@ -13039,9 +13203,9 @@
       "source_file": "main.py",
       "source_location": "L26",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_hologramconnect",
-      "target": "services_vision_cameracontextprovider",
-      "confidence_score": 0.5
+      "target": "services_vision_cameracontextprovider"
     },
     {
       "relation": "uses",
@@ -13049,9 +13213,9 @@
       "source_file": "main.py",
       "source_location": "L26",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_llmtestpayload",
-      "target": "services_vision_cameracontextprovider",
-      "confidence_score": 0.5
+      "target": "services_vision_cameracontextprovider"
     },
     {
       "relation": "uses",
@@ -13059,9 +13223,9 @@
       "source_file": "main.py",
       "source_location": "L26",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_speakpayload",
-      "target": "services_vision_cameracontextprovider",
-      "confidence_score": 0.5
+      "target": "services_vision_cameracontextprovider"
     },
     {
       "relation": "uses",
@@ -13069,9 +13233,9 @@
       "source_file": "main.py",
       "source_location": "L26",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_trainimagepayload",
-      "target": "services_vision_cameracontextprovider",
-      "confidence_score": 0.5
+      "target": "services_vision_cameracontextprovider"
     },
     {
       "relation": "uses",
@@ -13079,9 +13243,9 @@
       "source_file": "main.py",
       "source_location": "L26",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "main_vocabularypayload",
-      "target": "services_vision_cameracontextprovider",
-      "confidence_score": 0.5
+      "target": "services_vision_cameracontextprovider"
     },
     {
       "relation": "method",
@@ -13213,9 +13377,9 @@
       "source_file": "main.py",
       "source_location": "L26",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "websocket",
-      "target": "services_vision_cameracontextprovider",
-      "confidence_score": 0.5
+      "target": "services_vision_cameracontextprovider"
     },
     {
       "relation": "references",
@@ -24802,9 +24966,9 @@
       "source_file": "main.py",
       "source_location": "L247",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "main",
-      "target": "main_host_speak",
-      "confidence_score": 1.0
+      "target": "main_host_speak"
     },
     {
       "relation": "contains",
@@ -24885,16 +25049,6 @@
       "confidence_score": 1.0,
       "source": "main",
       "target": "main_resume_ai"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "main.py",
-      "source_location": "L34",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "main",
-      "target": "main_send_to_web_client"
     },
     {
       "relation": "contains",
@@ -25111,9 +25265,9 @@
       "source_file": "main.py",
       "source_location": "L51",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "main_rationale_51",
-      "target": "main_atomic_write_text",
-      "confidence_score": 1.0
+      "target": "main_atomic_write_text"
     },
     {
       "relation": "calls",
@@ -25165,9 +25319,9 @@
       "source_file": "main.py",
       "source_location": "L67",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "main_rationale_67",
-      "target": "main_lifespan",
-      "confidence_score": 1.0
+      "target": "main_lifespan"
     },
     {
       "relation": "uses",
@@ -25183,9 +25337,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L248",
+      "source_location": "L244",
       "weight": 1.0,
-      "source": "main_rationale_248",
+      "source": "main_rationale_244",
       "target": "main_host_speak",
       "confidence_score": 1.0
     },
@@ -25410,9 +25564,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L558",
+      "source_location": "L523",
       "weight": 1.0,
-      "source": "main_rationale_558",
+      "source": "main_rationale_523",
       "target": "main_get_providers",
       "confidence_score": 1.0
     },
@@ -25420,9 +25574,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L569",
+      "source_location": "L534",
       "weight": 1.0,
-      "source": "main_rationale_569",
+      "source": "main_rationale_534",
       "target": "main_test_llm",
       "confidence_score": 1.0
     },
@@ -25441,9 +25595,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L585",
+      "source_location": "L550",
       "weight": 1.0,
-      "source": "main_rationale_585",
+      "source": "main_rationale_550",
       "target": "main_get_unev_content",
       "confidence_score": 1.0
     },
@@ -25451,9 +25605,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L591",
+      "source_location": "L556",
       "weight": 1.0,
-      "source": "main_rationale_591",
+      "source": "main_rationale_556",
       "target": "main_update_unev_content",
       "confidence_score": 1.0
     },
@@ -25504,9 +25658,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L611",
+      "source_location": "L576",
       "weight": 1.0,
-      "source": "main_rationale_611",
+      "source": "main_rationale_576",
       "target": "main_set_camera",
       "confidence_score": 1.0
     },
@@ -25698,9 +25852,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L842",
+      "source_location": "L807",
       "weight": 1.0,
-      "source": "main_rationale_842",
+      "source": "main_rationale_807",
       "target": "main_placeholder_jpeg",
       "confidence_score": 1.0
     },
@@ -25708,9 +25862,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L860",
+      "source_location": "L825",
       "weight": 1.0,
-      "source": "main_rationale_860",
+      "source": "main_rationale_825",
       "target": "main_video_feed",
       "confidence_score": 1.0
     },
@@ -28544,6 +28698,26 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_app_services.py",
+      "source_location": "L92",
+      "weight": 1.0,
+      "source": "tests_test_app_services",
+      "target": "tests_test_app_services_test_broadcast_threadsafe_bridges_thread_to_loop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_services.py",
+      "source_location": "L127",
+      "weight": 1.0,
+      "source": "tests_test_app_services",
+      "target": "tests_test_app_services_test_broadcast_threadsafe_is_silent_without_bound_loop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_services.py",
       "source_location": "L108",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -28669,6 +28843,17 @@
       "confidence_score": 1.0,
       "source": "tests_test_app_services_fakews",
       "target": "tests_test_app_services_fakews_send_json"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_services.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "tests_test_app_services_test_broadcast_threadsafe_bridges_thread_to_loop",
+      "target": "tests_test_app_services_fakews",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -28824,11 +29009,31 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_app_services.py",
-      "source_location": "L195",
+      "source_location": "L93",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "tests_test_app_services_rationale_195",
-      "target": "tests_test_app_services_test_stream_skips_call_import_when_context_injected"
+      "source": "tests_test_app_services_rationale_93",
+      "target": "tests_test_app_services_test_broadcast_threadsafe_bridges_thread_to_loop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_services.py",
+      "source_location": "L128",
+      "weight": 1.0,
+      "source": "tests_test_app_services_rationale_128",
+      "target": "tests_test_app_services_test_broadcast_threadsafe_is_silent_without_bound_loop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_app_services.py",
+      "source_location": "L238",
+      "weight": 1.0,
+      "source": "tests_test_app_services_rationale_238",
+      "target": "tests_test_app_services_test_stream_skips_call_import_when_context_injected",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -32717,5 +32922,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "2c2567bf404c77383c572b722dbfe051f0b24fca"
+  "built_at_commit": "97a885f7f08392d401e860b72489e735080c4e78"
 }

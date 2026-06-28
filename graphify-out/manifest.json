@@ -10,8 +10,8 @@
     "semantic_hash": ""
   },
   "main.py": {
-    "mtime": 1782620784.2590756,
-    "ast_hash": "41d76ce8c72a5578606abd55913484db",
+    "mtime": 1782621710.0450897,
+    "ast_hash": "2b67166c98bcfa996b57f570a9d7cc34",
     "semantic_hash": ""
   },
   "skills/__init__.py": {
@@ -920,8 +920,8 @@
     "semantic_hash": ""
   },
   "app/connection.py": {
-    "mtime": 1782620370.6734912,
-    "ast_hash": "ec23f86a6325cb321454f39f194740ac",
+    "mtime": 1782621641.565103,
+    "ast_hash": "406f8b6017342ac26db14cc1571ed6a3",
     "semantic_hash": ""
   },
   "app/services/__init__.py": {
@@ -945,8 +945,8 @@
     "semantic_hash": ""
   },
   "tests/test_app_services.py": {
-    "mtime": 1782603283.8397386,
-    "ast_hash": "517b208130fe738847a0c1e41daa9b76",
+    "mtime": 1782621850.5217369,
+    "ast_hash": "888b1424e032e20653a87953d6e5c181",
     "semantic_hash": ""
   },
   "docs/PHASE3_WIRING.md": {

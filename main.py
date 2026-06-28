@@ -70,8 +70,10 @@ async def lifespan(app: FastAPI):
     transmitir al frontend e inicia los hilos de cámara YOLO y voz STT.
     Apaga: cierra el controlador del holograma físico y limpia conexiones.
     """
-    global running_loop
-    running_loop = asyncio.get_running_loop()
+    # El manager (dueño del registro de sockets) también es dueño del puente
+    # hilo→loop: le entregamos el loop para que los hilos de voz/cámara difundan
+    # con manager.broadcast_threadsafe. (Antes vivía como el global `running_loop`.)
+    manager.bind_loop(asyncio.get_running_loop())
 
     # Parchear/monkey-patch las funciones de call.py para que transmitan al frontend
     try:
@@ -82,38 +84,33 @@ async def lifespan(app: FastAPI):
         # voice_loop no lea stdin como push-to-talk (el botón llega por WS).
         call.WEB_MODE = True
 
-        # 1. Parchear speak
-        original_speak = call.speak
+        # Antes aquí se parcheaba call.speak con un wrapper no-op para "no reemitir
+        # texto desde el hilo de TTS". Ya es innecesario: el WS emite el texto vía
+        # ConversationService y _host_speak usa call.speak SOLO para el audio; el
+        # voice loop sigue llamando a call.speak directamente. Patch retirado.
 
-        def custom_speak(text, blocking=True):
-            # NO reemitir streaming_started/text_chunk/text_done aquí. El handler
-            # del WebSocket YA emitió esos eventos para el texto del LLM (con
-            # await, canal inmediato). custom_speak corre en el hilo de TTS y
-            # reenviaba los mismos eventos por un canal diferido
-            # (run_coroutine_threadsafe), creando una carrera con
-            # `audio_status: completed`: la UI quedaba atascada en "hablando" y el
-            # texto parpadeaba (aparecía, se borraba y reaparecía). El TTS solo
-            # reproduce el audio; el WebSocket es el único emisor de texto.
-            original_speak(text, blocking)
-
-        call.speak = custom_speak
-
-        # 2. Parchear listen_once para capturar transcripciones
+        # 1. Parchear listen_once para capturar transcripciones. Corre en el hilo de
+        # voz, así que difunde por el manager con el salto hilo→loop.
         original_listen_once = WhisperListener.listen_once
 
         def custom_listen_once(self):
             user_input = original_listen_once(self)
             if user_input:
-                send_to_web_client("stt_transcript", user_input)
+                manager.broadcast_threadsafe(
+                    {"type": "stt_transcript", "text": user_input}
+                )
             return user_input
 
         WhisperListener.listen_once = custom_listen_once
 
-        # 3. Parchear callback de cámara
+        # 2. Parchear callback de cámara. Corre en el hilo de cámara: difunde por el
+        # manager y alimenta el proveedor de visión.
         original_callback = call._camera_detection_callback
 
         def custom_callback(event, count, analysis=None):
-            send_to_web_client("camera_event", event, count=count)
+            manager.broadcast_threadsafe(
+                {"type": "camera_event", "event": event, "count": count}
+            )
             # Alimenta el proveedor de visión para que el ConversationService pueda
             # inyectar el contexto de cámara al LLM (rompe el ciclo call↔llm_backend
             # cuando hay análisis; si no, stream_llm_response usa el fallback legado).
@@ -235,7 +232,6 @@ async def _api_token_gate(request, call_next):
 # Reemplaza la antigua lista global `active_connections` y centraliza el envío:
 # tanto el endpoint async como los hilos de voz/cámara emiten por este manager.
 manager = ConnectionManager()
-running_loop = None
 
 # --- Capa de servicios de la Fase 3 (estado inyectado, sin globals mutables) ---
 # Singletons a nivel de módulo. El proveedor de cámara DEBE ser único: el callback
@@ -264,37 +260,6 @@ conversation = ConversationService(
     camera=camera_provider,
     speak=_host_speak,
 )
-
-
-def send_to_web_client(type_name: str, text: str, user_text: str = None, count: int = None):
-    if not running_loop:
-        return
-
-    payload = {"type": type_name}
-    if type_name == "status":
-        payload["status"] = text
-    elif type_name == "text_chunk":
-        payload["text"] = text
-    elif type_name == "text_done":
-        payload["full_text"] = text
-    elif type_name == "audio_status":
-        payload["status"] = text
-        payload["message"] = "TTS local actualizado"
-    elif type_name == "stt_transcript":
-        payload["text"] = text
-    elif type_name == "camera_event":
-        payload["event"] = text
-        if count is not None:
-            payload["count"] = count
-
-    if user_text:
-        payload["user_text"] = user_text
-
-    # Esta función la llaman los hilos de voz/cámara (no-async), así que hay que
-    # saltar al event loop con run_coroutine_threadsafe. El manager serializa el
-    # envío y purga sockets muertos por sí mismo; ese salto hilo→loop es el puente
-    # imprescindible entre los productores en hilos y el WebSocket.
-    asyncio.run_coroutine_threadsafe(manager.broadcast(payload), running_loop)
 
 
 # --- Modelos Pydantic ---
