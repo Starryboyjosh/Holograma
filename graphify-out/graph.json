@@ -440,7 +440,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_vision",
-      "community": 5,
+      "community": 86,
       "norm_label": "vision.py"
     },
     {
@@ -520,7 +520,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_vision_rationale_1",
-      "community": 5,
+      "community": 86,
       "norm_label": "proveedor del contexto de camara para el llm.  hoy `llm_backend.stream_llm_respo"
     },
     {
@@ -540,7 +540,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "call",
-      "community": 5,
+      "community": 26,
       "norm_label": "call.py"
     },
     {
@@ -570,7 +570,7 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "call_resume_hologram",
-      "community": 5,
+      "community": 99,
       "norm_label": "resume_hologram()"
     },
     {
@@ -620,7 +620,7 @@
       "source_location": "L218",
       "_origin": "ast",
       "id": "call_get_piper_sample_rate",
-      "community": 27,
+      "community": 2,
       "norm_label": "get_piper_sample_rate()"
     },
     {
@@ -640,7 +640,7 @@
       "source_location": "L243",
       "_origin": "ast",
       "id": "call_get_powershell_command",
-      "community": 2,
+      "community": 89,
       "norm_label": "get_powershell_command()"
     },
     {
@@ -650,7 +650,7 @@
       "source_location": "L259",
       "_origin": "ast",
       "id": "call_run_powershell",
-      "community": 2,
+      "community": 89,
       "norm_label": "run_powershell()"
     },
     {
@@ -660,7 +660,7 @@
       "source_location": "L300",
       "_origin": "ast",
       "id": "call_play_wav_with_windows",
-      "community": 2,
+      "community": 89,
       "norm_label": "play_wav_with_windows()"
     },
     {
@@ -710,7 +710,7 @@
       "source_location": "L463",
       "_origin": "ast",
       "id": "call_speak_with_windows_voice",
-      "community": 2,
+      "community": 89,
       "norm_label": "speak_with_windows_voice()"
     },
     {
@@ -770,7 +770,7 @@
       "source_location": "L727",
       "_origin": "ast",
       "id": "call_build_camera_context",
-      "community": 5,
+      "community": 0,
       "norm_label": "_build_camera_context()"
     },
     {
@@ -780,7 +780,7 @@
       "source_location": "L761",
       "_origin": "ast",
       "id": "call_is_visual_question",
-      "community": 5,
+      "community": 0,
       "norm_label": "_is_visual_question()"
     },
     {
@@ -790,7 +790,7 @@
       "source_location": "L769",
       "_origin": "ast",
       "id": "call_is_greeting",
-      "community": 5,
+      "community": 0,
       "norm_label": "_is_greeting()"
     },
     {
@@ -800,7 +800,7 @@
       "source_location": "L791",
       "_origin": "ast",
       "id": "call_ask_ai",
-      "community": 5,
+      "community": 0,
       "norm_label": "ask_ai()"
     },
     {
@@ -840,7 +840,7 @@
       "source_location": "L903",
       "_origin": "ast",
       "id": "call_get_latest_camera_jpeg",
-      "community": 5,
+      "community": 98,
       "norm_label": "get_latest_camera_jpeg()"
     },
     {
@@ -850,7 +850,7 @@
       "source_location": "L910",
       "_origin": "ast",
       "id": "call_camera_feed_subscribe",
-      "community": 91,
+      "community": 26,
       "norm_label": "camera_feed_subscribe()"
     },
     {
@@ -870,7 +870,7 @@
       "source_location": "L928",
       "_origin": "ast",
       "id": "call_camera_detection_callback",
-      "community": 91,
+      "community": 26,
       "norm_label": "_camera_detection_callback()"
     },
     {
@@ -890,7 +890,7 @@
       "source_location": "L1030",
       "_origin": "ast",
       "id": "call_stop_camera_thread",
-      "community": 93,
+      "community": 17,
       "norm_label": "stop_camera_thread()"
     },
     {
@@ -980,7 +980,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "call_rationale_1",
-      "community": 5,
+      "community": 26,
       "norm_label": "unev hologram \u2014 main entry point.  regla de oro a: todas las rutas usan pathlib."
     },
     {
@@ -1010,7 +1010,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "call_rationale_93",
-      "community": 5,
+      "community": 99,
       "norm_label": "resume hologram activity."
     },
     {
@@ -1060,7 +1060,7 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "call_rationale_219",
-      "community": 27,
+      "community": 2,
       "norm_label": "read piper sample rate from the model json sidecar when available."
     },
     {
@@ -1080,7 +1080,7 @@
       "source_location": "L244",
       "_origin": "ast",
       "id": "call_rationale_244",
-      "community": 2,
+      "community": 89,
       "norm_label": "return a powershell executable path on windows or wsl if available."
     },
     {
@@ -1090,7 +1090,7 @@
       "source_location": "L260",
       "_origin": "ast",
       "id": "call_rationale_260",
-      "community": 2,
+      "community": 89,
       "norm_label": "run a powershell script and return true when it succeeds."
     },
     {
@@ -1100,7 +1100,7 @@
       "source_location": "L301",
       "_origin": "ast",
       "id": "call_rationale_301",
-      "community": 2,
+      "community": 89,
       "norm_label": "play a wav file with windows' built-in soundplayer."
     },
     {
@@ -1150,7 +1150,7 @@
       "source_location": "L464",
       "_origin": "ast",
       "id": "call_rationale_464",
-      "community": 2,
+      "community": 89,
       "norm_label": "use windows built-in speech synthesis when piper is unavailable."
     },
     {
@@ -1210,7 +1210,7 @@
       "source_location": "L904",
       "_origin": "ast",
       "id": "call_rationale_904",
-      "community": 5,
+      "community": 98,
       "norm_label": "return the latest annotated camera frame (jpeg bytes) or none."
     },
     {
@@ -1220,7 +1220,7 @@
       "source_location": "L911",
       "_origin": "ast",
       "id": "call_rationale_911",
-      "community": 91,
+      "community": 26,
       "norm_label": "registra un cliente del feed de video (activa la codificacion jpeg).      el det"
     },
     {
@@ -1240,7 +1240,7 @@
       "source_location": "L929",
       "_origin": "ast",
       "id": "call_rationale_929",
-      "community": 91,
+      "community": 26,
       "norm_label": "handle yolo detection events from the background camera thread."
     },
     {
@@ -1260,7 +1260,7 @@
       "source_location": "L1031",
       "_origin": "ast",
       "id": "call_rationale_1031",
-      "community": 93,
+      "community": 17,
       "norm_label": "deten la deteccion y libera la camara (apagar la camara = liberarla).      senal"
     },
     {
@@ -1830,7 +1830,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "schemas_desktop_schema",
-      "community": 29,
+      "community": 93,
       "norm_label": "desktop-schema.json"
     },
     {
@@ -1840,7 +1840,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "schemas_desktop_schema_schema",
-      "community": 29,
+      "community": 93,
       "norm_label": "$schema"
     },
     {
@@ -1850,7 +1850,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "schemas_desktop_schema_title",
-      "community": 29,
+      "community": 93,
       "norm_label": "title"
     },
     {
@@ -1860,7 +1860,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "schemas_desktop_schema_description",
-      "community": 29,
+      "community": 93,
       "norm_label": "description"
     },
     {
@@ -1870,7 +1870,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "schemas_desktop_schema_anyof",
-      "community": 29,
+      "community": 93,
       "norm_label": "anyof"
     },
     {
@@ -2360,7 +2360,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "schemas_desktop_schema_definitions_permissionentry",
-      "community": 64,
+      "community": 29,
       "norm_label": "permissionentry"
     },
     {
@@ -2370,7 +2370,7 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "schemas_desktop_schema_permissionentry_description",
-      "community": 64,
+      "community": 29,
       "norm_label": "description"
     },
     {
@@ -2380,7 +2380,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "schemas_desktop_schema_permissionentry_anyof",
-      "community": 64,
+      "community": 29,
       "norm_label": "anyof"
     },
     {
@@ -2500,7 +2500,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "schemas_linux_schema",
-      "community": 50,
+      "community": 30,
       "norm_label": "linux-schema.json"
     },
     {
@@ -2510,7 +2510,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "schemas_linux_schema_schema",
-      "community": 50,
+      "community": 30,
       "norm_label": "$schema"
     },
     {
@@ -2520,7 +2520,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "schemas_linux_schema_title",
-      "community": 50,
+      "community": 30,
       "norm_label": "title"
     },
     {
@@ -2530,7 +2530,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "schemas_linux_schema_description",
-      "community": 50,
+      "community": 30,
       "norm_label": "description"
     },
     {
@@ -2540,7 +2540,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "schemas_linux_schema_anyof",
-      "community": 50,
+      "community": 30,
       "norm_label": "anyof"
     },
     {
@@ -3030,7 +3030,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "schemas_linux_schema_definitions_permissionentry",
-      "community": 30,
+      "community": 97,
       "norm_label": "permissionentry"
     },
     {
@@ -3040,7 +3040,7 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "schemas_linux_schema_permissionentry_description",
-      "community": 30,
+      "community": 97,
       "norm_label": "description"
     },
     {
@@ -3050,7 +3050,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "schemas_linux_schema_permissionentry_anyof",
-      "community": 30,
+      "community": 97,
       "norm_label": "anyof"
     },
     {
@@ -5330,7 +5330,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller",
-      "community": 6,
+      "community": 50,
       "norm_label": "hologramfancontroller"
     },
     {
@@ -5340,7 +5340,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_init",
-      "community": 6,
+      "community": 50,
       "norm_label": ".__init__()"
     },
     {
@@ -5350,7 +5350,7 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_is_connected",
-      "community": 6,
+      "community": 50,
       "norm_label": ".is_connected()"
     },
     {
@@ -5360,7 +5360,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_connect",
-      "community": 6,
+      "community": 50,
       "norm_label": ".connect()"
     },
     {
@@ -5370,7 +5370,7 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_disconnect",
-      "community": 80,
+      "community": 91,
       "norm_label": ".disconnect()"
     },
     {
@@ -5470,7 +5470,7 @@
       "source_location": "L170",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_brightness_up",
-      "community": 6,
+      "community": 50,
       "norm_label": ".brightness_up()"
     },
     {
@@ -5490,7 +5490,7 @@
       "source_location": "L180",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_enter",
-      "community": 6,
+      "community": 50,
       "norm_label": ".__enter__()"
     },
     {
@@ -5500,7 +5500,7 @@
       "source_location": "L183",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_exit",
-      "community": 80,
+      "community": 91,
       "norm_label": ".__exit__()"
     },
     {
@@ -5530,7 +5530,7 @@
       "source_location": "L292",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager",
-      "community": 23,
+      "community": 87,
       "norm_label": "hologramstatemanager"
     },
     {
@@ -5540,7 +5540,7 @@
       "source_location": "L314",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_init",
-      "community": 23,
+      "community": 87,
       "norm_label": ".__init__()"
     },
     {
@@ -5560,7 +5560,7 @@
       "source_location": "L348",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_configure",
-      "community": 23,
+      "community": 92,
       "norm_label": ".configure()"
     },
     {
@@ -5590,7 +5590,7 @@
       "source_location": "L413",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_start",
-      "community": 23,
+      "community": 92,
       "norm_label": ".start()"
     },
     {
@@ -5600,7 +5600,7 @@
       "source_location": "L424",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_set_state",
-      "community": 23,
+      "community": 92,
       "norm_label": ".set_state()"
     },
     {
@@ -5620,7 +5620,7 @@
       "source_location": "L457",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_run",
-      "community": 23,
+      "community": 91,
       "norm_label": "._run()"
     },
     {
@@ -5630,7 +5630,7 @@
       "source_location": "L477",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_apply",
-      "community": 23,
+      "community": 91,
       "norm_label": "._apply()"
     },
     {
@@ -5640,7 +5640,7 @@
       "source_location": "L500",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_ensure_connected",
-      "community": 23,
+      "community": 50,
       "norm_label": "._ensure_connected()"
     },
     {
@@ -5650,7 +5650,7 @@
       "source_location": "L525",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_drop_connection",
-      "community": 23,
+      "community": 91,
       "norm_label": "._drop_connection()"
     },
     {
@@ -5680,7 +5680,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "hologram_controller_rationale_32",
-      "community": 6,
+      "community": 50,
       "norm_label": "controlador de ventilador holografico missyou via tcp.      reemplaza las funcio"
     },
     {
@@ -5690,7 +5690,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "hologram_controller_rationale_63",
-      "community": 6,
+      "community": 50,
       "norm_label": "args:             ip:      ip del holograma. default 10.10.10.1 (wifi directo)."
     },
     {
@@ -5700,7 +5700,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "hologram_controller_rationale_79",
-      "community": 6,
+      "community": 50,
       "norm_label": "true si el socket tcp sigue abierto."
     },
     {
@@ -5710,7 +5710,7 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "hologram_controller_rationale_85",
-      "community": 6,
+      "community": 50,
       "norm_label": "establece la conexion tcp con el holograma."
     },
     {
@@ -5720,7 +5720,7 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "hologram_controller_rationale_103",
-      "community": 80,
+      "community": 91,
       "norm_label": "cierra la conexion tcp limpiamente."
     },
     {
@@ -5820,7 +5820,7 @@
       "source_location": "L171",
       "_origin": "ast",
       "id": "hologram_controller_rationale_171",
-      "community": 6,
+      "community": 50,
       "norm_label": "aumenta el brillo de la pantalla. [+]"
     },
     {
@@ -5860,7 +5860,7 @@
       "source_location": "L293",
       "_origin": "ast",
       "id": "hologram_controller_rationale_293",
-      "community": 23,
+      "community": 87,
       "norm_label": "puente thread-safe entre los estados de la ia y los clips del holograma.      la"
     },
     {
@@ -5880,7 +5880,7 @@
       "source_location": "L349",
       "_origin": "ast",
       "id": "hologram_controller_rationale_349",
-      "community": 23,
+      "community": 92,
       "norm_label": "aplica un destino tcp nuevo y activa el cambio automatico de clips."
     },
     {
@@ -5910,7 +5910,7 @@
       "source_location": "L414",
       "_origin": "ast",
       "id": "hologram_controller_rationale_414",
-      "community": 23,
+      "community": 92,
       "norm_label": "arranca el hilo de control y deja el holograma en idle. no-op si esta deshabilit"
     },
     {
@@ -5920,7 +5920,7 @@
       "source_location": "L425",
       "_origin": "ast",
       "id": "hologram_controller_rationale_425",
-      "community": 23,
+      "community": 92,
       "norm_label": "solicita un cambio de estado del holograma. no bloquea ni lanza excepciones."
     },
     {
@@ -6380,7 +6380,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "main_lifespan",
-      "community": 87,
+      "community": 96,
       "norm_label": "lifespan()"
     },
     {
@@ -6390,7 +6390,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "fastapi",
-      "community": 87,
+      "community": 96,
       "norm_label": "fastapi"
     },
     {
@@ -6420,7 +6420,7 @@
       "source_location": "L275",
       "_origin": "ast",
       "id": "main_configupdate",
-      "community": 17,
+      "community": 87,
       "norm_label": "configupdate"
     },
     {
@@ -6430,7 +6430,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "basemodel",
-      "community": 17,
+      "community": 87,
       "norm_label": "basemodel"
     },
     {
@@ -6440,7 +6440,7 @@
       "source_location": "L298",
       "_origin": "ast",
       "id": "main_boundingboxmodel",
-      "community": 17,
+      "community": 87,
       "norm_label": "boundingboxmodel"
     },
     {
@@ -6450,7 +6450,7 @@
       "source_location": "L307",
       "_origin": "ast",
       "id": "main_trainimagepayload",
-      "community": 17,
+      "community": 87,
       "norm_label": "trainimagepayload"
     },
     {
@@ -6460,7 +6460,7 @@
       "source_location": "L312",
       "_origin": "ast",
       "id": "main_vocabularypayload",
-      "community": 17,
+      "community": 87,
       "norm_label": "vocabularypayload"
     },
     {
@@ -6490,7 +6490,7 @@
       "source_location": "L523",
       "_origin": "ast",
       "id": "main_llmtestpayload",
-      "community": 17,
+      "community": 87,
       "norm_label": "llmtestpayload"
     },
     {
@@ -6510,7 +6510,7 @@
       "source_location": "L542",
       "_origin": "ast",
       "id": "main_test_llm",
-      "community": 17,
+      "community": 87,
       "norm_label": "test_llm()"
     },
     {
@@ -6520,7 +6520,7 @@
       "source_location": "L558",
       "_origin": "ast",
       "id": "main_get_unev_content",
-      "community": 85,
+      "community": 100,
       "norm_label": "get_unev_content()"
     },
     {
@@ -6530,7 +6530,7 @@
       "source_location": "L564",
       "_origin": "ast",
       "id": "main_update_unev_content",
-      "community": 85,
+      "community": 17,
       "norm_label": "update_unev_content()"
     },
     {
@@ -6540,7 +6540,7 @@
       "source_location": "L579",
       "_origin": "ast",
       "id": "main_cameratoggle",
-      "community": 93,
+      "community": 87,
       "norm_label": "cameratoggle"
     },
     {
@@ -6550,7 +6550,7 @@
       "source_location": "L584",
       "_origin": "ast",
       "id": "main_set_camera",
-      "community": 93,
+      "community": 17,
       "norm_label": "set_camera()"
     },
     {
@@ -6560,7 +6560,7 @@
       "source_location": "L604",
       "_origin": "ast",
       "id": "main_speakpayload",
-      "community": 17,
+      "community": 87,
       "norm_label": "speakpayload"
     },
     {
@@ -6570,7 +6570,7 @@
       "source_location": "L610",
       "_origin": "ast",
       "id": "main_get_voices",
-      "community": 27,
+      "community": 17,
       "norm_label": "get_voices()"
     },
     {
@@ -6620,7 +6620,7 @@
       "source_location": "L724",
       "_origin": "ast",
       "id": "main_hologramconnect",
-      "community": 17,
+      "community": 87,
       "norm_label": "hologramconnect"
     },
     {
@@ -6630,7 +6630,7 @@
       "source_location": "L729",
       "_origin": "ast",
       "id": "main_hologramcommand",
-      "community": 17,
+      "community": 87,
       "norm_label": "hologramcommand"
     },
     {
@@ -6780,7 +6780,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "main_rationale_75",
-      "community": 87,
+      "community": 96,
       "norm_label": "ciclo de vida de la aplicacion (reemplaza @app.on_event, deprecado).      arranc"
     },
     {
@@ -6810,7 +6810,7 @@
       "source_location": "L543",
       "_origin": "ast",
       "id": "main_rationale_543",
-      "community": 17,
+      "community": 87,
       "norm_label": "prueba real de proveedor/modelo/key/url sin guardar nada.      devuelve un mensa"
     },
     {
@@ -6820,7 +6820,7 @@
       "source_location": "L559",
       "_origin": "ast",
       "id": "main_rationale_559",
-      "community": 85,
+      "community": 100,
       "norm_label": "contenido institucional de unev (fuente unica editable)."
     },
     {
@@ -6830,7 +6830,7 @@
       "source_location": "L565",
       "_origin": "ast",
       "id": "main_rationale_565",
-      "community": 85,
+      "community": 17,
       "norm_label": "valida y guarda el contenido de unev; recarga la fuente en caliente.      devuel"
     },
     {
@@ -6840,7 +6840,7 @@
       "source_location": "L585",
       "_origin": "ast",
       "id": "main_rationale_585",
-      "community": 93,
+      "community": 17,
       "norm_label": "enciende o **apaga** la camara liberando el dispositivo.      apagar no solo ocu"
     },
     {
@@ -7360,7 +7360,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "security",
-      "community": 0,
+      "community": 47,
       "norm_label": "security.py"
     },
     {
@@ -7370,7 +7370,7 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "security_redact_secrets",
-      "community": 0,
+      "community": 17,
       "norm_label": "redact_secrets()"
     },
     {
@@ -7380,7 +7380,7 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "security_clamp_text",
-      "community": 85,
+      "community": 27,
       "norm_label": "clamp_text()"
     },
     {
@@ -7390,7 +7390,7 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "security_redact_iter",
-      "community": 0,
+      "community": 47,
       "norm_label": "redact_iter()"
     },
     {
@@ -7400,7 +7400,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "security_rationale_1",
-      "community": 0,
+      "community": 47,
       "norm_label": "utilidades de seguridad para holograma unev.  funciones puras (sin red, sin esta"
     },
     {
@@ -7410,7 +7410,7 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "security_rationale_65",
-      "community": 0,
+      "community": 17,
       "norm_label": "devuelve ``text`` con cualquier secreto enmascarado.      enmascara (1) los valo"
     },
     {
@@ -7420,7 +7420,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "security_rationale_88",
-      "community": 85,
+      "community": 27,
       "norm_label": "sanea texto no confiable: elimina caracteres de control y trunca a ``max_len``."
     },
     {
@@ -7430,7 +7430,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "security_rationale_101",
-      "community": 0,
+      "community": 47,
       "norm_label": "aplica :func:`redact_secrets` a una coleccion (util para listas de logs)."
     },
     {
@@ -7460,7 +7460,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_appearance",
-      "community": 91,
+      "community": 26,
       "norm_label": "appearance.py"
     },
     {
@@ -7470,7 +7470,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_appearance_get_cordial_observation",
-      "community": 91,
+      "community": 26,
       "norm_label": "get_cordial_observation()"
     },
     {
@@ -7480,7 +7480,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_event_mode",
-      "community": 5,
+      "community": 26,
       "norm_label": "event_mode.py"
     },
     {
@@ -7490,7 +7490,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "skills_event_mode_has_camera",
-      "community": 5,
+      "community": 26,
       "norm_label": "_has_camera()"
     },
     {
@@ -7500,7 +7500,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "skills_event_mode_get_system_prompt",
-      "community": 5,
+      "community": 26,
       "norm_label": "get_system_prompt()"
     },
     {
@@ -7510,7 +7510,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "skills_event_mode_get_greeting",
-      "community": 91,
+      "community": 26,
       "norm_label": "get_greeting()"
     },
     {
@@ -7520,7 +7520,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_honduras",
-      "community": 85,
+      "community": 62,
       "norm_label": "honduras.py"
     },
     {
@@ -7530,7 +7530,7 @@
       "source_location": "L191",
       "_origin": "ast",
       "id": "skills_honduras_get_university_summary",
-      "community": 85,
+      "community": 62,
       "norm_label": "get_university_summary()"
     },
     {
@@ -7540,7 +7540,7 @@
       "source_location": "L201",
       "_origin": "ast",
       "id": "skills_honduras_get_programs_summary",
-      "community": 85,
+      "community": 62,
       "norm_label": "get_programs_summary()"
     },
     {
@@ -7550,7 +7550,7 @@
       "source_location": "L215",
       "_origin": "ast",
       "id": "skills_honduras_get_program_info",
-      "community": 85,
+      "community": 62,
       "norm_label": "get_program_info()"
     },
     {
@@ -7560,7 +7560,7 @@
       "source_location": "L254",
       "_origin": "ast",
       "id": "skills_honduras_get_admission_info",
-      "community": 85,
+      "community": 62,
       "norm_label": "get_admission_info()"
     },
     {
@@ -7570,7 +7570,7 @@
       "source_location": "L265",
       "_origin": "ast",
       "id": "skills_honduras_get_location_info",
-      "community": 85,
+      "community": 62,
       "norm_label": "get_location_info()"
     },
     {
@@ -7580,7 +7580,7 @@
       "source_location": "L269",
       "_origin": "ast",
       "id": "skills_honduras_get_approval_info",
-      "community": 85,
+      "community": 62,
       "norm_label": "get_approval_info()"
     },
     {
@@ -7590,7 +7590,7 @@
       "source_location": "L273",
       "_origin": "ast",
       "id": "skills_honduras_get_website_info",
-      "community": 85,
+      "community": 62,
       "norm_label": "get_website_info()"
     },
     {
@@ -7600,7 +7600,7 @@
       "source_location": "L277",
       "_origin": "ast",
       "id": "skills_honduras_get_proceres_info",
-      "community": 85,
+      "community": 62,
       "norm_label": "get_proceres_info()"
     },
     {
@@ -7610,7 +7610,7 @@
       "source_location": "L288",
       "_origin": "ast",
       "id": "skills_honduras_get_vulgarismos_info",
-      "community": 85,
+      "community": 62,
       "norm_label": "get_vulgarismos_info()"
     },
     {
@@ -7620,7 +7620,7 @@
       "source_location": "L299",
       "_origin": "ast",
       "id": "skills_honduras_get_simbolos_patrios_info",
-      "community": 85,
+      "community": 62,
       "norm_label": "get_simbolos_patrios_info()"
     },
     {
@@ -7630,7 +7630,7 @@
       "source_location": "L310",
       "_origin": "ast",
       "id": "skills_honduras_get_university_context",
-      "community": 85,
+      "community": 62,
       "norm_label": "get_university_context()"
     },
     {
@@ -7740,7 +7740,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_unev_content",
-      "community": 85,
+      "community": 27,
       "norm_label": "unev_content.py"
     },
     {
@@ -7750,7 +7750,7 @@
       "source_location": "L196",
       "_origin": "ast",
       "id": "skills_unev_content_coerce",
-      "community": 85,
+      "community": 27,
       "norm_label": "_coerce()"
     },
     {
@@ -7760,7 +7760,7 @@
       "source_location": "L217",
       "_origin": "ast",
       "id": "skills_unev_content_validate_unev_info",
-      "community": 85,
+      "community": 27,
       "norm_label": "validate_unev_info()"
     },
     {
@@ -7770,7 +7770,7 @@
       "source_location": "L237",
       "_origin": "ast",
       "id": "skills_unev_content_load_unev_info",
-      "community": 85,
+      "community": 27,
       "norm_label": "load_unev_info()"
     },
     {
@@ -7780,7 +7780,7 @@
       "source_location": "L237",
       "_origin": "ast",
       "id": "path",
-      "community": 27,
+      "community": 13,
       "norm_label": "path"
     },
     {
@@ -7800,7 +7800,7 @@
       "source_location": "L256",
       "_origin": "ast",
       "id": "skills_unev_content_reload",
-      "community": 85,
+      "community": 27,
       "norm_label": "reload()"
     },
     {
@@ -7810,7 +7810,7 @@
       "source_location": "L263",
       "_origin": "ast",
       "id": "skills_unev_content_save_unev_info",
-      "community": 85,
+      "community": 27,
       "norm_label": "save_unev_info()"
     },
     {
@@ -7820,7 +7820,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_1",
-      "community": 85,
+      "community": 27,
       "norm_label": "fuente unica y editable de la informacion institucional de unev.  antes, los dat"
     },
     {
@@ -7830,7 +7830,7 @@
       "source_location": "L197",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_197",
-      "community": 85,
+      "community": 27,
       "norm_label": "normaliza ``data`` a la forma canonica, rellenando faltantes con el respaldo."
     },
     {
@@ -7840,7 +7840,7 @@
       "source_location": "L218",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_218",
-      "community": 85,
+      "community": 27,
       "norm_label": "devuelve una lista de errores (vacia = valido) para mostrar al operador."
     },
     {
@@ -7850,7 +7850,7 @@
       "source_location": "L238",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_238",
-      "community": 85,
+      "community": 27,
       "norm_label": "carga el contenido desde el json autoritativo; respaldo en codigo si falla."
     },
     {
@@ -7870,7 +7870,7 @@
       "source_location": "L257",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_257",
-      "community": 85,
+      "community": 27,
       "norm_label": "recarga desde disco (tras una edicion) y actualiza la cache."
     },
     {
@@ -7880,7 +7880,7 @@
       "source_location": "L264",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_264",
-      "community": 85,
+      "community": 27,
       "norm_label": "valida, escribe atomicamente el json autoritativo y recarga la cache.      lanza"
     },
     {
@@ -7970,7 +7970,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "skills_university_get_university_context",
-      "community": 85,
+      "community": 0,
       "norm_label": "get_university_context()"
     },
     {
@@ -8000,7 +8000,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "skills_utils_normalize_text",
-      "community": 26,
+      "community": 85,
       "norm_label": "normalize_text()"
     },
     {
@@ -8010,7 +8010,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "skills_utils_rationale_5",
-      "community": 26,
+      "community": 85,
       "norm_label": "normalizes text by removing accents, lowercasing, and stripping whitespace."
     },
     {
@@ -8040,7 +8040,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "stt_listener",
-      "community": 62,
+      "community": 0,
       "norm_label": "listener.py"
     },
     {
@@ -8070,7 +8070,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_init",
-      "community": 62,
+      "community": 0,
       "norm_label": ".__init__()"
     },
     {
@@ -8150,7 +8150,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "stt_listener_rationale_1",
-      "community": 62,
+      "community": 0,
       "norm_label": "speech-to-text listener using faster-whisper and sounddevice.  regla de oro a: t"
     },
     {
@@ -8250,7 +8250,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "stt_wakeword",
-      "community": 62,
+      "community": 0,
       "norm_label": "wakeword.py"
     },
     {
@@ -8260,7 +8260,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector",
-      "community": 27,
+      "community": 13,
       "norm_label": "wakeworddetector"
     },
     {
@@ -8270,7 +8270,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_init",
-      "community": 27,
+      "community": 0,
       "norm_label": ".__init__()"
     },
     {
@@ -8280,7 +8280,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_load_model",
-      "community": 27,
+      "community": 13,
       "norm_label": "._load_model()"
     },
     {
@@ -8290,7 +8290,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_find_bundled_model",
-      "community": 27,
+      "community": 13,
       "norm_label": "._find_bundled_model()"
     },
     {
@@ -8300,7 +8300,7 @@
       "source_location": "L143",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_wait_for_wake",
-      "community": 27,
+      "community": 13,
       "norm_label": ".wait_for_wake()"
     },
     {
@@ -8310,7 +8310,7 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_is_available",
-      "community": 27,
+      "community": 13,
       "norm_label": ".is_available()"
     },
     {
@@ -8320,7 +8320,7 @@
       "source_location": "L229",
       "_origin": "ast",
       "id": "stt_wakeword_get_wakeword_status",
-      "community": 62,
+      "community": 0,
       "norm_label": "get_wakeword_status()"
     },
     {
@@ -8330,7 +8330,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "stt_wakeword_rationale_1",
-      "community": 62,
+      "community": 0,
       "norm_label": "detector de palabra clave (wake word) con openwakeword.  regla de oro a: todas l"
     },
     {
@@ -8340,7 +8340,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "stt_wakeword_rationale_39",
-      "community": 27,
+      "community": 13,
       "norm_label": "detecta una palabra clave en streaming con openwakeword."
     },
     {
@@ -8350,7 +8350,7 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "stt_wakeword_rationale_123",
-      "community": 27,
+      "community": 13,
       "norm_label": "resuelve un nombre corto a la ruta de un .onnx incluido (0.4.x).          ej.: `"
     },
     {
@@ -8360,7 +8360,7 @@
       "source_location": "L144",
       "_origin": "ast",
       "id": "stt_wakeword_rationale_144",
-      "community": 27,
+      "community": 13,
       "norm_label": "bloquea hasta detectar la palabra clave.          parameters         ----------"
     },
     {
@@ -8370,7 +8370,7 @@
       "source_location": "L220",
       "_origin": "ast",
       "id": "stt_wakeword_rationale_220",
-      "community": 27,
+      "community": 13,
       "norm_label": "return true if openwakeword and sounddevice are importable."
     },
     {
@@ -8380,7 +8380,7 @@
       "source_location": "L230",
       "_origin": "ast",
       "id": "stt_wakeword_rationale_230",
-      "community": 62,
+      "community": 0,
       "norm_label": "return a human-readable status string for the wake-word subsystem."
     },
     {
@@ -8730,7 +8730,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_camera_stop",
-      "community": 92,
+      "community": 0,
       "norm_label": "test_camera_stop.py"
     },
     {
@@ -8740,7 +8740,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_test_camera_stop_test_run_continuous_stops_and_releases_camera",
-      "community": 92,
+      "community": 0,
       "norm_label": "test_run_continuous_stops_and_releases_camera()"
     },
     {
@@ -8750,7 +8750,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "tests_test_camera_stop_test_stop_is_idempotent_before_run",
-      "community": 92,
+      "community": 0,
       "norm_label": "test_stop_is_idempotent_before_run()"
     },
     {
@@ -8760,7 +8760,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_camera_stop_rationale_1",
-      "community": 92,
+      "community": 0,
       "norm_label": "test del mecanismo de parada/liberacion de la camara (fase b).  no requiere cama"
     },
     {
@@ -8960,7 +8960,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_hologram_controller",
-      "community": 89,
+      "community": 7,
       "norm_label": "test_hologram_controller.py"
     },
     {
@@ -9110,7 +9110,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "tests_test_hologram_controller_wait_for_event",
-      "community": 89,
+      "community": 7,
       "norm_label": "wait_for_event()"
     },
     {
@@ -9120,7 +9120,7 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "tests_test_hologram_controller_test_configured_manager_applies_ai_state_clips",
-      "community": 89,
+      "community": 7,
       "norm_label": "test_configured_manager_applies_ai_state_clips()"
     },
     {
@@ -9130,7 +9130,7 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "tests_test_hologram_controller_test_manager_rejects_invalid_connection_settings",
-      "community": 89,
+      "community": 7,
       "norm_label": "test_manager_rejects_invalid_connection_settings()"
     },
     {
@@ -9140,7 +9140,7 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "tests_test_hologram_controller_test_resolve_state_clips_defaults_when_env_empty",
-      "community": 89,
+      "community": 7,
       "norm_label": "test_resolve_state_clips_defaults_when_env_empty()"
     },
     {
@@ -9150,7 +9150,7 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "tests_test_hologram_controller_test_resolve_state_clips_honors_playlist_order_overrides",
-      "community": 89,
+      "community": 7,
       "norm_label": "test_resolve_state_clips_honors_playlist_order_overrides()"
     },
     {
@@ -9160,7 +9160,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "tests_test_hologram_controller_test_resolve_state_clips_ignores_invalid_values",
-      "community": 89,
+      "community": 7,
       "norm_label": "test_resolve_state_clips_ignores_invalid_values()"
     },
     {
@@ -9170,7 +9170,7 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "tests_test_hologram_controller_test_configured_manager_uses_custom_clip_map",
-      "community": 89,
+      "community": 7,
       "norm_label": "test_configured_manager_uses_custom_clip_map()"
     },
     {
@@ -10250,7 +10250,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_unev_content",
-      "community": 85,
+      "community": 64,
       "norm_label": "test_unev_content.py"
     },
     {
@@ -10260,7 +10260,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_load_defaults_when_file_missing",
-      "community": 85,
+      "community": 64,
       "norm_label": "test_load_defaults_when_file_missing()"
     },
     {
@@ -10270,7 +10270,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_save_then_load_roundtrip",
-      "community": 85,
+      "community": 64,
       "norm_label": "test_save_then_load_roundtrip()"
     },
     {
@@ -10280,7 +10280,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_merge_fills_missing_keys_from_default",
-      "community": 85,
+      "community": 64,
       "norm_label": "test_merge_fills_missing_keys_from_default()"
     },
     {
@@ -10290,7 +10290,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_program_keys_are_lowercased",
-      "community": 85,
+      "community": 64,
       "norm_label": "test_program_keys_are_lowercased()"
     },
     {
@@ -10300,7 +10300,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_validation_reports_actionable_errors",
-      "community": 85,
+      "community": 64,
       "norm_label": "test_validation_reports_actionable_errors()"
     },
     {
@@ -10310,7 +10310,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_save_rejects_invalid",
-      "community": 85,
+      "community": 64,
       "norm_label": "test_save_rejects_invalid()"
     },
     {
@@ -10320,7 +10320,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_save_updates_cache_and_university_reads_it",
-      "community": 85,
+      "community": 64,
       "norm_label": "test_save_updates_cache_and_university_reads_it()"
     },
     {
@@ -10330,7 +10330,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_clamp_strips_control_chars_in_content",
-      "community": 85,
+      "community": 64,
       "norm_label": "test_clamp_strips_control_chars_in_content()"
     },
     {
@@ -10340,7 +10340,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_unev_content_rationale_1",
-      "community": 85,
+      "community": 64,
       "norm_label": "tests de la fuente unica de contenido unev (skills/unev_content).  puras: usan r"
     },
     {
@@ -10350,7 +10350,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "utils",
-      "community": 62,
+      "community": 0,
       "norm_label": "utils.py"
     },
     {
@@ -10360,7 +10360,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "utils_env",
-      "community": 62,
+      "community": 0,
       "norm_label": "_env()"
     },
     {
@@ -10370,7 +10370,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "utils_env_float",
-      "community": 62,
+      "community": 0,
       "norm_label": "_env_float()"
     },
     {
@@ -10380,7 +10380,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "utils_env_int",
-      "community": 62,
+      "community": 0,
       "norm_label": "_env_int()"
     },
     {
@@ -10390,7 +10390,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "utils_is_quiet",
-      "community": 62,
+      "community": 2,
       "norm_label": "_is_quiet()"
     },
     {
@@ -10400,7 +10400,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "utils_configure_utf8_stdio",
-      "community": 62,
+      "community": 0,
       "norm_label": "configure_utf8_stdio()"
     },
     {
@@ -10410,7 +10410,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "utils_rationale_7",
-      "community": 62,
+      "community": 0,
       "norm_label": "helper to retrieve string environment variables."
     },
     {
@@ -10420,7 +10420,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "utils_rationale_11",
-      "community": 62,
+      "community": 0,
       "norm_label": "helper to retrieve float environment variables."
     },
     {
@@ -10430,7 +10430,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "utils_rationale_21",
-      "community": 62,
+      "community": 0,
       "norm_label": "helper to retrieve integer environment variables."
     },
     {
@@ -10440,7 +10440,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "utils_rationale_31",
-      "community": 62,
+      "community": 2,
       "norm_label": "returns true if hologram_quiet env var is set to 1/true/yes."
     },
     {
@@ -10450,7 +10450,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "utils_rationale_36",
-      "community": 62,
+      "community": 0,
       "norm_label": "configures standard input/output streams to use utf-8 encoding across systems."
     },
     {
@@ -10480,7 +10480,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_camera",
-      "community": 16,
+      "community": 0,
       "norm_label": "camera.py"
     },
     {
@@ -10590,7 +10590,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_camera_rationale_1",
-      "community": 16,
+      "community": 0,
       "norm_label": "cross-platform opencv camera wrapper.  regla de oro a: todas las rutas usan path"
     },
     {
@@ -10670,7 +10670,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_face_analyzer",
-      "community": 62,
+      "community": 0,
       "norm_label": "face_analyzer.py"
     },
     {
@@ -10690,7 +10690,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "vision_face_analyzer_faceanalyzer_init",
-      "community": 62,
+      "community": 0,
       "norm_label": ".__init__()"
     },
     {
@@ -10750,7 +10750,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_face_analyzer_rationale_1",
-      "community": 62,
+      "community": 0,
       "norm_label": "safe face presence analysis with opencv.  this module only detects/counts visibl"
     },
     {
@@ -10780,7 +10780,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_person_detector",
-      "community": 92,
+      "community": 0,
       "norm_label": "person_detector.py"
     },
     {
@@ -10810,7 +10810,7 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_stop",
-      "community": 1,
+      "community": 103,
       "norm_label": ".stop()"
     },
     {
@@ -10900,7 +10900,7 @@
       "source_location": "L288",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_count_persons_in_frame",
-      "community": 95,
+      "community": 1,
       "norm_label": ".count_persons_in_frame()"
     },
     {
@@ -10920,7 +10920,7 @@
       "source_location": "L309",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_count_persons_once",
-      "community": 95,
+      "community": 15,
       "norm_label": ".count_persons_once()"
     },
     {
@@ -10970,7 +10970,7 @@
       "source_location": "L401",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_feed_unsubscribe",
-      "community": 46,
+      "community": 95,
       "norm_label": ".feed_unsubscribe()"
     },
     {
@@ -10980,7 +10980,7 @@
       "source_location": "L416",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_has_feed_subscribers",
-      "community": 46,
+      "community": 95,
       "norm_label": ".has_feed_subscribers()"
     },
     {
@@ -10990,7 +10990,7 @@
       "source_location": "L425",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_run_continuous",
-      "community": 46,
+      "community": 0,
       "norm_label": ".run_continuous()"
     },
     {
@@ -11010,7 +11010,7 @@
       "source_location": "L561",
       "_origin": "ast",
       "id": "vision_person_detector_get_vision_status",
-      "community": 92,
+      "community": 0,
       "norm_label": "get_vision_status()"
     },
     {
@@ -11020,7 +11020,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_1",
-      "community": 92,
+      "community": 0,
       "norm_label": "yolov8/v11 person detector for the unev hologram.  regla de oro a: todas las rut"
     },
     {
@@ -11040,7 +11040,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_73",
-      "community": 1,
+      "community": 103,
       "norm_label": "solicita que run_continuous termine y libere la camara."
     },
     {
@@ -11130,7 +11130,7 @@
       "source_location": "L289",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_289",
-      "community": 95,
+      "community": 1,
       "norm_label": "return the number of people detected in *frame*."
     },
     {
@@ -11150,7 +11150,7 @@
       "source_location": "L310",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_310",
-      "community": 95,
+      "community": 15,
       "norm_label": "open the camera, read one frame, and return the person count."
     },
     {
@@ -11200,7 +11200,7 @@
       "source_location": "L402",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_402",
-      "community": 46,
+      "community": 95,
       "norm_label": "da de baja un cliente del feed mjpeg (el contador nunca baja de 0).          al"
     },
     {
@@ -11210,7 +11210,7 @@
       "source_location": "L417",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_417",
-      "community": 46,
+      "community": 95,
       "norm_label": "\u00bfhay al menos un cliente viendo el feed anotado?"
     },
     {
@@ -11220,7 +11220,7 @@
       "source_location": "L426",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_426",
-      "community": 46,
+      "community": 0,
       "norm_label": "run a detection loop calling *callback(event, count)* on changes.          param"
     },
     {
@@ -11240,7 +11240,7 @@
       "source_location": "L562",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_562",
-      "community": 92,
+      "community": 0,
       "norm_label": "return a human-readable status string for the vision subsystem."
     },
     {
@@ -11274,364 +11274,44 @@
       "norm_label": "analisis_y_plan_de_mejora.md"
     },
     {
-      "label": "Holograma UNEV \u2014 An\u00e1lisis t\u00e9cnico y plan de mejora",
+      "label": "Holograma UNEV \u2014 Trabajo pendiente",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_holograma_unev_an\u00e1lisis_t\u00e9cnico_y_plan_de_mejora",
+      "id": "analisis_y_plan_de_mejora_holograma_unev_trabajo_pendiente",
       "community": 8,
-      "norm_label": "holograma unev \u2014 analisis tecnico y plan de mejora"
+      "norm_label": "holograma unev \u2014 trabajo pendiente"
     },
     {
-      "label": "Estado de implementaci\u00f3n (actualizado 2026-06-28)",
+      "label": "Reorganizaci\u00f3n de carpetas (diferido)",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L3",
+      "source_location": "L10",
       "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_estado_de_implementaci\u00f3n_actualizado_2026_06_28",
+      "id": "analisis_y_plan_de_mejora_reorganizaci\u00f3n_de_carpetas_diferido",
       "community": 8,
-      "norm_label": "estado de implementacion (actualizado 2026-06-28)"
+      "norm_label": "reorganizacion de carpetas (diferido)"
     },
     {
-      "label": "0. TL;DR (resumen ejecutivo)",
+      "label": "Por qu\u00e9 est\u00e1 diferido",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L40",
+      "source_location": "L43",
       "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_0_tl_dr_resumen_ejecutivo",
+      "id": "analisis_y_plan_de_mejora_por_qu\u00e9_est\u00e1_diferido",
       "community": 8,
-      "norm_label": "0. tl;dr (resumen ejecutivo)"
+      "norm_label": "por que esta diferido"
     },
     {
-      "label": "1. C\u00f3mo est\u00e1 construido hoy (y por qu\u00e9 duele)",
+      "label": "C\u00f3mo hacerlo cuando se retome",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L66",
+      "source_location": "L52",
       "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_1_c\u00f3mo_est\u00e1_construido_hoy_y_por_qu\u00e9_duele",
+      "id": "analisis_y_plan_de_mejora_c\u00f3mo_hacerlo_cuando_se_retome",
       "community": 8,
-      "norm_label": "1. como esta construido hoy (y por que duele)"
-    },
-    {
-      "label": "1.1 El pecado original: una CLI disfrazada de servidor web",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L68",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_1_1_el_pecado_original_una_cli_disfrazada_de_servidor_web",
-      "community": 8,
-      "norm_label": "1.1 el pecado original: una cli disfrazada de servidor web"
-    },
-    {
-      "label": "1.2 Dos caminos de LLM que divergen",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L103",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_1_2_dos_caminos_de_llm_que_divergen",
-      "community": 8,
-      "norm_label": "1.2 dos caminos de llm que divergen"
-    },
-    {
-      "label": "1.3 Importaciones circulares",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L114",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_1_3_importaciones_circulares",
-      "community": 8,
-      "norm_label": "1.3 importaciones circulares"
-    },
-    {
-      "label": "2. Diagn\u00f3stico por s\u00edntoma (con evidencia exacta)",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L124",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_2_diagn\u00f3stico_por_s\u00edntoma_con_evidencia_exacta",
-      "community": 8,
-      "norm_label": "2. diagnostico por sintoma (con evidencia exacta)"
-    },
-    {
-      "label": "2.A \u2014 \"Se congela\" / todo lento  \u2192  bloqueo del event loop",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L126",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_2_a_se_congela_todo_lento_bloqueo_del_event_loop",
-      "community": 8,
-      "norm_label": "2.a \u2014 \"se congela\" / todo lento  \u2192  bloqueo del event loop"
-    },
-    {
-      "label": "2.B \u2014 \"Se queda en hablando\" / el estado nunca vuelve a idle",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L163",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_2_b_se_queda_en_hablando_el_estado_nunca_vuelve_a_idle",
-      "community": 8,
-      "norm_label": "2.b \u2014 \"se queda en hablando\" / el estado nunca vuelve a idle"
-    },
-    {
-      "label": "2.C \u2014 \"A veces no responde / dice que no puede responder\"",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L245",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_2_c_a_veces_no_responde_dice_que_no_puede_responder",
-      "community": 8,
-      "norm_label": "2.c \u2014 \"a veces no responde / dice que no puede responder\""
-    },
-    {
-      "label": "2.D \u2014 \"La detecci\u00f3n de personas funciona raro\"",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L279",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_2_d_la_detecci\u00f3n_de_personas_funciona_raro",
-      "community": 8,
-      "norm_label": "2.d \u2014 \"la deteccion de personas funciona raro\""
-    },
-    {
-      "label": "2.E \u2014 \"Lento en general\" (fuentes acumuladas)",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L337",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_2_e_lento_en_general_fuentes_acumuladas",
-      "community": 8,
-      "norm_label": "2.e \u2014 \"lento en general\" (fuentes acumuladas)"
-    },
-    {
-      "label": "3. Cat\u00e1logo completo de errores (lista numerada)",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L362",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_3_cat\u00e1logo_completo_de_errores_lista_numerada",
-      "community": 8,
-      "norm_label": "3. catalogo completo de errores (lista numerada)"
-    },
-    {
-      "label": "Arquitectura",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L366",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_arquitectura",
-      "community": 8,
-      "norm_label": "arquitectura"
-    },
-    {
-      "label": "Concurrencia / asyncio",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L379",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_concurrencia_asyncio",
-      "community": 8,
-      "norm_label": "concurrencia / asyncio"
-    },
-    {
-      "label": "LLM",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L390",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_llm",
-      "community": 8,
-      "norm_label": "llm"
-    },
-    {
-      "label": "Visi\u00f3n",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L402",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_visi\u00f3n",
-      "community": 8,
-      "norm_label": "vision"
-    },
-    {
-      "label": "TTS / STT",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L410",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_tts_stt",
-      "community": 8,
-      "norm_label": "tts / stt"
-    },
-    {
-      "label": "Frontend",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L417",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_frontend",
-      "community": 8,
-      "norm_label": "frontend"
-    },
-    {
-      "label": "Higiene de repositorio",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L423",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_higiene_de_repositorio",
-      "community": 8,
-      "norm_label": "higiene de repositorio"
-    },
-    {
-      "label": "4. \u00bfReescribir desde cero o refactorizar?",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L432",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_4_reescribir_desde_cero_o_refactorizar",
-      "community": 8,
-      "norm_label": "4. \u00bfreescribir desde cero o refactorizar?"
-    },
-    {
-      "label": "5. Arquitectura objetivo",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L461",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_5_arquitectura_objetivo",
-      "community": 8,
-      "norm_label": "5. arquitectura objetivo"
-    },
-    {
-      "label": "6. Plan por fases",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L498",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_6_plan_por_fases",
-      "community": 8,
-      "norm_label": "6. plan por fases"
-    },
-    {
-      "label": "Fase 0 \u2014 Quick wins (horas, alto impacto, bajo riesgo)",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L503",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_fase_0_quick_wins_horas_alto_impacto_bajo_riesgo",
-      "community": 8,
-      "norm_label": "fase 0 \u2014 quick wins (horas, alto impacto, bajo riesgo)"
-    },
-    {
-      "label": "Fase 1 \u2014 Desbloquear el event loop (1\u20132 d\u00edas)",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L518",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_fase_1_desbloquear_el_event_loop_1_2_d\u00edas",
-      "community": 8,
-      "norm_label": "fase 1 \u2014 desbloquear el event loop (1\u20132 dias)"
-    },
-    {
-      "label": "Fase 2 \u2014 Unificar la ruta de LLM (2\u20133 d\u00edas)",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L527",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_fase_2_unificar_la_ruta_de_llm_2_3_d\u00edas",
-      "community": 8,
-      "norm_label": "fase 2 \u2014 unificar la ruta de llm (2\u20133 dias)"
-    },
-    {
-      "label": "Fase 3 \u2014 Des-monkey-patchear hacia servicios (3\u20135 d\u00edas) \u2014 el refactor grande",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L534",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_fase_3_des_monkey_patchear_hacia_servicios_3_5_d\u00edas_el_refactor_grande",
-      "community": 8,
-      "norm_label": "fase 3 \u2014 des-monkey-patchear hacia servicios (3\u20135 dias) \u2014 el refactor grande"
-    },
-    {
-      "label": "Fase 4 \u2014 Rendimiento y pulido (2\u20133 d\u00edas)",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L545",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_fase_4_rendimiento_y_pulido_2_3_d\u00edas",
-      "community": 8,
-      "norm_label": "fase 4 \u2014 rendimiento y pulido (2\u20133 dias)"
-    },
-    {
-      "label": "7. Limpieza de repositorio",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L558",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_7_limpieza_de_repositorio",
-      "community": 8,
-      "norm_label": "7. limpieza de repositorio"
-    },
-    {
-      "label": "7.1 Sacar binarios pesados del control de versiones",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L560",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_7_1_sacar_binarios_pesados_del_control_de_versiones",
-      "community": 8,
-      "norm_label": "7.1 sacar binarios pesados del control de versiones"
-    },
-    {
-      "label": "7.2 `.md` a BORRAR o consolidar (lo pediste expl\u00edcitamente)",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L572",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_7_2_md_a_borrar_o_consolidar_lo_pediste_expl\u00edcitamente",
-      "community": 8,
-      "norm_label": "7.2 `.md` a borrar o consolidar (lo pediste explicitamente)"
-    },
-    {
-      "label": "7.3 Otros",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L595",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_7_3_otros",
-      "community": 8,
-      "norm_label": "7.3 otros"
-    },
-    {
-      "label": "8. Reorganizaci\u00f3n de carpetas propuesta",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L603",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_8_reorganizaci\u00f3n_de_carpetas_propuesta",
-      "community": 8,
-      "norm_label": "8. reorganizacion de carpetas propuesta"
-    },
-    {
-      "label": "9. Ap\u00e9ndice \u2014 veredicto por archivo",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L641",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_9_ap\u00e9ndice_veredicto_por_archivo",
-      "community": 8,
-      "norm_label": "9. apendice \u2014 veredicto por archivo"
-    },
-    {
-      "label": "Cierre",
-      "file_type": "document",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L661",
-      "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_cierre",
-      "community": 8,
-      "norm_label": "cierre"
+      "norm_label": "como hacerlo cuando se retome"
     },
     {
       "label": "CLAUDE.md",
@@ -29681,9 +29361,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval",
-      "target": "tests_test_custom_object_interval_fakebox",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_fakebox"
     },
     {
       "relation": "contains",
@@ -29691,9 +29371,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval",
-      "target": "tests_test_custom_object_interval_fakemodel",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_fakemodel"
     },
     {
       "relation": "contains",
@@ -29701,9 +29381,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L27",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval",
-      "target": "tests_test_custom_object_interval_fakeresult",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_fakeresult"
     },
     {
       "relation": "contains",
@@ -29711,9 +29391,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval",
-      "target": "tests_test_custom_object_interval_fakexy",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_fakexy"
     },
     {
       "relation": "contains",
@@ -29721,9 +29401,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L44",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval",
-      "target": "tests_test_custom_object_interval_make_detector",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_make_detector"
     },
     {
       "relation": "contains",
@@ -29731,9 +29411,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L56",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval",
-      "target": "tests_test_custom_object_interval_test_first_call_runs_inference",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_test_first_call_runs_inference"
     },
     {
       "relation": "contains",
@@ -29741,9 +29421,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L74",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval",
-      "target": "tests_test_custom_object_interval_test_inference_reruns_after_interval",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_test_inference_reruns_after_interval"
     },
     {
       "relation": "contains",
@@ -29751,9 +29431,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L91",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval",
-      "target": "tests_test_custom_object_interval_test_no_custom_classes_skips_inference",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_test_no_custom_classes_skips_inference"
     },
     {
       "relation": "contains",
@@ -29761,9 +29441,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L64",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval",
-      "target": "tests_test_custom_object_interval_test_second_call_within_interval_uses_cache",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_test_second_call_within_interval_uses_cache"
     },
     {
       "relation": "contains",
@@ -29771,9 +29451,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L83",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval",
-      "target": "tests_test_custom_object_interval_test_zero_interval_runs_every_call",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_test_zero_interval_runs_every_call"
     },
     {
       "relation": "imports",
@@ -29782,9 +29462,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval",
-      "target": "vision_person_detector",
-      "confidence_score": 1.0
+      "target": "vision_person_detector"
     },
     {
       "relation": "rationale_for",
@@ -29792,9 +29472,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval_rationale_1",
-      "target": "tests_test_custom_object_interval",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval"
     },
     {
       "relation": "calls",
@@ -29803,9 +29483,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval_fakebox_init",
-      "target": "tests_test_custom_object_interval_fakexy",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_fakexy"
     },
     {
       "relation": "method",
@@ -29813,9 +29493,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval_fakexy",
-      "target": "tests_test_custom_object_interval_fakexy_init",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_fakexy_init"
     },
     {
       "relation": "method",
@@ -29823,9 +29503,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L16",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval_fakexy",
-      "target": "tests_test_custom_object_interval_fakexy_tolist",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_fakexy_tolist"
     },
     {
       "relation": "method",
@@ -29833,9 +29513,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval_fakebox",
-      "target": "tests_test_custom_object_interval_fakebox_init",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_fakebox_init"
     },
     {
       "relation": "calls",
@@ -29844,9 +29524,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L41",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval_fakemodel_predict",
-      "target": "tests_test_custom_object_interval_fakebox",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_fakebox"
     },
     {
       "relation": "calls",
@@ -29855,9 +29535,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L41",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval_fakemodel_predict",
-      "target": "tests_test_custom_object_interval_fakeresult",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_fakeresult"
     },
     {
       "relation": "method",
@@ -29865,9 +29545,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L28",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval_fakeresult",
-      "target": "tests_test_custom_object_interval_fakeresult_init",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_fakeresult_init"
     },
     {
       "relation": "method",
@@ -29875,9 +29555,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L36",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval_fakemodel",
-      "target": "tests_test_custom_object_interval_fakemodel_init",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_fakemodel_init"
     },
     {
       "relation": "method",
@@ -29885,9 +29565,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L39",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval_fakemodel",
-      "target": "tests_test_custom_object_interval_fakemodel_predict",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_fakemodel_predict"
     },
     {
       "relation": "calls",
@@ -29896,9 +29576,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L52",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval_make_detector",
-      "target": "tests_test_custom_object_interval_fakemodel",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_fakemodel"
     },
     {
       "relation": "rationale_for",
@@ -29906,9 +29586,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L34",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval_rationale_34",
-      "target": "tests_test_custom_object_interval_fakemodel",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_fakemodel"
     },
     {
       "relation": "calls",
@@ -29917,9 +29597,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L58",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval_test_first_call_runs_inference",
-      "target": "tests_test_custom_object_interval_make_detector",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_make_detector"
     },
     {
       "relation": "calls",
@@ -29928,9 +29608,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L76",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval_test_inference_reruns_after_interval",
-      "target": "tests_test_custom_object_interval_make_detector",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_make_detector"
     },
     {
       "relation": "calls",
@@ -29939,9 +29619,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L93",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval_test_no_custom_classes_skips_inference",
-      "target": "tests_test_custom_object_interval_make_detector",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_make_detector"
     },
     {
       "relation": "calls",
@@ -29950,9 +29630,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L66",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval_test_second_call_within_interval_uses_cache",
-      "target": "tests_test_custom_object_interval_make_detector",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_make_detector"
     },
     {
       "relation": "calls",
@@ -29961,9 +29641,9 @@
       "source_file": "tests/test_custom_object_interval.py",
       "source_location": "L85",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_custom_object_interval_test_zero_interval_runs_every_call",
-      "target": "tests_test_custom_object_interval_make_detector",
-      "confidence_score": 1.0
+      "target": "tests_test_custom_object_interval_make_detector"
     },
     {
       "relation": "contains",
@@ -32502,9 +32182,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L73",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_73",
-      "target": "vision_person_detector_yolopersondetector_stop",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_stop"
     },
     {
       "relation": "rationale_for",
@@ -32512,9 +32192,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L77",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_77",
-      "target": "vision_person_detector_yolopersondetector_load",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_load"
     },
     {
       "relation": "calls",
@@ -32555,9 +32235,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L115",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_115",
-      "target": "vision_person_detector_yolopersondetector_ensure_loaded",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_ensure_loaded"
     },
     {
       "relation": "calls",
@@ -32587,9 +32267,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L120",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_120",
-      "target": "vision_person_detector_yolopersondetector_load_training_data",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_load_training_data"
     },
     {
       "relation": "calls",
@@ -32608,9 +32288,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L161",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_161",
-      "target": "vision_person_detector_yolopersondetector_build_text_prompt",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_build_text_prompt"
     },
     {
       "relation": "calls",
@@ -32629,9 +32309,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L169",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_169",
-      "target": "vision_person_detector_yolopersondetector_detect_custom_objects",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_detect_custom_objects"
     },
     {
       "relation": "calls",
@@ -32650,9 +32330,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L227",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_227",
-      "target": "vision_person_detector_yolopersondetector_detect_persons_in_frame",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_detect_persons_in_frame"
     },
     {
       "relation": "calls",
@@ -32693,9 +32373,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L252",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_252",
-      "target": "vision_person_detector_yolopersondetector_analyze_frame",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_analyze_frame"
     },
     {
       "relation": "calls",
@@ -32714,9 +32394,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L285",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_285",
-      "target": "vision_person_detector_yolopersondetector_detect_person_in_frame",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_detect_person_in_frame"
     },
     {
       "relation": "calls",
@@ -32735,9 +32415,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L289",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_289",
-      "target": "vision_person_detector_yolopersondetector_count_persons_in_frame",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_count_persons_in_frame"
     },
     {
       "relation": "calls",
@@ -32756,9 +32436,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L297",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_297",
-      "target": "vision_person_detector_yolopersondetector_detect_person_once",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_detect_person_once"
     },
     {
       "relation": "rationale_for",
@@ -32766,9 +32446,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L310",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_310",
-      "target": "vision_person_detector_yolopersondetector_count_persons_once",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_count_persons_once"
     },
     {
       "relation": "rationale_for",
@@ -32776,9 +32456,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L327",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_327",
-      "target": "vision_person_detector_yolopersondetector_draw_overlay",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_draw_overlay"
     },
     {
       "relation": "calls",
@@ -32797,9 +32477,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L378",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_378",
-      "target": "vision_person_detector_yolopersondetector_store_annotated_frame",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_store_annotated_frame"
     },
     {
       "relation": "calls",
@@ -32818,9 +32498,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L392",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_392",
-      "target": "vision_person_detector_yolopersondetector_get_latest_jpeg",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_get_latest_jpeg"
     },
     {
       "relation": "rationale_for",
@@ -32828,9 +32508,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L397",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_397",
-      "target": "vision_person_detector_yolopersondetector_feed_subscribe",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_feed_subscribe"
     },
     {
       "relation": "rationale_for",
@@ -32838,9 +32518,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L402",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_402",
-      "target": "vision_person_detector_yolopersondetector_feed_unsubscribe",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_feed_unsubscribe"
     },
     {
       "relation": "rationale_for",
@@ -32858,9 +32538,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L417",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_417",
-      "target": "vision_person_detector_yolopersondetector_has_feed_subscribers",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_has_feed_subscribers"
     },
     {
       "relation": "calls",
@@ -32879,9 +32559,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L426",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_426",
-      "target": "vision_person_detector_yolopersondetector_run_continuous",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_run_continuous"
     },
     {
       "relation": "rationale_for",
@@ -32889,9 +32569,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L552",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_552",
-      "target": "vision_person_detector_yolopersondetector_is_available",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_is_available"
     },
     {
       "relation": "rationale_for",
@@ -32899,9 +32579,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L562",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_562",
-      "target": "vision_person_detector_get_vision_status",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_get_vision_status"
     },
     {
       "relation": "contains",
@@ -32919,19 +32599,29 @@
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
       "source_location": "L1",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "analisis_y_plan_de_mejora",
-      "target": "analisis_y_plan_de_mejora_holograma_unev_an\u00e1lisis_t\u00e9cnico_y_plan_de_mejora"
+      "target": "analisis_y_plan_de_mejora_holograma_unev_trabajo_pendiente",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L17",
+      "source_location": "L10",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_holograma_unev_an\u00e1lisis_t\u00e9cnico_y_plan_de_mejora",
-      "target": "analisis_y_plan_de_mejora_0_tl_dr_resumen_ejecutivo"
+      "source": "analisis_y_plan_de_mejora_holograma_unev_trabajo_pendiente",
+      "target": "analisis_y_plan_de_mejora_reorganizaci\u00f3n_de_carpetas_diferido",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "analisis_y_plan_de_mejora_reorganizaci\u00f3n_de_carpetas_diferido",
+      "target": "analisis_y_plan_de_mejora_c\u00f3mo_hacerlo_cuando_se_retome",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -32939,339 +32629,9 @@
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
       "source_location": "L43",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_holograma_unev_an\u00e1lisis_t\u00e9cnico_y_plan_de_mejora",
-      "target": "analisis_y_plan_de_mejora_1_c\u00f3mo_est\u00e1_construido_hoy_y_por_qu\u00e9_duele"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L101",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_holograma_unev_an\u00e1lisis_t\u00e9cnico_y_plan_de_mejora",
-      "target": "analisis_y_plan_de_mejora_2_diagn\u00f3stico_por_s\u00edntoma_con_evidencia_exacta"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L339",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_holograma_unev_an\u00e1lisis_t\u00e9cnico_y_plan_de_mejora",
-      "target": "analisis_y_plan_de_mejora_3_cat\u00e1logo_completo_de_errores_lista_numerada"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L409",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_holograma_unev_an\u00e1lisis_t\u00e9cnico_y_plan_de_mejora",
-      "target": "analisis_y_plan_de_mejora_4_reescribir_desde_cero_o_refactorizar"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L438",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_holograma_unev_an\u00e1lisis_t\u00e9cnico_y_plan_de_mejora",
-      "target": "analisis_y_plan_de_mejora_5_arquitectura_objetivo"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L475",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_holograma_unev_an\u00e1lisis_t\u00e9cnico_y_plan_de_mejora",
-      "target": "analisis_y_plan_de_mejora_6_plan_por_fases"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L533",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_holograma_unev_an\u00e1lisis_t\u00e9cnico_y_plan_de_mejora",
-      "target": "analisis_y_plan_de_mejora_7_limpieza_de_repositorio"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L571",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_holograma_unev_an\u00e1lisis_t\u00e9cnico_y_plan_de_mejora",
-      "target": "analisis_y_plan_de_mejora_8_reorganizaci\u00f3n_de_carpetas_propuesta"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L609",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_holograma_unev_an\u00e1lisis_t\u00e9cnico_y_plan_de_mejora",
-      "target": "analisis_y_plan_de_mejora_9_ap\u00e9ndice_veredicto_por_archivo"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_holograma_unev_an\u00e1lisis_t\u00e9cnico_y_plan_de_mejora",
-      "target": "analisis_y_plan_de_mejora_estado_de_implementaci\u00f3n_actualizado_2026_06_28"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L45",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_1_c\u00f3mo_est\u00e1_construido_hoy_y_por_qu\u00e9_duele",
-      "target": "analisis_y_plan_de_mejora_1_1_el_pecado_original_una_cli_disfrazada_de_servidor_web"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L80",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_1_c\u00f3mo_est\u00e1_construido_hoy_y_por_qu\u00e9_duele",
-      "target": "analisis_y_plan_de_mejora_1_2_dos_caminos_de_llm_que_divergen"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L91",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_1_c\u00f3mo_est\u00e1_construido_hoy_y_por_qu\u00e9_duele",
-      "target": "analisis_y_plan_de_mejora_1_3_importaciones_circulares"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L103",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_2_diagn\u00f3stico_por_s\u00edntoma_con_evidencia_exacta",
-      "target": "analisis_y_plan_de_mejora_2_a_se_congela_todo_lento_bloqueo_del_event_loop"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L140",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_2_diagn\u00f3stico_por_s\u00edntoma_con_evidencia_exacta",
-      "target": "analisis_y_plan_de_mejora_2_b_se_queda_en_hablando_el_estado_nunca_vuelve_a_idle"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L222",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_2_diagn\u00f3stico_por_s\u00edntoma_con_evidencia_exacta",
-      "target": "analisis_y_plan_de_mejora_2_c_a_veces_no_responde_dice_que_no_puede_responder"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L256",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_2_diagn\u00f3stico_por_s\u00edntoma_con_evidencia_exacta",
-      "target": "analisis_y_plan_de_mejora_2_d_la_detecci\u00f3n_de_personas_funciona_raro"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L314",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_2_diagn\u00f3stico_por_s\u00edntoma_con_evidencia_exacta",
-      "target": "analisis_y_plan_de_mejora_2_e_lento_en_general_fuentes_acumuladas"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L343",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_3_cat\u00e1logo_completo_de_errores_lista_numerada",
-      "target": "analisis_y_plan_de_mejora_arquitectura"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L356",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_3_cat\u00e1logo_completo_de_errores_lista_numerada",
-      "target": "analisis_y_plan_de_mejora_concurrencia_asyncio"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L394",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_3_cat\u00e1logo_completo_de_errores_lista_numerada",
-      "target": "analisis_y_plan_de_mejora_frontend"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L400",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_3_cat\u00e1logo_completo_de_errores_lista_numerada",
-      "target": "analisis_y_plan_de_mejora_higiene_de_repositorio"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L367",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_3_cat\u00e1logo_completo_de_errores_lista_numerada",
-      "target": "analisis_y_plan_de_mejora_llm"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L387",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_3_cat\u00e1logo_completo_de_errores_lista_numerada",
-      "target": "analisis_y_plan_de_mejora_tts_stt"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L379",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_3_cat\u00e1logo_completo_de_errores_lista_numerada",
-      "target": "analisis_y_plan_de_mejora_visi\u00f3n"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L480",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_6_plan_por_fases",
-      "target": "analisis_y_plan_de_mejora_fase_0_quick_wins_horas_alto_impacto_bajo_riesgo"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L495",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_6_plan_por_fases",
-      "target": "analisis_y_plan_de_mejora_fase_1_desbloquear_el_event_loop_1_2_d\u00edas"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L504",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_6_plan_por_fases",
-      "target": "analisis_y_plan_de_mejora_fase_2_unificar_la_ruta_de_llm_2_3_d\u00edas"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L511",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_6_plan_por_fases",
-      "target": "analisis_y_plan_de_mejora_fase_3_des_monkey_patchear_hacia_servicios_3_5_d\u00edas_el_refactor_grande"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L522",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_6_plan_por_fases",
-      "target": "analisis_y_plan_de_mejora_fase_4_rendimiento_y_pulido_2_3_d\u00edas"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L535",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_7_limpieza_de_repositorio",
-      "target": "analisis_y_plan_de_mejora_7_1_sacar_binarios_pesados_del_control_de_versiones"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L547",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_7_limpieza_de_repositorio",
-      "target": "analisis_y_plan_de_mejora_7_2_md_a_borrar_o_consolidar_lo_pediste_expl\u00edcitamente"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L563",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_7_limpieza_de_repositorio",
-      "target": "analisis_y_plan_de_mejora_7_3_otros"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L629",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "analisis_y_plan_de_mejora_9_ap\u00e9ndice_veredicto_por_archivo",
-      "target": "analisis_y_plan_de_mejora_cierre"
+      "source": "analisis_y_plan_de_mejora_reorganizaci\u00f3n_de_carpetas_diferido",
+      "target": "analisis_y_plan_de_mejora_por_qu\u00e9_est\u00e1_diferido",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -33875,5 +33235,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "d21a51b905b595d6da6fca428689be4c9785048a"
+  "built_at_commit": "408b359c5cf2992f2df278f33468b52d45f7296d"
 }
