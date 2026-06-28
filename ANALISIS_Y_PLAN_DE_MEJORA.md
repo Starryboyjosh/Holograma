@@ -2,7 +2,7 @@
 
 ## Estado de implementación (actualizado 2026-06-27)
 
-Avance verificado con `pytest` (**91 pruebas**) + `ruff` limpio. El backend de ML
+Avance verificado con `pytest` (**93 pruebas**) + `ruff` limpio. El backend de ML
 no corre en este entorno, por eso lo que requiere ejecutarlo queda marcado como
 *pendiente de hardware*, no cerrado. Detalle para el próximo agente en
 [`docs/HANDOFF.md`](docs/HANDOFF.md) → "Latest session".
@@ -12,8 +12,8 @@ no corre en este entorno, por eso lo que requiere ejecutarlo queda marcado como
 | **0 — Síntomas** | ✅ Hecho | Sin re-saludo por parpadeo (`vision/person_detector.py`); `custom_speak` ya no reemite eventos (atasco "hablando", síntoma B); `_ollama_ready` cacheado (`OLLAMA_READY_TTL_SECONDS`); watchdog de 20 s en `useChatSocket.ts`. |
 | **1 — Event loop** | ◐ Parcial | Selección de backend en `asyncio.to_thread` (el sondeo ya no congela el loop). **Desvío deliberado:** la ruta async ya usa `AsyncOpenAI`/`AsyncAnthropic`, así que la reescritura urllib→httpx no aporta nada al loop y NO se hizo. |
 | **2 — Calidad** | ◐ Parcial | `max_tokens` unificado vía `LLM_MAX_TOKENS` (450); el filtro anti-inglés ya no descarta respuestas (síntoma C "no puedo responder"). |
-| **3 — De-monkey-patch** | ◐ Base hecha | Capa `app/` aditiva y testeada (`ConnectionManager`, `LLMService`, `CameraContextProvider`, `ConversationService`); corte del ciclo `call↔llm_backend` vía `stream_llm_response(camera_context=...)`. **Nada importa `app/` aún** → cero riesgo. Falta cablear en `main.py` y borrar el monkey-patching (requiere hardware). |
-| **4 / §8 — Reorg** | ☐ Pendiente | Movimiento de carpetas (`app/` + `core/`) diferido: rompe imports y necesita el backend corriendo para validar. |
+| **3 — De-monkey-patch** | ✅ Hecho | Capa `app/` **cableada en `main.py`** por estrangulamiento (Pasos A–D; commits `2c2567b`/`97a885f`/`9fe1eb2`/`9b2afa0`): registro único de sockets vía `ConnectionManager` (+ puente hilo→loop `bind_loop`/`broadcast_threadsafe` para voz/cámara), el turno WS pasa por `ConversationService` (emisor único), monkey-patch de texto retirado, ciclo `call↔llm_backend` cortado vía `stream_llm_response(camera_context=...)`, y `os.chdir` global eliminado (rutas ancladas a `BASE_DIR`). **Validado contra servidor real lanzado desde un CWD ajeno.** Pendiente: reescribir `call.py`/`llm_backend.py` (§9, futuro). |
+| **4 / §8 — Reorg** | ☐ Diferido | Movimiento de carpetas (`app/` + `core/`) **diferido a su propia sesión** por decisión (2026-06-27): rompe imports en todo el repo y cambia el punto de entrada del sidecar de Tauri (`main.py`→`app/main.py`); además su árbol presupone el reescribir de `call.py`/`llm_backend.py` (§9) que aún no se hizo. Hacer con A–D ya verdes, un commit por movimiento. |
 
 Pruebas nuevas de esta tanda: `tests/test_person_presence.py`,
 `tests/test_ollama_ready_cache.py`, `tests/test_llm_unify.py`,

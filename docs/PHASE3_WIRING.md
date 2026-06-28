@@ -1,5 +1,13 @@
 # Phase 3 wiring — next-session execution plan
 
+> **STATUS 2026-06-27 — Steps A–D COMPLETE, live-validated & pushed**
+> (`2c2567b` A · `97a885f` B · `9fe1eb2` C · `9b2afa0` D). The de-monkey-patch
+> wiring is done: single `ConnectionManager` registry + thread→loop bridge, the WS
+> turn runs through `ConversationService`, redundant patches retired, and `os.chdir`
+> removed (paths anchored to `BASE_DIR`, validated by booting from a foreign cwd).
+> **§8 folder reorg was deferred to its own session** by decision. This doc is now
+> historical reference — keep it for the §8 plan (§3 below) and the validation recipe.
+
 Surgical, code-grounded plan to finish Phase 3 (de-monkey-patch `main.py` into the
 tested `app/` service layer) and then §8 folder reorg. Written because 23% of a
 session wasn't enough to do it **with validation** — and this item is the riskiest
