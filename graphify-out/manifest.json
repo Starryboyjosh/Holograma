@@ -10,8 +10,8 @@
     "semantic_hash": ""
   },
   "main.py": {
-    "mtime": 1782600331.2546213,
-    "ast_hash": "e3ee874cb6d3175deb17ac5a5710481d",
+    "mtime": 1782620402.8967037,
+    "ast_hash": "f626f3deaa15e2d7dca039daf446db42",
     "semantic_hash": ""
   },
   "skills/__init__.py": {
@@ -775,8 +775,8 @@
     "semantic_hash": ""
   },
   "docs/CONFIG.md": {
-    "mtime": 1782309244.7893198,
-    "ast_hash": "0114fc9c4f030263ca263c9ba0d3a274",
+    "mtime": 1782603595.7699172,
+    "ast_hash": "415ed43b2269e7c1ab917a3501ea60ad",
     "semantic_hash": ""
   },
   "docs/Manual de Marca - UNEV 1920x1080 - 2025.pdf": {
@@ -820,8 +820,8 @@
     "semantic_hash": ""
   },
   "docs/HANDOFF.md": {
-    "mtime": 1782358922.0951622,
-    "ast_hash": "262c79cbfb75e40d352b1b12028efe6d",
+    "mtime": 1782605655.7951527,
+    "ast_hash": "ccf520f76b2790b7c98a732beab4c6d3",
     "semantic_hash": ""
   },
   "security.py": {
@@ -910,8 +910,8 @@
     "semantic_hash": ""
   },
   "ANALISIS_Y_PLAN_DE_MEJORA.md": {
-    "mtime": 1782587316.8425617,
-    "ast_hash": "0d5f5e1112ee5f77589ac611f752ae88",
+    "mtime": 1782603641.5166118,
+    "ast_hash": "7899d022b765b4e6d6065e855c27d691",
     "semantic_hash": ""
   },
   "app/__init__.py": {
@@ -920,8 +920,8 @@
     "semantic_hash": ""
   },
   "app/connection.py": {
-    "mtime": 1782603221.996373,
-    "ast_hash": "85314168e6d1c45eab965c9069f3df13",
+    "mtime": 1782620370.6734912,
+    "ast_hash": "ec23f86a6325cb321454f39f194740ac",
     "semantic_hash": ""
   },
   "app/services/__init__.py": {
@@ -947,6 +947,11 @@
   "tests/test_app_services.py": {
     "mtime": 1782603283.8397386,
     "ast_hash": "517b208130fe738847a0c1e41daa9b76",
+    "semantic_hash": ""
+  },
+  "docs/PHASE3_WIRING.md": {
+    "mtime": 1782605610.851782,
+    "ast_hash": "5fc1e6f9dedbd871e9b52347ab4e0a89",
     "semantic_hash": ""
   }
 }

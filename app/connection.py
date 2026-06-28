@@ -59,3 +59,23 @@ class ConnectionManager:
             async with self._lock:
                 for websocket in dead:
                     self._connections.discard(websocket)
+
+    async def close_all(self) -> None:
+        """Cierra y olvida todas las conexiones (apagado ordenado del servidor).
+
+        El manager es ahora el dueño del registro de sockets, así que también es
+        responsable de cerrarlos limpiamente al apagar. `close()` es opcional en el
+        protocolo (FastAPI lo cumple); si no existe o falla, se ignora.
+        """
+        async with self._lock:
+            targets = list(self._connections)
+            self._connections.clear()
+
+        for websocket in targets:
+            close = getattr(websocket, "close", None)
+            if close is None:
+                continue
+            try:
+                await close()
+            except Exception:
+                pass

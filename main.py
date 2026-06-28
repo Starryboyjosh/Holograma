@@ -20,6 +20,7 @@ from fastapi.responses import (
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from app.connection import ConnectionManager
 from auth_token import request_authorized
 from llm_backend import probe_backend, stream_llm_response
 from provider_config import all_providers_public_info
@@ -166,12 +167,7 @@ async def lifespan(app: FastAPI):
     yield
 
     # --- Apagado ordenado ---
-    for ws in list(active_connections):
-        try:
-            await ws.close()
-        except Exception:
-            pass
-    active_connections.clear()
+    await manager.close_all()
     try:
         import call
 
@@ -228,7 +224,10 @@ async def _api_token_gate(request, call_next):
         )
     return await call_next(request)
 
-active_connections: list[WebSocket] = []
+# Registro único de conexiones WebSocket + difusión async (ver app/connection.py).
+# Reemplaza la antigua lista global `active_connections` y centraliza el envío:
+# tanto el endpoint async como los hilos de voz/cámara emiten por este manager.
+manager = ConnectionManager()
 running_loop = None
 
 
@@ -256,15 +255,11 @@ def send_to_web_client(type_name: str, text: str, user_text: str = None, count: 
     if user_text:
         payload["user_text"] = user_text
 
-    async def do_send():
-        for ws in list(active_connections):
-            try:
-                await ws.send_json(payload)
-            except Exception:
-                if ws in active_connections:
-                    active_connections.remove(ws)
-
-    asyncio.run_coroutine_threadsafe(do_send(), running_loop)
+    # Esta función la llaman los hilos de voz/cámara (no-async), así que hay que
+    # saltar al event loop con run_coroutine_threadsafe. El manager serializa el
+    # envío y purga sockets muertos por sí mismo; ese salto hilo→loop es el puente
+    # imprescindible entre los productores en hilos y el WebSocket.
+    asyncio.run_coroutine_threadsafe(manager.broadcast(payload), running_loop)
 
 
 # --- Modelos Pydantic ---
@@ -904,7 +899,7 @@ async def send_tts_status(websocket: WebSocket, status: str, message: str):
 @app.websocket("/ws/chat")
 async def websocket_chat_endpoint(websocket: WebSocket):
     await websocket.accept()
-    active_connections.append(websocket)
+    await manager.register(websocket)
     print("[WebSocket] Cliente conectado al chat principal.")
     try:
         # Informar al cliente del modo de voz actual (ptt / presentation / auto).
@@ -931,13 +926,7 @@ async def websocket_chat_endpoint(websocket: WebSocket):
                     from call import set_trigger_mode
 
                     new_mode = set_trigger_mode(message_data.get("mode", ""))
-                    for ws in list(active_connections):
-                        try:
-                            await ws.send_json(
-                                {"type": "voice_mode", "mode": new_mode}
-                            )
-                        except Exception:
-                            pass
+                    await manager.broadcast({"type": "voice_mode", "mode": new_mode})
                 except Exception as e:
                     print(f"[WebSocket] No se pudo cambiar el modo: {e}")
                 continue
@@ -1010,8 +999,7 @@ async def websocket_chat_endpoint(websocket: WebSocket):
     except Exception as e:
         print(f"[WebSocket] Error inesperado en WebSocket: {e}")
     finally:
-        if websocket in active_connections:
-            active_connections.remove(websocket)
+        await manager.unregister(websocket)
 
 
 
