@@ -831,11 +831,18 @@ def _placeholder_jpeg(message: str = "Esperando camara..."):
 
 
 @app.get("/api/video_feed")
-def video_feed():
-    """Stream the annotated YOLO camera frames to the web interface as MJPEG."""
+async def video_feed():
+    """Transmite los cuadros YOLO anotados como MJPEG (async: no bloquea el loop).
+
+    Antes era un endpoint síncrono cuyo generador usaba time.sleep: cada cliente
+    del feed ocupaba un worker del threadpool y el sleep bloqueaba ese hilo. Ahora
+    es async con asyncio.sleep, así que el stream cede el control al event loop
+    entre cuadros y convive con el WebSocket y el resto de endpoints sin pelear por
+    los hilos del pool.
+    """
     import call
 
-    def generate():
+    async def generate():
         placeholder = _placeholder_jpeg()
         # Suscribirse activa la codificación JPEG en el hilo de cámara; al cerrarse
         # el generador (cliente desconecta) se da de baja y el detector deja de
@@ -847,11 +854,11 @@ def video_feed():
                 if jpeg is None:
                     jpeg = placeholder
                     if jpeg is None:
-                        time.sleep(0.2)
+                        await asyncio.sleep(0.2)
                         continue
-                    time.sleep(0.2)
+                    await asyncio.sleep(0.2)
                 else:
-                    time.sleep(0.04)  # ~25 fps
+                    await asyncio.sleep(0.04)  # ~25 fps
                 yield (
                     b"--frame\r\n"
                     b"Content-Type: image/jpeg\r\n\r\n" + jpeg + b"\r\n"
