@@ -52,6 +52,11 @@ class YoloPersonDetector:
         # Último cuadro anotado (JPEG) para transmitir al frontend vía MJPEG.
         self._latest_jpeg: bytes | None = None
         self._jpeg_lock = threading.Lock()
+        # Suscriptores del feed MJPEG. Codificar JPEG en cada iteración (~30 fps)
+        # gasta CPU aunque nadie mire; con cero suscriptores el bucle se salta el
+        # imencode por completo. El contador lo mueven los handlers de /api/video_feed.
+        self._feed_subscribers = 0
+        self._feed_lock = threading.Lock()
         # Señal cooperativa de parada: al activarla, run_continuous sale del bucle
         # y el context manager de Camera libera el dispositivo (apagar = liberar).
         self._stop_event = threading.Event()
@@ -373,6 +378,31 @@ class YoloPersonDetector:
         with self._jpeg_lock:
             return self._latest_jpeg
 
+    def feed_subscribe(self):
+        """Registra un cliente del feed MJPEG (activa la codificación JPEG)."""
+        with self._feed_lock:
+            self._feed_subscribers += 1
+
+    def feed_unsubscribe(self):
+        """Da de baja un cliente del feed MJPEG (el contador nunca baja de 0).
+
+        Al llegar a cero suscriptores se descarta el último cuadro cacheado: un
+        cliente que reconecte no verá un fotograma viejo mientras se genera el
+        primero nuevo (verá el placeholder hasta que haya cuadro fresco).
+        """
+        with self._feed_lock:
+            if self._feed_subscribers > 0:
+                self._feed_subscribers -= 1
+            cleared = self._feed_subscribers == 0
+        if cleared:
+            with self._jpeg_lock:
+                self._latest_jpeg = None
+
+    def has_feed_subscribers(self):
+        """¿Hay al menos un cliente viendo el feed anotado?"""
+        with self._feed_lock:
+            return self._feed_subscribers > 0
+
     # ------------------------------------------------------------------
     # Continuous detection loop
     # ------------------------------------------------------------------
@@ -491,8 +521,11 @@ class YoloPersonDetector:
                         last_count = count
                     last_custom_labels = current_custom_labels
 
-                # Publica el cuadro actual con las cajas del análisis más reciente.
-                self._store_annotated_frame(frame, last_analysis)
+                # Publica el cuadro anotado SOLO si alguien mira el feed MJPEG.
+                # Sin suscriptores nos saltamos el imencode (caro a ~30 fps) por
+                # completo; la detección/eventos siguen corriendo igual.
+                if self.has_feed_subscribers():
+                    self._store_annotated_frame(frame, last_analysis)
                 time.sleep(0.03)
 
     # ------------------------------------------------------------------

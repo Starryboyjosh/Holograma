@@ -907,6 +907,24 @@ def get_latest_camera_jpeg():
     return _camera_detector.get_latest_jpeg()
 
 
+def camera_feed_subscribe():
+    """Registra un cliente del feed de video (activa la codificación JPEG).
+
+    El detector solo codifica el cuadro anotado mientras haya al menos un cliente
+    viendo `/api/video_feed`; sin suscriptores ahorra el imencode por cuadro.
+    """
+    detector = _camera_detector
+    if detector is not None:
+        detector.feed_subscribe()
+
+
+def camera_feed_unsubscribe():
+    """Da de baja un cliente del feed de video."""
+    detector = _camera_detector
+    if detector is not None:
+        detector.feed_unsubscribe()
+
+
 def _camera_detection_callback(event, count, analysis=None):
     """Handle YOLO detection events from the background camera thread."""
     global ai_busy, _last_camera_analysis, _last_custom_speak_times, _person_present

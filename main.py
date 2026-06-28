@@ -837,20 +837,27 @@ def video_feed():
 
     def generate():
         placeholder = _placeholder_jpeg()
-        while True:
-            jpeg = call.get_latest_camera_jpeg()
-            if jpeg is None:
-                jpeg = placeholder
+        # Suscribirse activa la codificación JPEG en el hilo de cámara; al cerrarse
+        # el generador (cliente desconecta) se da de baja y el detector deja de
+        # codificar si no queda nadie mirando.
+        call.camera_feed_subscribe()
+        try:
+            while True:
+                jpeg = call.get_latest_camera_jpeg()
                 if jpeg is None:
+                    jpeg = placeholder
+                    if jpeg is None:
+                        time.sleep(0.2)
+                        continue
                     time.sleep(0.2)
-                    continue
-                time.sleep(0.2)
-            else:
-                time.sleep(0.04)  # ~25 fps
-            yield (
-                b"--frame\r\n"
-                b"Content-Type: image/jpeg\r\n\r\n" + jpeg + b"\r\n"
-            )
+                else:
+                    time.sleep(0.04)  # ~25 fps
+                yield (
+                    b"--frame\r\n"
+                    b"Content-Type: image/jpeg\r\n\r\n" + jpeg + b"\r\n"
+                )
+        finally:
+            call.camera_feed_unsubscribe()
 
     return StreamingResponse(
         generate(),
