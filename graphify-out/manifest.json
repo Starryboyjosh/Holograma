@@ -1,17 +1,17 @@
 {
   "call.py": {
-    "mtime": 1782310791.9928212,
-    "ast_hash": "770d58a19bc5378da32e238772e1683e",
+    "mtime": 1782674931.364101,
+    "ast_hash": "4570cf32aeb27a44bdad9f72ab0078ff",
     "semantic_hash": ""
   },
   "llm_backend.py": {
-    "mtime": 1782622914.3616955,
-    "ast_hash": "ed1f26498eac4b8cdc039be12a73d216",
+    "mtime": 1782676158.3329923,
+    "ast_hash": "34c36d6a8294db34862df07ff824de2f",
     "semantic_hash": ""
   },
   "main.py": {
-    "mtime": 1782622829.9083624,
-    "ast_hash": "32e03d3a72112e4d3991a7d4a6a35efe",
+    "mtime": 1782676747.2160082,
+    "ast_hash": "54ca9a3afb30489a42cf8f0c65eb66ac",
     "semantic_hash": ""
   },
   "skills/__init__.py": {
@@ -75,8 +75,8 @@
     "semantic_hash": ""
   },
   "vision/person_detector.py": {
-    "mtime": 1782600320.0046008,
-    "ast_hash": "8d18b9dd6882d5743a6de6878909e97d",
+    "mtime": 1782674924.2807748,
+    "ast_hash": "16babc844eef8cbb7a5dea7ab092e673",
     "semantic_hash": ""
   },
   ".claude/settings.json": {
@@ -285,8 +285,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1782358358.033692,
-    "ast_hash": "fcc229e543d2411e5f8eafe5b86f24a2",
+    "mtime": 1782676763.6159337,
+    "ast_hash": "11e5d4faca9f2897d46de6daa7a4399f",
     "semantic_hash": ""
   },
   "frontend/README.md": {
@@ -760,8 +760,8 @@
     "semantic_hash": ""
   },
   "provider_config.py": {
-    "mtime": 1782270504.2665818,
-    "ast_hash": "617b3d99ece7e73779d0c80863ccfec0",
+    "mtime": 1782676136.9898446,
+    "ast_hash": "2c4f45f5ee2e9a2726d7079ffc0f93c5",
     "semantic_hash": ""
   },
   "tests/test_llm_backend.py": {
@@ -770,13 +770,13 @@
     "semantic_hash": ""
   },
   "tests/test_provider_config.py": {
-    "mtime": 1782307393.6739385,
-    "ast_hash": "258ef78737e9a8049b55cd96e2ddd4a8",
+    "mtime": 1782676301.4152062,
+    "ast_hash": "eb7bdf6508de4d3375a8dc1488d3f5c5",
     "semantic_hash": ""
   },
   "docs/CONFIG.md": {
-    "mtime": 1782603595.7699172,
-    "ast_hash": "415ed43b2269e7c1ab917a3501ea60ad",
+    "mtime": 1782676769.8659055,
+    "ast_hash": "248e0ae03ca6d6daec402b3a5cc9d69d",
     "semantic_hash": ""
   },
   "docs/Manual de Marca - UNEV 1920x1080 - 2025.pdf": {
@@ -817,11 +817,6 @@
   "frontend/vitest.config.ts": {
     "mtime": 1782307907.8090212,
     "ast_hash": "0030ab476cec78d91c8e3d3c11b4d3f7",
-    "semantic_hash": ""
-  },
-  "docs/HANDOFF.md": {
-    "mtime": 1782605655.7951527,
-    "ast_hash": "ccf520f76b2790b7c98a732beab4c6d3",
     "semantic_hash": ""
   },
   "security.py": {
@@ -895,8 +890,8 @@
     "semantic_hash": ""
   },
   "tests/test_llm_unify.py": {
-    "mtime": 1782601161.6391168,
-    "ast_hash": "54076e7f59b14c9a44e1e45f23df864c",
+    "mtime": 1782676350.5781984,
+    "ast_hash": "da368e1a5ced37880cd7b71cf4b2bfb8",
     "semantic_hash": ""
   },
   "tests/test_ollama_ready_cache.py": {
@@ -905,18 +900,18 @@
     "semantic_hash": ""
   },
   "tests/test_person_presence.py": {
-    "mtime": 1782600599.181726,
-    "ast_hash": "0443f0640e94f53391541476f2a27e45",
+    "mtime": 1782674842.787523,
+    "ast_hash": "0db18be6ed3ec24e4908192d0e612f35",
     "semantic_hash": ""
   },
   "ANALISIS_Y_PLAN_DE_MEJORA.md": {
-    "mtime": 1782603641.5166118,
-    "ast_hash": "7899d022b765b4e6d6065e855c27d691",
+    "mtime": 1782676982.9983482,
+    "ast_hash": "d2fcf9e9b2b65baeef7a3d6cec995380",
     "semantic_hash": ""
   },
   "app/__init__.py": {
-    "mtime": 1782603212.1497014,
-    "ast_hash": "39954e67a3c95b92535a5b3e0e2b4406",
+    "mtime": 1782676738.6160479,
+    "ast_hash": "3159862ba86d1b96931ada4ac1ba6e13",
     "semantic_hash": ""
   },
   "app/connection.py": {
@@ -949,9 +944,9 @@
     "ast_hash": "888b1424e032e20653a87953d6e5c181",
     "semantic_hash": ""
   },
-  "docs/PHASE3_WIRING.md": {
-    "mtime": 1782605610.851782,
-    "ast_hash": "5fc1e6f9dedbd871e9b52347ab4e0a89",
+  "tests/test_camera_feed_gate.py": {
+    "mtime": 1782674992.1807067,
+    "ast_hash": "f2dcc59a03741674df5dfd4f71a2d79f",
     "semantic_hash": ""
   }
 }

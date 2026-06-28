@@ -1,23 +1,26 @@
 # Holograma UNEV — Análisis técnico y plan de mejora
 
-## Estado de implementación (actualizado 2026-06-27)
+## Estado de implementación (actualizado 2026-06-28)
 
-Avance verificado con `pytest` (**93 pruebas**) + `ruff` limpio. El backend de ML
-no corre en este entorno, por eso lo que requiere ejecutarlo queda marcado como
-*pendiente de hardware*, no cerrado. Detalle para el próximo agente en
-[`docs/HANDOFF.md`](docs/HANDOFF.md) → "Latest session".
+Avance verificado con `pytest` (**107 pruebas**) + `ruff` limpio. El backend **sí**
+corre en este entorno (`.venv` completo: torch/YOLO/whisper/piper/fastapi, cámara y
+audio presentes), así que cada paso se valida levantando el servidor real (receta de
+humo en [`README.md`](README.md) → "Pruebas recomendadas en laptop"). Sólo el
+ventilador físico (TCP externo) y *oír* por micrófono siguen necesitando al operador.
 
 | Fase | Estado | Qué se hizo |
 |------|--------|-------------|
 | **0 — Síntomas** | ✅ Hecho | Sin re-saludo por parpadeo (`vision/person_detector.py`); `custom_speak` ya no reemite eventos (atasco "hablando", síntoma B); `_ollama_ready` cacheado (`OLLAMA_READY_TTL_SECONDS`); watchdog de 20 s en `useChatSocket.ts`. |
-| **1 — Event loop** | ◐ Parcial | Selección de backend en `asyncio.to_thread` (el sondeo ya no congela el loop). **Desvío deliberado:** la ruta async ya usa `AsyncOpenAI`/`AsyncAnthropic`, así que la reescritura urllib→httpx no aporta nada al loop y NO se hizo. |
-| **2 — Calidad** | ◐ Parcial | `max_tokens` unificado vía `LLM_MAX_TOKENS` (450); el filtro anti-inglés ya no descarta respuestas (síntoma C "no puedo responder"). |
+| **1 — Event loop** | ◐ Parcial | Selección de backend en `asyncio.to_thread` (el sondeo ya no congela el loop); `video_feed` convertido a `StreamingResponse` **async** (commit `9e8d5d3`), ya no retiene workers del threadpool. **Desvío deliberado:** la ruta async ya usa `AsyncOpenAI`/`AsyncAnthropic`, así que la reescritura urllib→httpx no aporta nada al loop y NO se hizo. Falta: pasar los endpoints CRUD a `async def`. |
+| **2 — Calidad** | ◐ Parcial | `max_tokens` unificado vía `LLM_MAX_TOKENS` (450); el filtro anti-inglés ya no descarta respuestas (síntoma C "no puedo responder"); **cadena de fallback multi-proveedor** antes de degradar a Ollama/`local_only` (`configured_cloud_providers` + `_candidate_backends`; commit `3a320ce`). Falta: borrar el `generate_reply` sync. |
 | **3 — De-monkey-patch** | ✅ Hecho | Capa `app/` **cableada en `main.py`** por estrangulamiento (Pasos A–D; commits `2c2567b`/`97a885f`/`9fe1eb2`/`9b2afa0`): registro único de sockets vía `ConnectionManager` (+ puente hilo→loop `bind_loop`/`broadcast_threadsafe` para voz/cámara), el turno WS pasa por `ConversationService` (emisor único), monkey-patch de texto retirado, ciclo `call↔llm_backend` cortado vía `stream_llm_response(camera_context=...)`, y `os.chdir` global eliminado (rutas ancladas a `BASE_DIR`). **Validado contra servidor real lanzado desde un CWD ajeno.** Pendiente: reescribir `call.py`/`llm_backend.py` (§9, futuro). |
-| **4 / §8 — Reorg** | ☐ Diferido | Movimiento de carpetas (`app/` + `core/`) **diferido a su propia sesión** por decisión (2026-06-27): rompe imports en todo el repo y cambia el punto de entrada del sidecar de Tauri (`main.py`→`app/main.py`); además su árbol presupone el reescribir de `call.py`/`llm_backend.py` (§9) que aún no se hizo. Hacer con A–D ya verdes, un commit por movimiento. |
+| **4 — Rendimiento** | ◐ Parcial | JPEG del feed solo si hay suscriptores (el detector se salta `imencode` con cero clientes; commits `179a0b4`/`9e8d5d3`); debounce de entrada en la detección de personas (`PRESENCE_ENTER_SECONDS`, anti-rebote de un cuadro; commit `e2cce0b`). Falta (necesita micrófono/altavoz): TTS en proceso no bloqueante y `audio_status: completed` real. |
+| **§8 — Reorg** | ☐ Diferido | Movimiento de carpetas (`app/` + `core/`) **diferido a su propia sesión** por decisión (2026-06-27): rompe imports en todo el repo y cambia el punto de entrada del sidecar de Tauri (`main.py`→`app/main.py`); además su árbol presupone el reescribir de `call.py`/`llm_backend.py` (§9) que aún no se hizo. Hacer con A–D ya verdes, un commit por movimiento. |
 
-Pruebas nuevas de esta tanda: `tests/test_person_presence.py`,
-`tests/test_ollama_ready_cache.py`, `tests/test_llm_unify.py`,
-`tests/test_app_services.py`.
+Pruebas (acumuladas): `tests/test_person_presence.py` (incl. debounce de entrada),
+`tests/test_ollama_ready_cache.py`, `tests/test_llm_unify.py` (incl. cadena de
+fallback multi-proveedor), `tests/test_app_services.py`, `tests/test_provider_config.py`
+(incl. `configured_cloud_providers`) y `tests/test_camera_feed_gate.py` (gating del MJPEG).
 
 > Documento maestro. Reúne (1) el diagnóstico de cada síntoma reportado con la
 > línea de código exacta que lo causa, (2) el catálogo completo de errores,
@@ -516,15 +519,15 @@ subsistemas buenos — empiezas con orquestación nueva pero reciclas los motore
       (`llm_backend.py:38-60`); `await` real, sin bloquear el loop.
 - [ ] Envolver Piper/YOLO/Whisper en `asyncio.to_thread(...)` cuando se invoquen
       desde rutas async.
-- [ ] Convertir `video_feed` a `StreamingResponse` async (o servirlo desde el
-      detector con backpressure) para no retener workers del threadpool.
+- [x] Convertir `video_feed` a `StreamingResponse` async (o servirlo desde el
+      detector con backpressure) para no retener workers del threadpool. — commit `9e8d5d3`.
 - [ ] Convertir los endpoints CRUD a `async def`.
 
 ### Fase 2 — Unificar la ruta de LLM (2–3 días)
 - [ ] Borrar `generate_reply` sync; dejar solo `stream_llm_response`.
 - [ ] Mover el filtro anti-inglés a la única ruta y suavizarlo (o quitarlo).
-- [ ] Selección de backend con reintento al siguiente proveedor con key antes de
-      `local_only`; el enlatado pasa a ser último recurso con log explícito.
+- [x] Selección de backend con reintento al siguiente proveedor con key antes de
+      `local_only`; el enlatado pasa a ser último recurso con log explícito. — commit `3a320ce`.
 - [ ] Unificar `max_tokens` por configuración, no por proveedor hardcodeado.
 
 ### Fase 3 — Des-monkey-patchear hacia servicios (3–5 días) — el refactor grande
@@ -542,10 +545,11 @@ subsistemas buenos — empiezas con orquestación nueva pero reciclas los motore
 - [ ] TTS en proceso (evaluar Supertonic ONNX como en `tutor_v3.py`, o Piper vía
       binding en proceso) con reproducción no bloqueante; reemplazar el
       `killall -9` por gestión de los procesos propios.
-- [ ] JPEG del feed solo si hay suscriptores; inferencia de objetos custom en su
-      propio intervalo.
+- [x] JPEG del feed solo si hay suscriptores — commits `179a0b4`/`9e8d5d3`;
+      inferencia de objetos custom en su propio intervalo (pendiente).
 - [ ] `audio_status: completed` cuando el audio **termina** de verdad.
-- [ ] Debounce de entrada en la detección de personas.
+- [x] Debounce de entrada en la detección de personas — commit `e2cce0b`
+      (`PRESENCE_ENTER_SECONDS`, anti-rebote de un cuadro).
 
 ---
 
@@ -567,13 +571,20 @@ subsistemas buenos — empiezas con orquestación nueva pero reciclas los motore
 
 | Archivo | Acción | Motivo |
 |---------|--------|--------|
-| `docs/HANDOFF.md` | **Borrar** | Notas de traspaso efímeras; su contenido útil (la lista de tareas diferidas, incl. el de-monkey-patch) queda recogido en **este** documento. |
-| `docs/HOLOGRAM.md` | **Consolidar → borrar** | Se solapa con el docstring de `hologram_controller.py` (que ya es exhaustivo). Mover lo que falte al README y borrar. |
-| `docs/CONFIG.md` | **Consolidar → borrar** | Duplica `.env.example` (que ya documenta cada variable). Dejar `.env.example` como fuente de verdad. |
+| `docs/HANDOFF.md` | ✅ **Borrado** | Notas de traspaso efímeras y ya contradictorias internamente; su §E (de-monkey-patch) está hecha y la receta de humo se rescató al README. |
+| `docs/PHASE3_WIRING.md` | ✅ **Borrado** | Plan de ejecución histórico; los Pasos A–D están hechos y su validación (§0) se rescató al README. |
+| `docs/HOLOGRAM.md` | **Conservar** (revisado 2026-06-28) | *Desvío del plan original:* NO es un duplicado del docstring — es la guía autoritativa del hardware MISSYOU (protocolo TCP, mapeo estado→clip, reglas de autoría de clips 5:12, hotspot WiFi) y está **enlazada desde `README.md`**. Borrarla perdería información que el código no contiene. |
+| `docs/CONFIG.md` | **Conservar** (revisado 2026-06-28) | *Desvío del plan original:* NO duplica `.env.example` — es la referencia del **contrato** proveedor/modelo (reglas de `select_backend`, endpoints `/api/providers` · `/api/llm/test` · `/api/config`, UI de Ajustes, endurecimiento §D.1). Refrescada a 107 pruebas. |
 | `docs/PACKAGING.md` | **Conservar** (o mover a `README`) | Info de empaquetado Tauri; útil pero cabe en el README. |
 | `AGENTS.md` / `CLAUDE.md` / `.claude/CLAUDE.md` | **Conservar** | Reglas para agentes; vigentes. |
 | `graphify-out/GRAPH_REPORT.md` | **Conservar** | Útil para revisión de arquitectura. |
 | `.pytest_cache/README.md` | (auto) | Generado; ya ignorado por `.pytest_cache/`. |
+
+> **Nota (2026-06-28):** el plan original marcaba `HOLOGRAM.md` y `CONFIG.md` para
+> "consolidar → borrar" suponiéndolos duplicados. Al revisarlos uno a uno resultaron
+> ser doc **autoritativa y no duplicada** (HOLOGRAM está enlazada desde el README;
+> CONFIG es la referencia del contrato de proveedor), así que se conservan y refrescan.
+> Sí se borraron los dos `.md` realmente efímeros/históricos (`HANDOFF`, `PHASE3_WIRING`).
 
 > Los dos PDF de `docs/` no son `.md` pero entran en "docs viejos": el de **marca
 > UNEV** (28 MB) fuera del repo (§7.1); el `Holograma_MISSYOU_Referencia_IA.pdf`

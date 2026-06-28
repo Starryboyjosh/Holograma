@@ -2,13 +2,14 @@
 
 Esta es la **capa de servicios tipada** que el plan de mejora
 (`ANALISIS_Y_PLAN_DE_MEJORA.md`, §5 y Fase 3) propone para reemplazar el
-monkey-patching y el estado global de `main.py`/`call.py`. Es **aditiva**: envuelve
-los motores buenos que ya existen (`llm_backend`, `vision/`, `stt/`,
-`hologram_controller`) detrás de interfaces limpias, sin tocar todavía el arranque
-en producción.
+monkey-patching y el estado global de `main.py`/`call.py`. Envuelve los motores
+buenos que ya existen (`llm_backend`, `vision/`, `stt/`, `hologram_controller`)
+detrás de interfaces limpias. La Fase 3 (Pasos A–D) ya **cableó** estos servicios
+en `main.py` por estrangulamiento (commits `2c2567b`/`97a885f`/`9fe1eb2`/`9b2afa0`),
+validada contra un servidor real.
 
-Estado actual (lo verificable sin levantar el backend ya está implementado y
-testeado en `tests/test_app_services.py`):
+Servicios ya implementados, testeados (`tests/test_app_services.py`) y en uso por
+`main.py`:
 
 * `connection.ConnectionManager` — único emisor de eventos async hacia el cliente
   (reemplaza `send_to_web_client` + `run_coroutine_threadsafe`).
@@ -18,7 +19,6 @@ testeado en `tests/test_app_services.py`):
 * `services.conversation.ConversationService` — orquesta prompt → LLM → eventos →
   TTS, con UN solo emisor y sin reemitir texto desde el TTS.
 
-Pendiente (necesita el backend/hardware real, ver HANDOFF.md §E):
-wrappers `tts`/`stt`/`hologram`, y cablear estos servicios en `app/main.py`
-borrando el monkey-patching del `lifespan` de `main.py`.
+Pendiente (diferido a su propia sesión, ver `ANALISIS_Y_PLAN_DE_MEJORA.md` §8):
+wrappers `tts`/`stt`/`hologram` y el movimiento de carpetas a `app/main.py` + `core/`.
 """

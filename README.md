@@ -208,6 +208,23 @@ se cambian en caliente desde la WebApp (sin reiniciar):
    HOLOGRAM_FACE_ANALYSIS=1 ./.venv/bin/python call.py --voice --camera
    ```
 
+5. **Humo HTTP/WS sin tomar cámara ni micrófono** (valida el servidor sin hardware):
+   ```bash
+   ./.venv/bin/python -m pytest -q          # backend en verde (107 pruebas)
+   ./.venv/bin/ruff check .                 # estilo limpio
+   # Levanta FastAPI sin agarrar cámara/mic (default del puerto: 8000):
+   HOLOGRAM_CAMERA=0 HOLOGRAM_INPUT=keyboard ./.venv/bin/python main.py
+   # En otra terminal:
+   curl -s localhost:8000/api/providers     # JSON de proveedores (sin secretos)
+   # Abre un WS a /ws (ver frontend/src/hooks/useChatSocket.ts), envía un prompt y
+   # verifica la secuencia de eventos:
+   #   streaming_started → text_chunk* → text_done
+   #                     → audio_status:processing → audio_status:completed
+   ```
+   El extremo a extremo con voz y cámara usa `HOLOGRAM_CAMERA=1` / `HOLOGRAM_INPUT=voice`,
+   pero entonces el servidor retiene `/dev/video0` y el micrófono: asegúrate de que no
+   haya otra instancia corriendo primero.
+
 El análisis de rostro implementado solo cuenta rostros visibles. No identifica personas ni infiere edad, género, raza, emoción, salud u otros atributos sensibles.
 
 ---

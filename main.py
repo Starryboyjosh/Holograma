@@ -221,7 +221,8 @@ app.add_middleware(
 # Token de capacidad opcional para endpoints privilegiados (ajustes, contenido,
 # cámara, entrenamiento). Apagado por defecto (HOLOGRAM_API_TOKEN vacío) para no
 # romper la app actual; al activarlo, las escrituras exigen el header X-API-Token.
-# La shell de Tauri debe entregar el token al frontend (ver docs/HANDOFF.md, D.2).
+# Pendiente: la shell de Tauri debe entregar el token al frontend en cada llamada
+# privilegiada (trabajo de seguridad diferido, junto al empaquetado del sidecar).
 _API_TOKEN = os.getenv("HOLOGRAM_API_TOKEN", "").strip()
 
 

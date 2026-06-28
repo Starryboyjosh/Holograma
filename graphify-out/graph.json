@@ -380,7 +380,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_llm",
-      "community": 17,
+      "community": 24,
       "norm_label": "llm.py"
     },
     {
@@ -390,7 +390,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "services_llm_llmservice",
-      "community": 17,
+      "community": 24,
       "norm_label": "llmservice"
     },
     {
@@ -400,7 +400,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "services_llm_llmservice_init",
-      "community": 17,
+      "community": 24,
       "norm_label": ".__init__()"
     },
     {
@@ -410,7 +410,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "streamfn",
-      "community": 17,
+      "community": 24,
       "norm_label": "streamfn"
     },
     {
@@ -420,7 +420,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "services_llm_llmservice_stream",
-      "community": 17,
+      "community": 24,
       "norm_label": ".stream()"
     },
     {
@@ -430,7 +430,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_llm_rationale_1",
-      "community": 17,
+      "community": 24,
       "norm_label": "servicio de llm: envuelve la **unica** ruta async de generacion.  `llm_backend.s"
     },
     {
@@ -440,7 +440,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_vision",
-      "community": 24,
+      "community": 5,
       "norm_label": "vision.py"
     },
     {
@@ -510,7 +510,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "services_vision_cameracontextprovider_default_builder",
-      "community": 24,
+      "community": 5,
       "norm_label": "._default_builder()"
     },
     {
@@ -520,7 +520,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_vision_rationale_1",
-      "community": 24,
+      "community": 5,
       "norm_label": "proveedor del contexto de camara para el llm.  hoy `llm_backend.stream_llm_respo"
     },
     {
@@ -580,7 +580,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "call_clean_for_tts",
-      "community": 50,
+      "community": 58,
       "norm_label": "clean_for_tts()"
     },
     {
@@ -620,7 +620,7 @@
       "source_location": "L218",
       "_origin": "ast",
       "id": "call_get_piper_sample_rate",
-      "community": 16,
+      "community": 27,
       "norm_label": "get_piper_sample_rate()"
     },
     {
@@ -730,7 +730,7 @@
       "source_location": "L539",
       "_origin": "ast",
       "id": "call_split_into_chunks",
-      "community": 50,
+      "community": 58,
       "norm_label": "_split_into_chunks()"
     },
     {
@@ -760,7 +760,7 @@
       "source_location": "L658",
       "_origin": "ast",
       "id": "call_speak",
-      "community": 5,
+      "community": 26,
       "norm_label": "speak()"
     },
     {
@@ -844,10 +844,30 @@
       "norm_label": "get_latest_camera_jpeg()"
     },
     {
-      "label": "_camera_detection_callback()",
+      "label": "camera_feed_subscribe()",
       "file_type": "code",
       "source_file": "call.py",
       "source_location": "L910",
+      "_origin": "ast",
+      "id": "call_camera_feed_subscribe",
+      "community": 5,
+      "norm_label": "camera_feed_subscribe()"
+    },
+    {
+      "label": "camera_feed_unsubscribe()",
+      "file_type": "code",
+      "source_file": "call.py",
+      "source_location": "L921",
+      "_origin": "ast",
+      "id": "call_camera_feed_unsubscribe",
+      "community": 5,
+      "norm_label": "camera_feed_unsubscribe()"
+    },
+    {
+      "label": "_camera_detection_callback()",
+      "file_type": "code",
+      "source_file": "call.py",
+      "source_location": "L928",
       "_origin": "ast",
       "id": "call_camera_detection_callback",
       "community": 5,
@@ -857,17 +877,17 @@
       "label": "start_camera_thread()",
       "file_type": "code",
       "source_file": "call.py",
-      "source_location": "L972",
+      "source_location": "L990",
       "_origin": "ast",
       "id": "call_start_camera_thread",
-      "community": 5,
+      "community": 26,
       "norm_label": "start_camera_thread()"
     },
     {
       "label": "stop_camera_thread()",
       "file_type": "code",
       "source_file": "call.py",
-      "source_location": "L1012",
+      "source_location": "L1030",
       "_origin": "ast",
       "id": "call_stop_camera_thread",
       "community": 17,
@@ -877,17 +897,17 @@
       "label": "chat_to_voice()",
       "file_type": "code",
       "source_file": "call.py",
-      "source_location": "L1038",
+      "source_location": "L1056",
       "_origin": "ast",
       "id": "call_chat_to_voice",
-      "community": 5,
+      "community": 26,
       "norm_label": "chat_to_voice()"
     },
     {
       "label": "request_listen()",
       "file_type": "code",
       "source_file": "call.py",
-      "source_location": "L1106",
+      "source_location": "L1124",
       "_origin": "ast",
       "id": "call_request_listen",
       "community": 45,
@@ -897,7 +917,7 @@
       "label": "set_trigger_mode()",
       "file_type": "code",
       "source_file": "call.py",
-      "source_location": "L1111",
+      "source_location": "L1129",
       "_origin": "ast",
       "id": "call_set_trigger_mode",
       "community": 45,
@@ -907,7 +927,7 @@
       "label": "get_trigger_mode()",
       "file_type": "code",
       "source_file": "call.py",
-      "source_location": "L1122",
+      "source_location": "L1140",
       "_origin": "ast",
       "id": "call_get_trigger_mode",
       "community": 45,
@@ -917,7 +937,7 @@
       "label": "_stdin_ptt_reader()",
       "file_type": "code",
       "source_file": "call.py",
-      "source_location": "L1127",
+      "source_location": "L1145",
       "_origin": "ast",
       "id": "call_stdin_ptt_reader",
       "community": 45,
@@ -927,30 +947,30 @@
       "label": "_wait_for_trigger()",
       "file_type": "code",
       "source_file": "call.py",
-      "source_location": "L1138",
+      "source_location": "L1156",
       "_origin": "ast",
       "id": "call_wait_for_trigger",
-      "community": 5,
+      "community": 26,
       "norm_label": "_wait_for_trigger()"
     },
     {
       "label": "voice_loop()",
       "file_type": "code",
       "source_file": "call.py",
-      "source_location": "L1169",
+      "source_location": "L1187",
       "_origin": "ast",
       "id": "call_voice_loop",
-      "community": 5,
+      "community": 26,
       "norm_label": "voice_loop()"
     },
     {
       "label": "main()",
       "file_type": "code",
       "source_file": "call.py",
-      "source_location": "L1271",
+      "source_location": "L1289",
       "_origin": "ast",
       "id": "call_main",
-      "community": 5,
+      "community": 26,
       "norm_label": "main()"
     },
     {
@@ -1000,7 +1020,7 @@
       "source_location": "L110",
       "_origin": "ast",
       "id": "call_rationale_110",
-      "community": 50,
+      "community": 58,
       "norm_label": "remove characters that can sound awkward when read by a tts engine."
     },
     {
@@ -1040,7 +1060,7 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "call_rationale_219",
-      "community": 16,
+      "community": 27,
       "norm_label": "read piper sample rate from the model json sidecar when available."
     },
     {
@@ -1150,7 +1170,7 @@
       "source_location": "L540",
       "_origin": "ast",
       "id": "call_rationale_540",
-      "community": 50,
+      "community": 58,
       "norm_label": "divide el texto en fragmentos listos para tts.     el primero usa clausulas para"
     },
     {
@@ -1180,7 +1200,7 @@
       "source_location": "L659",
       "_origin": "ast",
       "id": "call_rationale_659",
-      "community": 5,
+      "community": 26,
       "norm_label": "speak text using piper when possible, with os-native fallbacks.     utiliza segm"
     },
     {
@@ -1194,12 +1214,32 @@
       "norm_label": "return the latest annotated camera frame (jpeg bytes) or none."
     },
     {
-      "label": "Handle YOLO detection events from the background camera thread.",
+      "label": "Registra un cliente del feed de video (activa la codificaci\u00f3n JPEG).      El det",
       "file_type": "rationale",
       "source_file": "call.py",
       "source_location": "L911",
       "_origin": "ast",
       "id": "call_rationale_911",
+      "community": 5,
+      "norm_label": "registra un cliente del feed de video (activa la codificacion jpeg).      el det"
+    },
+    {
+      "label": "Da de baja un cliente del feed de video.",
+      "file_type": "rationale",
+      "source_file": "call.py",
+      "source_location": "L922",
+      "_origin": "ast",
+      "id": "call_rationale_922",
+      "community": 5,
+      "norm_label": "da de baja un cliente del feed de video."
+    },
+    {
+      "label": "Handle YOLO detection events from the background camera thread.",
+      "file_type": "rationale",
+      "source_file": "call.py",
+      "source_location": "L929",
+      "_origin": "ast",
+      "id": "call_rationale_929",
       "community": 5,
       "norm_label": "handle yolo detection events from the background camera thread."
     },
@@ -1207,19 +1247,19 @@
       "label": "Start YOLO person detection in a background daemon thread.",
       "file_type": "rationale",
       "source_file": "call.py",
-      "source_location": "L973",
+      "source_location": "L991",
       "_origin": "ast",
-      "id": "call_rationale_973",
-      "community": 5,
+      "id": "call_rationale_991",
+      "community": 26,
       "norm_label": "start yolo person detection in a background daemon thread."
     },
     {
       "label": "Det\u00e9n la detecci\u00f3n y libera la c\u00e1mara (apagar la c\u00e1mara = liberarla).      Se\u00f1al",
       "file_type": "rationale",
       "source_file": "call.py",
-      "source_location": "L1013",
+      "source_location": "L1031",
       "_origin": "ast",
-      "id": "call_rationale_1013",
+      "id": "call_rationale_1031",
       "community": 17,
       "norm_label": "deten la deteccion y libera la camara (apagar la camara = liberarla).      senal"
     },
@@ -1227,19 +1267,19 @@
       "label": "Text input loop: keyboard \u2192 LLM \u2192 TTS.",
       "file_type": "rationale",
       "source_file": "call.py",
-      "source_location": "L1039",
+      "source_location": "L1057",
       "_origin": "ast",
-      "id": "call_rationale_1039",
-      "community": 5,
+      "id": "call_rationale_1057",
+      "community": 26,
       "norm_label": "text input loop: keyboard \u2192 llm \u2192 tts."
     },
     {
       "label": "Solicita una escucha puntual (push-to-talk remoto, p. ej. la WebApp).",
       "file_type": "rationale",
       "source_file": "call.py",
-      "source_location": "L1107",
+      "source_location": "L1125",
       "_origin": "ast",
-      "id": "call_rationale_1107",
+      "id": "call_rationale_1125",
       "community": 45,
       "norm_label": "solicita una escucha puntual (push-to-talk remoto, p. ej. la webapp)."
     },
@@ -1247,9 +1287,9 @@
       "label": "Cambia en caliente el modo de activaci\u00f3n de voz. Devuelve el modo final.",
       "file_type": "rationale",
       "source_file": "call.py",
-      "source_location": "L1112",
+      "source_location": "L1130",
       "_origin": "ast",
-      "id": "call_rationale_1112",
+      "id": "call_rationale_1130",
       "community": 45,
       "norm_label": "cambia en caliente el modo de activacion de voz. devuelve el modo final."
     },
@@ -1257,9 +1297,9 @@
       "label": "Devuelve el modo de activaci\u00f3n de voz actual.",
       "file_type": "rationale",
       "source_file": "call.py",
-      "source_location": "L1123",
+      "source_location": "L1141",
       "_origin": "ast",
-      "id": "call_rationale_1123",
+      "id": "call_rationale_1141",
       "community": 45,
       "norm_label": "devuelve el modo de activacion de voz actual."
     },
@@ -1267,9 +1307,9 @@
       "label": "Lee ENTER de la terminal y solicita una escucha (push-to-talk en CLI).",
       "file_type": "rationale",
       "source_file": "call.py",
-      "source_location": "L1128",
+      "source_location": "L1146",
       "_origin": "ast",
-      "id": "call_rationale_1128",
+      "id": "call_rationale_1146",
       "community": 45,
       "norm_label": "lee enter de la terminal y solicita una escucha (push-to-talk en cli)."
     },
@@ -1277,30 +1317,30 @@
       "label": "Bloquea hasta que toque escuchar, seg\u00fan el modo din\u00e1mico actual.      Devuelve `",
       "file_type": "rationale",
       "source_file": "call.py",
-      "source_location": "L1139",
+      "source_location": "L1157",
       "_origin": "ast",
-      "id": "call_rationale_1139",
-      "community": 5,
+      "id": "call_rationale_1157",
+      "community": 26,
       "norm_label": "bloquea hasta que toque escuchar, segun el modo dinamico actual.      devuelve `"
     },
     {
       "label": "Voice input loop: microphone \u2192 Whisper \u2192 LLM \u2192 TTS (Regla B: sounddevice).",
       "file_type": "rationale",
       "source_file": "call.py",
-      "source_location": "L1170",
+      "source_location": "L1188",
       "_origin": "ast",
-      "id": "call_rationale_1170",
-      "community": 5,
+      "id": "call_rationale_1188",
+      "community": 26,
       "norm_label": "voice input loop: microphone \u2192 whisper \u2192 llm \u2192 tts (regla b: sounddevice)."
     },
     {
       "label": "Parse flags and run the appropriate loop.",
       "file_type": "rationale",
       "source_file": "call.py",
-      "source_location": "L1272",
+      "source_location": "L1290",
       "_origin": "ast",
-      "id": "call_rationale_1272",
-      "community": 5,
+      "id": "call_rationale_1290",
+      "community": 26,
       "norm_label": "parse flags and run the appropriate loop."
     },
     {
@@ -2320,7 +2360,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "schemas_desktop_schema_definitions_permissionentry",
-      "community": 29,
+      "community": 64,
       "norm_label": "permissionentry"
     },
     {
@@ -2330,7 +2370,7 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "schemas_desktop_schema_permissionentry_description",
-      "community": 29,
+      "community": 64,
       "norm_label": "description"
     },
     {
@@ -2340,7 +2380,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "schemas_desktop_schema_permissionentry_anyof",
-      "community": 29,
+      "community": 64,
       "norm_label": "anyof"
     },
     {
@@ -2370,7 +2410,7 @@
       "source_location": "L2239",
       "_origin": "ast",
       "id": "schemas_desktop_schema_definitions_value",
-      "community": 64,
+      "community": 29,
       "norm_label": "value"
     },
     {
@@ -2380,7 +2420,7 @@
       "source_location": "L2240",
       "_origin": "ast",
       "id": "schemas_desktop_schema_value_description",
-      "community": 64,
+      "community": 29,
       "norm_label": "description"
     },
     {
@@ -2390,7 +2430,7 @@
       "source_location": "L2241",
       "_origin": "ast",
       "id": "schemas_desktop_schema_value_anyof",
-      "community": 64,
+      "community": 29,
       "norm_label": "anyof"
     },
     {
@@ -2460,7 +2500,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "schemas_linux_schema",
-      "community": 58,
+      "community": 50,
       "norm_label": "linux-schema.json"
     },
     {
@@ -2470,7 +2510,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "schemas_linux_schema_schema",
-      "community": 58,
+      "community": 50,
       "norm_label": "$schema"
     },
     {
@@ -2480,7 +2520,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "schemas_linux_schema_title",
-      "community": 58,
+      "community": 50,
       "norm_label": "title"
     },
     {
@@ -2490,7 +2530,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "schemas_linux_schema_description",
-      "community": 58,
+      "community": 50,
       "norm_label": "description"
     },
     {
@@ -2500,7 +2540,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "schemas_linux_schema_anyof",
-      "community": 58,
+      "community": 50,
       "norm_label": "anyof"
     },
     {
@@ -5917,7 +5957,7 @@
       "label": "LLMBackendError",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L31",
+      "source_location": "L32",
       "_origin": "ast",
       "id": "llm_backend_llmbackenderror",
       "community": 0,
@@ -5937,7 +5977,7 @@
       "label": "_ollama_base_url()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L35",
+      "source_location": "L36",
       "_origin": "ast",
       "id": "llm_backend_ollama_base_url",
       "community": 0,
@@ -5947,7 +5987,7 @@
       "label": "_ollama_model_name()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L39",
+      "source_location": "L40",
       "_origin": "ast",
       "id": "llm_backend_ollama_model_name",
       "community": 0,
@@ -5957,7 +5997,7 @@
       "label": "_max_tokens()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L43",
+      "source_location": "L44",
       "_origin": "ast",
       "id": "llm_backend_max_tokens",
       "community": 0,
@@ -5967,7 +6007,7 @@
       "label": "_ollama_request()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L61",
+      "source_location": "L62",
       "_origin": "ast",
       "id": "llm_backend_ollama_request",
       "community": 0,
@@ -5977,7 +6017,7 @@
       "label": "_ollama_tags()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L86",
+      "source_location": "L87",
       "_origin": "ast",
       "id": "llm_backend_ollama_tags",
       "community": 0,
@@ -5987,7 +6027,7 @@
       "label": "_ollama_server_available()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L90",
+      "source_location": "L91",
       "_origin": "ast",
       "id": "llm_backend_ollama_server_available",
       "community": 0,
@@ -5997,7 +6037,7 @@
       "label": "_ollama_model_available()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L99",
+      "source_location": "L100",
       "_origin": "ast",
       "id": "llm_backend_ollama_model_available",
       "community": 0,
@@ -6007,7 +6047,7 @@
       "label": "_ollama_ready()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L120",
+      "source_location": "L121",
       "_origin": "ast",
       "id": "llm_backend_ollama_ready",
       "community": 0,
@@ -6017,7 +6057,7 @@
       "label": "get_selected_backend()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L150",
+      "source_location": "L151",
       "_origin": "ast",
       "id": "llm_backend_get_selected_backend",
       "community": 0,
@@ -6027,7 +6067,7 @@
       "label": "get_backend_status()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L165",
+      "source_location": "L166",
       "_origin": "ast",
       "id": "llm_backend_get_backend_status",
       "community": 0,
@@ -6037,7 +6077,7 @@
       "label": "_humanize_probe_error()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L195",
+      "source_location": "L196",
       "_origin": "ast",
       "id": "llm_backend_humanize_probe_error",
       "community": 0,
@@ -6047,7 +6087,7 @@
       "label": "probe_backend()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L211",
+      "source_location": "L212",
       "_origin": "ast",
       "id": "llm_backend_probe_backend",
       "community": 0,
@@ -6057,7 +6097,7 @@
       "label": "_candidate_backends()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L270",
+      "source_location": "L271",
       "_origin": "ast",
       "id": "llm_backend_candidate_backends",
       "community": 0,
@@ -6067,7 +6107,7 @@
       "label": "_local_only_reply()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L278",
+      "source_location": "L296",
       "_origin": "ast",
       "id": "llm_backend_local_only_reply",
       "community": 0,
@@ -6077,7 +6117,7 @@
       "label": "_chat_with_backend()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L295",
+      "source_location": "L313",
       "_origin": "ast",
       "id": "llm_backend_chat_with_backend",
       "community": 0,
@@ -6087,7 +6127,7 @@
       "label": "_build_messages()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L307",
+      "source_location": "L325",
       "_origin": "ast",
       "id": "llm_backend_build_messages",
       "community": 0,
@@ -6097,7 +6137,7 @@
       "label": "_require()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L332",
+      "source_location": "L350",
       "_origin": "ast",
       "id": "llm_backend_require",
       "community": 0,
@@ -6107,7 +6147,7 @@
       "label": "_chat_with_openai_compatible()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L356",
+      "source_location": "L374",
       "_origin": "ast",
       "id": "llm_backend_chat_with_openai_compatible",
       "community": 0,
@@ -6117,7 +6157,7 @@
       "label": "_strip_qwen_thinking()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L371",
+      "source_location": "L389",
       "_origin": "ast",
       "id": "llm_backend_strip_qwen_thinking",
       "community": 0,
@@ -6127,7 +6167,7 @@
       "label": "_chat_with_ollama()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L390",
+      "source_location": "L408",
       "_origin": "ast",
       "id": "llm_backend_chat_with_ollama",
       "community": 0,
@@ -6137,7 +6177,7 @@
       "label": "_chat_with_claude_native()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L426",
+      "source_location": "L444",
       "_origin": "ast",
       "id": "llm_backend_chat_with_claude_native",
       "community": 0,
@@ -6147,7 +6187,7 @@
       "label": "_is_mostly_english()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L453",
+      "source_location": "L471",
       "_origin": "ast",
       "id": "llm_backend_is_mostly_english",
       "community": 0,
@@ -6157,7 +6197,7 @@
       "label": "_postprocess_reply()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L472",
+      "source_location": "L490",
       "_origin": "ast",
       "id": "llm_backend_postprocess_reply",
       "community": 0,
@@ -6167,7 +6207,7 @@
       "label": "generate_reply()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L488",
+      "source_location": "L506",
       "_origin": "ast",
       "id": "llm_backend_generate_reply",
       "community": 0,
@@ -6177,7 +6217,7 @@
       "label": "_stream_backend_response()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L504",
+      "source_location": "L522",
       "_origin": "ast",
       "id": "llm_backend_stream_backend_response",
       "community": 0,
@@ -6187,7 +6227,7 @@
       "label": "stream_llm_response()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L554",
+      "source_location": "L572",
       "_origin": "ast",
       "id": "llm_backend_stream_llm_response",
       "community": 0,
@@ -6197,9 +6237,9 @@
       "label": "L\u00edmite de tokens de salida, configurable y unificado para todos los backends.",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L44",
+      "source_location": "L45",
       "_origin": "ast",
-      "id": "llm_backend_rationale_44",
+      "id": "llm_backend_rationale_45",
       "community": 0,
       "norm_label": "limite de tokens de salida, configurable y unificado para todos los backends."
     },
@@ -6207,9 +6247,9 @@
       "label": "\u00bfOllama est\u00e1 listo (servidor arriba + modelo instalado)?  Cacheado.      El resu",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L121",
+      "source_location": "L122",
       "_origin": "ast",
-      "id": "llm_backend_rationale_121",
+      "id": "llm_backend_rationale_122",
       "community": 0,
       "norm_label": "\u00bfollama esta listo (servidor arriba + modelo instalado)?  cacheado.      el resu"
     },
@@ -6217,9 +6257,9 @@
       "label": "Backend efectivo seg\u00fan la configuraci\u00f3n actual.      Delega en :func:`provider_c",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L151",
+      "source_location": "L152",
       "_origin": "ast",
-      "id": "llm_backend_rationale_151",
+      "id": "llm_backend_rationale_152",
       "community": 0,
       "norm_label": "backend efectivo segun la configuracion actual.      delega en :func:`provider_c"
     },
@@ -6227,9 +6267,9 @@
       "label": "Traduce errores de proveedor a un mensaje accionable para el operador.",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L196",
+      "source_location": "L197",
       "_origin": "ast",
-      "id": "llm_backend_rationale_196",
+      "id": "llm_backend_rationale_197",
       "community": 0,
       "norm_label": "traduce errores de proveedor a un mensaje accionable para el operador."
     },
@@ -6237,19 +6277,29 @@
       "label": "Prueba real de conexi\u00f3n a un proveedor sin persistir nada.      Devuelve ``{\"ok\"",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L212",
+      "source_location": "L213",
       "_origin": "ast",
-      "id": "llm_backend_rationale_212",
+      "id": "llm_backend_rationale_213",
       "community": 0,
       "norm_label": "prueba real de conexion a un proveedor sin persistir nada.      devuelve ``{\"ok\""
+    },
+    {
+      "label": "Orden de intentos del LLM, de m\u00e1s a menos preferente.      primario -> otros pro",
+      "file_type": "rationale",
+      "source_file": "llm_backend.py",
+      "source_location": "L272",
+      "_origin": "ast",
+      "id": "llm_backend_rationale_272",
+      "community": 0,
+      "norm_label": "orden de intentos del llm, de mas a menos preferente.      primario -> otros pro"
     },
     {
       "label": "Resuelve (api_key, model, base_url) o lanza un error claro y accionable.",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L333",
+      "source_location": "L351",
       "_origin": "ast",
-      "id": "llm_backend_rationale_333",
+      "id": "llm_backend_rationale_351",
       "community": 0,
       "norm_label": "resuelve (api_key, model, base_url) o lanza un error claro y accionable."
     },
@@ -6257,9 +6307,9 @@
       "label": "Chat con cualquier backend compatible con OpenAI (openrouter/openai/nvidia/custo",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L357",
+      "source_location": "L375",
       "_origin": "ast",
-      "id": "llm_backend_rationale_357",
+      "id": "llm_backend_rationale_375",
       "community": 0,
       "norm_label": "chat con cualquier backend compatible con openai (openrouter/openai/nvidia/custo"
     },
@@ -6267,9 +6317,9 @@
       "label": "Remove reasoning/thinking blocks so they are not spoken by TTS.      Cubre vario",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L372",
+      "source_location": "L390",
       "_origin": "ast",
-      "id": "llm_backend_rationale_372",
+      "id": "llm_backend_rationale_390",
       "community": 0,
       "norm_label": "remove reasoning/thinking blocks so they are not spoken by tts.      cubre vario"
     },
@@ -6277,9 +6327,9 @@
       "label": "Heuristic: return True only when the text is clearly English.      Se exige evid",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L454",
+      "source_location": "L472",
       "_origin": "ast",
-      "id": "llm_backend_rationale_454",
+      "id": "llm_backend_rationale_472",
       "community": 0,
       "norm_label": "heuristic: return true only when the text is clearly english.      se exige evid"
     },
@@ -6287,9 +6337,9 @@
       "label": "Clean up LLM response: strip thinking blocks and handle language issues.",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L473",
+      "source_location": "L491",
       "_origin": "ast",
-      "id": "llm_backend_rationale_473",
+      "id": "llm_backend_rationale_491",
       "community": 0,
       "norm_label": "clean up llm response: strip thinking blocks and handle language issues."
     },
@@ -6297,9 +6347,9 @@
       "label": "Generador as\u00edncrono para transmitir la respuesta del LLM en tiempo real.      ``",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L557",
+      "source_location": "L575",
       "_origin": "ast",
-      "id": "llm_backend_rationale_557",
+      "id": "llm_backend_rationale_575",
       "community": 0,
       "norm_label": "generador asincrono para transmitir la respuesta del llm en tiempo real.      ``"
     },
@@ -6330,7 +6380,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "main_lifespan",
-      "community": 24,
+      "community": 17,
       "norm_label": "lifespan()"
     },
     {
@@ -6340,14 +6390,14 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "fastapi",
-      "community": 24,
+      "community": 17,
       "norm_label": "fastapi"
     },
     {
       "label": "_api_token_gate()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L229",
+      "source_location": "L230",
       "_origin": "ast",
       "id": "main_api_token_gate",
       "community": 17,
@@ -6357,7 +6407,7 @@
       "label": "_host_speak()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L251",
+      "source_location": "L252",
       "_origin": "ast",
       "id": "main_host_speak",
       "community": 17,
@@ -6367,7 +6417,7 @@
       "label": "ConfigUpdate",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L274",
+      "source_location": "L275",
       "_origin": "ast",
       "id": "main_configupdate",
       "community": 17,
@@ -6387,7 +6437,7 @@
       "label": "BoundingBoxModel",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L297",
+      "source_location": "L298",
       "_origin": "ast",
       "id": "main_boundingboxmodel",
       "community": 17,
@@ -6397,7 +6447,7 @@
       "label": "TrainImagePayload",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L306",
+      "source_location": "L307",
       "_origin": "ast",
       "id": "main_trainimagepayload",
       "community": 17,
@@ -6407,7 +6457,7 @@
       "label": "VocabularyPayload",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L311",
+      "source_location": "L312",
       "_origin": "ast",
       "id": "main_vocabularypayload",
       "community": 17,
@@ -6417,7 +6467,7 @@
       "label": "get_config()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L319",
+      "source_location": "L320",
       "_origin": "ast",
       "id": "main_get_config",
       "community": 17,
@@ -6427,7 +6477,7 @@
       "label": "update_config()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L371",
+      "source_location": "L372",
       "_origin": "ast",
       "id": "main_update_config",
       "community": 17,
@@ -6437,7 +6487,7 @@
       "label": "LlmTestPayload",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L522",
+      "source_location": "L523",
       "_origin": "ast",
       "id": "main_llmtestpayload",
       "community": 17,
@@ -6447,17 +6497,17 @@
       "label": "get_providers()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L530",
+      "source_location": "L531",
       "_origin": "ast",
       "id": "main_get_providers",
-      "community": 17,
+      "community": 0,
       "norm_label": "get_providers()"
     },
     {
       "label": "test_llm()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L541",
+      "source_location": "L542",
       "_origin": "ast",
       "id": "main_test_llm",
       "community": 17,
@@ -6467,7 +6517,7 @@
       "label": "get_unev_content()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L557",
+      "source_location": "L558",
       "_origin": "ast",
       "id": "main_get_unev_content",
       "community": 85,
@@ -6477,17 +6527,17 @@
       "label": "update_unev_content()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L563",
+      "source_location": "L564",
       "_origin": "ast",
       "id": "main_update_unev_content",
-      "community": 85,
+      "community": 17,
       "norm_label": "update_unev_content()"
     },
     {
       "label": "CameraToggle",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L578",
+      "source_location": "L579",
       "_origin": "ast",
       "id": "main_cameratoggle",
       "community": 17,
@@ -6497,7 +6547,7 @@
       "label": "set_camera()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L583",
+      "source_location": "L584",
       "_origin": "ast",
       "id": "main_set_camera",
       "community": 17,
@@ -6507,7 +6557,7 @@
       "label": "SpeakPayload",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L603",
+      "source_location": "L604",
       "_origin": "ast",
       "id": "main_speakpayload",
       "community": 17,
@@ -6517,17 +6567,17 @@
       "label": "get_voices()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L609",
+      "source_location": "L610",
       "_origin": "ast",
       "id": "main_get_voices",
-      "community": 16,
+      "community": 27,
       "norm_label": "get_voices()"
     },
     {
       "label": "play_speak()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L621",
+      "source_location": "L622",
       "_origin": "ast",
       "id": "main_play_speak",
       "community": 17,
@@ -6537,7 +6587,7 @@
       "label": "train_image()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L647",
+      "source_location": "L648",
       "_origin": "ast",
       "id": "main_train_image",
       "community": 17,
@@ -6547,7 +6597,7 @@
       "label": "get_training_metadata()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L700",
+      "source_location": "L701",
       "_origin": "ast",
       "id": "main_get_training_metadata",
       "community": 17,
@@ -6557,7 +6607,7 @@
       "label": "train_vocabulary()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L712",
+      "source_location": "L713",
       "_origin": "ast",
       "id": "main_train_vocabulary",
       "community": 17,
@@ -6567,7 +6617,7 @@
       "label": "HologramConnect",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L723",
+      "source_location": "L724",
       "_origin": "ast",
       "id": "main_hologramconnect",
       "community": 17,
@@ -6577,7 +6627,7 @@
       "label": "HologramCommand",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L728",
+      "source_location": "L729",
       "_origin": "ast",
       "id": "main_hologramcommand",
       "community": 17,
@@ -6587,7 +6637,7 @@
       "label": "_get_holo_manager()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L736",
+      "source_location": "L737",
       "_origin": "ast",
       "id": "main_get_holo_manager",
       "community": 17,
@@ -6597,7 +6647,7 @@
       "label": "holo_connect()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L743",
+      "source_location": "L744",
       "_origin": "ast",
       "id": "main_holo_connect",
       "community": 17,
@@ -6607,7 +6657,7 @@
       "label": "holo_disconnect()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L760",
+      "source_location": "L761",
       "_origin": "ast",
       "id": "main_holo_disconnect",
       "community": 17,
@@ -6617,7 +6667,7 @@
       "label": "holo_command()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L769",
+      "source_location": "L770",
       "_origin": "ast",
       "id": "main_holo_command",
       "community": 17,
@@ -6627,7 +6677,7 @@
       "label": "holo_status()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L779",
+      "source_location": "L780",
       "_origin": "ast",
       "id": "main_holo_status",
       "community": 17,
@@ -6637,7 +6687,7 @@
       "label": "pause_ai()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L792",
+      "source_location": "L793",
       "_origin": "ast",
       "id": "main_pause_ai",
       "community": 17,
@@ -6647,7 +6697,7 @@
       "label": "resume_ai()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L803",
+      "source_location": "L804",
       "_origin": "ast",
       "id": "main_resume_ai",
       "community": 17,
@@ -6657,7 +6707,7 @@
       "label": "_placeholder_jpeg()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L816",
+      "source_location": "L817",
       "_origin": "ast",
       "id": "main_placeholder_jpeg",
       "community": 17,
@@ -6667,7 +6717,7 @@
       "label": "video_feed()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L834",
+      "source_location": "L835",
       "_origin": "ast",
       "id": "main_video_feed",
       "community": 17,
@@ -6677,7 +6727,7 @@
       "label": "read_root()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L865",
+      "source_location": "L880",
       "_origin": "ast",
       "id": "main_read_root",
       "community": 17,
@@ -6687,7 +6737,7 @@
       "label": "read_all_other_paths()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L887",
+      "source_location": "L902",
       "_origin": "ast",
       "id": "main_read_all_other_paths",
       "community": 17,
@@ -6697,7 +6747,7 @@
       "label": "websocket_chat_endpoint()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L903",
+      "source_location": "L918",
       "_origin": "ast",
       "id": "main_websocket_chat_endpoint",
       "community": 45,
@@ -6707,10 +6757,10 @@
       "label": "WebSocket",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L903",
+      "source_location": "L918",
       "_origin": "ast",
       "id": "websocket",
-      "community": 45,
+      "community": 24,
       "norm_label": "websocket"
     },
     {
@@ -6730,16 +6780,16 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "main_rationale_75",
-      "community": 24,
+      "community": 17,
       "norm_label": "ciclo de vida de la aplicacion (reemplaza @app.on_event, deprecado).      arranc"
     },
     {
       "label": "TTS en el host del holograma.      Import perezoso de `call` (evita cargar la CL",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L252",
+      "source_location": "L253",
       "_origin": "ast",
-      "id": "main_rationale_252",
+      "id": "main_rationale_253",
       "community": 17,
       "norm_label": "tts en el host del holograma.      import perezoso de `call` (evita cargar la cl"
     },
@@ -6747,19 +6797,19 @@
       "label": "Lista de proveedores de IA con metadata segura (sin secretos).      La interfaz",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L531",
+      "source_location": "L532",
       "_origin": "ast",
-      "id": "main_rationale_531",
-      "community": 17,
+      "id": "main_rationale_532",
+      "community": 0,
       "norm_label": "lista de proveedores de ia con metadata segura (sin secretos).      la interfaz"
     },
     {
       "label": "Prueba real de proveedor/modelo/key/URL sin guardar nada.      Devuelve un mensa",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L542",
+      "source_location": "L543",
       "_origin": "ast",
-      "id": "main_rationale_542",
+      "id": "main_rationale_543",
       "community": 17,
       "norm_label": "prueba real de proveedor/modelo/key/url sin guardar nada.      devuelve un mensa"
     },
@@ -6767,9 +6817,9 @@
       "label": "Contenido institucional de UNEV (fuente \u00fanica editable).",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L558",
+      "source_location": "L559",
       "_origin": "ast",
-      "id": "main_rationale_558",
+      "id": "main_rationale_559",
       "community": 85,
       "norm_label": "contenido institucional de unev (fuente unica editable)."
     },
@@ -6777,19 +6827,19 @@
       "label": "Valida y guarda el contenido de UNEV; recarga la fuente en caliente.      Devuel",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L564",
+      "source_location": "L565",
       "_origin": "ast",
-      "id": "main_rationale_564",
-      "community": 85,
+      "id": "main_rationale_565",
+      "community": 17,
       "norm_label": "valida y guarda el contenido de unev; recarga la fuente en caliente.      devuel"
     },
     {
       "label": "Enciende o **apaga** la c\u00e1mara liberando el dispositivo.      Apagar no solo ocu",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L584",
+      "source_location": "L585",
       "_origin": "ast",
-      "id": "main_rationale_584",
+      "id": "main_rationale_585",
       "community": 17,
       "norm_label": "enciende o **apaga** la camara liberando el dispositivo.      apagar no solo ocu"
     },
@@ -6797,21 +6847,21 @@
       "label": "Build a simple 'no signal' JPEG so the <img> always shows something.",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L817",
+      "source_location": "L818",
       "_origin": "ast",
-      "id": "main_rationale_817",
+      "id": "main_rationale_818",
       "community": 17,
       "norm_label": "build a simple 'no signal' jpeg so the <img> always shows something."
     },
     {
-      "label": "Stream the annotated YOLO camera frames to the web interface as MJPEG.",
+      "label": "Transmite los cuadros YOLO anotados como MJPEG (async: no bloquea el loop).",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L835",
+      "source_location": "L836",
       "_origin": "ast",
-      "id": "main_rationale_835",
+      "id": "main_rationale_836",
       "community": 17,
-      "norm_label": "stream the annotated yolo camera frames to the web interface as mjpeg."
+      "norm_label": "transmite los cuadros yolo anotados como mjpeg (async: no bloquea el loop)."
     },
     {
       "label": "provider_config.py",
@@ -6894,10 +6944,20 @@
       "norm_label": "resolve_base_url()"
     },
     {
-      "label": "provider_public_info()",
+      "label": "configured_cloud_providers()",
       "file_type": "code",
       "source_file": "provider_config.py",
       "source_location": "L255",
+      "_origin": "ast",
+      "id": "provider_config_configured_cloud_providers",
+      "community": 0,
+      "norm_label": "configured_cloud_providers()"
+    },
+    {
+      "label": "provider_public_info()",
+      "file_type": "code",
+      "source_file": "provider_config.py",
+      "source_location": "L285",
       "_origin": "ast",
       "id": "provider_config_provider_public_info",
       "community": 0,
@@ -6907,7 +6967,7 @@
       "label": "all_providers_public_info()",
       "file_type": "code",
       "source_file": "provider_config.py",
-      "source_location": "L275",
+      "source_location": "L305",
       "_origin": "ast",
       "id": "provider_config_all_providers_public_info",
       "community": 0,
@@ -6954,12 +7014,22 @@
       "norm_label": "modelo efectivo para un proveedor.      precedencia: variable especifica del pro"
     },
     {
-      "label": "Metadata segura para la interfaz (sin secretos).",
+      "label": "IDs de proveedores en la nube con credenciales utilizables (key + modelo).",
       "file_type": "rationale",
       "source_file": "provider_config.py",
       "source_location": "L256",
       "_origin": "ast",
       "id": "provider_config_rationale_256",
+      "community": 0,
+      "norm_label": "ids de proveedores en la nube con credenciales utilizables (key + modelo)."
+    },
+    {
+      "label": "Metadata segura para la interfaz (sin secretos).",
+      "file_type": "rationale",
+      "source_file": "provider_config.py",
+      "source_location": "L286",
+      "_origin": "ast",
+      "id": "provider_config_rationale_286",
       "community": 0,
       "norm_label": "metadata segura para la interfaz (sin secretos)."
     },
@@ -7290,7 +7360,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "security",
-      "community": 0,
+      "community": 17,
       "norm_label": "security.py"
     },
     {
@@ -7300,7 +7370,7 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "security_redact_secrets",
-      "community": 0,
+      "community": 17,
       "norm_label": "redact_secrets()"
     },
     {
@@ -7310,7 +7380,7 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "security_clamp_text",
-      "community": 85,
+      "community": 17,
       "norm_label": "clamp_text()"
     },
     {
@@ -7320,7 +7390,7 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "security_redact_iter",
-      "community": 0,
+      "community": 17,
       "norm_label": "redact_iter()"
     },
     {
@@ -7330,7 +7400,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "security_rationale_1",
-      "community": 0,
+      "community": 17,
       "norm_label": "utilidades de seguridad para holograma unev.  funciones puras (sin red, sin esta"
     },
     {
@@ -7340,7 +7410,7 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "security_rationale_65",
-      "community": 0,
+      "community": 17,
       "norm_label": "devuelve ``text`` con cualquier secreto enmascarado.      enmascara (1) los valo"
     },
     {
@@ -7350,7 +7420,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "security_rationale_88",
-      "community": 85,
+      "community": 17,
       "norm_label": "sanea texto no confiable: elimina caracteres de control y trunca a ``max_len``."
     },
     {
@@ -7360,7 +7430,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "security_rationale_101",
-      "community": 0,
+      "community": 17,
       "norm_label": "aplica :func:`redact_secrets` a una coleccion (util para listas de logs)."
     },
     {
@@ -7710,7 +7780,7 @@
       "source_location": "L237",
       "_origin": "ast",
       "id": "path",
-      "community": 16,
+      "community": 27,
       "norm_label": "path"
     },
     {
@@ -7930,7 +8000,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "skills_utils_normalize_text",
-      "community": 5,
+      "community": 85,
       "norm_label": "normalize_text()"
     },
     {
@@ -7940,7 +8010,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "skills_utils_rationale_5",
-      "community": 5,
+      "community": 85,
       "norm_label": "normalizes text by removing accents, lowercasing, and stripping whitespace."
     },
     {
@@ -7980,7 +8050,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "stt_listener_looks_like_hallucination",
-      "community": 27,
+      "community": 62,
       "norm_label": "_looks_like_hallucination()"
     },
     {
@@ -7990,7 +8060,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener",
-      "community": 27,
+      "community": 17,
       "norm_label": "whisperlistener"
     },
     {
@@ -8060,7 +8130,7 @@
       "source_location": "L421",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_is_available",
-      "community": 27,
+      "community": 17,
       "norm_label": ".is_available()"
     },
     {
@@ -8070,7 +8140,7 @@
       "source_location": "L431",
       "_origin": "ast",
       "id": "stt_listener_get_stt_status",
-      "community": 5,
+      "community": 26,
       "norm_label": "get_stt_status()"
     },
     {
@@ -8090,7 +8160,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "stt_listener_rationale_42",
-      "community": 27,
+      "community": 62,
       "norm_label": "return true if *text* is empty or a known whisper silence-hallucination."
     },
     {
@@ -8100,7 +8170,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "stt_listener_rationale_54",
-      "community": 27,
+      "community": 17,
       "norm_label": "record from the microphone and transcribe with faster-whisper.      parameters"
     },
     {
@@ -8160,7 +8230,7 @@
       "source_location": "L422",
       "_origin": "ast",
       "id": "stt_listener_rationale_422",
-      "community": 27,
+      "community": 17,
       "norm_label": "return true if sounddevice and faster-whisper are importable."
     },
     {
@@ -8170,7 +8240,7 @@
       "source_location": "L432",
       "_origin": "ast",
       "id": "stt_listener_rationale_432",
-      "community": 5,
+      "community": 26,
       "norm_label": "return a human-readable status string for the stt subsystem."
     },
     {
@@ -8190,7 +8260,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector",
-      "community": 16,
+      "community": 27,
       "norm_label": "wakeworddetector"
     },
     {
@@ -8200,7 +8270,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_init",
-      "community": 16,
+      "community": 62,
       "norm_label": ".__init__()"
     },
     {
@@ -8210,7 +8280,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_load_model",
-      "community": 16,
+      "community": 27,
       "norm_label": "._load_model()"
     },
     {
@@ -8220,7 +8290,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_find_bundled_model",
-      "community": 16,
+      "community": 27,
       "norm_label": "._find_bundled_model()"
     },
     {
@@ -8230,7 +8300,7 @@
       "source_location": "L143",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_wait_for_wake",
-      "community": 16,
+      "community": 27,
       "norm_label": ".wait_for_wake()"
     },
     {
@@ -8240,7 +8310,7 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_is_available",
-      "community": 16,
+      "community": 27,
       "norm_label": ".is_available()"
     },
     {
@@ -8270,7 +8340,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "stt_wakeword_rationale_39",
-      "community": 16,
+      "community": 27,
       "norm_label": "detecta una palabra clave en streaming con openwakeword."
     },
     {
@@ -8280,7 +8350,7 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "stt_wakeword_rationale_123",
-      "community": 16,
+      "community": 27,
       "norm_label": "resuelve un nombre corto a la ruta de un .onnx incluido (0.4.x).          ej.: `"
     },
     {
@@ -8290,7 +8360,7 @@
       "source_location": "L144",
       "_origin": "ast",
       "id": "stt_wakeword_rationale_144",
-      "community": 16,
+      "community": 27,
       "norm_label": "bloquea hasta detectar la palabra clave.          parameters         ----------"
     },
     {
@@ -8300,7 +8370,7 @@
       "source_location": "L220",
       "_origin": "ast",
       "id": "stt_wakeword_rationale_220",
-      "community": 16,
+      "community": 27,
       "norm_label": "return true if openwakeword and sounddevice are importable."
     },
     {
@@ -8572,6 +8642,86 @@
       "id": "tests_test_app_services_rationale_238",
       "community": 24,
       "norm_label": "con `camera_context` inyectado, no se construye contexto desde `call`."
+    },
+    {
+      "label": "test_camera_feed_gate.py",
+      "file_type": "code",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_camera_feed_gate",
+      "community": 16,
+      "norm_label": "test_camera_feed_gate.py"
+    },
+    {
+      "label": "test_subscriber_counter_floors_at_zero()",
+      "file_type": "code",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "tests_test_camera_feed_gate_test_subscriber_counter_floors_at_zero",
+      "community": 16,
+      "norm_label": "test_subscriber_counter_floors_at_zero()"
+    },
+    {
+      "label": "test_last_jpeg_cleared_when_no_subscribers()",
+      "file_type": "code",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "tests_test_camera_feed_gate_test_last_jpeg_cleared_when_no_subscribers",
+      "community": 16,
+      "norm_label": "test_last_jpeg_cleared_when_no_subscribers()"
+    },
+    {
+      "label": "_count_stores()",
+      "file_type": "code",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "tests_test_camera_feed_gate_count_stores",
+      "community": 16,
+      "norm_label": "_count_stores()"
+    },
+    {
+      "label": "test_run_continuous_skips_encode_without_subscribers()",
+      "file_type": "code",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L82",
+      "_origin": "ast",
+      "id": "tests_test_camera_feed_gate_test_run_continuous_skips_encode_without_subscribers",
+      "community": 16,
+      "norm_label": "test_run_continuous_skips_encode_without_subscribers()"
+    },
+    {
+      "label": "test_run_continuous_encodes_with_subscriber()",
+      "file_type": "code",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L86",
+      "_origin": "ast",
+      "id": "tests_test_camera_feed_gate_test_run_continuous_encodes_with_subscriber",
+      "community": 16,
+      "norm_label": "test_run_continuous_encodes_with_subscriber()"
+    },
+    {
+      "label": "Gating del feed MJPEG: el detector solo codifica JPEG si alguien mira.  Codifica",
+      "file_type": "rationale",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_camera_feed_gate_rationale_1",
+      "community": 16,
+      "norm_label": "gating del feed mjpeg: el detector solo codifica jpeg si alguien mira.  codifica"
+    },
+    {
+      "label": "Corre run_continuous unos cuadros y cuenta cu\u00e1ntas veces guard\u00f3 un JPEG.",
+      "file_type": "rationale",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L40",
+      "_origin": "ast",
+      "id": "tests_test_camera_feed_gate_rationale_40",
+      "community": 16,
+      "norm_label": "corre run_continuous unos cuadros y cuenta cuantas veces guardo un jpeg."
     },
     {
       "label": "test_camera_stop.py",
@@ -9074,6 +9224,36 @@
       "norm_label": "test_backend_selection_runs_off_event_loop()"
     },
     {
+      "label": "test_candidate_backends_inserts_cloud_fallback_before_local()",
+      "file_type": "code",
+      "source_file": "tests/test_llm_unify.py",
+      "source_location": "L117",
+      "_origin": "ast",
+      "id": "tests_test_llm_unify_test_candidate_backends_inserts_cloud_fallback_before_local",
+      "community": 65,
+      "norm_label": "test_candidate_backends_inserts_cloud_fallback_before_local()"
+    },
+    {
+      "label": "test_candidate_backends_skips_ollama_when_not_ready()",
+      "file_type": "code",
+      "source_file": "tests/test_llm_unify.py",
+      "source_location": "L132",
+      "_origin": "ast",
+      "id": "tests_test_llm_unify_test_candidate_backends_skips_ollama_when_not_ready",
+      "community": 65,
+      "norm_label": "test_candidate_backends_skips_ollama_when_not_ready()"
+    },
+    {
+      "label": "test_candidate_backends_keeps_primary_when_not_in_configured()",
+      "file_type": "code",
+      "source_file": "tests/test_llm_unify.py",
+      "source_location": "L138",
+      "_origin": "ast",
+      "id": "tests_test_llm_unify_test_candidate_backends_keeps_primary_when_not_in_configured",
+      "community": 65,
+      "norm_label": "test_candidate_backends_keeps_primary_when_not_in_configured()"
+    },
+    {
       "label": "Unificaci\u00f3n de la ruta de LLM (Fases 1 y 2 del plan de mejora).  Cubre tres arre",
       "file_type": "rationale",
       "source_file": "tests/test_llm_unify.py",
@@ -9112,6 +9292,26 @@
       "id": "tests_test_llm_unify_rationale_87",
       "community": 65,
       "norm_label": "`_candidate_backends` debe ejecutarse en un hilo distinto al del loop.      el l"
+    },
+    {
+      "label": "primario -> otros proveedores con key -> ollama (si responde) -> local_only.",
+      "file_type": "rationale",
+      "source_file": "tests/test_llm_unify.py",
+      "source_location": "L118",
+      "_origin": "ast",
+      "id": "tests_test_llm_unify_rationale_118",
+      "community": 65,
+      "norm_label": "primario -> otros proveedores con key -> ollama (si responde) -> local_only."
+    },
+    {
+      "label": "Un primario expl\u00edcito sin key (p. ej. claude_native) sigue siendo el primer inte",
+      "file_type": "rationale",
+      "source_file": "tests/test_llm_unify.py",
+      "source_location": "L139",
+      "_origin": "ast",
+      "id": "tests_test_llm_unify_rationale_139",
+      "community": 65,
+      "norm_label": "un primario explicito sin key (p. ej. claude_native) sigue siendo el primer inte"
     },
     {
       "label": "test_ollama_ready_cache.py",
@@ -9257,7 +9457,7 @@
       "label": "test_blink_does_not_re_greet()",
       "file_type": "code",
       "source_file": "tests/test_person_presence.py",
-      "source_location": "L69",
+      "source_location": "L83",
       "_origin": "ast",
       "id": "tests_test_person_presence_test_blink_does_not_re_greet",
       "community": 70,
@@ -9267,7 +9467,7 @@
       "label": "test_real_departure_and_return_greets_again()",
       "file_type": "code",
       "source_file": "tests/test_person_presence.py",
-      "source_location": "L80",
+      "source_location": "L94",
       "_origin": "ast",
       "id": "tests_test_person_presence_test_real_departure_and_return_greets_again",
       "community": 70,
@@ -9277,11 +9477,41 @@
       "label": "test_group_detected_once_for_sustained_group()",
       "file_type": "code",
       "source_file": "tests/test_person_presence.py",
-      "source_location": "L86",
+      "source_location": "L100",
       "_origin": "ast",
       "id": "tests_test_person_presence_test_group_detected_once_for_sustained_group",
       "community": 70,
       "norm_label": "test_group_detected_once_for_sustained_group()"
+    },
+    {
+      "label": "test_single_frame_false_positive_does_not_greet()",
+      "file_type": "code",
+      "source_file": "tests/test_person_presence.py",
+      "source_location": "L106",
+      "_origin": "ast",
+      "id": "tests_test_person_presence_test_single_frame_false_positive_does_not_greet",
+      "community": 70,
+      "norm_label": "test_single_frame_false_positive_does_not_greet()"
+    },
+    {
+      "label": "test_sustained_presence_greets_after_grace()",
+      "file_type": "code",
+      "source_file": "tests/test_person_presence.py",
+      "source_location": "L116",
+      "_origin": "ast",
+      "id": "tests_test_person_presence_test_sustained_presence_greets_after_grace",
+      "community": 70,
+      "norm_label": "test_sustained_presence_greets_after_grace()"
+    },
+    {
+      "label": "test_group_entry_is_debounced_too()",
+      "file_type": "code",
+      "source_file": "tests/test_person_presence.py",
+      "source_location": "L122",
+      "_origin": "ast",
+      "id": "tests_test_person_presence_test_group_entry_is_debounced_too",
+      "community": 70,
+      "norm_label": "test_group_entry_is_debounced_too()"
     },
     {
       "label": "M\u00e1quina de estados de presencia: parpadeos vs. ausencia real.  Estos tests blind",
@@ -9317,9 +9547,9 @@
       "label": "Un cuadro perdido entre dos presencias NO debe re-disparar person_entered.",
       "file_type": "rationale",
       "source_file": "tests/test_person_presence.py",
-      "source_location": "L70",
+      "source_location": "L84",
       "_origin": "ast",
-      "id": "tests_test_person_presence_rationale_70",
+      "id": "tests_test_person_presence_rationale_84",
       "community": 70,
       "norm_label": "un cuadro perdido entre dos presencias no debe re-disparar person_entered."
     },
@@ -9327,9 +9557,9 @@
       "label": "Una ausencia sostenida (supera la gracia) s\u00ed cuenta como ida y vuelta.",
       "file_type": "rationale",
       "source_file": "tests/test_person_presence.py",
-      "source_location": "L81",
+      "source_location": "L95",
       "_origin": "ast",
-      "id": "tests_test_person_presence_rationale_81",
+      "id": "tests_test_person_presence_rationale_95",
       "community": 70,
       "norm_label": "una ausencia sostenida (supera la gracia) si cuenta como ida y vuelta."
     },
@@ -9337,11 +9567,41 @@
       "label": "Un grupo (>3) dispara group_detected una sola vez mientras se mantiene.",
       "file_type": "rationale",
       "source_file": "tests/test_person_presence.py",
-      "source_location": "L87",
+      "source_location": "L101",
       "_origin": "ast",
-      "id": "tests_test_person_presence_rationale_87",
+      "id": "tests_test_person_presence_rationale_101",
       "community": 70,
       "norm_label": "un grupo (>3) dispara group_detected una sola vez mientras se mantiene."
+    },
+    {
+      "label": "Un \u00fanico cuadro con persona (falso positivo de YOLO) NO debe saludar.      Con u",
+      "file_type": "rationale",
+      "source_file": "tests/test_person_presence.py",
+      "source_location": "L107",
+      "_origin": "ast",
+      "id": "tests_test_person_presence_rationale_107",
+      "community": 70,
+      "norm_label": "un unico cuadro con persona (falso positivo de yolo) no debe saludar.      con u"
+    },
+    {
+      "label": "Una presencia sostenida supera el anti-rebote y confirma la entrada una vez.",
+      "file_type": "rationale",
+      "source_file": "tests/test_person_presence.py",
+      "source_location": "L117",
+      "_origin": "ast",
+      "id": "tests_test_person_presence_rationale_117",
+      "community": 70,
+      "norm_label": "una presencia sostenida supera el anti-rebote y confirma la entrada una vez."
+    },
+    {
+      "label": "El anti-rebote de entrada tambi\u00e9n aplica a grupos: confirma una sola vez.",
+      "file_type": "rationale",
+      "source_file": "tests/test_person_presence.py",
+      "source_location": "L123",
+      "_origin": "ast",
+      "id": "tests_test_person_presence_rationale_123",
+      "community": 70,
+      "norm_label": "el anti-rebote de entrada tambien aplica a grupos: confirma una sola vez."
     },
     {
       "label": "test_provider_config.py",
@@ -9544,10 +9804,50 @@
       "norm_label": "test_custom_openai_public_info_flags_base_url_requirement()"
     },
     {
-      "label": "test_public_info_reports_key_configured_without_leaking()",
+      "label": "test_configured_cloud_providers_empty_without_keys()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
       "source_location": "L129",
+      "_origin": "ast",
+      "id": "tests_test_provider_config_test_configured_cloud_providers_empty_without_keys",
+      "community": 18,
+      "norm_label": "test_configured_cloud_providers_empty_without_keys()"
+    },
+    {
+      "label": "test_configured_cloud_providers_single_key()",
+      "file_type": "code",
+      "source_file": "tests/test_provider_config.py",
+      "source_location": "L133",
+      "_origin": "ast",
+      "id": "tests_test_provider_config_test_configured_cloud_providers_single_key",
+      "community": 18,
+      "norm_label": "test_configured_cloud_providers_single_key()"
+    },
+    {
+      "label": "test_configured_cloud_providers_follows_autodetect_order()",
+      "file_type": "code",
+      "source_file": "tests/test_provider_config.py",
+      "source_location": "L137",
+      "_origin": "ast",
+      "id": "tests_test_provider_config_test_configured_cloud_providers_follows_autodetect_order",
+      "community": 18,
+      "norm_label": "test_configured_cloud_providers_follows_autodetect_order()"
+    },
+    {
+      "label": "test_configured_cloud_providers_excludes_custom_openai_without_base_url()",
+      "file_type": "code",
+      "source_file": "tests/test_provider_config.py",
+      "source_location": "L147",
+      "_origin": "ast",
+      "id": "tests_test_provider_config_test_configured_cloud_providers_excludes_custom_openai_without_base_url",
+      "community": 18,
+      "norm_label": "test_configured_cloud_providers_excludes_custom_openai_without_base_url()"
+    },
+    {
+      "label": "test_public_info_reports_key_configured_without_leaking()",
+      "file_type": "code",
+      "source_file": "tests/test_provider_config.py",
+      "source_location": "L158",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_public_info_reports_key_configured_without_leaking",
       "community": 18,
@@ -9557,7 +9857,7 @@
       "label": "test_keyless_providers_report_configured_true()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L137",
+      "source_location": "L166",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_keyless_providers_report_configured_true",
       "community": 18,
@@ -9622,6 +9922,26 @@
       "id": "tests_test_provider_config_rationale_101",
       "community": 18,
       "norm_label": "el proveedor 'custom_openai' lee key/modelo de las variables openai_compat_*."
+    },
+    {
+      "label": "Con varias keys, el orden es determinista (AUTODETECT_ORDER), no el del dict.",
+      "file_type": "rationale",
+      "source_file": "tests/test_provider_config.py",
+      "source_location": "L138",
+      "_origin": "ast",
+      "id": "tests_test_provider_config_rationale_138",
+      "community": 18,
+      "norm_label": "con varias keys, el orden es determinista (autodetect_order), no el del dict."
+    },
+    {
+      "label": "custom_openai necesita key, modelo y base-url; sin base-url no se encola.",
+      "file_type": "rationale",
+      "source_file": "tests/test_provider_config.py",
+      "source_location": "L148",
+      "_origin": "ast",
+      "id": "tests_test_provider_config_rationale_148",
+      "community": 18,
+      "norm_label": "custom_openai necesita key, modelo y base-url; sin base-url no se encola."
     },
     {
       "label": "test_security.py",
@@ -9850,7 +10170,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "utils_env",
-      "community": 0,
+      "community": 62,
       "norm_label": "_env()"
     },
     {
@@ -9880,7 +10200,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "utils_is_quiet",
-      "community": 2,
+      "community": 27,
       "norm_label": "_is_quiet()"
     },
     {
@@ -9900,7 +10220,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "utils_rationale_7",
-      "community": 0,
+      "community": 62,
       "norm_label": "helper to retrieve string environment variables."
     },
     {
@@ -9930,7 +10250,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "utils_rationale_31",
-      "community": 2,
+      "community": 27,
       "norm_label": "returns true if hologram_quiet env var is set to 1/true/yes."
     },
     {
@@ -9970,7 +10290,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_camera",
-      "community": 62,
+      "community": 16,
       "norm_label": "camera.py"
     },
     {
@@ -10080,7 +10400,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_camera_rationale_1",
-      "community": 62,
+      "community": 16,
       "norm_label": "cross-platform opencv camera wrapper.  regla de oro a: todas las rutas usan path"
     },
     {
@@ -10270,7 +10590,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_person_detector",
-      "community": 92,
+      "community": 62,
       "norm_label": "person_detector.py"
     },
     {
@@ -10297,7 +10617,7 @@
       "label": ".stop()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L60",
+      "source_location": "L65",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_stop",
       "community": 1,
@@ -10307,7 +10627,7 @@
       "label": ".load()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L64",
+      "source_location": "L69",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_load",
       "community": 1,
@@ -10317,7 +10637,7 @@
       "label": "._ensure_loaded()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L102",
+      "source_location": "L107",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_ensure_loaded",
       "community": 1,
@@ -10327,7 +10647,7 @@
       "label": "._load_training_data()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L107",
+      "source_location": "L112",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_load_training_data",
       "community": 1,
@@ -10337,7 +10657,7 @@
       "label": "._build_text_prompt()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L148",
+      "source_location": "L153",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_build_text_prompt",
       "community": 1,
@@ -10347,7 +10667,7 @@
       "label": ".detect_custom_objects()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L156",
+      "source_location": "L161",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_detect_custom_objects",
       "community": 1,
@@ -10357,7 +10677,7 @@
       "label": ".detect_persons_in_frame()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L206",
+      "source_location": "L211",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_detect_persons_in_frame",
       "community": 1,
@@ -10367,7 +10687,7 @@
       "label": ".analyze_frame()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L231",
+      "source_location": "L236",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_analyze_frame",
       "community": 1,
@@ -10377,17 +10697,17 @@
       "label": ".detect_person_in_frame()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L264",
+      "source_location": "L269",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_detect_person_in_frame",
-      "community": 93,
+      "community": 1,
       "norm_label": ".detect_person_in_frame()"
     },
     {
       "label": ".count_persons_in_frame()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L268",
+      "source_location": "L273",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_count_persons_in_frame",
       "community": 1,
@@ -10397,17 +10717,17 @@
       "label": ".detect_person_once()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L276",
+      "source_location": "L281",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_detect_person_once",
-      "community": 93,
+      "community": 15,
       "norm_label": ".detect_person_once()"
     },
     {
       "label": ".count_persons_once()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L289",
+      "source_location": "L294",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_count_persons_once",
       "community": 1,
@@ -10417,7 +10737,7 @@
       "label": "._draw_overlay()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L306",
+      "source_location": "L311",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_draw_overlay",
       "community": 46,
@@ -10427,7 +10747,7 @@
       "label": "._store_annotated_frame()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L357",
+      "source_location": "L362",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_store_annotated_frame",
       "community": 46,
@@ -10437,17 +10757,47 @@
       "label": ".get_latest_jpeg()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L371",
+      "source_location": "L376",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_get_latest_jpeg",
       "community": 1,
       "norm_label": ".get_latest_jpeg()"
     },
     {
+      "label": ".feed_subscribe()",
+      "file_type": "code",
+      "source_file": "vision/person_detector.py",
+      "source_location": "L381",
+      "_origin": "ast",
+      "id": "vision_person_detector_yolopersondetector_feed_subscribe",
+      "community": 1,
+      "norm_label": ".feed_subscribe()"
+    },
+    {
+      "label": ".feed_unsubscribe()",
+      "file_type": "code",
+      "source_file": "vision/person_detector.py",
+      "source_location": "L386",
+      "_origin": "ast",
+      "id": "vision_person_detector_yolopersondetector_feed_unsubscribe",
+      "community": 1,
+      "norm_label": ".feed_unsubscribe()"
+    },
+    {
+      "label": ".has_feed_subscribers()",
+      "file_type": "code",
+      "source_file": "vision/person_detector.py",
+      "source_location": "L401",
+      "_origin": "ast",
+      "id": "vision_person_detector_yolopersondetector_has_feed_subscribers",
+      "community": 46,
+      "norm_label": ".has_feed_subscribers()"
+    },
+    {
       "label": ".run_continuous()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L380",
+      "source_location": "L410",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_run_continuous",
       "community": 46,
@@ -10457,7 +10807,7 @@
       "label": ".is_available()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L484",
+      "source_location": "L536",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_is_available",
       "community": 1,
@@ -10467,10 +10817,10 @@
       "label": "get_vision_status()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L494",
+      "source_location": "L546",
       "_origin": "ast",
       "id": "vision_person_detector_get_vision_status",
-      "community": 92,
+      "community": 62,
       "norm_label": "get_vision_status()"
     },
     {
@@ -10480,7 +10830,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_1",
-      "community": 92,
+      "community": 62,
       "norm_label": "yolov8/v11 person detector for the unev hologram.  regla de oro a: todas las rut"
     },
     {
@@ -10497,9 +10847,9 @@
       "label": "Solicita que run_continuous termine y libere la c\u00e1mara.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L61",
+      "source_location": "L66",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_61",
+      "id": "vision_person_detector_rationale_66",
       "community": 1,
       "norm_label": "solicita que run_continuous termine y libere la camara."
     },
@@ -10507,9 +10857,9 @@
       "label": "Load the YOLO model.  Downloads weights automatically on first run.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L65",
+      "source_location": "L70",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_65",
+      "id": "vision_person_detector_rationale_70",
       "community": 1,
       "norm_label": "load the yolo model.  downloads weights automatically on first run."
     },
@@ -10517,9 +10867,9 @@
       "label": "Load the model if it hasn't been loaded yet.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L103",
+      "source_location": "L108",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_103",
+      "id": "vision_person_detector_rationale_108",
       "community": 1,
       "norm_label": "load the model if it hasn't been loaded yet."
     },
@@ -10527,9 +10877,9 @@
       "label": "Load custom classes from training_metadata.json and open_vocabulary.txt.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L108",
+      "source_location": "L113",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_108",
+      "id": "vision_person_detector_rationale_113",
       "community": 1,
       "norm_label": "load custom classes from training_metadata.json and open_vocabulary.txt."
     },
@@ -10537,9 +10887,9 @@
       "label": "Combine custom classes and vocabulary into a single YOLOE text prompt.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L149",
+      "source_location": "L154",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_149",
+      "id": "vision_person_detector_rationale_154",
       "community": 1,
       "norm_label": "combine custom classes and vocabulary into a single yoloe text prompt."
     },
@@ -10547,9 +10897,9 @@
       "label": "Detect custom objects using YOLOE text prompts from training data.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L157",
+      "source_location": "L162",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_157",
+      "id": "vision_person_detector_rationale_162",
       "community": 1,
       "norm_label": "detect custom objects using yoloe text prompts from training data."
     },
@@ -10557,9 +10907,9 @@
       "label": "Return a list of person detections in *frame*.          Each detection is a dict",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L207",
+      "source_location": "L212",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_207",
+      "id": "vision_person_detector_rationale_212",
       "community": 1,
       "norm_label": "return a list of person detections in *frame*.          each detection is a dict"
     },
@@ -10567,9 +10917,9 @@
       "label": "Return person and custom object detections plus optional safe face count.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L232",
+      "source_location": "L237",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_232",
+      "id": "vision_person_detector_rationale_237",
       "community": 1,
       "norm_label": "return person and custom object detections plus optional safe face count."
     },
@@ -10577,19 +10927,19 @@
       "label": "Return True if at least one person is detected in *frame*.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L265",
+      "source_location": "L270",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_265",
-      "community": 93,
+      "id": "vision_person_detector_rationale_270",
+      "community": 1,
       "norm_label": "return true if at least one person is detected in *frame*."
     },
     {
       "label": "Return the number of people detected in *frame*.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L269",
+      "source_location": "L274",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_269",
+      "id": "vision_person_detector_rationale_274",
       "community": 1,
       "norm_label": "return the number of people detected in *frame*."
     },
@@ -10597,19 +10947,19 @@
       "label": "Open the camera, read one frame, and return True if a person is found.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L277",
+      "source_location": "L282",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_277",
-      "community": 93,
+      "id": "vision_person_detector_rationale_282",
+      "community": 15,
       "norm_label": "open the camera, read one frame, and return true if a person is found."
     },
     {
       "label": "Open the camera, read one frame, and return the person count.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L290",
+      "source_location": "L295",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_290",
+      "id": "vision_person_detector_rationale_295",
       "community": 1,
       "norm_label": "open the camera, read one frame, and return the person count."
     },
@@ -10617,9 +10967,9 @@
       "label": "Draw person and custom-object boxes on a copy of *frame*.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L307",
+      "source_location": "L312",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_307",
+      "id": "vision_person_detector_rationale_312",
       "community": 46,
       "norm_label": "draw person and custom-object boxes on a copy of *frame*."
     },
@@ -10627,9 +10977,9 @@
       "label": "Encode *frame* (with overlay) to JPEG and cache it for streaming.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L358",
+      "source_location": "L363",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_358",
+      "id": "vision_person_detector_rationale_363",
       "community": 46,
       "norm_label": "encode *frame* (with overlay) to jpeg and cache it for streaming."
     },
@@ -10637,19 +10987,49 @@
       "label": "Return the most recent annotated frame as JPEG bytes (or None).",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L372",
+      "source_location": "L377",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_372",
+      "id": "vision_person_detector_rationale_377",
       "community": 1,
       "norm_label": "return the most recent annotated frame as jpeg bytes (or none)."
+    },
+    {
+      "label": "Registra un cliente del feed MJPEG (activa la codificaci\u00f3n JPEG).",
+      "file_type": "rationale",
+      "source_file": "vision/person_detector.py",
+      "source_location": "L382",
+      "_origin": "ast",
+      "id": "vision_person_detector_rationale_382",
+      "community": 1,
+      "norm_label": "registra un cliente del feed mjpeg (activa la codificacion jpeg)."
+    },
+    {
+      "label": "Da de baja un cliente del feed MJPEG (el contador nunca baja de 0).          Al",
+      "file_type": "rationale",
+      "source_file": "vision/person_detector.py",
+      "source_location": "L387",
+      "_origin": "ast",
+      "id": "vision_person_detector_rationale_387",
+      "community": 1,
+      "norm_label": "da de baja un cliente del feed mjpeg (el contador nunca baja de 0).          al"
+    },
+    {
+      "label": "\u00bfHay al menos un cliente viendo el feed anotado?",
+      "file_type": "rationale",
+      "source_file": "vision/person_detector.py",
+      "source_location": "L402",
+      "_origin": "ast",
+      "id": "vision_person_detector_rationale_402",
+      "community": 46,
+      "norm_label": "\u00bfhay al menos un cliente viendo el feed anotado?"
     },
     {
       "label": "Run a detection loop calling *callback(event, count)* on changes.          Param",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L381",
+      "source_location": "L411",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_381",
+      "id": "vision_person_detector_rationale_411",
       "community": 46,
       "norm_label": "run a detection loop calling *callback(event, count)* on changes.          param"
     },
@@ -10657,9 +11037,9 @@
       "label": "Return True if ultralytics and OpenCV are importable.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L485",
+      "source_location": "L537",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_485",
+      "id": "vision_person_detector_rationale_537",
       "community": 1,
       "norm_label": "return true if ultralytics and opencv are importable."
     },
@@ -10667,10 +11047,10 @@
       "label": "Return a human-readable status string for the vision subsystem.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L495",
+      "source_location": "L547",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_495",
-      "community": 92,
+      "id": "vision_person_detector_rationale_547",
+      "community": 62,
       "norm_label": "return a human-readable status string for the vision subsystem."
     },
     {
@@ -10714,20 +11094,20 @@
       "norm_label": "holograma unev \u2014 analisis tecnico y plan de mejora"
     },
     {
-      "label": "Estado de implementaci\u00f3n (actualizado 2026-06-27)",
+      "label": "Estado de implementaci\u00f3n (actualizado 2026-06-28)",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "analisis_y_plan_de_mejora_estado_de_implementaci\u00f3n_actualizado_2026_06_27",
+      "id": "analisis_y_plan_de_mejora_estado_de_implementaci\u00f3n_actualizado_2026_06_28",
       "community": 8,
-      "norm_label": "estado de implementacion (actualizado 2026-06-27)"
+      "norm_label": "estado de implementacion (actualizado 2026-06-28)"
     },
     {
       "label": "0. TL;DR (resumen ejecutivo)",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L36",
+      "source_location": "L39",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_0_tl_dr_resumen_ejecutivo",
       "community": 8,
@@ -10737,7 +11117,7 @@
       "label": "1. C\u00f3mo est\u00e1 construido hoy (y por qu\u00e9 duele)",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L62",
+      "source_location": "L65",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_1_c\u00f3mo_est\u00e1_construido_hoy_y_por_qu\u00e9_duele",
       "community": 8,
@@ -10747,7 +11127,7 @@
       "label": "1.1 El pecado original: una CLI disfrazada de servidor web",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L64",
+      "source_location": "L67",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_1_1_el_pecado_original_una_cli_disfrazada_de_servidor_web",
       "community": 8,
@@ -10757,7 +11137,7 @@
       "label": "1.2 Dos caminos de LLM que divergen",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L99",
+      "source_location": "L102",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_1_2_dos_caminos_de_llm_que_divergen",
       "community": 8,
@@ -10767,7 +11147,7 @@
       "label": "1.3 Importaciones circulares",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L110",
+      "source_location": "L113",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_1_3_importaciones_circulares",
       "community": 8,
@@ -10777,7 +11157,7 @@
       "label": "2. Diagn\u00f3stico por s\u00edntoma (con evidencia exacta)",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L120",
+      "source_location": "L123",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_2_diagn\u00f3stico_por_s\u00edntoma_con_evidencia_exacta",
       "community": 8,
@@ -10787,7 +11167,7 @@
       "label": "2.A \u2014 \"Se congela\" / todo lento  \u2192  bloqueo del event loop",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L122",
+      "source_location": "L125",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_2_a_se_congela_todo_lento_bloqueo_del_event_loop",
       "community": 8,
@@ -10797,7 +11177,7 @@
       "label": "2.B \u2014 \"Se queda en hablando\" / el estado nunca vuelve a idle",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L159",
+      "source_location": "L162",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_2_b_se_queda_en_hablando_el_estado_nunca_vuelve_a_idle",
       "community": 8,
@@ -10807,7 +11187,7 @@
       "label": "2.C \u2014 \"A veces no responde / dice que no puede responder\"",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L241",
+      "source_location": "L244",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_2_c_a_veces_no_responde_dice_que_no_puede_responder",
       "community": 8,
@@ -10817,7 +11197,7 @@
       "label": "2.D \u2014 \"La detecci\u00f3n de personas funciona raro\"",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L275",
+      "source_location": "L278",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_2_d_la_detecci\u00f3n_de_personas_funciona_raro",
       "community": 8,
@@ -10827,7 +11207,7 @@
       "label": "2.E \u2014 \"Lento en general\" (fuentes acumuladas)",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L333",
+      "source_location": "L336",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_2_e_lento_en_general_fuentes_acumuladas",
       "community": 8,
@@ -10837,7 +11217,7 @@
       "label": "3. Cat\u00e1logo completo de errores (lista numerada)",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L358",
+      "source_location": "L361",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_3_cat\u00e1logo_completo_de_errores_lista_numerada",
       "community": 8,
@@ -10847,7 +11227,7 @@
       "label": "Arquitectura",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L362",
+      "source_location": "L365",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_arquitectura",
       "community": 8,
@@ -10857,7 +11237,7 @@
       "label": "Concurrencia / asyncio",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L375",
+      "source_location": "L378",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_concurrencia_asyncio",
       "community": 8,
@@ -10867,7 +11247,7 @@
       "label": "LLM",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L386",
+      "source_location": "L389",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_llm",
       "community": 8,
@@ -10877,7 +11257,7 @@
       "label": "Visi\u00f3n",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L398",
+      "source_location": "L401",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_visi\u00f3n",
       "community": 8,
@@ -10887,7 +11267,7 @@
       "label": "TTS / STT",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L406",
+      "source_location": "L409",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_tts_stt",
       "community": 8,
@@ -10897,7 +11277,7 @@
       "label": "Frontend",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L413",
+      "source_location": "L416",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_frontend",
       "community": 8,
@@ -10907,7 +11287,7 @@
       "label": "Higiene de repositorio",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L419",
+      "source_location": "L422",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_higiene_de_repositorio",
       "community": 8,
@@ -10917,7 +11297,7 @@
       "label": "4. \u00bfReescribir desde cero o refactorizar?",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L428",
+      "source_location": "L431",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_4_reescribir_desde_cero_o_refactorizar",
       "community": 8,
@@ -10927,7 +11307,7 @@
       "label": "5. Arquitectura objetivo",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L457",
+      "source_location": "L460",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_5_arquitectura_objetivo",
       "community": 8,
@@ -10937,7 +11317,7 @@
       "label": "6. Plan por fases",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L494",
+      "source_location": "L497",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_6_plan_por_fases",
       "community": 8,
@@ -10947,7 +11327,7 @@
       "label": "Fase 0 \u2014 Quick wins (horas, alto impacto, bajo riesgo)",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L499",
+      "source_location": "L502",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_fase_0_quick_wins_horas_alto_impacto_bajo_riesgo",
       "community": 8,
@@ -10957,7 +11337,7 @@
       "label": "Fase 1 \u2014 Desbloquear el event loop (1\u20132 d\u00edas)",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L514",
+      "source_location": "L517",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_fase_1_desbloquear_el_event_loop_1_2_d\u00edas",
       "community": 8,
@@ -10967,7 +11347,7 @@
       "label": "Fase 2 \u2014 Unificar la ruta de LLM (2\u20133 d\u00edas)",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L523",
+      "source_location": "L526",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_fase_2_unificar_la_ruta_de_llm_2_3_d\u00edas",
       "community": 8,
@@ -10977,7 +11357,7 @@
       "label": "Fase 3 \u2014 Des-monkey-patchear hacia servicios (3\u20135 d\u00edas) \u2014 el refactor grande",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L530",
+      "source_location": "L533",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_fase_3_des_monkey_patchear_hacia_servicios_3_5_d\u00edas_el_refactor_grande",
       "community": 8,
@@ -10987,7 +11367,7 @@
       "label": "Fase 4 \u2014 Rendimiento y pulido (2\u20133 d\u00edas)",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L541",
+      "source_location": "L544",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_fase_4_rendimiento_y_pulido_2_3_d\u00edas",
       "community": 8,
@@ -10997,7 +11377,7 @@
       "label": "7. Limpieza de repositorio",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L552",
+      "source_location": "L556",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_7_limpieza_de_repositorio",
       "community": 8,
@@ -11007,7 +11387,7 @@
       "label": "7.1 Sacar binarios pesados del control de versiones",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L554",
+      "source_location": "L558",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_7_1_sacar_binarios_pesados_del_control_de_versiones",
       "community": 8,
@@ -11017,7 +11397,7 @@
       "label": "7.2 `.md` a BORRAR o consolidar (lo pediste expl\u00edcitamente)",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L566",
+      "source_location": "L570",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_7_2_md_a_borrar_o_consolidar_lo_pediste_expl\u00edcitamente",
       "community": 8,
@@ -11027,7 +11407,7 @@
       "label": "7.3 Otros",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L582",
+      "source_location": "L593",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_7_3_otros",
       "community": 8,
@@ -11037,7 +11417,7 @@
       "label": "8. Reorganizaci\u00f3n de carpetas propuesta",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L590",
+      "source_location": "L601",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_8_reorganizaci\u00f3n_de_carpetas_propuesta",
       "community": 8,
@@ -11047,7 +11427,7 @@
       "label": "9. Ap\u00e9ndice \u2014 veredicto por archivo",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L628",
+      "source_location": "L639",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_9_ap\u00e9ndice_veredicto_por_archivo",
       "community": 8,
@@ -11057,7 +11437,7 @@
       "label": "Cierre",
       "file_type": "document",
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
-      "source_location": "L648",
+      "source_location": "L659",
       "_origin": "ast",
       "id": "analisis_y_plan_de_mejora_cierre",
       "community": 8,
@@ -11267,7 +11647,7 @@
       "label": "\ud83c\udf99\ufe0f Activaci\u00f3n de la voz",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L165",
+      "source_location": "L166",
       "_origin": "ast",
       "id": "readme_activaci\u00f3n_de_la_voz",
       "community": 14,
@@ -11277,7 +11657,7 @@
       "label": "\ud83e\uddea Pruebas recomendadas en laptop",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L188",
+      "source_location": "L189",
       "_origin": "ast",
       "id": "readme_pruebas_recomendadas_en_laptop",
       "community": 14,
@@ -11287,7 +11667,7 @@
       "label": "\ud83c\udf53 Notas para Raspberry Pi 3/5",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L214",
+      "source_location": "L232",
       "_origin": "ast",
       "id": "readme_notas_para_raspberry_pi_3_5",
       "community": 14,
@@ -11297,7 +11677,7 @@
       "label": "\ud83d\udde3\ufe0f Comandos del Chat / Sistema",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L227",
+      "source_location": "L245",
       "_origin": "ast",
       "id": "readme_comandos_del_chat_sistema",
       "community": 14,
@@ -11307,7 +11687,7 @@
       "label": "\ud83d\udcc1 Estructura del Proyecto",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L241",
+      "source_location": "L259",
       "_origin": "ast",
       "id": "readme_estructura_del_proyecto",
       "community": 14,
@@ -11317,7 +11697,7 @@
       "label": "\ud83d\udd27 Configuraci\u00f3n Avanzada",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L283",
+      "source_location": "L301",
       "_origin": "ast",
       "id": "readme_configuraci\u00f3n_avanzada",
       "community": 14,
@@ -11327,7 +11707,7 @@
       "label": "Asistente Interactivo (`setup_hologram.py`)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L285",
+      "source_location": "L303",
       "_origin": "ast",
       "id": "readme_asistente_interactivo_setup_hologram_py",
       "community": 14,
@@ -11337,7 +11717,7 @@
       "label": "Archivo `config.json`",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L292",
+      "source_location": "L310",
       "_origin": "ast",
       "id": "readme_archivo_config_json",
       "community": 14,
@@ -11347,7 +11727,7 @@
       "label": "\ud83d\udcc4 Licencia",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L297",
+      "source_location": "L315",
       "_origin": "ast",
       "id": "readme_licencia",
       "community": 14,
@@ -11442,156 +11822,6 @@
       "id": "docs_config_endurecimiento_de_seguridad_fase_d_1",
       "community": 60,
       "norm_label": "endurecimiento de seguridad (fase d.1)"
-    },
-    {
-      "label": "HANDOFF.md",
-      "file_type": "document",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "docs_handoff",
-      "community": 26,
-      "norm_label": "handoff.md"
-    },
-    {
-      "label": "Holograma UNEV \u2014 Handoff for the next agent",
-      "file_type": "document",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "docs_handoff_holograma_unev_handoff_for_the_next_agent",
-      "community": 26,
-      "norm_label": "holograma unev \u2014 handoff for the next agent"
-    },
-    {
-      "label": "Latest session (2026-06-27) \u2014 symptom fixes + Phase 3 foundation",
-      "file_type": "document",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L8",
-      "_origin": "ast",
-      "id": "docs_handoff_latest_session_2026_06_27_symptom_fixes_phase_3_foundation",
-      "community": 26,
-      "norm_label": "latest session (2026-06-27) \u2014 symptom fixes + phase 3 foundation"
-    },
-    {
-      "label": "Hard environment constraints (read first)",
-      "file_type": "document",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L51",
-      "_origin": "ast",
-      "id": "docs_handoff_hard_environment_constraints_read_first",
-      "community": 26,
-      "norm_label": "hard environment constraints (read first)"
-    },
-    {
-      "label": "Verify (already done)",
-      "file_type": "document",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L60",
-      "_origin": "ast",
-      "id": "docs_handoff_verify_already_done",
-      "community": 26,
-      "norm_label": "verify (already done)"
-    },
-    {
-      "label": "Phase 1 result (DONE) \u2014 the config/provider contract",
-      "file_type": "document",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L69",
-      "_origin": "ast",
-      "id": "docs_handoff_phase_1_result_done_the_config_provider_contract",
-      "community": 26,
-      "norm_label": "phase 1 result (done) \u2014 the config/provider contract"
-    },
-    {
-      "label": "Remaining phases (pick per priority)",
-      "file_type": "document",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L81",
-      "_origin": "ast",
-      "id": "docs_handoff_remaining_phases_pick_per_priority",
-      "community": 26,
-      "norm_label": "remaining phases (pick per priority)"
-    },
-    {
-      "label": "A. Settings UX + wire test buttons  \u2705 DONE",
-      "file_type": "document",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L83",
-      "_origin": "ast",
-      "id": "docs_handoff_a_settings_ux_wire_test_buttons_done",
-      "community": 26,
-      "norm_label": "a. settings ux + wire test buttons  \u2705 done"
-    },
-    {
-      "label": "B. Cancellation + camera release + per-session events  (touches call.py, higher risk)",
-      "file_type": "document",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L99",
-      "_origin": "ast",
-      "id": "docs_handoff_b_cancellation_camera_release_per_session_events_touches_call_py_higher_risk",
-      "community": 26,
-      "norm_label": "b. cancellation + camera release + per-session events  (touches call.py, higher risk)"
-    },
-    {
-      "label": "C. Windows-first sidecar packaging  (cannot finish here; needs Windows runner)",
-      "file_type": "document",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L133",
-      "_origin": "ast",
-      "id": "docs_handoff_c_windows_first_sidecar_packaging_cannot_finish_here_needs_windows_runner",
-      "community": 26,
-      "norm_label": "c. windows-first sidecar packaging  (cannot finish here; needs windows runner)"
-    },
-    {
-      "label": "D. Security + operator auth",
-      "file_type": "document",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L141",
-      "_origin": "ast",
-      "id": "docs_handoff_d_security_operator_auth",
-      "community": 26,
-      "norm_label": "d. security + operator auth"
-    },
-    {
-      "label": "E. De-monkey-patch into typed services  \u2705 FOUNDATION DONE (wiring is runtime-gated)",
-      "file_type": "document",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L158",
-      "_origin": "ast",
-      "id": "docs_handoff_e_de_monkey_patch_into_typed_services_foundation_done_wiring_is_runtime_gated",
-      "community": 26,
-      "norm_label": "e. de-monkey-patch into typed services  \u2705 foundation done (wiring is runtime-gated)"
-    },
-    {
-      "label": "F. Single editable UNEV content source  \u2705 DONE",
-      "file_type": "document",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L190",
-      "_origin": "ast",
-      "id": "docs_handoff_f_single_editable_unev_content_source_done",
-      "community": 26,
-      "norm_label": "f. single editable unev content source  \u2705 done"
-    },
-    {
-      "label": "G. Legacy lint debt  \u2705 DONE",
-      "file_type": "document",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L197",
-      "_origin": "ast",
-      "id": "docs_handoff_g_legacy_lint_debt_done",
-      "community": 26,
-      "norm_label": "g. legacy lint debt  \u2705 done"
-    },
-    {
-      "label": "Reusable knobs already in the contract",
-      "file_type": "document",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L202",
-      "_origin": "ast",
-      "id": "docs_handoff_reusable_knobs_already_in_the_contract",
-      "community": 26,
-      "norm_label": "reusable knobs already in the contract"
     },
     {
       "label": "HOLOGRAM.md",
@@ -11762,86 +11992,6 @@
       "id": "docs_packaging_aceptaci\u00f3n",
       "community": 52,
       "norm_label": "aceptacion"
-    },
-    {
-      "label": "PHASE3_WIRING.md",
-      "file_type": "document",
-      "source_file": "docs/PHASE3_WIRING.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "docs_phase3_wiring",
-      "community": 89,
-      "norm_label": "phase3_wiring.md"
-    },
-    {
-      "label": "Phase 3 wiring \u2014 next-session execution plan",
-      "file_type": "document",
-      "source_file": "docs/PHASE3_WIRING.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "docs_phase3_wiring_phase_3_wiring_next_session_execution_plan",
-      "community": 89,
-      "norm_label": "phase 3 wiring \u2014 next-session execution plan"
-    },
-    {
-      "label": "0. READ FIRST \u2014 the backend RUNS on this machine",
-      "file_type": "document",
-      "source_file": "docs/PHASE3_WIRING.md",
-      "source_location": "L9",
-      "_origin": "ast",
-      "id": "docs_phase3_wiring_0_read_first_the_backend_runs_on_this_machine",
-      "community": 89,
-      "norm_label": "0. read first \u2014 the backend runs on this machine"
-    },
-    {
-      "label": "Validation recipe (run before AND after every step)",
-      "file_type": "document",
-      "source_file": "docs/PHASE3_WIRING.md",
-      "source_location": "L19",
-      "_origin": "ast",
-      "id": "docs_phase3_wiring_validation_recipe_run_before_and_after_every_step",
-      "community": 89,
-      "norm_label": "validation recipe (run before and after every step)"
-    },
-    {
-      "label": "1. What the monkey-patching actually does \u2014 DO NOT delete blindly",
-      "file_type": "document",
-      "source_file": "docs/PHASE3_WIRING.md",
-      "source_location": "L35",
-      "_origin": "ast",
-      "id": "docs_phase3_wiring_1_what_the_monkey_patching_actually_does_do_not_delete_blindly",
-      "community": 89,
-      "norm_label": "1. what the monkey-patching actually does \u2014 do not delete blindly"
-    },
-    {
-      "label": "2. Target wiring \u2014 strangler, smallest-risk first (one step = one commit)",
-      "file_type": "document",
-      "source_file": "docs/PHASE3_WIRING.md",
-      "source_location": "L58",
-      "_origin": "ast",
-      "id": "docs_phase3_wiring_2_target_wiring_strangler_smallest_risk_first_one_step_one_commit",
-      "community": 89,
-      "norm_label": "2. target wiring \u2014 strangler, smallest-risk first (one step = one commit)"
-    },
-    {
-      "label": "3. \u00a78 folder reorg \u2014 ONLY after A\u2013D are green",
-      "file_type": "document",
-      "source_file": "docs/PHASE3_WIRING.md",
-      "source_location": "L92",
-      "_origin": "ast",
-      "id": "docs_phase3_wiring_3_8_folder_reorg_only_after_a_d_are_green",
-      "community": 89,
-      "norm_label": "3. \u00a78 folder reorg \u2014 only after a\u2013d are green"
-    },
-    {
-      "label": "4. Don'ts",
-      "file_type": "document",
-      "source_file": "docs/PHASE3_WIRING.md",
-      "source_location": "L96",
-      "_origin": "ast",
-      "id": "docs_phase3_wiring_4_don_ts",
-      "community": 89,
-      "norm_label": "4. don'ts"
     },
     {
       "label": "README.md",
@@ -13442,6 +13592,26 @@
       "confidence_score": 1.0,
       "source": "call",
       "target": "call_camera_detection_callback"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "call.py",
+      "source_location": "L910",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "call",
+      "target": "call_camera_feed_subscribe"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "call.py",
+      "source_location": "L921",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "call",
+      "target": "call_camera_feed_unsubscribe"
     },
     {
       "relation": "contains",
@@ -15131,6 +15301,26 @@
       "target": "call_get_latest_camera_jpeg"
     },
     {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "call.py",
+      "source_location": "L911",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "call_rationale_911",
+      "target": "call_camera_feed_subscribe"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "call.py",
+      "source_location": "L922",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "call_rationale_922",
+      "target": "call_camera_feed_unsubscribe"
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -15163,6 +15353,16 @@
       "target": "call_camera_detection_callback"
     },
     {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "call.py",
+      "source_location": "L929",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "call_rationale_929",
+      "target": "call_camera_detection_callback"
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -15177,10 +15377,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "call.py",
-      "source_location": "L973",
+      "source_location": "L991",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "call_rationale_973",
+      "source": "call_rationale_991",
       "target": "call_start_camera_thread"
     },
     {
@@ -15231,10 +15431,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "call.py",
-      "source_location": "L1013",
+      "source_location": "L1031",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "call_rationale_1013",
+      "source": "call_rationale_1031",
       "target": "call_stop_camera_thread"
     },
     {
@@ -15296,10 +15496,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "call.py",
-      "source_location": "L1039",
+      "source_location": "L1057",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "call_rationale_1039",
+      "source": "call_rationale_1057",
       "target": "call_chat_to_voice"
     },
     {
@@ -15317,10 +15517,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "call.py",
-      "source_location": "L1107",
+      "source_location": "L1125",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "call_rationale_1107",
+      "source": "call_rationale_1125",
       "target": "call_request_listen"
     },
     {
@@ -15360,10 +15560,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "call.py",
-      "source_location": "L1112",
+      "source_location": "L1130",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "call_rationale_1112",
+      "source": "call_rationale_1130",
       "target": "call_set_trigger_mode"
     },
     {
@@ -15403,10 +15603,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "call.py",
-      "source_location": "L1123",
+      "source_location": "L1141",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "call_rationale_1123",
+      "source": "call_rationale_1141",
       "target": "call_get_trigger_mode"
     },
     {
@@ -15435,20 +15635,20 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "call.py",
-      "source_location": "L1128",
+      "source_location": "L1146",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "call_rationale_1128",
+      "source": "call_rationale_1146",
       "target": "call_stdin_ptt_reader"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "call.py",
-      "source_location": "L1139",
+      "source_location": "L1157",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "call_rationale_1139",
+      "source": "call_rationale_1157",
       "target": "call_wait_for_trigger"
     },
     {
@@ -15477,10 +15677,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "call.py",
-      "source_location": "L1170",
+      "source_location": "L1188",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "call_rationale_1170",
+      "source": "call_rationale_1188",
       "target": "call_voice_loop"
     },
     {
@@ -15586,10 +15786,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "call.py",
-      "source_location": "L1272",
+      "source_location": "L1290",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "call_rationale_1272",
+      "source": "call_rationale_1290",
       "target": "call_main"
     },
     {
@@ -23520,6 +23720,17 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
+      "source_location": "L13",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "llm_backend",
+      "target": "provider_config_configured_cloud_providers"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "llm_backend.py",
       "source_location": "L10",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -23980,11 +24191,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L44",
+      "source_location": "L45",
       "weight": 1.0,
-      "source": "llm_backend_rationale_44",
-      "target": "llm_backend_max_tokens",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "llm_backend_rationale_45",
+      "target": "llm_backend_max_tokens"
     },
     {
       "relation": "calls",
@@ -24177,11 +24388,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L121",
+      "source_location": "L122",
       "weight": 1.0,
-      "source": "llm_backend_rationale_121",
-      "target": "llm_backend_ollama_ready",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "llm_backend_rationale_122",
+      "target": "llm_backend_ollama_ready"
     },
     {
       "relation": "calls",
@@ -24231,11 +24442,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L151",
+      "source_location": "L152",
       "weight": 1.0,
-      "source": "llm_backend_rationale_151",
-      "target": "llm_backend_get_selected_backend",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "llm_backend_rationale_152",
+      "target": "llm_backend_get_selected_backend"
     },
     {
       "relation": "calls",
@@ -24296,11 +24507,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L196",
+      "source_location": "L197",
       "weight": 1.0,
-      "source": "llm_backend_rationale_196",
-      "target": "llm_backend_humanize_probe_error",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "llm_backend_rationale_197",
+      "target": "llm_backend_humanize_probe_error"
     },
     {
       "relation": "calls",
@@ -24328,11 +24539,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L212",
+      "source_location": "L213",
       "weight": 1.0,
-      "source": "llm_backend_rationale_212",
-      "target": "llm_backend_probe_backend",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "llm_backend_rationale_213",
+      "target": "llm_backend_probe_backend"
     },
     {
       "relation": "imports",
@@ -24361,10 +24572,31 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
+      "source_location": "L289",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "llm_backend_candidate_backends",
+      "target": "provider_config_configured_cloud_providers"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "llm_backend.py",
       "source_location": "L404",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "llm_backend_generate_reply",
+      "target": "llm_backend_candidate_backends"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "llm_backend.py",
+      "source_location": "L272",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "llm_backend_rationale_272",
       "target": "llm_backend_candidate_backends"
     },
     {
@@ -24503,11 +24735,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L333",
+      "source_location": "L351",
       "weight": 1.0,
-      "source": "llm_backend_rationale_333",
-      "target": "llm_backend_require",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "llm_backend_rationale_351",
+      "target": "llm_backend_require"
     },
     {
       "relation": "calls",
@@ -24557,11 +24789,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L357",
+      "source_location": "L375",
       "weight": 1.0,
-      "source": "llm_backend_rationale_357",
-      "target": "llm_backend_chat_with_openai_compatible",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "llm_backend_rationale_375",
+      "target": "llm_backend_chat_with_openai_compatible"
     },
     {
       "relation": "calls",
@@ -24589,11 +24821,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L372",
+      "source_location": "L390",
       "weight": 1.0,
-      "source": "llm_backend_rationale_372",
-      "target": "llm_backend_strip_qwen_thinking",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "llm_backend_rationale_390",
+      "target": "llm_backend_strip_qwen_thinking"
     },
     {
       "relation": "calls",
@@ -24665,11 +24897,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L454",
+      "source_location": "L472",
       "weight": 1.0,
-      "source": "llm_backend_rationale_454",
-      "target": "llm_backend_is_mostly_english",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "llm_backend_rationale_472",
+      "target": "llm_backend_is_mostly_english"
     },
     {
       "relation": "calls",
@@ -24686,11 +24918,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L473",
+      "source_location": "L491",
       "weight": 1.0,
-      "source": "llm_backend_rationale_473",
-      "target": "llm_backend_postprocess_reply",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "llm_backend_rationale_491",
+      "target": "llm_backend_postprocess_reply"
     },
     {
       "relation": "calls",
@@ -24718,11 +24950,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L557",
+      "source_location": "L575",
       "weight": 1.0,
-      "source": "llm_backend_rationale_557",
-      "target": "llm_backend_stream_llm_response",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "llm_backend_rationale_575",
+      "target": "llm_backend_stream_llm_response"
     },
     {
       "relation": "calls",
@@ -25265,9 +25497,9 @@
       "source_file": "main.py",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "main_rationale_59",
-      "target": "main_atomic_write_text",
-      "confidence_score": 1.0
+      "target": "main_atomic_write_text"
     },
     {
       "relation": "calls",
@@ -25319,9 +25551,9 @@
       "source_file": "main.py",
       "source_location": "L75",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "main_rationale_75",
-      "target": "main_lifespan",
-      "confidence_score": 1.0
+      "target": "main_lifespan"
     },
     {
       "relation": "uses",
@@ -25337,9 +25569,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L252",
+      "source_location": "L253",
       "weight": 1.0,
-      "source": "main_rationale_252",
+      "source": "main_rationale_253",
       "target": "main_host_speak",
       "confidence_score": 1.0
     },
@@ -25564,9 +25796,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L531",
+      "source_location": "L532",
       "weight": 1.0,
-      "source": "main_rationale_531",
+      "source": "main_rationale_532",
       "target": "main_get_providers",
       "confidence_score": 1.0
     },
@@ -25574,9 +25806,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L542",
+      "source_location": "L543",
       "weight": 1.0,
-      "source": "main_rationale_542",
+      "source": "main_rationale_543",
       "target": "main_test_llm",
       "confidence_score": 1.0
     },
@@ -25595,9 +25827,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L558",
+      "source_location": "L559",
       "weight": 1.0,
-      "source": "main_rationale_558",
+      "source": "main_rationale_559",
       "target": "main_get_unev_content",
       "confidence_score": 1.0
     },
@@ -25605,9 +25837,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L564",
+      "source_location": "L565",
       "weight": 1.0,
-      "source": "main_rationale_564",
+      "source": "main_rationale_565",
       "target": "main_update_unev_content",
       "confidence_score": 1.0
     },
@@ -25658,9 +25890,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L584",
+      "source_location": "L585",
       "weight": 1.0,
-      "source": "main_rationale_584",
+      "source": "main_rationale_585",
       "target": "main_set_camera",
       "confidence_score": 1.0
     },
@@ -25852,9 +26084,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L817",
+      "source_location": "L818",
       "weight": 1.0,
-      "source": "main_rationale_817",
+      "source": "main_rationale_818",
       "target": "main_placeholder_jpeg",
       "confidence_score": 1.0
     },
@@ -25862,9 +26094,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L835",
+      "source_location": "L836",
       "weight": 1.0,
-      "source": "main_rationale_835",
+      "source": "main_rationale_836",
       "target": "main_video_feed",
       "confidence_score": 1.0
     },
@@ -25919,6 +26151,16 @@
       "confidence_score": 1.0,
       "source": "provider_config",
       "target": "provider_config_canonical_provider"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "provider_config.py",
+      "source_location": "L255",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "provider_config",
+      "target": "provider_config_configured_cloud_providers"
     },
     {
       "relation": "contains",
@@ -26102,6 +26344,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "provider_config.py",
+      "source_location": "L277",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "provider_config_configured_cloud_providers",
+      "target": "provider_config_resolve_model"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "provider_config.py",
       "source_location": "L265",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -26123,6 +26376,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "provider_config.py",
+      "source_location": "L277",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "provider_config_configured_cloud_providers",
+      "target": "provider_config_resolve_api_key"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "provider_config.py",
       "source_location": "L271",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -26134,11 +26398,32 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "provider_config.py",
+      "source_location": "L279",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "provider_config_configured_cloud_providers",
+      "target": "provider_config_resolve_base_url"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "provider_config.py",
       "source_location": "L268",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "provider_config_provider_public_info",
       "target": "provider_config_resolve_base_url"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "provider_config.py",
+      "source_location": "L256",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "provider_config_rationale_256",
+      "target": "provider_config_configured_cloud_providers"
     },
     {
       "relation": "calls",
@@ -26159,6 +26444,16 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "provider_config_rationale_256",
+      "target": "provider_config_provider_public_info"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "provider_config.py",
+      "source_location": "L286",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "provider_config_rationale_286",
       "target": "provider_config_provider_public_info"
     },
     {
@@ -29038,6 +29333,120 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_camera_feed_gate",
+      "target": "tests_test_camera_feed_gate_count_stores"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_camera_feed_gate",
+      "target": "tests_test_camera_feed_gate_test_last_jpeg_cleared_when_no_subscribers"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L86",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_camera_feed_gate",
+      "target": "tests_test_camera_feed_gate_test_run_continuous_encodes_with_subscriber"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L82",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_camera_feed_gate",
+      "target": "tests_test_camera_feed_gate_test_run_continuous_skips_encode_without_subscribers"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L12",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_camera_feed_gate",
+      "target": "tests_test_camera_feed_gate_test_subscriber_counter_floors_at_zero"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_camera_feed_gate",
+      "target": "vision_camera"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_camera_feed_gate",
+      "target": "vision_person_detector"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_camera_feed_gate_rationale_1",
+      "target": "tests_test_camera_feed_gate"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_camera_feed_gate_rationale_40",
+      "target": "tests_test_camera_feed_gate_count_stores"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_camera_feed_gate_test_run_continuous_encodes_with_subscriber",
+      "target": "tests_test_camera_feed_gate_count_stores"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_camera_feed_gate.py",
+      "source_location": "L83",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_camera_feed_gate_test_run_continuous_skips_encode_without_subscribers",
+      "target": "tests_test_camera_feed_gate_count_stores"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "tests/test_camera_stop.py",
       "source_location": "L13",
       "weight": 1.0,
@@ -29452,6 +29861,36 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_llm_unify.py",
+      "source_location": "L117",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_llm_unify",
+      "target": "tests_test_llm_unify_test_candidate_backends_inserts_cloud_fallback_before_local"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_llm_unify.py",
+      "source_location": "L138",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_llm_unify",
+      "target": "tests_test_llm_unify_test_candidate_backends_keeps_primary_when_not_in_configured"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_llm_unify.py",
+      "source_location": "L132",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_llm_unify",
+      "target": "tests_test_llm_unify_test_candidate_backends_skips_ollama_when_not_ready"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_llm_unify.py",
       "source_location": "L24",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -29589,6 +30028,26 @@
       "confidence_score": 1.0,
       "source": "tests_test_llm_unify_rationale_87",
       "target": "tests_test_llm_unify_test_backend_selection_runs_off_event_loop"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_llm_unify.py",
+      "source_location": "L118",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_llm_unify_rationale_118",
+      "target": "tests_test_llm_unify_test_candidate_backends_inserts_cloud_fallback_before_local"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_llm_unify.py",
+      "source_location": "L139",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_llm_unify_rationale_139",
+      "target": "tests_test_llm_unify_test_candidate_backends_keeps_primary_when_not_in_configured"
     },
     {
       "relation": "contains",
@@ -29822,11 +30281,41 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_person_presence.py",
+      "source_location": "L122",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_person_presence",
+      "target": "tests_test_person_presence_test_group_entry_is_debounced_too"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_person_presence.py",
       "source_location": "L80",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "tests_test_person_presence",
       "target": "tests_test_person_presence_test_real_departure_and_return_greets_again"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_person_presence.py",
+      "source_location": "L106",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_person_presence",
+      "target": "tests_test_person_presence_test_single_frame_false_positive_does_not_greet"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_person_presence.py",
+      "source_location": "L116",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_person_presence",
+      "target": "tests_test_person_presence_test_sustained_presence_greets_after_grace"
     },
     {
       "relation": "imports",
@@ -29907,6 +30396,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_person_presence.py",
+      "source_location": "L124",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_person_presence_test_group_entry_is_debounced_too",
+      "target": "tests_test_person_presence_drive"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_person_presence.py",
       "source_location": "L82",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -29914,34 +30414,86 @@
       "target": "tests_test_person_presence_drive"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_person_presence.py",
+      "source_location": "L112",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_person_presence_test_single_frame_false_positive_does_not_greet",
+      "target": "tests_test_person_presence_drive"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_person_presence.py",
+      "source_location": "L118",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_person_presence_test_sustained_presence_greets_after_grace",
+      "target": "tests_test_person_presence_drive"
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_person_presence.py",
-      "source_location": "L70",
+      "source_location": "L84",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "tests_test_person_presence_rationale_70",
+      "source": "tests_test_person_presence_rationale_84",
       "target": "tests_test_person_presence_test_blink_does_not_re_greet"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_person_presence.py",
-      "source_location": "L81",
+      "source_location": "L95",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "tests_test_person_presence_rationale_81",
+      "source": "tests_test_person_presence_rationale_95",
       "target": "tests_test_person_presence_test_real_departure_and_return_greets_again"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_person_presence.py",
-      "source_location": "L87",
+      "source_location": "L101",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "tests_test_person_presence_rationale_87",
+      "source": "tests_test_person_presence_rationale_101",
       "target": "tests_test_person_presence_test_group_detected_once_for_sustained_group"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_person_presence.py",
+      "source_location": "L107",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_person_presence_rationale_107",
+      "target": "tests_test_person_presence_test_single_frame_false_positive_does_not_greet"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_person_presence.py",
+      "source_location": "L117",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_person_presence_rationale_117",
+      "target": "tests_test_person_presence_test_sustained_presence_greets_after_grace"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_person_presence.py",
+      "source_location": "L123",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_person_presence_rationale_123",
+      "target": "tests_test_person_presence_test_group_entry_is_debounced_too"
     },
     {
       "relation": "contains",
@@ -29972,6 +30524,46 @@
       "confidence_score": 1.0,
       "source": "tests_test_provider_config",
       "target": "tests_test_provider_config_test_autodetect_order_prefers_openrouter"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_provider_config.py",
+      "source_location": "L129",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_provider_config",
+      "target": "tests_test_provider_config_test_configured_cloud_providers_empty_without_keys"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_provider_config.py",
+      "source_location": "L147",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_provider_config",
+      "target": "tests_test_provider_config_test_configured_cloud_providers_excludes_custom_openai_without_base_url"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_provider_config.py",
+      "source_location": "L137",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_provider_config",
+      "target": "tests_test_provider_config_test_configured_cloud_providers_follows_autodetect_order"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_provider_config.py",
+      "source_location": "L133",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_provider_config",
+      "target": "tests_test_provider_config_test_configured_cloud_providers_single_key"
     },
     {
       "relation": "contains",
@@ -30212,6 +30804,26 @@
       "confidence_score": 1.0,
       "source": "tests_test_provider_config_rationale_101",
       "target": "tests_test_provider_config_test_custom_openai_resolves_key_and_model_from_compat_env"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_provider_config.py",
+      "source_location": "L138",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_provider_config_rationale_138",
+      "target": "tests_test_provider_config_test_configured_cloud_providers_follows_autodetect_order"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_provider_config.py",
+      "source_location": "L148",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_provider_config_rationale_148",
+      "target": "tests_test_provider_config_test_configured_cloud_providers_excludes_custom_openai_without_base_url"
     },
     {
       "relation": "contains",
@@ -31287,11 +31899,41 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
+      "source_location": "L381",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vision_person_detector_yolopersondetector",
+      "target": "vision_person_detector_yolopersondetector_feed_subscribe"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "vision/person_detector.py",
+      "source_location": "L386",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vision_person_detector_yolopersondetector",
+      "target": "vision_person_detector_yolopersondetector_feed_unsubscribe"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "vision/person_detector.py",
       "source_location": "L347",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "vision_person_detector_yolopersondetector",
       "target": "vision_person_detector_yolopersondetector_get_latest_jpeg"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "vision/person_detector.py",
+      "source_location": "L401",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vision_person_detector_yolopersondetector",
+      "target": "vision_person_detector_yolopersondetector_has_feed_subscribers"
     },
     {
       "relation": "method",
@@ -31378,20 +32020,20 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L61",
+      "source_location": "L66",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_61",
+      "source": "vision_person_detector_rationale_66",
       "target": "vision_person_detector_yolopersondetector_stop"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L65",
+      "source_location": "L70",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_65",
+      "source": "vision_person_detector_rationale_70",
       "target": "vision_person_detector_yolopersondetector_load"
     },
     {
@@ -31431,10 +32073,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L103",
+      "source_location": "L108",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_103",
+      "source": "vision_person_detector_rationale_108",
       "target": "vision_person_detector_yolopersondetector_ensure_loaded"
     },
     {
@@ -31463,20 +32105,20 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L103",
+      "source_location": "L108",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_103",
+      "source": "vision_person_detector_rationale_108",
       "target": "vision_person_detector_yolopersondetector_load_training_data"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L108",
+      "source_location": "L113",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_108",
+      "source": "vision_person_detector_rationale_113",
       "target": "vision_person_detector_yolopersondetector_load_training_data"
     },
     {
@@ -31494,10 +32136,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L149",
+      "source_location": "L154",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_149",
+      "source": "vision_person_detector_rationale_154",
       "target": "vision_person_detector_yolopersondetector_build_text_prompt"
     },
     {
@@ -31515,10 +32157,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L157",
+      "source_location": "L162",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_157",
+      "source": "vision_person_detector_rationale_162",
       "target": "vision_person_detector_yolopersondetector_detect_custom_objects"
     },
     {
@@ -31536,10 +32178,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L207",
+      "source_location": "L212",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_207",
+      "source": "vision_person_detector_rationale_212",
       "target": "vision_person_detector_yolopersondetector_detect_persons_in_frame"
     },
     {
@@ -31579,10 +32221,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L232",
+      "source_location": "L237",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_232",
+      "source": "vision_person_detector_rationale_237",
       "target": "vision_person_detector_yolopersondetector_analyze_frame"
     },
     {
@@ -31600,10 +32242,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L265",
+      "source_location": "L270",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_265",
+      "source": "vision_person_detector_rationale_270",
       "target": "vision_person_detector_yolopersondetector_detect_person_in_frame"
     },
     {
@@ -31621,10 +32263,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L269",
+      "source_location": "L274",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_269",
+      "source": "vision_person_detector_rationale_274",
       "target": "vision_person_detector_yolopersondetector_count_persons_in_frame"
     },
     {
@@ -31642,30 +32284,30 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L277",
+      "source_location": "L282",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_277",
+      "source": "vision_person_detector_rationale_282",
       "target": "vision_person_detector_yolopersondetector_detect_person_once"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L290",
+      "source_location": "L295",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_290",
+      "source": "vision_person_detector_rationale_295",
       "target": "vision_person_detector_yolopersondetector_count_persons_once"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L307",
+      "source_location": "L312",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_307",
+      "source": "vision_person_detector_rationale_312",
       "target": "vision_person_detector_yolopersondetector_draw_overlay"
     },
     {
@@ -31683,10 +32325,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L358",
+      "source_location": "L363",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_358",
+      "source": "vision_person_detector_rationale_363",
       "target": "vision_person_detector_yolopersondetector_store_annotated_frame"
     },
     {
@@ -31704,40 +32346,81 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L372",
+      "source_location": "L377",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_372",
+      "source": "vision_person_detector_rationale_377",
       "target": "vision_person_detector_yolopersondetector_get_latest_jpeg"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L381",
+      "source_location": "L382",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_381",
+      "source": "vision_person_detector_rationale_382",
+      "target": "vision_person_detector_yolopersondetector_feed_subscribe"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "vision/person_detector.py",
+      "source_location": "L387",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vision_person_detector_rationale_387",
+      "target": "vision_person_detector_yolopersondetector_feed_unsubscribe"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "vision/person_detector.py",
+      "source_location": "L402",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vision_person_detector_rationale_402",
+      "target": "vision_person_detector_yolopersondetector_has_feed_subscribers"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "vision/person_detector.py",
+      "source_location": "L527",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vision_person_detector_yolopersondetector_run_continuous",
+      "target": "vision_person_detector_yolopersondetector_has_feed_subscribers"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "vision/person_detector.py",
+      "source_location": "L411",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "vision_person_detector_rationale_411",
       "target": "vision_person_detector_yolopersondetector_run_continuous"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L485",
+      "source_location": "L537",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_485",
+      "source": "vision_person_detector_rationale_537",
       "target": "vision_person_detector_yolopersondetector_is_available"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L495",
+      "source_location": "L547",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "vision_person_detector_rationale_495",
+      "source": "vision_person_detector_rationale_547",
       "target": "vision_person_detector_get_vision_status"
     },
     {
@@ -31866,9 +32549,9 @@
       "source_file": "ANALISIS_Y_PLAN_DE_MEJORA.md",
       "source_location": "L3",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "analisis_y_plan_de_mejora_holograma_unev_an\u00e1lisis_t\u00e9cnico_y_plan_de_mejora",
-      "target": "analisis_y_plan_de_mejora_estado_de_implementaci\u00f3n_actualizado_2026_06_27"
+      "target": "analisis_y_plan_de_mejora_estado_de_implementaci\u00f3n_actualizado_2026_06_28",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -32463,146 +33146,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_handoff",
-      "target": "docs_handoff_holograma_unev_handoff_for_the_next_agent"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_handoff_holograma_unev_handoff_for_the_next_agent",
-      "target": "docs_handoff_hard_environment_constraints_read_first"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_handoff_holograma_unev_handoff_for_the_next_agent",
-      "target": "docs_handoff_latest_session_2026_06_27_symptom_fixes_phase_3_foundation"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L26",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_handoff_holograma_unev_handoff_for_the_next_agent",
-      "target": "docs_handoff_phase_1_result_done_the_config_provider_contract"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L39",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_handoff_holograma_unev_handoff_for_the_next_agent",
-      "target": "docs_handoff_remaining_phases_pick_per_priority"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L108",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_handoff_holograma_unev_handoff_for_the_next_agent",
-      "target": "docs_handoff_reusable_knobs_already_in_the_contract"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L60",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_handoff_holograma_unev_handoff_for_the_next_agent",
-      "target": "docs_handoff_verify_already_done"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L40",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_handoff_remaining_phases_pick_per_priority",
-      "target": "docs_handoff_a_settings_ux_wire_test_buttons_done"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L62",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_handoff_remaining_phases_pick_per_priority",
-      "target": "docs_handoff_b_cancellation_camera_release_per_session_events_touches_call_py_higher_risk"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L77",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_handoff_remaining_phases_pick_per_priority",
-      "target": "docs_handoff_c_windows_first_sidecar_packaging_cannot_finish_here_needs_windows_runner"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L84",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_handoff_remaining_phases_pick_per_priority",
-      "target": "docs_handoff_d_security_operator_auth"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L158",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_handoff_remaining_phases_pick_per_priority",
-      "target": "docs_handoff_e_de_monkey_patch_into_typed_services_foundation_done_wiring_is_runtime_gated"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L122",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_handoff_remaining_phases_pick_per_priority",
-      "target": "docs_handoff_f_single_editable_unev_content_source_done"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/HANDOFF.md",
-      "source_location": "L129",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_handoff_remaining_phases_pick_per_priority",
-      "target": "docs_handoff_g_legacy_lint_debt_done"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -32753,76 +33296,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "docs/PHASE3_WIRING.md",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_phase3_wiring",
-      "target": "docs_phase3_wiring_phase_3_wiring_next_session_execution_plan"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/PHASE3_WIRING.md",
-      "source_location": "L9",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_phase3_wiring_phase_3_wiring_next_session_execution_plan",
-      "target": "docs_phase3_wiring_0_read_first_the_backend_runs_on_this_machine"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/PHASE3_WIRING.md",
-      "source_location": "L35",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_phase3_wiring_phase_3_wiring_next_session_execution_plan",
-      "target": "docs_phase3_wiring_1_what_the_monkey_patching_actually_does_do_not_delete_blindly"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/PHASE3_WIRING.md",
-      "source_location": "L58",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_phase3_wiring_phase_3_wiring_next_session_execution_plan",
-      "target": "docs_phase3_wiring_2_target_wiring_strangler_smallest_risk_first_one_step_one_commit"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/PHASE3_WIRING.md",
-      "source_location": "L92",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_phase3_wiring_phase_3_wiring_next_session_execution_plan",
-      "target": "docs_phase3_wiring_3_8_folder_reorg_only_after_a_d_are_green"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/PHASE3_WIRING.md",
-      "source_location": "L96",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_phase3_wiring_phase_3_wiring_next_session_execution_plan",
-      "target": "docs_phase3_wiring_4_don_ts"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/PHASE3_WIRING.md",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_phase3_wiring_0_read_first_the_backend_runs_on_this_machine",
-      "target": "docs_phase3_wiring_validation_recipe_run_before_and_after_every_step"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "frontend/README.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -32922,5 +33395,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "9fe1eb2a472b7b090a58e148b3bf5721478c54ef"
+  "built_at_commit": "3a320ce1c0020c8d738fddf59091008b8733a0ed"
 }
