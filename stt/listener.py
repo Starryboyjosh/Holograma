@@ -78,6 +78,7 @@ class WhisperListener:
         silence_threshold=None,
         silence_duration=None,
         max_record_seconds=None,
+        max_threshold=None,
     ):
         self.model_size = model_size or _env("WHISPER_MODEL", "base")
         self.language = language or _env("WHISPER_LANGUAGE", "es")
@@ -90,6 +91,10 @@ class WhisperListener:
         )
         self.max_record_seconds = max_record_seconds or _env_float(
             "WHISPER_MAX_RECORD_SECONDS", 12.0
+        )
+        # Límite máximo para el umbral adaptativo (evita ensordecimiento por ruido/TTS)
+        self.max_threshold = max_threshold or _env_float(
+            "WHISPER_MAX_THRESHOLD", 0.15
         )
         # Tiempo máximo esperando a que la persona EMPIECE a hablar antes de
         # descartar el intento (evita transcribir silencio puro en bucle).
@@ -234,10 +239,12 @@ class WhisperListener:
                     threshold = max(
                         self.silence_threshold, noise_floor * self.noise_factor
                     )
+                    if self.max_threshold is not None:
+                        threshold = min(threshold, self.max_threshold)
                     if not _is_quiet():
                         print(
                             f"[STT] Ruido ambiente={noise_floor:.4f} "
-                            f"-> umbral adaptativo={threshold:.4f}"
+                            f"-> umbral adaptativo={threshold:.4f} (límite={self.max_threshold})"
                         )
 
                 # --- Captura continua ---
@@ -316,6 +323,107 @@ class WhisperListener:
     # Transcription
     # ------------------------------------------------------------------
 
+    def _load_db_hotwords(self):
+        """Carga y genera una lista refinada de hotwords desde las bases de datos locales."""
+        import json
+        import re
+
+        data_dir = Path(__file__).resolve().parent.parent / "data"
+        hotwords = set()
+
+        # 1. Leer open_vocabulary.txt
+        vocab_path = data_dir / "open_vocabulary.txt"
+        if vocab_path.exists():
+            try:
+                with open(vocab_path, "r", encoding="utf-8") as f:
+                    for w in re.split(r"[,\n;]+", f.read()):
+                        w_clean = w.strip()
+                        if w_clean:
+                            hotwords.add(w_clean)
+            except Exception:
+                pass
+
+        # Helper para extraer entidades específicas recursivamente
+        def extract_from_value(val):
+            if isinstance(val, str):
+                for m in re.finditer(r"\b[A-Z]{2,}\b", val):
+                    hotwords.add(m.group())
+                for m in re.finditer(r"\b[A-Z][a-záéíóúüñ]+(?:\s+(?:de|del|la|las|y)\s+[A-Z][a-záéíóúüñ]+)*\b", val):
+                    hotwords.add(m.group())
+                for m in re.finditer(
+                    r"\b(?:baleada|nacatamal|sisimite|comelenguas|alcitrón|garrobo|chortí|lenca|garífuna|misquito|tawahka|tolupan|pesh|voseo|leísmo)\w*\b",
+                    val,
+                    re.IGNORECASE
+                ):
+                    hotwords.add(m.group())
+            elif isinstance(val, dict):
+                for k, v in val.items():
+                    if isinstance(k, str) and len(k) > 2:
+                        if k not in (
+                            "name", "description", "main_claim", "approval", "address",
+                            "website", "programs", "values", "governance", "infrastructure",
+                            "academic_model", "student_support", "admission_requirements",
+                            "social_projection", "virtual_library", "international_presence",
+                            "proceres", "vulgarismos", "simbolos_patrios", "cultura_general"
+                        ):
+                            if k.islower() and not k.startswith("¿") and not k.endswith("?"):
+                                hotwords.add(k.title())
+                            else:
+                                hotwords.add(k)
+                    extract_from_value(v)
+            elif isinstance(val, list):
+                for item in val:
+                    extract_from_value(item)
+
+        # 2. Cargar unev_info.json
+        unev_path = data_dir / "unev_info.json"
+        if unev_path.exists():
+            try:
+                with open(unev_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    hotwords.add(data.get("name", "UNEV"))
+                    hotwords.add(data.get("full_name", ""))
+                    for name in ["Nathalie Cuadrado", "Cesar Arguijo", "Gladys Ferrufino", "Raúl Peña Moreno"]:
+                        hotwords.add(name)
+                    extract_from_value(data)
+            except Exception:
+                pass
+
+        # 3. Cargar honduras_info.json
+        honduras_path = data_dir / "honduras_info.json"
+        if honduras_path.exists():
+            try:
+                with open(honduras_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    hotwords.update([
+                        "Garífuna", "Lenca", "Creoles", "Misquito", "Tawahka", "Maya-Chortí",
+                        "Nahua", "Nahualt", "Tolupan", "Pesh", "PIAH", "baleada", "nacatamal",
+                        "pollo chuco", "alcitrón", "sisimite", "comelenguas", "pájaro-león",
+                        "yankopek", "Chikwai", "Mua Mua", "Oro Lenca"
+                    ])
+                    if "cultura_general" in data:
+                        for q in data["cultura_general"].keys():
+                            for genus in re.findall(
+                                r"\b(?:Abarema|Acanthocereus|Acanthoderes|Agalychnis|Amazilia|Amazona|Amorbia|Anelaphus|Anolis|Astrocaryum|Atlantihyla|Bothriechis|Brachymyrmex|Cedrela|Colobothea|Craugastor|Bolitoglossa)\b",
+                                q
+                            ):
+                                hotwords.add(genus)
+                    extract_from_value(data)
+            except Exception:
+                pass
+
+        # Limpiar y ordenar
+        cleaned = []
+        for hw in sorted(hotwords):
+            hw_clean = hw.strip(".,!?;:()-\" ")
+            if len(hw_clean) > 2 and not hw_clean.lower() in (
+                "del", "las", "por", "para", "con", "una", "este", "esta", "como", "pero",
+                "tipo", "especie", "dónde", "quién", "quiénes", "cuál", "cuáles", "cómo", "qué"
+            ):
+                cleaned.append(hw_clean)
+
+        return " ".join(cleaned) if cleaned else None
+
     def transcribe_file(self, audio_path):
         """Transcribe a WAV file and return the text.
 
@@ -346,6 +454,11 @@ class WhisperListener:
             "condition_on_previous_text": False,
             "no_speech_threshold": 0.6,
         }
+
+        # Cargar hotwords dinámicas
+        db_hotwords = self._load_db_hotwords()
+        if db_hotwords:
+            transcribe_kwargs["hotwords"] = db_hotwords
 
         try:
             segments, info = model.transcribe(str(audio_path), **transcribe_kwargs)

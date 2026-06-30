@@ -134,7 +134,13 @@ def get_piper_command_args():
     """Return the command used to run Piper if it is available."""
     configured_command = os.getenv("PIPER_COMMAND")
     if configured_command:
+        # Si la ruta apunta al wrapper antiguo en la raíz pero está en scripts/
+        if "piper_wrapper.sh" in configured_command and not "scripts/piper_wrapper.sh" in configured_command:
+            fallback_wrapper = BASE_DIR / "scripts" / "piper_wrapper.sh"
+            if fallback_wrapper.exists():
+                return [str(fallback_wrapper)]
         return configured_command.split()
+
 
     # ponytail: piper/ dir contains piper/piper/ subdir with binary
     bundled_piper_dir = BASE_DIR / "piper" / "piper"
@@ -324,9 +330,9 @@ def play_wav_file(wav_path):
         players = [["afplay", wav_path]]
     else:
         players = [
-            ["aplay", wav_path],
-            ["paplay", wav_path],
             ["pw-play", wav_path],
+            ["paplay", wav_path],
+            ["aplay", wav_path],
             ["ffplay", "-nodisp", "-autoexit", "-loglevel", "quiet", wav_path],
             ["mpv", "--no-video", "--really-quiet", wav_path],
         ]

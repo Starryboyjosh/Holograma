@@ -8,185 +8,86 @@ JSON_PATH = BASE_DIR / "data" / "honduras_info.json"
 
 HONDURAS_INFO = {}
 
-DEFAULT_HONDURAS_INFO = {
-    "name": "Honduras",
-    "description": (
-        "Honduras es una ecología de saberes donde convergen diversas cosmovisiones "
-        "indígenas y afrohondureñas, conformando una identidad nacional definida por "
-        "su naturaleza multiétnica, multicultural y una vasta riqueza ecológica y social."
-    ),
-    "main_claim": (
-        "República multiétnica y multicultural con 10 Pueblos Indígenas y "
-        "Afrohondureños (PIAH) que conforman el corazón de su identidad nacional."
-    ),
-    "approval": (
-        "Hito fundacional: ratificación del Convenio 169 de la Organización "
-        "Internacional del Trabajo (OIT), establecido el 27 de junio de 1989, "
-        "ratificado por el Estado de Honduras en 1994 y con entrada en vigencia "
-        "plena en 1995."
-    ),
-    "address": (
-        "República de Honduras, con capital en Tegucigalpa. Los 10 Pueblos Indígenas "
-        "y Afrohondureños habitan regiones específicas: los Lenca en Intibucá; los "
-        "Garífuna en la Costa Norte (incluyendo Omoa); los Negros de Habla Inglesa o "
-        "Creoles en las Islas de la Bahía y Costa Norte; y los grupos Misquito, "
-        "Tawahka, Maya-Chortí, Nahua, Nahualt, Tolupan y Pesh en sus respectivos "
-        "asentamientos regionales."
-    ),
-    "website": "[https://www.presidencia.gob.hn/](https://www.presidencia.gob.hn/)",
-    "programs": {
-        "era precolombina y ancestral": (
-            "La configuración del tejido social hondureño encuentra su génesis en la "
-            "profundidad temporal de las civilizaciones ancestrales. La presencia de "
-            "los Mayas y la herencia de los pueblos originarios lenca, nahua y "
-            "garífuna, entre otros, aportan una cosmovisión que se erige como el "
-            "corazón del desarrollo sociocultural de la nación. Las lenguas maternas "
-            "son reconocidas como vehículos esenciales de desarrollo cognitivo."
-        ),
-        "evolución lingüística y colonial": (
-            "El mestizaje en Honduras operó como un proceso de reconfiguración "
-            "identitaria donde el español se impuso como lengua nacional. Según Van "
-            "Wijk (1961), generó rasgos morfosintácticos singulares como el voseo "
-            "generalizado, el leísmo, la pérdida de identidad del artículo definido "
-            "(l'amor, l'arcalde), la adverbialización de adjetivos (canta bonito) y "
-            "construcciones pleonásticas posesivas (mi casa mía), junto con "
-            "influencias léxicas de los enclaves bananeros de la United Fruit Company."
-        ),
-        "periodo de investigación y reconocimiento (s. xix-xx)": (
-            "La institucionalización del estudio de la lengua legitimó el habla "
-            "popular. En 1899 se publicó el primer diccionario de hondureñismos y se "
-            "consolidó la Academia Hondureña de la Lengua. La edición de 1992 del "
-            "Diccionario de la RAE incorporó 302 términos hondureños, cifra que "
-            "ascendió a 1,950 en 2001 y actualmente alcanza 2,782 registros."
-        ),
-        "periodo contemporáneo y salvaguarda (2022-2035)": (
-            "La política estatal se fundamenta en la reparación histórica de los "
-            "derechos lingüísticos. Bajo el Gobierno de la Refundación se impulsa el "
-            "Plan Nacional 2025-2035 en consonancia con el Decenio Internacional de "
-            "las Lenguas Indígenas (2022-2032), salvaguardando lenguas maternas "
-            "frente a la globalización y la discriminación, mediante documentación "
-            "de gramáticas y educación plurilingüe."
-        ),
-    },
-    "proceres": {
-        "alberto de jesús membreño": (
-            "Destacado intelectual que publicó en 1899 el primer diccionario de "
-            "hondureñismos bajo el título 'Vocabulario de los provincialismos de "
-            "Honduras'. Su obra representó el primer esfuerzo sistemático por "
-            "codificar el pensamiento popular y otorgar una fisonomía propia al "
-            "castellano hablado en el territorio nacional."
-        ),
-        "francisco cruz castro": (
-            "Eminente figura cuya contribución a la preservación del patrimonio fue "
-            "fundamental a través de su obra 'Botica del pueblo'. Su vocabulario "
-            "médico, botánico y cotidiano sirvió de base empírica para que "
-            "investigadores posteriores, especialmente Alberto de Jesús Membreño, "
-            "pudieran estructurar el primer catálogo de términos hondureños."
-        ),
-        "annarella vélez osejo": (
-            "Historiadora y actual Secretaria de Estado en los Despachos de las "
-            "Culturas, las Artes y los Patrimonios de los Pueblos de Honduras. "
-            "Ejerce liderazgo estratégico en la implementación del Plan Nacional de "
-            "Salvaguarda de las Lenguas, promoviendo el reconocimiento de la "
-            "diversidad cultural como patrimonio común."
-        ),
-        "cintia marizel bernárdez": (
-            "Jefa de la Unidad de Educación Plurilingüe y Multicultural. Determinante "
-            "en la creación del diagnóstico sociolingüístico conocido como el 'árbol "
-            "de problemas', coordina la producción de materiales pedagógicos y "
-            "recursos didácticos para fortalecer competencias comunicativas en "
-            "lenguas maternas dentro de las comunidades de los 10 pueblos originarios."
-        ),
-    },
-    "vulgarismos": {
-        "voseo generalizado": (
-            "Uso extendido del pronombre 'vos' en lugar de 'tú' como rasgo "
-            "morfosintáctico característico del habla informal hondureña."
-        ),
-        "leísmo": (
-            "Uso del pronombre 'le' en lugar de 'lo' o 'la' como complemento directo, "
-            "rasgo identificado por Van Wijk (1961) en el habla hondureña."
-        ),
-        "pérdida del artículo definido ante vocal": (
-            "Fenómeno de contracción que produce formas como 'l'amor' por 'el amor' "
-            "o 'l'arcalde' por 'el alcalde' en el habla popular."
-        ),
-        "adverbialización de adjetivos": (
-            "Construcciones como 'canta bonito' donde el adjetivo funciona como "
-            "adverbio, característico del español hondureño."
-        ),
-        "construcciones pleonásticas posesivas": (
-            "Expresiones redundantes como 'mi casa mía' que duplican la marca de "
-            "posesión, propias del habla coloquial nacional."
-        ),
-        "mínimo": (
-            "Término léxico para referirse al banano, derivado de los estándares de "
-            "exportación de los enclaves bananeros de la United Fruit Company."
-        ),
-    },
-    "simbolos_patrios": {
-        "lenguas maternas": (
-            "Reconocidas en el Plan Nacional de Salvaguarda como vehículos "
-            "esenciales de desarrollo cognitivo que permiten al individuo imaginar, "
-            "crear y conceptualizar su realidad desde un entorno cultural propio."
-        ),
-        "convenio 169 de la oit": (
-            "Instrumento internacional ratificado por Honduras en 1994 que constituye "
-            "el marco jurídico fundacional para el reconocimiento de los derechos de "
-            "los Pueblos Indígenas y Afrohondureños."
-        ),
-        "los 10 pueblos indígenas y afrohondureños (piah)": (
-            "Lenca, Garífuna, Negros de Habla Inglesa o Creoles, Misquito, Tawahka, "
-            "Maya-Chortí, Nahua, Nahualt, Tolupan y Pesh: corazón multiétnico y "
-            "multicultural de la identidad nacional hondureña."
-        ),
-        "academia hondureña de la lengua": (
-            "Institución que consolidó la codificación del castellano hablado en "
-            "Honduras, posicionándolo como un contribuyente mayoritario al léxico "
-            "hispánico global con 2,782 registros en el DRAE."
-        ),
-        "plan nacional de salvaguarda 2025-2035": (
-            "Política estatal de reparación histórica de los derechos lingüísticos, "
-            "alineada con el Decenio Internacional de las Lenguas Indígenas "
-            "(2022-2032) impulsado por la UNESCO."
-        ),
-    },
-}
+if not JSON_PATH.exists():
+    raise RuntimeError(f"ERROR CRÍTICO: No se encontró el archivo de datos requerido en: {JSON_PATH}")
 
-if JSON_PATH.exists():
-    try:
-        with JSON_PATH.open("r", encoding="utf-8") as f:
-            data = json.load(f)
-            HONDURAS_INFO = {
-                "name": data.get("name", DEFAULT_HONDURAS_INFO["name"]),
-                "website": data.get("website", DEFAULT_HONDURAS_INFO["website"]),
-                "description": data.get("description", DEFAULT_HONDURAS_INFO["description"]),
-                "main_claim": data.get("main_claim", DEFAULT_HONDURAS_INFO["main_claim"]),
-                "approval": data.get("approval", DEFAULT_HONDURAS_INFO["approval"]),
-                "address": data.get("address", DEFAULT_HONDURAS_INFO["address"]),
-                "programs": {},
-                "proceres": {},
-                "vulgarismos": {},
-                "simbolos_patrios": {},
-            }
-            programs_data = data.get("programs", {})
-            for prog_key, prog_desc in programs_data.items():
-                HONDURAS_INFO["programs"][prog_key.lower().strip()] = prog_desc
-            proceres_data = data.get("proceres", {})
-            for proc_key, proc_desc in proceres_data.items():
-                HONDURAS_INFO["proceres"][proc_key.lower().strip()] = proc_desc
-            vulg_data = data.get("vulgarismos", {})
-            for vulg_key, vulg_desc in vulg_data.items():
-                HONDURAS_INFO["vulgarismos"][vulg_key.lower().strip()] = vulg_desc
-            simb_data = data.get("simbolos_patrios", {})
-            for simb_key, simb_desc in simb_data.items():
-                HONDURAS_INFO["simbolos_patrios"][simb_key.lower().strip()] = simb_desc
-    except Exception as e:
-        print(f"AVISO: No se pudo cargar {JSON_PATH}. Usando fallback en código. Error: {e}")
-        HONDURAS_INFO = DEFAULT_HONDURAS_INFO
-else:
-    HONDURAS_INFO = DEFAULT_HONDURAS_INFO
+try:
+    with JSON_PATH.open("r", encoding="utf-8") as f:
+        data = json.load(f)
+        HONDURAS_INFO = {
+            "name": data["name"],
+            "website": data["website"],
+            "description": data["description"],
+            "main_claim": data["main_claim"],
+            "approval": data["approval"],
+            "address": data["address"],
+            "programs": {},
+            "proceres": {},
+            "vulgarismos": {},
+            "simbolos_patrios": {},
+            "cultura_general": {},
+        }
+        programs_data = data.get("programs", {})
+        for prog_key, prog_desc in programs_data.items():
+            HONDURAS_INFO["programs"][prog_key.lower().strip()] = prog_desc
+        proceres_data = data.get("proceres", {})
+        for proc_key, proc_desc in proceres_data.items():
+            HONDURAS_INFO["proceres"][proc_key.lower().strip()] = proc_desc
+        vulg_data = data.get("vulgarismos", {})
+        for vulg_key, vulg_desc in vulg_data.items():
+            HONDURAS_INFO["vulgarismos"][vulg_key.lower().strip()] = vulg_desc
+        simb_data = data.get("simbolos_patrios", {})
+        for simb_key, simb_desc in simb_data.items():
+            HONDURAS_INFO["simbolos_patrios"][simb_key.lower().strip()] = simb_desc
+        
+        # Carga estructurada de cultura general desde el JSON
+        cult_data = data.get("cultura_general", {})
+        for cult_key, cult_desc in cult_data.items():
+            HONDURAS_INFO["cultura_general"][cult_key.lower().strip()] = cult_desc
+            
+except Exception as e:
+    raise RuntimeError(f"ERROR CRÍTICO al leer o decodificar el archivo de datos {JSON_PATH}: {e}")
 
+
+
+# ==============================================================================
+# SISTEMA DE INDEXACIÓN OPTIMIZADO PARA BÚSQUEDAS (MÓDULO DE RENDIMIENTO)
+# ==============================================================================
+HONDURAS_EXACT_LOOKUP = {}
+HONDURAS_PARTIAL_LOOKUP = []
+
+def _build_search_index():
+    """
+    Pre-calcula índices de texto normalizados en el arranque del servidor/script.
+    Garantiza búsquedas directas en O(1) y evita llamadas repetitivas en caliente
+    a normalize_text() reduciendo el uso de CPU.
+    """
+    global HONDURAS_EXACT_LOOKUP, HONDURAS_PARTIAL_LOOKUP
+    HONDURAS_EXACT_LOOKUP = {}
+    HONDURAS_PARTIAL_LOOKUP = []
+    
+    # 1. Procesar Categorías estándar con formato "Título: Descripción"
+    standard_categories = ["programs", "proceres", "vulgarismos", "simbolos_patrios"]
+    for category in standard_categories:
+        for key, desc in HONDURAS_INFO.get(category, {}).items():
+            norm_key = normalize_text(key)
+            formatted_string = f"{key.title()}: {desc}"
+            HONDURAS_EXACT_LOOKUP[norm_key] = formatted_string
+            HONDURAS_PARTIAL_LOOKUP.append((norm_key, formatted_string))
+            
+    # 2. Procesar Cultura General (Entrega directa del valor descriptivo)
+    for key, desc in HONDURAS_INFO.get("cultura_general", {}).items():
+        norm_key = normalize_text(key)
+        HONDURAS_EXACT_LOOKUP[norm_key] = desc
+        HONDURAS_PARTIAL_LOOKUP.append((norm_key, desc))
+
+# Inicialización única del mapa de memoria indexado
+_build_search_index()
+
+
+# ==============================================================================
+# FUNCIONES DE EXTRACCIÓN DE CONTEXTO E HISTORIA
+# ==============================================================================
 
 def get_university_summary():
     return (
@@ -214,39 +115,21 @@ def get_programs_summary():
 
 def get_program_info(program_name):
     normalized_program_name = normalize_text(program_name)
-    for program, description in HONDURAS_INFO["programs"].items():
-        normalized_program = normalize_text(program)
-        if (
-            normalized_program in normalized_program_name
-            or normalized_program_name in normalized_program
-        ):
-            return f"{program.title()}: {description}"
-    for procer, description in HONDURAS_INFO["proceres"].items():
-        normalized_procer = normalize_text(procer)
-        if (
-            normalized_procer in normalized_program_name
-            or normalized_program_name in normalized_procer
-        ):
-            return f"{procer.title()}: {description}"
-    for vulg, description in HONDURAS_INFO["vulgarismos"].items():
-        normalized_vulg = normalize_text(vulg)
-        if (
-            normalized_vulg in normalized_program_name
-            or normalized_program_name in normalized_vulg
-        ):
-            return f"{vulg.title()}: {description}"
-    for simb, description in HONDURAS_INFO["simbolos_patrios"].items():
-        normalized_simb = normalize_text(simb)
-        if (
-            normalized_simb in normalized_program_name
-            or normalized_program_name in normalized_simb
-        ):
-            return f"{simb.title()}: {description}"
+    
+    # OPTIMIZACIÓN 1: Coincidencia de Hash Directo O(1) instantánea
+    if normalized_program_name in HONDURAS_EXACT_LOOKUP:
+        return HONDURAS_EXACT_LOOKUP[normalized_program_name]
+        
+    # OPTIMIZACIÓN 2 (Principio DRY): Búsqueda secuencial unificada por subcadenas (sin loops repetidos)
+    for norm_key, formatted_result in HONDURAS_PARTIAL_LOOKUP:
+        if norm_key in normalized_program_name or normalized_program_name in norm_key:
+            return formatted_result
+            
     return (
         "Puedo darte información sobre los periodos históricos (Era Precolombina, "
         "Evolución Lingüística y Colonial, Investigación y Reconocimiento, y "
         "Periodo Contemporáneo), así como sobre próceres (Membreño, Cruz Castro, "
-        "Vélez Osejo, Bernárdez), vulgarismos y símbolos patrios. ¿Sobre cuál tema "
+        "Vélez Osejo, Bernárdez), vulgarismos, símbolos patrios y cultura general de Honduras. ¿Sobre cuál tema "
         "te gustaría saber más?"
     )
 
@@ -312,6 +195,8 @@ def get_university_context():
     proceres = ", ".join(procer.title() for procer in HONDURAS_INFO["proceres"].keys())
     vulgarismos = ", ".join(vulg.title() for vulg in HONDURAS_INFO["vulgarismos"].keys())
     simbolos = ", ".join(simb.title() for simb in HONDURAS_INFO["simbolos_patrios"].keys())
+    total_cultura = len(HONDURAS_INFO.get("cultura_general", {}))
+    
     return (
         "Información histórica y cultural de Honduras:\n"
         f"- Nombre Oficial: República de {HONDURAS_INFO['name']}\n"
@@ -324,7 +209,8 @@ def get_university_context():
         f"- Próceres y personajes históricos: {proceres}.\n"
         f"- Vulgarismos y rasgos del habla hondureña: {vulgarismos}.\n"
         f"- Símbolos patrios y culturales: {simbolos}.\n"
-        "Si el visitante pregunta por datos no incluidos aquí, no inventes. "
+        f"- Base de Datos de Cultura General: Cuenta con un catálogo integrado de {total_cultura} respuestas sobre tradiciones, gastronomía, geografía y flora de Honduras.\n"
+        "Si el visitante pregunta por datos no incluidos aquí o por temas específicos de cultura general que no coincidan, no inventes. "
         "Recomienda revisar fuentes oficiales del Estado de Honduras, la Academia "
         "Hondureña de la Lengua o la Secretaría de las Culturas, las Artes y los "
         "Patrimonios de los Pueblos de Honduras."
