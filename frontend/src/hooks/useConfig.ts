@@ -15,6 +15,8 @@ export function useConfig() {
   const [yoloInterval, setYoloInterval] = useState('1.0');
   const [yoloEnabled, setYoloEnabled] = useState(true);
   const [whisperSize, setWhisperSize] = useState('medium');
+  const [groqApiKey, setGroqApiKey] = useState('');
+  const [groqApiKeySet, setGroqApiKeySet] = useState(false);
   const [piperVoice, setPiperVoice] = useState('es_MX-claude-high.onnx');
   const [voicesList, setVoicesList] = useState<string[]>(['es_MX-claude-high.onnx']);
   const [savedTeachingObjects, setSavedTeachingObjects] = useState<SavedObject[]>([]);
@@ -37,6 +39,8 @@ export function useConfig() {
         setBaseUrl(data.OPENAI_COMPAT_BASE_URL || '');
         // Keys are never returned by the backend; keep the buffer empty.
         setApiKey('');
+        setGroqApiKey('');
+        setGroqApiKeySet(!!data.GROQ_API_KEY_SET);
         if (data.HOLOGRAM_CAMERA) setYoloEnabled(data.HOLOGRAM_CAMERA === '1');
         if (data.YOLO_INTERVAL_SECONDS) setYoloInterval(data.YOLO_INTERVAL_SECONDS);
         if (data.WHISPER_MODEL) setWhisperSize(data.WHISPER_MODEL);
@@ -109,6 +113,9 @@ export function useConfig() {
     setYoloEnabled,
     whisperSize,
     setWhisperSize,
+    groqApiKey,
+    setGroqApiKey,
+    groqApiKeySet,
     piperVoice,
     setPiperVoice,
     voicesList,

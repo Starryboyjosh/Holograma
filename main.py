@@ -291,6 +291,7 @@ class ConfigUpdate(BaseModel):
     OPENAI_COMPAT_BASE_URL: str | None = None
     PIPER_VOICE: str | None = None
     HOLOGRAM_MODE: str | None = None
+    GROQ_API_KEY: str | None = None
     HOLOGRAM_TCP_IP: str | None = None
     HOLOGRAM_TCP_PORT: int | None = None
 
@@ -335,6 +336,7 @@ def get_config():
         "ANTHROPIC_API_KEY", ""
     )
     nvidia_key = os.getenv("NVIDIA_API_KEY") or config_data.get("NVIDIA_API_KEY", "")
+    groq_key = os.getenv("GROQ_API_KEY") or config_data.get("GROQ_API_KEY", "")
 
     return {
         "OLLAMA_MODEL": config_data.get("OLLAMA_MODEL", None),
@@ -351,10 +353,12 @@ def get_config():
         "OPENAI_API_KEY": "",
         "ANTHROPIC_API_KEY": "",
         "NVIDIA_API_KEY": "",
+        "GROQ_API_KEY": "",
         "OPENROUTER_API_KEY_SET": bool(openrouter_key),
         "OPENAI_API_KEY_SET": bool(openai_key),
         "ANTHROPIC_API_KEY_SET": bool(anthropic_key),
         "NVIDIA_API_KEY_SET": bool(nvidia_key),
+        "GROQ_API_KEY_SET": bool(groq_key),
         # URL base del endpoint propio compatible con OpenAI (no es secreto): se
         # devuelve para que el formulario la pueda pre-rellenar. La key nunca.
         "OPENAI_COMPAT_BASE_URL": os.getenv("OPENAI_COMPAT_BASE_URL")
@@ -416,6 +420,9 @@ def update_config(payload: ConfigUpdate):
     if payload.NVIDIA_API_KEY is not None:
         config_data["NVIDIA_API_KEY"] = payload.NVIDIA_API_KEY
         os.environ["NVIDIA_API_KEY"] = payload.NVIDIA_API_KEY
+    if payload.GROQ_API_KEY is not None:
+        config_data["GROQ_API_KEY"] = payload.GROQ_API_KEY
+        os.environ["GROQ_API_KEY"] = payload.GROQ_API_KEY
     if payload.OPENAI_COMPAT_API_KEY is not None:
         config_data["OPENAI_COMPAT_API_KEY"] = payload.OPENAI_COMPAT_API_KEY
         os.environ["OPENAI_COMPAT_API_KEY"] = payload.OPENAI_COMPAT_API_KEY
@@ -449,6 +456,7 @@ def update_config(payload: ConfigUpdate):
         "OPENAI_API_KEY": "",
         "ANTHROPIC_API_KEY": "",
         "NVIDIA_API_KEY": "",
+        "GROQ_API_KEY": "",
         "PIPER_VOICE": "es_MX-claude-high.onnx",
         "HOLOGRAM_MODE": "dark",
         "HOLOGRAM_TCP_IP": "",
@@ -486,6 +494,8 @@ def update_config(payload: ConfigUpdate):
             new_env_data["ANTHROPIC_API_KEY"] = payload.ANTHROPIC_API_KEY
         if payload.NVIDIA_API_KEY is not None:
             new_env_data["NVIDIA_API_KEY"] = payload.NVIDIA_API_KEY
+        if payload.GROQ_API_KEY is not None:
+            new_env_data["GROQ_API_KEY"] = payload.GROQ_API_KEY
         if payload.OPENAI_COMPAT_API_KEY is not None:
             new_env_data["OPENAI_COMPAT_API_KEY"] = payload.OPENAI_COMPAT_API_KEY
         if payload.OPENAI_COMPAT_BASE_URL is not None:

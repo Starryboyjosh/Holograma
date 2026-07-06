@@ -10,8 +10,8 @@
     "semantic_hash": ""
   },
   "main.py": {
-    "mtime": 1782773230.971352,
-    "ast_hash": "54ca9a3afb30489a42cf8f0c65eb66ac",
+    "mtime": 1783319974.1412828,
+    "ast_hash": "4ec19dd6a957c5749e7e647ce1bc54b1",
     "semantic_hash": ""
   },
   "skills/__init__.py": {
@@ -55,8 +55,8 @@
     "semantic_hash": "b0436582c4a8505d00db6acfde9d06c9"
   },
   "stt/listener.py": {
-    "mtime": 1782785274.4356594,
-    "ast_hash": "83335ff17a94debc0605aa0f9c02dea9",
+    "mtime": 1783319987.942705,
+    "ast_hash": "f58edf66162ac3b02daa14eb08331b97",
     "semantic_hash": ""
   },
   "vision/__init__.py": {
@@ -90,8 +90,8 @@
     "semantic_hash": ""
   },
   "data/honduras_info.json": {
-    "mtime": 1782781457.009768,
-    "ast_hash": "96dd8934df6550c13d5699bb4e3dc919",
+    "mtime": 1782786137.8206134,
+    "ast_hash": "1d6f97ef916710a695f083e843733de1",
     "semantic_hash": ""
   },
   "data/unev_info.json": {
@@ -300,8 +300,8 @@
     "semantic_hash": ""
   },
   "requirements.txt": {
-    "mtime": 1782226483.5706086,
-    "ast_hash": "2a33c74ccff6114c65f4c98598656ea6",
+    "mtime": 1783319954.1336682,
+    "ast_hash": "159d2aabb04a976ce39c58e98bfa6960",
     "semantic_hash": ""
   },
   "docs/Holograma_MISSYOU_Referencia_IA.pdf": {
@@ -340,8 +340,8 @@
     "semantic_hash": ""
   },
   "config.example.json": {
-    "mtime": 1782226483.5286083,
-    "ast_hash": "f188b68f39b0c6699d4cc8ee1fce10b1",
+    "mtime": 1783319991.0037985,
+    "ast_hash": "411752b99891981ee913c5ddd2242367",
     "semantic_hash": ""
   },
   "frontend/src-tauri/build.rs": {
@@ -430,8 +430,8 @@
     "semantic_hash": ""
   },
   "frontend/src/hooks/useConfig.ts": {
-    "mtime": 1782773230.934741,
-    "ast_hash": "e1e6b75e7ff60778ec258fc4b16ed2ed",
+    "mtime": 1783319995.8309457,
+    "ast_hash": "b8e74252a6c62e0d95570949578c7b80",
     "semantic_hash": ""
   },
   "frontend/src/hooks/useHologram.ts": {
@@ -455,8 +455,8 @@
     "semantic_hash": ""
   },
   "frontend/src/screens/SettingsScreen.tsx": {
-    "mtime": 1782773230.936741,
-    "ast_hash": "e70a38596e7fbc3b53cbf72addb61ccc",
+    "mtime": 1783320753.7277162,
+    "ast_hash": "a8a5bed3c5d8bb07c0f1219423da619e",
     "semantic_hash": ""
   },
   "frontend/src/screens/TeachingScreen.tsx": {
@@ -800,8 +800,8 @@
     "semantic_hash": ""
   },
   "security.py": {
-    "mtime": 1782773230.9737422,
-    "ast_hash": "dde53a9792138180d347ad230dcd79db",
+    "mtime": 1783319963.006941,
+    "ast_hash": "8b0fda8878fc28ea52e5fa65ea2ba16c",
     "semantic_hash": ""
   },
   "tests/test_security.py": {

@@ -35,6 +35,7 @@ SECRET_ENV_VARS: tuple[str, ...] = (
     "ANTHROPIC_API_KEY",
     "NVIDIA_API_KEY",
     "OPENAI_COMPAT_API_KEY",
+    "GROQ_API_KEY",
 )
 
 # Tokens con forma de API key de los proveedores soportados (y prefijos comunes).

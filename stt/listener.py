@@ -118,6 +118,8 @@ class WhisperListener:
 
     def _load_model(self):
         """Load the Faster-Whisper model on first use."""
+        if self.model_size == "whisper-large-v3-turbo":
+            return None
         if self._model is not None:
             return self._model
 
@@ -424,6 +426,43 @@ class WhisperListener:
 
         return " ".join(cleaned) if cleaned else None
 
+    def _transcribe_groq(self, audio_path):
+        """Transcribe a WAV file using the Groq API with whisper-large-v3-turbo."""
+        api_key = _env("GROQ_API_KEY")
+        if not api_key:
+            raise ValueError(
+                "La clave API de Groq (GROQ_API_KEY) no está configurada. "
+                "Por favor, configúrala en los ajustes de STT."
+            )
+
+        try:
+            from groq import Groq
+        except ImportError as error:
+            raise RuntimeError(
+                "Falta instalar la librería groq. "
+                "Ejecuta: pip install groq"
+            ) from error
+
+        client = Groq(api_key=api_key)
+        audio_path = Path(audio_path)
+
+        if not _is_quiet():
+            print(f"[STT] Transcribiendo '{audio_path.name}' con Groq (whisper-large-v3-turbo)...")
+
+        try:
+            with open(audio_path, "rb") as file:
+                transcription = client.audio.transcriptions.create(
+                    file=(audio_path.name, file.read()),
+                    model="whisper-large-v3-turbo",
+                    temperature=0.0,
+                    response_format="verbose_json",
+                )
+                return transcription.text.strip()
+        except Exception as error:
+            if not _is_quiet():
+                print(f"[STT] Error en la transcripción con Groq: {error}")
+            raise
+
     def transcribe_file(self, audio_path):
         """Transcribe a WAV file and return the text.
 
@@ -432,8 +471,11 @@ class WhisperListener:
         audio_path : str or Path
             Path to the WAV file (Regla A: accepts Path objects).
         """
-        model = self._load_model()
         audio_path = Path(audio_path)  # Regla A
+        if self.model_size == "whisper-large-v3-turbo":
+            return self._transcribe_groq(audio_path)
+
+        model = self._load_model()
 
         # Prompt inicial para contextualizar el vocabulario de la universidad (mejora transcripción de siglas)
         default_prompt = (
@@ -510,6 +552,10 @@ class WhisperListener:
 
         try:
             text = self.transcribe_file(wav_path)
+        except Exception as error:
+            if not _is_quiet():
+                print(f"[STT] Error durante la transcripción: {error}")
+            text = ""
         finally:
             try:
                 wav_path.unlink()  # Regla A: pathlib for deletion too
@@ -532,10 +578,14 @@ class WhisperListener:
 
     @staticmethod
     def is_available():
-        """Return True if sounddevice and faster-whisper are importable."""
+        """Return True if sounddevice and faster-whisper (or groq if selected) are importable."""
         try:
             import sounddevice  # noqa: F401
-            from faster_whisper import WhisperModel  # noqa: F401
+            model = _env("WHISPER_MODEL", "base")
+            if model == "whisper-large-v3-turbo":
+                from groq import Groq  # noqa: F401
+            else:
+                from faster_whisper import WhisperModel  # noqa: F401
             return True
         except ImportError:
             return False
@@ -560,6 +610,18 @@ def get_stt_status():
     except Exception as error:
         mic_status = f"error consultando dispositivos: {error}"
 
+    model = _env("WHISPER_MODEL", "base")
+    if model == "whisper-large-v3-turbo":
+        try:
+            from groq import Groq  # noqa: F401
+            groq_status = "librería groq instalada"
+        except ImportError:
+            return "STT no disponible: falta librería groq. Ejecuta: pip install groq"
+        
+        has_key = bool(_env("GROQ_API_KEY"))
+        key_status = "API key configurada" if has_key else "falta API key de Groq"
+        return f"STT activo (Groq Cloud): modelo '{model}', {mic_status}, {groq_status}, {key_status}."
+
     try:
         from faster_whisper import WhisperModel  # noqa: F401
         whisper_status = "faster-whisper instalado"
@@ -569,5 +631,4 @@ def get_stt_status():
             "Ejecuta: pip install faster-whisper"
         )
 
-    model = _env("WHISPER_MODEL", "base")
     return f"STT activo: modelo Whisper '{model}', {mic_status}, {whisper_status}."

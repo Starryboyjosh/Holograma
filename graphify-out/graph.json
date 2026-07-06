@@ -70,7 +70,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "app_connection_connectionmanager",
-      "community": 16,
+      "community": 26,
       "norm_label": "connectionmanager"
     },
     {
@@ -80,7 +80,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "app_connection_connectionmanager_init",
-      "community": 16,
+      "community": 26,
       "norm_label": ".__init__()"
     },
     {
@@ -90,7 +90,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "app_connection_connectionmanager_count",
-      "community": 16,
+      "community": 26,
       "norm_label": ".count()"
     },
     {
@@ -130,7 +130,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "app_connection_connectionmanager_bind_loop",
-      "community": 16,
+      "community": 64,
       "norm_label": ".bind_loop()"
     },
     {
@@ -140,7 +140,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "abstracteventloop",
-      "community": 16,
+      "community": 64,
       "norm_label": "abstracteventloop"
     },
     {
@@ -160,7 +160,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "app_connection_connectionmanager_close_all",
-      "community": 16,
+      "community": 88,
       "norm_label": ".close_all()"
     },
     {
@@ -190,7 +190,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "app_connection_rationale_23",
-      "community": 16,
+      "community": 26,
       "norm_label": "registro de conexiones + difusion async, seguro ante sockets caidos."
     },
     {
@@ -210,7 +210,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "app_connection_rationale_69",
-      "community": 16,
+      "community": 64,
       "norm_label": "captura el event loop del servidor para emitir desde hilos no-async.          se"
     },
     {
@@ -230,7 +230,7 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "app_connection_rationale_91",
-      "community": 16,
+      "community": 88,
       "norm_label": "cierra y olvida todas las conexiones (apagado ordenado del servidor).          e"
     },
     {
@@ -380,7 +380,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_llm",
-      "community": 81,
+      "community": 26,
       "norm_label": "llm.py"
     },
     {
@@ -390,7 +390,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "services_llm_llmservice",
-      "community": 81,
+      "community": 26,
       "norm_label": "llmservice"
     },
     {
@@ -400,7 +400,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "services_llm_llmservice_init",
-      "community": 81,
+      "community": 26,
       "norm_label": ".__init__()"
     },
     {
@@ -410,7 +410,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "streamfn",
-      "community": 81,
+      "community": 26,
       "norm_label": "streamfn"
     },
     {
@@ -420,7 +420,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "services_llm_llmservice_stream",
-      "community": 81,
+      "community": 26,
       "norm_label": ".stream()"
     },
     {
@@ -430,7 +430,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_llm_rationale_1",
-      "community": 81,
+      "community": 26,
       "norm_label": "servicio de llm: envuelve la **unica** ruta async de generacion.  `llm_backend.s"
     },
     {
@@ -440,7 +440,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_vision",
-      "community": 5,
+      "community": 0,
       "norm_label": "vision.py"
     },
     {
@@ -450,7 +450,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "services_vision_cameracontextprovider",
-      "community": 81,
+      "community": 26,
       "norm_label": "cameracontextprovider"
     },
     {
@@ -460,7 +460,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "services_vision_cameracontextprovider_init",
-      "community": 81,
+      "community": 26,
       "norm_label": ".__init__()"
     },
     {
@@ -470,7 +470,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "contextbuilder",
-      "community": 81,
+      "community": 26,
       "norm_label": "contextbuilder"
     },
     {
@@ -480,7 +480,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "services_vision_cameracontextprovider_analysis",
-      "community": 81,
+      "community": 26,
       "norm_label": ".analysis()"
     },
     {
@@ -490,7 +490,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "services_vision_cameracontextprovider_update",
-      "community": 81,
+      "community": 26,
       "norm_label": ".update()"
     },
     {
@@ -500,7 +500,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "services_vision_cameracontextprovider_build_context",
-      "community": 81,
+      "community": 26,
       "norm_label": ".build_context()"
     },
     {
@@ -510,7 +510,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "services_vision_cameracontextprovider_default_builder",
-      "community": 5,
+      "community": 0,
       "norm_label": "._default_builder()"
     },
     {
@@ -520,7 +520,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_vision_rationale_1",
-      "community": 5,
+      "community": 0,
       "norm_label": "proveedor del contexto de camara para el llm.  hoy `llm_backend.stream_llm_respo"
     },
     {
@@ -530,7 +530,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "services_vision_rationale_30",
-      "community": 81,
+      "community": 26,
       "norm_label": "registra el ultimo analisis de la camara (lo llamara visionservice)."
     },
     {
@@ -620,7 +620,7 @@
       "source_location": "L224",
       "_origin": "ast",
       "id": "call_get_piper_sample_rate",
-      "community": 2,
+      "community": 40,
       "norm_label": "get_piper_sample_rate()"
     },
     {
@@ -640,7 +640,7 @@
       "source_location": "L249",
       "_origin": "ast",
       "id": "call_get_powershell_command",
-      "community": 64,
+      "community": 2,
       "norm_label": "get_powershell_command()"
     },
     {
@@ -650,7 +650,7 @@
       "source_location": "L265",
       "_origin": "ast",
       "id": "call_run_powershell",
-      "community": 64,
+      "community": 2,
       "norm_label": "run_powershell()"
     },
     {
@@ -660,7 +660,7 @@
       "source_location": "L306",
       "_origin": "ast",
       "id": "call_play_wav_with_windows",
-      "community": 64,
+      "community": 2,
       "norm_label": "play_wav_with_windows()"
     },
     {
@@ -710,7 +710,7 @@
       "source_location": "L469",
       "_origin": "ast",
       "id": "call_speak_with_windows_voice",
-      "community": 64,
+      "community": 2,
       "norm_label": "speak_with_windows_voice()"
     },
     {
@@ -770,7 +770,7 @@
       "source_location": "L733",
       "_origin": "ast",
       "id": "call_build_camera_context",
-      "community": 5,
+      "community": 0,
       "norm_label": "_build_camera_context()"
     },
     {
@@ -780,7 +780,7 @@
       "source_location": "L767",
       "_origin": "ast",
       "id": "call_is_visual_question",
-      "community": 5,
+      "community": 0,
       "norm_label": "_is_visual_question()"
     },
     {
@@ -790,7 +790,7 @@
       "source_location": "L775",
       "_origin": "ast",
       "id": "call_is_greeting",
-      "community": 5,
+      "community": 0,
       "norm_label": "_is_greeting()"
     },
     {
@@ -800,7 +800,7 @@
       "source_location": "L797",
       "_origin": "ast",
       "id": "call_ask_ai",
-      "community": 5,
+      "community": 0,
       "norm_label": "ask_ai()"
     },
     {
@@ -890,7 +890,7 @@
       "source_location": "L1036",
       "_origin": "ast",
       "id": "call_stop_camera_thread",
-      "community": 26,
+      "community": 17,
       "norm_label": "stop_camera_thread()"
     },
     {
@@ -910,7 +910,7 @@
       "source_location": "L1130",
       "_origin": "ast",
       "id": "call_request_listen",
-      "community": 45,
+      "community": 17,
       "norm_label": "request_listen()"
     },
     {
@@ -920,7 +920,7 @@
       "source_location": "L1135",
       "_origin": "ast",
       "id": "call_set_trigger_mode",
-      "community": 45,
+      "community": 17,
       "norm_label": "set_trigger_mode()"
     },
     {
@@ -930,7 +930,7 @@
       "source_location": "L1146",
       "_origin": "ast",
       "id": "call_get_trigger_mode",
-      "community": 45,
+      "community": 17,
       "norm_label": "get_trigger_mode()"
     },
     {
@@ -940,7 +940,7 @@
       "source_location": "L1151",
       "_origin": "ast",
       "id": "call_stdin_ptt_reader",
-      "community": 45,
+      "community": 5,
       "norm_label": "_stdin_ptt_reader()"
     },
     {
@@ -1060,7 +1060,7 @@
       "source_location": "L225",
       "_origin": "ast",
       "id": "call_rationale_225",
-      "community": 2,
+      "community": 40,
       "norm_label": "read piper sample rate from the model json sidecar when available."
     },
     {
@@ -1080,7 +1080,7 @@
       "source_location": "L250",
       "_origin": "ast",
       "id": "call_rationale_250",
-      "community": 64,
+      "community": 2,
       "norm_label": "return a powershell executable path on windows or wsl if available."
     },
     {
@@ -1090,7 +1090,7 @@
       "source_location": "L266",
       "_origin": "ast",
       "id": "call_rationale_266",
-      "community": 64,
+      "community": 2,
       "norm_label": "run a powershell script and return true when it succeeds."
     },
     {
@@ -1100,7 +1100,7 @@
       "source_location": "L307",
       "_origin": "ast",
       "id": "call_rationale_307",
-      "community": 64,
+      "community": 2,
       "norm_label": "play a wav file with windows' built-in soundplayer."
     },
     {
@@ -1150,7 +1150,7 @@
       "source_location": "L470",
       "_origin": "ast",
       "id": "call_rationale_470",
-      "community": 64,
+      "community": 2,
       "norm_label": "use windows built-in speech synthesis when piper is unavailable."
     },
     {
@@ -1260,7 +1260,7 @@
       "source_location": "L1037",
       "_origin": "ast",
       "id": "call_rationale_1037",
-      "community": 26,
+      "community": 17,
       "norm_label": "deten la deteccion y libera la camara (apagar la camara = liberarla).      senal"
     },
     {
@@ -1280,7 +1280,7 @@
       "source_location": "L1131",
       "_origin": "ast",
       "id": "call_rationale_1131",
-      "community": 45,
+      "community": 17,
       "norm_label": "solicita una escucha puntual (push-to-talk remoto, p. ej. la webapp)."
     },
     {
@@ -1290,7 +1290,7 @@
       "source_location": "L1136",
       "_origin": "ast",
       "id": "call_rationale_1136",
-      "community": 45,
+      "community": 17,
       "norm_label": "cambia en caliente el modo de activacion de voz. devuelve el modo final."
     },
     {
@@ -1300,7 +1300,7 @@
       "source_location": "L1147",
       "_origin": "ast",
       "id": "call_rationale_1147",
-      "community": 45,
+      "community": 17,
       "norm_label": "devuelve el modo de activacion de voz actual."
     },
     {
@@ -1310,7 +1310,7 @@
       "source_location": "L1152",
       "_origin": "ast",
       "id": "call_rationale_1152",
-      "community": 45,
+      "community": 5,
       "norm_label": "lee enter de la terminal y solicita una escucha (push-to-talk en cli)."
     },
     {
@@ -4850,7 +4850,7 @@
       "source_location": "L471",
       "_origin": "ast",
       "id": "llm_backend_is_mostly_english",
-      "community": 123,
+      "community": 0,
       "norm_label": "_is_mostly_english()"
     },
     {
@@ -4860,7 +4860,7 @@
       "source_location": "L490",
       "_origin": "ast",
       "id": "llm_backend_postprocess_reply",
-      "community": 123,
+      "community": 0,
       "norm_label": "_postprocess_reply()"
     },
     {
@@ -4990,7 +4990,7 @@
       "source_location": "L472",
       "_origin": "ast",
       "id": "llm_backend_rationale_472",
-      "community": 123,
+      "community": 0,
       "norm_label": "heuristic: return true only when the text is clearly english.      se exige evid"
     },
     {
@@ -5000,7 +5000,7 @@
       "source_location": "L491",
       "_origin": "ast",
       "id": "llm_backend_rationale_491",
-      "community": 123,
+      "community": 0,
       "norm_label": "clean up llm response: strip thinking blocks and handle language issues."
     },
     {
@@ -5050,7 +5050,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "fastapi",
-      "community": 17,
+      "community": 26,
       "norm_label": "fastapi"
     },
     {
@@ -5080,7 +5080,7 @@
       "source_location": "L275",
       "_origin": "ast",
       "id": "main_configupdate",
-      "community": 17,
+      "community": 26,
       "norm_label": "configupdate"
     },
     {
@@ -5090,44 +5090,44 @@
       "source_location": "",
       "_origin": "ast",
       "id": "basemodel",
-      "community": 17,
+      "community": 26,
       "norm_label": "basemodel"
     },
     {
       "label": "BoundingBoxModel",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L298",
+      "source_location": "L299",
       "_origin": "ast",
       "id": "main_boundingboxmodel",
-      "community": 17,
+      "community": 26,
       "norm_label": "boundingboxmodel"
     },
     {
       "label": "TrainImagePayload",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L307",
+      "source_location": "L308",
       "_origin": "ast",
       "id": "main_trainimagepayload",
-      "community": 17,
+      "community": 26,
       "norm_label": "trainimagepayload"
     },
     {
       "label": "VocabularyPayload",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L312",
+      "source_location": "L313",
       "_origin": "ast",
       "id": "main_vocabularypayload",
-      "community": 17,
+      "community": 26,
       "norm_label": "vocabularypayload"
     },
     {
       "label": "get_config()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L320",
+      "source_location": "L321",
       "_origin": "ast",
       "id": "main_get_config",
       "community": 17,
@@ -5137,7 +5137,7 @@
       "label": "update_config()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L372",
+      "source_location": "L376",
       "_origin": "ast",
       "id": "main_update_config",
       "community": 17,
@@ -5147,27 +5147,27 @@
       "label": "LlmTestPayload",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L523",
+      "source_location": "L533",
       "_origin": "ast",
       "id": "main_llmtestpayload",
-      "community": 17,
+      "community": 26,
       "norm_label": "llmtestpayload"
     },
     {
       "label": "get_providers()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L531",
+      "source_location": "L541",
       "_origin": "ast",
       "id": "main_get_providers",
-      "community": 24,
+      "community": 0,
       "norm_label": "get_providers()"
     },
     {
       "label": "test_llm()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L542",
+      "source_location": "L552",
       "_origin": "ast",
       "id": "main_test_llm",
       "community": 17,
@@ -5177,17 +5177,17 @@
       "label": "get_unev_content()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L558",
+      "source_location": "L568",
       "_origin": "ast",
       "id": "main_get_unev_content",
-      "community": 85,
+      "community": 24,
       "norm_label": "get_unev_content()"
     },
     {
       "label": "update_unev_content()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L564",
+      "source_location": "L574",
       "_origin": "ast",
       "id": "main_update_unev_content",
       "community": 17,
@@ -5197,7 +5197,7 @@
       "label": "CameraToggle",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L579",
+      "source_location": "L589",
       "_origin": "ast",
       "id": "main_cameratoggle",
       "community": 26,
@@ -5207,37 +5207,37 @@
       "label": "set_camera()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L584",
+      "source_location": "L594",
       "_origin": "ast",
       "id": "main_set_camera",
-      "community": 26,
+      "community": 17,
       "norm_label": "set_camera()"
     },
     {
       "label": "SpeakPayload",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L604",
+      "source_location": "L614",
       "_origin": "ast",
       "id": "main_speakpayload",
-      "community": 17,
+      "community": 26,
       "norm_label": "speakpayload"
     },
     {
       "label": "get_voices()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L610",
+      "source_location": "L620",
       "_origin": "ast",
       "id": "main_get_voices",
-      "community": 61,
+      "community": 40,
       "norm_label": "get_voices()"
     },
     {
       "label": "play_speak()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L622",
+      "source_location": "L632",
       "_origin": "ast",
       "id": "main_play_speak",
       "community": 17,
@@ -5247,7 +5247,7 @@
       "label": "train_image()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L648",
+      "source_location": "L658",
       "_origin": "ast",
       "id": "main_train_image",
       "community": 17,
@@ -5257,7 +5257,7 @@
       "label": "get_training_metadata()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L701",
+      "source_location": "L711",
       "_origin": "ast",
       "id": "main_get_training_metadata",
       "community": 17,
@@ -5267,7 +5267,7 @@
       "label": "train_vocabulary()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L713",
+      "source_location": "L723",
       "_origin": "ast",
       "id": "main_train_vocabulary",
       "community": 17,
@@ -5277,27 +5277,27 @@
       "label": "HologramConnect",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L724",
+      "source_location": "L734",
       "_origin": "ast",
       "id": "main_hologramconnect",
-      "community": 17,
+      "community": 26,
       "norm_label": "hologramconnect"
     },
     {
       "label": "HologramCommand",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L729",
+      "source_location": "L739",
       "_origin": "ast",
       "id": "main_hologramcommand",
-      "community": 17,
+      "community": 26,
       "norm_label": "hologramcommand"
     },
     {
       "label": "_get_holo_manager()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L737",
+      "source_location": "L747",
       "_origin": "ast",
       "id": "main_get_holo_manager",
       "community": 17,
@@ -5307,7 +5307,7 @@
       "label": "holo_connect()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L744",
+      "source_location": "L754",
       "_origin": "ast",
       "id": "main_holo_connect",
       "community": 17,
@@ -5317,7 +5317,7 @@
       "label": "holo_disconnect()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L761",
+      "source_location": "L771",
       "_origin": "ast",
       "id": "main_holo_disconnect",
       "community": 17,
@@ -5327,7 +5327,7 @@
       "label": "holo_command()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L770",
+      "source_location": "L780",
       "_origin": "ast",
       "id": "main_holo_command",
       "community": 17,
@@ -5337,7 +5337,7 @@
       "label": "holo_status()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L780",
+      "source_location": "L790",
       "_origin": "ast",
       "id": "main_holo_status",
       "community": 17,
@@ -5347,7 +5347,7 @@
       "label": "pause_ai()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L793",
+      "source_location": "L803",
       "_origin": "ast",
       "id": "main_pause_ai",
       "community": 17,
@@ -5357,7 +5357,7 @@
       "label": "resume_ai()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L804",
+      "source_location": "L814",
       "_origin": "ast",
       "id": "main_resume_ai",
       "community": 17,
@@ -5367,7 +5367,7 @@
       "label": "_placeholder_jpeg()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L817",
+      "source_location": "L827",
       "_origin": "ast",
       "id": "main_placeholder_jpeg",
       "community": 17,
@@ -5377,7 +5377,7 @@
       "label": "video_feed()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L835",
+      "source_location": "L845",
       "_origin": "ast",
       "id": "main_video_feed",
       "community": 17,
@@ -5387,7 +5387,7 @@
       "label": "read_root()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L880",
+      "source_location": "L890",
       "_origin": "ast",
       "id": "main_read_root",
       "community": 17,
@@ -5397,7 +5397,7 @@
       "label": "read_all_other_paths()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L902",
+      "source_location": "L912",
       "_origin": "ast",
       "id": "main_read_all_other_paths",
       "community": 17,
@@ -5407,20 +5407,20 @@
       "label": "websocket_chat_endpoint()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L918",
+      "source_location": "L928",
       "_origin": "ast",
       "id": "main_websocket_chat_endpoint",
-      "community": 45,
+      "community": 17,
       "norm_label": "websocket_chat_endpoint()"
     },
     {
       "label": "WebSocket",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L918",
+      "source_location": "L928",
       "_origin": "ast",
       "id": "websocket",
-      "community": 45,
+      "community": 26,
       "norm_label": "websocket"
     },
     {
@@ -5457,19 +5457,19 @@
       "label": "Lista de proveedores de IA con metadata segura (sin secretos).      La interfaz",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L532",
+      "source_location": "L542",
       "_origin": "ast",
-      "id": "main_rationale_532",
-      "community": 24,
+      "id": "main_rationale_542",
+      "community": 0,
       "norm_label": "lista de proveedores de ia con metadata segura (sin secretos).      la interfaz"
     },
     {
       "label": "Prueba real de proveedor/modelo/key/URL sin guardar nada.      Devuelve un mensa",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L543",
+      "source_location": "L553",
       "_origin": "ast",
-      "id": "main_rationale_543",
+      "id": "main_rationale_553",
       "community": 17,
       "norm_label": "prueba real de proveedor/modelo/key/url sin guardar nada.      devuelve un mensa"
     },
@@ -5477,19 +5477,19 @@
       "label": "Contenido institucional de UNEV (fuente \u00fanica editable).",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L559",
+      "source_location": "L569",
       "_origin": "ast",
-      "id": "main_rationale_559",
-      "community": 85,
+      "id": "main_rationale_569",
+      "community": 24,
       "norm_label": "contenido institucional de unev (fuente unica editable)."
     },
     {
       "label": "Valida y guarda el contenido de UNEV; recarga la fuente en caliente.      Devuel",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L565",
+      "source_location": "L575",
       "_origin": "ast",
-      "id": "main_rationale_565",
+      "id": "main_rationale_575",
       "community": 17,
       "norm_label": "valida y guarda el contenido de unev; recarga la fuente en caliente.      devuel"
     },
@@ -5497,19 +5497,19 @@
       "label": "Enciende o **apaga** la c\u00e1mara liberando el dispositivo.      Apagar no solo ocu",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L585",
+      "source_location": "L595",
       "_origin": "ast",
-      "id": "main_rationale_585",
-      "community": 26,
+      "id": "main_rationale_595",
+      "community": 17,
       "norm_label": "enciende o **apaga** la camara liberando el dispositivo.      apagar no solo ocu"
     },
     {
       "label": "Build a simple 'no signal' JPEG so the <img> always shows something.",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L818",
+      "source_location": "L828",
       "_origin": "ast",
-      "id": "main_rationale_818",
+      "id": "main_rationale_828",
       "community": 17,
       "norm_label": "build a simple 'no signal' jpeg so the <img> always shows something."
     },
@@ -5517,9 +5517,9 @@
       "label": "Transmite los cuadros YOLO anotados como MJPEG (async: no bloquea el loop).",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L836",
+      "source_location": "L846",
       "_origin": "ast",
-      "id": "main_rationale_836",
+      "id": "main_rationale_846",
       "community": 17,
       "norm_label": "transmite los cuadros yolo anotados como mjpeg (async: no bloquea el loop)."
     },
@@ -5660,7 +5660,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "arms_ponytail",
-      "community": 86,
+      "community": 40,
       "norm_label": "ponytail.js"
     },
     {
@@ -5670,7 +5670,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "arms_ponytail_fs",
-      "community": 86,
+      "community": 40,
       "norm_label": "fs"
     },
     {
@@ -5680,7 +5680,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "arms_ponytail_path",
-      "community": 86,
+      "community": 40,
       "norm_label": "path"
     },
     {
@@ -5690,7 +5690,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "arms_ponytail_system",
-      "community": 86,
+      "community": 40,
       "norm_label": "system"
     },
     {
@@ -8128,7 +8128,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "provider_config",
-      "community": 24,
+      "community": 0,
       "norm_label": "provider_config.py"
     },
     {
@@ -8138,7 +8138,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "provider_config_provider",
-      "community": 24,
+      "community": 0,
       "norm_label": "provider"
     },
     {
@@ -8148,7 +8148,7 @@
       "source_location": "L160",
       "_origin": "ast",
       "id": "provider_config_norm",
-      "community": 24,
+      "community": 0,
       "norm_label": "_norm()"
     },
     {
@@ -8158,7 +8158,7 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "provider_config_canonical_provider",
-      "community": 24,
+      "community": 0,
       "norm_label": "_canonical_provider()"
     },
     {
@@ -8168,7 +8168,7 @@
       "source_location": "L170",
       "_origin": "ast",
       "id": "provider_config_select_backend",
-      "community": 24,
+      "community": 0,
       "norm_label": "select_backend()"
     },
     {
@@ -8178,7 +8178,7 @@
       "source_location": "L208",
       "_origin": "ast",
       "id": "provider_config_resolve_model",
-      "community": 24,
+      "community": 0,
       "norm_label": "resolve_model()"
     },
     {
@@ -8188,7 +8188,7 @@
       "source_location": "L235",
       "_origin": "ast",
       "id": "provider_config_resolve_api_key",
-      "community": 24,
+      "community": 0,
       "norm_label": "resolve_api_key()"
     },
     {
@@ -8198,7 +8198,7 @@
       "source_location": "L243",
       "_origin": "ast",
       "id": "provider_config_resolve_base_url",
-      "community": 24,
+      "community": 0,
       "norm_label": "resolve_base_url()"
     },
     {
@@ -8208,7 +8208,7 @@
       "source_location": "L255",
       "_origin": "ast",
       "id": "provider_config_configured_cloud_providers",
-      "community": 24,
+      "community": 0,
       "norm_label": "configured_cloud_providers()"
     },
     {
@@ -8218,7 +8218,7 @@
       "source_location": "L285",
       "_origin": "ast",
       "id": "provider_config_provider_public_info",
-      "community": 24,
+      "community": 0,
       "norm_label": "provider_public_info()"
     },
     {
@@ -8228,7 +8228,7 @@
       "source_location": "L305",
       "_origin": "ast",
       "id": "provider_config_all_providers_public_info",
-      "community": 24,
+      "community": 0,
       "norm_label": "all_providers_public_info()"
     },
     {
@@ -8238,7 +8238,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "provider_config_rationale_1",
-      "community": 24,
+      "community": 0,
       "norm_label": "unified llm provider/model configuration contract for holograma unev.  antes de"
     },
     {
@@ -8248,7 +8248,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "provider_config_rationale_34",
-      "community": 24,
+      "community": 0,
       "norm_label": "descripcion de un proveedor de llm y como alcanzarlo."
     },
     {
@@ -8258,7 +8258,7 @@
       "source_location": "L174",
       "_origin": "ast",
       "id": "provider_config_rationale_174",
-      "community": 24,
+      "community": 0,
       "norm_label": "devuelve el backend a usar segun la configuracion. determinista.      reglas (en"
     },
     {
@@ -8268,7 +8268,7 @@
       "source_location": "L209",
       "_origin": "ast",
       "id": "provider_config_rationale_209",
-      "community": 24,
+      "community": 0,
       "norm_label": "modelo efectivo para un proveedor.      precedencia: variable especifica del pro"
     },
     {
@@ -8278,7 +8278,7 @@
       "source_location": "L256",
       "_origin": "ast",
       "id": "provider_config_rationale_256",
-      "community": 24,
+      "community": 0,
       "norm_label": "ids de proveedores en la nube con credenciales utilizables (key + modelo)."
     },
     {
@@ -8288,7 +8288,7 @@
       "source_location": "L286",
       "_origin": "ast",
       "id": "provider_config_rationale_286",
-      "community": 24,
+      "community": 0,
       "norm_label": "metadata segura para la interfaz (sin secretos)."
     },
     {
@@ -8631,14 +8631,14 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "security",
-      "community": 124,
+      "community": 17,
       "norm_label": "security.py"
     },
     {
       "label": "redact_secrets()",
       "file_type": "code",
       "source_file": "security.py",
-      "source_location": "L64",
+      "source_location": "L65",
       "_origin": "ast",
       "id": "security_redact_secrets",
       "community": 17,
@@ -8648,7 +8648,7 @@
       "label": "clamp_text()",
       "file_type": "code",
       "source_file": "security.py",
-      "source_location": "L87",
+      "source_location": "L88",
       "_origin": "ast",
       "id": "security_clamp_text",
       "community": 17,
@@ -8658,10 +8658,10 @@
       "label": "redact_iter()",
       "file_type": "code",
       "source_file": "security.py",
-      "source_location": "L100",
+      "source_location": "L101",
       "_origin": "ast",
       "id": "security_redact_iter",
-      "community": 124,
+      "community": 17,
       "norm_label": "redact_iter()"
     },
     {
@@ -8671,16 +8671,16 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "security_rationale_1",
-      "community": 124,
+      "community": 17,
       "norm_label": "utilidades de seguridad para holograma unev.  funciones puras (sin red, sin esta"
     },
     {
       "label": "Devuelve ``text`` con cualquier secreto enmascarado.      Enmascara (1) los valo",
       "file_type": "rationale",
       "source_file": "security.py",
-      "source_location": "L65",
+      "source_location": "L66",
       "_origin": "ast",
-      "id": "security_rationale_65",
+      "id": "security_rationale_66",
       "community": 17,
       "norm_label": "devuelve ``text`` con cualquier secreto enmascarado.      enmascara (1) los valo"
     },
@@ -8688,9 +8688,9 @@
       "label": "Sanea texto no confiable: elimina caracteres de control y trunca a ``max_len``.",
       "file_type": "rationale",
       "source_file": "security.py",
-      "source_location": "L88",
+      "source_location": "L89",
       "_origin": "ast",
-      "id": "security_rationale_88",
+      "id": "security_rationale_89",
       "community": 17,
       "norm_label": "sanea texto no confiable: elimina caracteres de control y trunca a ``max_len``."
     },
@@ -8698,10 +8698,10 @@
       "label": "Aplica :func:`redact_secrets` a una colecci\u00f3n (\u00fatil para listas de logs).",
       "file_type": "rationale",
       "source_file": "security.py",
-      "source_location": "L101",
+      "source_location": "L102",
       "_origin": "ast",
-      "id": "security_rationale_101",
-      "community": 124,
+      "id": "security_rationale_102",
+      "community": 17,
       "norm_label": "aplica :func:`redact_secrets` a una coleccion (util para listas de logs)."
     },
     {
@@ -9011,7 +9011,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_router",
-      "community": 85,
+      "community": 24,
       "norm_label": "router.py"
     },
     {
@@ -9021,7 +9021,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "skills_router_route_local_skill",
-      "community": 85,
+      "community": 24,
       "norm_label": "route_local_skill()"
     },
     {
@@ -9031,7 +9031,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_unev_content",
-      "community": 85,
+      "community": 41,
       "norm_label": "unev_content.py"
     },
     {
@@ -9041,7 +9041,7 @@
       "source_location": "L196",
       "_origin": "ast",
       "id": "skills_unev_content_coerce",
-      "community": 85,
+      "community": 41,
       "norm_label": "_coerce()"
     },
     {
@@ -9051,7 +9051,7 @@
       "source_location": "L217",
       "_origin": "ast",
       "id": "skills_unev_content_validate_unev_info",
-      "community": 85,
+      "community": 41,
       "norm_label": "validate_unev_info()"
     },
     {
@@ -9061,7 +9061,7 @@
       "source_location": "L237",
       "_origin": "ast",
       "id": "skills_unev_content_load_unev_info",
-      "community": 85,
+      "community": 41,
       "norm_label": "load_unev_info()"
     },
     {
@@ -9071,7 +9071,7 @@
       "source_location": "L237",
       "_origin": "ast",
       "id": "path",
-      "community": 61,
+      "community": 40,
       "norm_label": "path"
     },
     {
@@ -9081,7 +9081,7 @@
       "source_location": "L248",
       "_origin": "ast",
       "id": "skills_unev_content_get_unev_info",
-      "community": 85,
+      "community": 24,
       "norm_label": "get_unev_info()"
     },
     {
@@ -9091,7 +9091,7 @@
       "source_location": "L256",
       "_origin": "ast",
       "id": "skills_unev_content_reload",
-      "community": 85,
+      "community": 41,
       "norm_label": "reload()"
     },
     {
@@ -9101,7 +9101,7 @@
       "source_location": "L263",
       "_origin": "ast",
       "id": "skills_unev_content_save_unev_info",
-      "community": 85,
+      "community": 41,
       "norm_label": "save_unev_info()"
     },
     {
@@ -9111,7 +9111,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_1",
-      "community": 85,
+      "community": 41,
       "norm_label": "fuente unica y editable de la informacion institucional de unev.  antes, los dat"
     },
     {
@@ -9121,7 +9121,7 @@
       "source_location": "L197",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_197",
-      "community": 85,
+      "community": 41,
       "norm_label": "normaliza ``data`` a la forma canonica, rellenando faltantes con el respaldo."
     },
     {
@@ -9131,7 +9131,7 @@
       "source_location": "L218",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_218",
-      "community": 85,
+      "community": 41,
       "norm_label": "devuelve una lista de errores (vacia = valido) para mostrar al operador."
     },
     {
@@ -9141,7 +9141,7 @@
       "source_location": "L238",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_238",
-      "community": 85,
+      "community": 41,
       "norm_label": "carga el contenido desde el json autoritativo; respaldo en codigo si falla."
     },
     {
@@ -9151,7 +9151,7 @@
       "source_location": "L249",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_249",
-      "community": 85,
+      "community": 24,
       "norm_label": "contenido vigente (cacheado). llamado por las skills en cada respuesta."
     },
     {
@@ -9161,7 +9161,7 @@
       "source_location": "L257",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_257",
-      "community": 85,
+      "community": 41,
       "norm_label": "recarga desde disco (tras una edicion) y actualiza la cache."
     },
     {
@@ -9171,7 +9171,7 @@
       "source_location": "L264",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_264",
-      "community": 85,
+      "community": 41,
       "norm_label": "valida, escribe atomicamente el json autoritativo y recarga la cache.      lanza"
     },
     {
@@ -9181,7 +9181,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_university",
-      "community": 85,
+      "community": 24,
       "norm_label": "university.py"
     },
     {
@@ -9191,7 +9191,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "skills_university_get_university_summary",
-      "community": 85,
+      "community": 24,
       "norm_label": "get_university_summary()"
     },
     {
@@ -9201,7 +9201,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "skills_university_get_programs_summary",
-      "community": 85,
+      "community": 24,
       "norm_label": "get_programs_summary()"
     },
     {
@@ -9211,7 +9211,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "skills_university_get_program_info",
-      "community": 85,
+      "community": 24,
       "norm_label": "get_program_info()"
     },
     {
@@ -9221,7 +9221,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "skills_university_get_admission_info",
-      "community": 85,
+      "community": 24,
       "norm_label": "get_admission_info()"
     },
     {
@@ -9231,7 +9231,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "skills_university_get_location_info",
-      "community": 85,
+      "community": 24,
       "norm_label": "get_location_info()"
     },
     {
@@ -9241,7 +9241,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "skills_university_get_approval_info",
-      "community": 85,
+      "community": 24,
       "norm_label": "get_approval_info()"
     },
     {
@@ -9251,7 +9251,7 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "skills_university_get_website_info",
-      "community": 85,
+      "community": 24,
       "norm_label": "get_website_info()"
     },
     {
@@ -9261,7 +9261,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "skills_university_get_university_context",
-      "community": 5,
+      "community": 0,
       "norm_label": "get_university_context()"
     },
     {
@@ -9271,7 +9271,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_university_rationale_1",
-      "community": 85,
+      "community": 24,
       "norm_label": "respuestas sobre unev. los datos provienen de la fuente unica y editable ``skill"
     },
     {
@@ -9351,7 +9351,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener",
-      "community": 17,
+      "community": 26,
       "norm_label": "whisperlistener"
     },
     {
@@ -9371,14 +9371,14 @@
       "source_location": "L119",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_load_model",
-      "community": 41,
+      "community": 76,
       "norm_label": "._load_model()"
     },
     {
       "label": "._record_until_silence()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L171",
+      "source_location": "L173",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_record_until_silence",
       "community": 58,
@@ -9388,37 +9388,47 @@
       "label": "._audio_to_wav_path()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L300",
+      "source_location": "L302",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_audio_to_wav_path",
-      "community": 58,
+      "community": 40,
       "norm_label": "._audio_to_wav_path()"
     },
     {
       "label": "._load_db_hotwords()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L326",
+      "source_location": "L328",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_load_db_hotwords",
-      "community": 41,
+      "community": 76,
       "norm_label": "._load_db_hotwords()"
+    },
+    {
+      "label": "._transcribe_groq()",
+      "file_type": "code",
+      "source_file": "stt/listener.py",
+      "source_location": "L429",
+      "_origin": "ast",
+      "id": "stt_listener_whisperlistener_transcribe_groq",
+      "community": 76,
+      "norm_label": "._transcribe_groq()"
     },
     {
       "label": ".transcribe_file()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L427",
+      "source_location": "L466",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_transcribe_file",
-      "community": 41,
+      "community": 76,
       "norm_label": ".transcribe_file()"
     },
     {
       "label": ".listen_once()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L497",
+      "source_location": "L539",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_listen_once",
       "community": 58,
@@ -9428,20 +9438,20 @@
       "label": ".is_available()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L534",
+      "source_location": "L580",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_is_available",
-      "community": 17,
+      "community": 76,
       "norm_label": ".is_available()"
     },
     {
       "label": "get_stt_status()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L544",
+      "source_location": "L594",
       "_origin": "ast",
       "id": "stt_listener_get_stt_status",
-      "community": 5,
+      "community": 76,
       "norm_label": "get_stt_status()"
     },
     {
@@ -9471,7 +9481,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "stt_listener_rationale_54",
-      "community": 17,
+      "community": 26,
       "norm_label": "record from the microphone and transcribe with faster-whisper.      parameters"
     },
     {
@@ -9481,16 +9491,16 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "stt_listener_rationale_120",
-      "community": 41,
+      "community": 76,
       "norm_label": "load the faster-whisper model on first use."
     },
     {
       "label": "Record audio from the default microphone until silence is detected.          Usa",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L172",
+      "source_location": "L174",
       "_origin": "ast",
-      "id": "stt_listener_rationale_172",
+      "id": "stt_listener_rationale_174",
       "community": 58,
       "norm_label": "record audio from the default microphone until silence is detected.          usa"
     },
@@ -9498,60 +9508,70 @@
       "label": "Write a float32 numpy array to a temporary WAV file.          Returns a ``pathli",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L301",
+      "source_location": "L303",
       "_origin": "ast",
-      "id": "stt_listener_rationale_301",
-      "community": 58,
+      "id": "stt_listener_rationale_303",
+      "community": 40,
       "norm_label": "write a float32 numpy array to a temporary wav file.          returns a ``pathli"
     },
     {
       "label": "Carga y genera una lista refinada de hotwords desde las bases de datos locales.",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L327",
+      "source_location": "L329",
       "_origin": "ast",
-      "id": "stt_listener_rationale_327",
-      "community": 41,
+      "id": "stt_listener_rationale_329",
+      "community": 76,
       "norm_label": "carga y genera una lista refinada de hotwords desde las bases de datos locales."
+    },
+    {
+      "label": "Transcribe a WAV file using the Groq API with whisper-large-v3-turbo.",
+      "file_type": "rationale",
+      "source_file": "stt/listener.py",
+      "source_location": "L430",
+      "_origin": "ast",
+      "id": "stt_listener_rationale_430",
+      "community": 76,
+      "norm_label": "transcribe a wav file using the groq api with whisper-large-v3-turbo."
     },
     {
       "label": "Transcribe a WAV file and return the text.          Parameters         ---------",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L428",
+      "source_location": "L467",
       "_origin": "ast",
-      "id": "stt_listener_rationale_428",
-      "community": 41,
+      "id": "stt_listener_rationale_467",
+      "community": 76,
       "norm_label": "transcribe a wav file and return the text.          parameters         ---------"
     },
     {
       "label": "Record from the microphone and return the transcribed text.          Returns an",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L498",
+      "source_location": "L540",
       "_origin": "ast",
-      "id": "stt_listener_rationale_498",
+      "id": "stt_listener_rationale_540",
       "community": 58,
       "norm_label": "record from the microphone and return the transcribed text.          returns an"
     },
     {
-      "label": "Return True if sounddevice and faster-whisper are importable.",
+      "label": "Return True if sounddevice and faster-whisper (or groq if selected) are importab",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L535",
+      "source_location": "L581",
       "_origin": "ast",
-      "id": "stt_listener_rationale_535",
-      "community": 17,
-      "norm_label": "return true if sounddevice and faster-whisper are importable."
+      "id": "stt_listener_rationale_581",
+      "community": 76,
+      "norm_label": "return true if sounddevice and faster-whisper (or groq if selected) are importab"
     },
     {
       "label": "Return a human-readable status string for the STT subsystem.",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L545",
+      "source_location": "L595",
       "_origin": "ast",
-      "id": "stt_listener_rationale_545",
-      "community": 5,
+      "id": "stt_listener_rationale_595",
+      "community": 76,
       "norm_label": "return a human-readable status string for the stt subsystem."
     },
     {
@@ -9831,7 +9851,7 @@
       "source_location": "L127",
       "_origin": "ast",
       "id": "tests_test_app_services_test_broadcast_threadsafe_is_silent_without_bound_loop",
-      "community": 16,
+      "community": 81,
       "norm_label": "test_broadcast_threadsafe_is_silent_without_bound_loop()"
     },
     {
@@ -9941,7 +9961,7 @@
       "source_location": "L128",
       "_origin": "ast",
       "id": "tests_test_app_services_rationale_128",
-      "community": 16,
+      "community": 81,
       "norm_label": "sin loop ligado (arranque incompleto), no revienta el hilo; se descarta."
     },
     {
@@ -11561,7 +11581,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_unev_content",
-      "community": 85,
+      "community": 45,
       "norm_label": "test_unev_content.py"
     },
     {
@@ -11571,7 +11591,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_load_defaults_when_file_missing",
-      "community": 85,
+      "community": 45,
       "norm_label": "test_load_defaults_when_file_missing()"
     },
     {
@@ -11581,7 +11601,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_save_then_load_roundtrip",
-      "community": 85,
+      "community": 45,
       "norm_label": "test_save_then_load_roundtrip()"
     },
     {
@@ -11591,7 +11611,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_merge_fills_missing_keys_from_default",
-      "community": 85,
+      "community": 45,
       "norm_label": "test_merge_fills_missing_keys_from_default()"
     },
     {
@@ -11601,7 +11621,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_program_keys_are_lowercased",
-      "community": 85,
+      "community": 45,
       "norm_label": "test_program_keys_are_lowercased()"
     },
     {
@@ -11611,7 +11631,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_validation_reports_actionable_errors",
-      "community": 85,
+      "community": 45,
       "norm_label": "test_validation_reports_actionable_errors()"
     },
     {
@@ -11621,7 +11641,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_save_rejects_invalid",
-      "community": 85,
+      "community": 45,
       "norm_label": "test_save_rejects_invalid()"
     },
     {
@@ -11631,7 +11651,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_save_updates_cache_and_university_reads_it",
-      "community": 85,
+      "community": 45,
       "norm_label": "test_save_updates_cache_and_university_reads_it()"
     },
     {
@@ -11641,7 +11661,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_clamp_strips_control_chars_in_content",
-      "community": 85,
+      "community": 45,
       "norm_label": "test_clamp_strips_control_chars_in_content()"
     },
     {
@@ -11651,7 +11671,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_unev_content_rationale_1",
-      "community": 85,
+      "community": 45,
       "norm_label": "tests de la fuente unica de contenido unev (skills/unev_content).  puras: usan r"
     },
     {
@@ -11671,7 +11691,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "utils_env",
-      "community": 0,
+      "community": 76,
       "norm_label": "_env()"
     },
     {
@@ -11701,7 +11721,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "utils_is_quiet",
-      "community": 2,
+      "community": 76,
       "norm_label": "_is_quiet()"
     },
     {
@@ -11721,7 +11741,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "utils_rationale_7",
-      "community": 0,
+      "community": 76,
       "norm_label": "helper to retrieve string environment variables."
     },
     {
@@ -11751,7 +11771,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "utils_rationale_31",
-      "community": 2,
+      "community": 76,
       "norm_label": "returns true if hologram_quiet env var is set to 1/true/yes."
     },
     {
@@ -11791,7 +11811,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_camera",
-      "community": 76,
+      "community": 27,
       "norm_label": "camera.py"
     },
     {
@@ -11811,7 +11831,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "vision_camera_camera_init",
-      "community": 15,
+      "community": 76,
       "norm_label": ".__init__()"
     },
     {
@@ -11901,7 +11921,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_camera_rationale_1",
-      "community": 76,
+      "community": 27,
       "norm_label": "cross-platform opencv camera wrapper.  regla de oro a: todas las rutas usan path"
     },
     {
@@ -12001,7 +12021,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "vision_face_analyzer_faceanalyzer_init",
-      "community": 33,
+      "community": 76,
       "norm_label": ".__init__()"
     },
     {
@@ -12211,7 +12231,7 @@
       "source_location": "L288",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_count_persons_in_frame",
-      "community": 125,
+      "community": 1,
       "norm_label": ".count_persons_in_frame()"
     },
     {
@@ -12231,7 +12251,7 @@
       "source_location": "L309",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_count_persons_once",
-      "community": 125,
+      "community": 1,
       "norm_label": ".count_persons_once()"
     },
     {
@@ -12271,7 +12291,7 @@
       "source_location": "L396",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_feed_subscribe",
-      "community": 126,
+      "community": 1,
       "norm_label": ".feed_subscribe()"
     },
     {
@@ -12441,7 +12461,7 @@
       "source_location": "L289",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_289",
-      "community": 125,
+      "community": 1,
       "norm_label": "return the number of people detected in *frame*."
     },
     {
@@ -12461,7 +12481,7 @@
       "source_location": "L310",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_310",
-      "community": 125,
+      "community": 1,
       "norm_label": "open the camera, read one frame, and return the person count."
     },
     {
@@ -12501,7 +12521,7 @@
       "source_location": "L397",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_397",
-      "community": 126,
+      "community": 1,
       "norm_label": "registra un cliente del feed mjpeg (activa la codificacion jpeg)."
     },
     {
@@ -27247,21 +27267,21 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L532",
+      "source_location": "L542",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "main_rationale_532",
-      "target": "main_get_providers"
+      "source": "main_rationale_542",
+      "target": "main_get_providers",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L543",
+      "source_location": "L553",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "main_rationale_543",
-      "target": "main_test_llm"
+      "source": "main_rationale_553",
+      "target": "main_test_llm",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -27278,21 +27298,21 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L559",
+      "source_location": "L569",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "main_rationale_559",
-      "target": "main_get_unev_content"
+      "source": "main_rationale_569",
+      "target": "main_get_unev_content",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L565",
+      "source_location": "L575",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "main_rationale_565",
-      "target": "main_update_unev_content"
+      "source": "main_rationale_575",
+      "target": "main_update_unev_content",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -27341,11 +27361,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L585",
+      "source_location": "L595",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "main_rationale_585",
-      "target": "main_set_camera"
+      "source": "main_rationale_595",
+      "target": "main_set_camera",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -27535,21 +27555,21 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L818",
+      "source_location": "L828",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "main_rationale_818",
-      "target": "main_placeholder_jpeg"
+      "source": "main_rationale_828",
+      "target": "main_placeholder_jpeg",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L836",
+      "source_location": "L846",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "main_rationale_836",
-      "target": "main_video_feed"
+      "source": "main_rationale_846",
+      "target": "main_video_feed",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -31860,11 +31880,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "security.py",
-      "source_location": "L65",
+      "source_location": "L66",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "security_rationale_65",
-      "target": "security_redact_secrets"
+      "source": "security_rationale_66",
+      "target": "security_redact_secrets",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -31881,11 +31901,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "security.py",
-      "source_location": "L88",
+      "source_location": "L89",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "security_rationale_88",
-      "target": "security_clamp_text"
+      "source": "security_rationale_89",
+      "target": "security_clamp_text",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -31913,11 +31933,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "security.py",
-      "source_location": "L101",
+      "source_location": "L102",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "security_rationale_101",
-      "target": "security_redact_iter"
+      "source": "security_rationale_102",
+      "target": "security_redact_iter",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -33206,9 +33226,9 @@
       "source_file": "stt/listener.py",
       "source_location": "L326",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "stt_listener_whisperlistener",
-      "target": "stt_listener_whisperlistener_load_db_hotwords",
-      "confidence_score": 1.0
+      "target": "stt_listener_whisperlistener_load_db_hotwords"
     },
     {
       "relation": "method",
@@ -33239,6 +33259,16 @@
       "confidence_score": 1.0,
       "source": "stt_listener_whisperlistener",
       "target": "stt_listener_whisperlistener_transcribe_file"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "stt/listener.py",
+      "source_location": "L429",
+      "weight": 1.0,
+      "source": "stt_listener_whisperlistener",
+      "target": "stt_listener_whisperlistener_transcribe_groq",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -33320,11 +33350,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L172",
+      "source_location": "L174",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "stt_listener_rationale_172",
-      "target": "stt_listener_whisperlistener_record_until_silence"
+      "source": "stt_listener_rationale_174",
+      "target": "stt_listener_whisperlistener_record_until_silence",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -33352,11 +33382,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L301",
+      "source_location": "L303",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "stt_listener_rationale_301",
-      "target": "stt_listener_whisperlistener_audio_to_wav_path"
+      "source": "stt_listener_rationale_303",
+      "target": "stt_listener_whisperlistener_audio_to_wav_path",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -33373,9 +33403,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L327",
+      "source_location": "L329",
       "weight": 1.0,
-      "source": "stt_listener_rationale_327",
+      "source": "stt_listener_rationale_329",
       "target": "stt_listener_whisperlistener_load_db_hotwords",
       "confidence_score": 1.0
     },
@@ -33386,27 +33416,60 @@
       "source_file": "stt/listener.py",
       "source_location": "L459",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "stt_listener_whisperlistener_transcribe_file",
-      "target": "stt_listener_whisperlistener_load_db_hotwords",
+      "target": "stt_listener_whisperlistener_load_db_hotwords"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "stt/listener.py",
+      "source_location": "L430",
+      "weight": 1.0,
+      "source": "stt_listener_rationale_430",
+      "target": "stt_listener_whisperlistener_transcribe_groq",
       "confidence_score": 1.0
     },
     {
-      "relation": "rationale_for",
+      "relation": "calls",
+      "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L327",
+      "source_location": "L476",
       "weight": 1.0,
+      "source": "stt_listener_whisperlistener_transcribe_file",
+      "target": "stt_listener_whisperlistener_transcribe_groq",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source": "stt_listener_rationale_327",
-      "target": "stt_listener_whisperlistener_transcribe_file"
+      "source_file": "stt/listener.py",
+      "source_location": "L431",
+      "weight": 1.0,
+      "source": "stt_listener_whisperlistener_transcribe_groq",
+      "target": "utils_env"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "stt/listener.py",
+      "source_location": "L449",
+      "weight": 1.0,
+      "source": "stt_listener_whisperlistener_transcribe_groq",
+      "target": "utils_is_quiet"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L428",
+      "source_location": "L467",
       "weight": 1.0,
-      "source": "stt_listener_rationale_428",
+      "source": "stt_listener_rationale_467",
       "target": "stt_listener_whisperlistener_transcribe_file",
       "confidence_score": 1.0
     },
@@ -33447,9 +33510,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L498",
+      "source_location": "L540",
       "weight": 1.0,
-      "source": "stt_listener_rationale_498",
+      "source": "stt_listener_rationale_540",
       "target": "stt_listener_whisperlistener_listen_once",
       "confidence_score": 1.0
     },
@@ -33468,11 +33531,22 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L535",
+      "source_location": "L581",
       "weight": 1.0,
-      "source": "stt_listener_rationale_535",
+      "source": "stt_listener_rationale_581",
       "target": "stt_listener_whisperlistener_is_available",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "stt/listener.py",
+      "source_location": "L584",
+      "weight": 1.0,
+      "source": "stt_listener_whisperlistener_is_available",
+      "target": "utils_env"
     },
     {
       "relation": "calls",
@@ -33489,9 +33563,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L545",
+      "source_location": "L595",
       "weight": 1.0,
-      "source": "stt_listener_rationale_545",
+      "source": "stt_listener_rationale_595",
       "target": "stt_listener_get_stt_status",
       "confidence_score": 1.0
     },
@@ -39594,5 +39668,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "26cd275710b2c33eb34b856d7d3de4a1d1a014e4"
+  "built_at_commit": "61ecc99028b12e0e84592a1cf5ac8d761c833448"
 }
