@@ -190,7 +190,8 @@ def test_conversation_with_tts_emits_audio_progress_and_speaks_once():
     full = asyncio.run(service.handle_prompt("hi"))
 
     assert full == "Respuesta"
-    assert spoken == ["Respuesta"]  # TTS una vez, con el texto completo
+    # Respuesta corta sin puntuación: un solo speak con el texto completo.
+    assert spoken == ["Respuesta"]
     assert [m["type"] for m in conn.messages] == [
         "status",
         "text_chunk",
@@ -202,6 +203,30 @@ def test_conversation_with_tts_emits_audio_progress_and_speaks_once():
     assert audio == ["processing", "completed"]
     # El TTS NO reemite texto: hay exactamente un text_chunk (síntoma B).
     assert sum(1 for m in conn.messages if m["type"] == "text_chunk") == 1
+
+
+def test_conversation_tts_streams_clauses_before_llm_finishes(monkeypatch):
+    """Con stream TTS, la primera cláusula se habla antes de text_done."""
+    monkeypatch.setenv("HOLOGRAM_TTS_STREAM", "1")
+    conn = RecordingConnection()
+    spoken: list[str] = []
+    # Primera cláusula >= 23 chars + resto: el stream TTS habla antes del final.
+    service = ConversationService(
+        FakeLLM(["Hola, muy buenas tardes a todos. ", "El resto del mensaje."]),
+        conn,
+        speak=lambda t: spoken.append(t),
+    )
+
+    full = asyncio.run(service.handle_prompt("hi"))
+
+    assert full == "Hola, muy buenas tardes a todos. El resto del mensaje."
+    assert len(spoken) >= 1
+    assert "Hola, muy buenas tardes a todos." in spoken[0]
+    assert "".join(spoken).replace("  ", " ").strip()
+    # Texto al cliente sigue saliendo solo por text_chunk (no por TTS).
+    assert sum(1 for m in conn.messages if m["type"] == "text_chunk") == 2
+    audio = [m["status"] for m in conn.messages if m["type"] == "audio_status"]
+    assert audio == ["processing", "completed"]
 
 
 def test_conversation_injects_camera_context_into_llm():

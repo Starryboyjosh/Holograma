@@ -5,6 +5,30 @@
 from skills.unev_content import get_unev_info
 from skills.utils import normalize_text
 
+# Reexport para call.py / router (import histórico).
+__all__ = [
+    "normalize_text",
+    "get_university_summary",
+    "get_programs_summary",
+    "get_program_info",
+    "get_admission_info",
+    "get_location_info",
+    "get_approval_info",
+    "get_website_info",
+    "get_university_context",
+    "invalidate_context_cache",
+]
+
+# Contexto de sistema para el LLM: se reutiliza entre turnos (antes se
+# reconstruía en cada mensaje). Se invalida al editar unev_info.
+_CONTEXT_CACHE: str | None = None
+
+
+def invalidate_context_cache() -> None:
+    """Limpia la caché de ``get_university_context`` (p. ej. tras editar JSON)."""
+    global _CONTEXT_CACHE
+    _CONTEXT_CACHE = None
+
 
 def get_university_summary():
     info = get_unev_info()
@@ -51,17 +75,20 @@ def get_program_info(program_name):
 
 
 def get_admission_info():
+    """Admisión desde la fuente editable (evita texto duplicado/desactualizado)."""
+    info = get_unev_info()
+    req = (info.get("admission_requirements") or "").strip()
+    programs = ", ".join(p.title() for p in info.get("programs", {}))
+    if req:
+        tail = (
+            f" Puedes elegir entre: {programs}."
+            if programs
+            else ""
+        )
+        return f"Requisitos de admisión en UNEV: {req}{tail}"
     return (
-        "Para iniciar tu proceso de admisión en UNEV debes presentar de forma digital: "
-        "Título de Educación Media (PDF), DNI y Certificación de Nacimiento (sin RNP). "
-        "Además, deberás realizar un Examen Diagnóstico de Tecnología y Ofimática "
-        "(30 minutos), con un puntaje mínimo del 70% para ingreso directo. Si no "
-        "alcanzas el puntaje, ingresarás al Programa de Inmersión y Nivelación Digital "
-        "(PRIND), un andamiaje obligatorio que asegura el dominio de las herramientas "
-        "asincrónicas antes de iniciar la carga técnica. Puedes elegir entre las "
-        "carreras de Diseño Gráfico, Administración de Empresas o Programación Web, "
-        "todas con modalidad 100% virtual, duración de 2 años y ciclos cuatrimestrales "
-        "intensivos de 11 semanas."
+        "Consulta los requisitos de admisión en la página oficial de UNEV o "
+        "pregunta por una carrera concreta."
     )
 
 
@@ -79,6 +106,11 @@ def get_website_info():
 
 
 def get_university_context():
+    """Contexto de sistema UNEV + Honduras (cacheado entre turnos del LLM)."""
+    global _CONTEXT_CACHE
+    if _CONTEXT_CACHE is not None:
+        return _CONTEXT_CACHE
+
     from skills.honduras import get_university_context as get_honduras_context
 
     try:
@@ -112,4 +144,5 @@ def get_university_context():
         "Si el visitante pregunta por datos no incluidos aquí, no inventes. "
         "Recomienda revisar la página oficial o contactar a UNEV."
     )
-    return unev_ctx + "\n\n" + honduras_ctx
+    _CONTEXT_CACHE = unev_ctx + "\n\n" + honduras_ctx
+    return _CONTEXT_CACHE

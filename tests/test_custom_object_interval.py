@@ -36,7 +36,8 @@ class _FakeModel:
     def __init__(self):
         self.predict_calls = 0
 
-    def predict(self, frame, text=None, verbose=False):
+    def predict(self, frame, text=None, verbose=False, **kwargs):
+        # Acepta imgsz/conf/device/half del detector optimizado.
         self.predict_calls += 1
         return [_FakeResult([_FakeBox(0.9, 0, [1, 2, 3, 4])], {0: "botella"})]
 

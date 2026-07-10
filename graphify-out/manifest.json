@@ -35,8 +35,8 @@
     "semantic_hash": ""
   },
   "skills/presence.py": {
-    "mtime": 1782226483.5706086,
-    "ast_hash": "3bb695807ec0508f6b625872ff1d35a5",
+    "mtime": 1783704598.130962,
+    "ast_hash": "2f3dbaa5a7e9516e04377714f5e076ef",
     "semantic_hash": ""
   },
   "skills/router.py": {
@@ -45,8 +45,8 @@
     "semantic_hash": ""
   },
   "skills/university.py": {
-    "mtime": 1782773230.974767,
-    "ast_hash": "b81795ec9c249adf84b7eafafee2e362",
+    "mtime": 1783704598.130962,
+    "ast_hash": "0badcf5ee85423c4378a3419a9b15476",
     "semantic_hash": ""
   },
   "stt/__init__.py": {
@@ -55,8 +55,8 @@
     "semantic_hash": "b0436582c4a8505d00db6acfde9d06c9"
   },
   "stt/listener.py": {
-    "mtime": 1783319987.942705,
-    "ast_hash": "f58edf66162ac3b02daa14eb08331b97",
+    "mtime": 1783704598.130962,
+    "ast_hash": "4eeb67a048b0667e28b9944c53ed88b6",
     "semantic_hash": ""
   },
   "vision/__init__.py": {
@@ -65,8 +65,8 @@
     "semantic_hash": "c3bc0db18424f006e8b162c48bcc4356"
   },
   "vision/camera.py": {
-    "mtime": 1782773230.9777424,
-    "ast_hash": "a2c84d5cf6e297f6067c42b7a166e8d3",
+    "mtime": 1783702702.0367146,
+    "ast_hash": "68bebc3202d7fa3f30234a80d559373b",
     "semantic_hash": ""
   },
   "vision/face_analyzer.py": {
@@ -75,8 +75,8 @@
     "semantic_hash": ""
   },
   "vision/person_detector.py": {
-    "mtime": 1782773230.9777424,
-    "ast_hash": "83d468b10b2054a2465fa2925d82b666",
+    "mtime": 1783702815.551309,
+    "ast_hash": "25e1103c344870ee46c6af33184f9d9f",
     "semantic_hash": ""
   },
   ".claude/settings.json": {
@@ -285,7 +285,7 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1782773230.7737362,
+    "mtime": 1783578418.6501234,
     "ast_hash": "ba8eab4cfc7efc23e9814b4a8fb49206",
     "semantic_hash": ""
   },
@@ -300,7 +300,7 @@
     "semantic_hash": ""
   },
   "requirements.txt": {
-    "mtime": 1783319954.1336682,
+    "mtime": 1783578418.6501234,
     "ast_hash": "159d2aabb04a976ce39c58e98bfa6960",
     "semantic_hash": ""
   },
@@ -340,8 +340,8 @@
     "semantic_hash": ""
   },
   "config.example.json": {
-    "mtime": 1783319991.0037985,
-    "ast_hash": "411752b99891981ee913c5ddd2242367",
+    "mtime": 1783702837.8476117,
+    "ast_hash": "1bff766648595651fac0d152946f4c94",
     "semantic_hash": ""
   },
   "frontend/src-tauri/build.rs": {
@@ -820,8 +820,8 @@
     "semantic_hash": ""
   },
   "skills/unev_content.py": {
-    "mtime": 1782773230.974767,
-    "ast_hash": "15cd3921eb2208629c2a79e2255003da",
+    "mtime": 1783704598.130962,
+    "ast_hash": "4c1f6ad70368fb5347c21d8ef3269382",
     "semantic_hash": ""
   },
   "tests/test_unev_content.py": {
@@ -905,8 +905,8 @@
     "semantic_hash": ""
   },
   "app/services/conversation.py": {
-    "mtime": 1782773230.7746363,
-    "ast_hash": "583b562a65fa55ed3397d247ececabe2",
+    "mtime": 1783702787.2615452,
+    "ast_hash": "1c398eea5531efeca43a7e435457209e",
     "semantic_hash": ""
   },
   "app/services/llm.py": {
@@ -920,8 +920,8 @@
     "semantic_hash": ""
   },
   "tests/test_app_services.py": {
-    "mtime": 1782773230.9757423,
-    "ast_hash": "888b1424e032e20653a87953d6e5c181",
+    "mtime": 1783702800.7833521,
+    "ast_hash": "0336314c5091788d2f86c71cb7fbf3cf",
     "semantic_hash": ""
   },
   "tests/test_camera_feed_gate.py": {
@@ -930,8 +930,8 @@
     "semantic_hash": ""
   },
   "tests/test_custom_object_interval.py": {
-    "mtime": 1782773230.9762797,
-    "ast_hash": "f15c5508d76777a44e4c11f2fb6961c3",
+    "mtime": 1783702815.551309,
+    "ast_hash": "f713378e96df0b49b4e6db8317ec136d",
     "semantic_hash": ""
   },
   "ponytail/.agents/plugins/marketplace.json": {
@@ -1357,6 +1357,16 @@
   "ponytail/assets/social-preview.png": {
     "mtime": 1781630096.4673545,
     "ast_hash": "afeb113daf2e6aa6260af475ac5047a7",
+    "semantic_hash": ""
+  },
+  "tests/test_yolo_predict_opts.py": {
+    "mtime": 1783702800.7833521,
+    "ast_hash": "c5bb7150532450c88fd1c794af28aa21",
+    "semantic_hash": ""
+  },
+  "tests/test_hotwords_cache.py": {
+    "mtime": 1783704613.2079275,
+    "ast_hash": "e0efe3f294bc7932d72e448be0fd75e5",
     "semantic_hash": ""
   }
 }

@@ -16,20 +16,30 @@ import threading
 import time
 from pathlib import Path
 
-from utils import _env, _env_float
+from utils import _env, _env_float, _env_int
 
 # COCO class ID for "person"
 _PERSON_CLASS_ID = 0
 
 
+def _xyxy_tuple(xyxy) -> tuple[float, float, float, float]:
+    """Normaliza `box.xyxy[0]` de Ultralytics (tensor) o de fakes de test (list)."""
+    if hasattr(xyxy, "tolist"):
+        vals = xyxy.tolist()
+    else:
+        vals = list(xyxy)
+    return float(vals[0]), float(vals[1]), float(vals[2]), float(vals[3])
+
+
 class YoloPersonDetector:
-    """Detect people using YOLOe26 via the Ultralytics library.
+    """Detect people using YOLO26 / YOLOE-26 via the Ultralytics library (local).
 
     Parameters
     ----------
     model_name : str
-        Model file name or path.  Accepts YOLO v8/v11 (``yolo26n.pt``) weights.
-        The environment variable ``YOLO_MODEL`` overrides this value.
+        Model file name or path.  Accepts YOLO26 (``yolo26n.pt``) or YOLOE-26
+        open-vocab weights.  The environment variable ``YOLO_MODEL`` overrides
+        this value.  Inference is always local — never gated on person presence.
     confidence_threshold : float
         Minimum confidence to consider a detection valid.
     """
@@ -39,6 +49,15 @@ class YoloPersonDetector:
         self.confidence_threshold = confidence_threshold or _env_float(
             "YOLO_CONFIDENCE", 0.5
         )
+        # Tamaño de entrada Ultralytics (menor = más rápido). 320 es un buen
+        # equilibrio para kiosco CPU; 640 si hay GPU y se quiere más detalle.
+        self.imgsz = _env_int("YOLO_IMGSZ", 320)
+        # device vacío = auto de Ultralytics; "cpu", "0", "cuda:0", etc.
+        self.device = _env("YOLO_DEVICE", "").strip() or None
+        self.half = _env("YOLO_HALF", "0").lower() in ("1", "true", "yes")
+        # Lado máximo del frame antes de predecir (ahorra copias si la cámara
+        # entrega 1080p). 0 = no redimensionar en software (solo imgsz del modelo).
+        self.max_side = _env_int("YOLO_MAX_SIDE", 640)
         self.model = None
         self.face_analyzer = None
         self._custom_classes: list[str] = []
@@ -62,6 +81,8 @@ class YoloPersonDetector:
         # Suscriptores del feed MJPEG. Codificar JPEG en cada iteración (~30 fps)
         # gasta CPU aunque nadie mire; con cero suscriptores el bucle se salta el
         # imencode por completo. El contador lo mueven los handlers de /api/video_feed.
+        # La detección YOLO NUNCA se apaga por ausencia de personas o de viewers:
+        # solo el encode JPEG es opcional.
         self._feed_subscribers = 0
         self._feed_lock = threading.Lock()
         # Señal cooperativa de parada: al activarla, run_continuous sale del bucle
@@ -72,6 +93,47 @@ class YoloPersonDetector:
     def stop(self):
         """Solicita que run_continuous termine y libere la cámara."""
         self._stop_event.set()
+
+    def _interruptible_sleep(self, seconds: float) -> None:
+        """Duerme hasta *seconds* o hasta ``stop()`` (no bloquea el apagado)."""
+        if seconds is None or seconds <= 0:
+            return
+        self._stop_event.wait(timeout=seconds)
+
+    def _predict_kwargs(self, extra: dict | None = None) -> dict:
+        """Argumentos comunes de inferencia local (latencia / recursos)."""
+        kwargs: dict = {
+            "verbose": False,
+            "imgsz": self.imgsz,
+            "conf": self.confidence_threshold,
+        }
+        if self.device is not None:
+            kwargs["device"] = self.device
+        if self.half:
+            kwargs["half"] = True
+        if extra:
+            kwargs.update(extra)
+        return kwargs
+
+    def _prepare_frame(self, frame):
+        """Opcional: reduce el frame grande antes de YOLO (sin apagar la cámara)."""
+        if frame is None or self.max_side <= 0:
+            return frame
+        try:
+            h, w = frame.shape[:2]
+        except Exception:
+            return frame
+        longest = max(h, w)
+        if longest <= self.max_side:
+            return frame
+        try:
+            import cv2
+        except ImportError:
+            return frame
+        scale = self.max_side / float(longest)
+        new_w = max(1, int(w * scale))
+        new_h = max(1, int(h * scale))
+        return cv2.resize(frame, (new_w, new_h), interpolation=cv2.INTER_AREA)
 
     def load(self):
         """Load the YOLO model.  Downloads weights automatically on first run."""
@@ -191,14 +253,32 @@ class YoloPersonDetector:
         self._ensure_loaded()
         objects = []
         try:
-            results = self.model.predict(frame, text=prompt, verbose=False)
+            prepared = self._prepare_frame(frame)
+            results = self.model.predict(
+                prepared, text=prompt, **self._predict_kwargs()
+            )
+            # Si redimensionamos, las cajas vienen en coords del frame reducido;
+            # escalar de vuelta al frame original para overlays/UI.
+            scale_back = 1.0
+            if prepared is not frame and prepared is not None and frame is not None:
+                try:
+                    scale_back = frame.shape[1] / float(prepared.shape[1])
+                except Exception:
+                    scale_back = 1.0
             for result in results:
                 for box in result.boxes:
                     confidence = float(box.conf[0])
                     if confidence >= self.confidence_threshold:
                         cls_id = int(box.cls[0])
                         cls_name = result.names.get(cls_id, "unknown")
-                        x1, y1, x2, y2 = box.xyxy[0].tolist()
+                        x1, y1, x2, y2 = _xyxy_tuple(box.xyxy[0])
+                        if scale_back != 1.0:
+                            x1, y1, x2, y2 = (
+                                x1 * scale_back,
+                                y1 * scale_back,
+                                x2 * scale_back,
+                                y2 * scale_back,
+                            )
                         objects.append({
                             "label": cls_name,
                             "confidence": confidence,
@@ -227,12 +307,21 @@ class YoloPersonDetector:
         """Return a list of person detections in *frame*.
 
         Each detection is a dict with keys ``confidence`` and ``box``
-        (a tuple of ``(x1, y1, x2, y2)``).
+        (a tuple of ``(x1, y1, x2, y2)``).  Corre siempre que se llame: no se
+        omite por "sala vacía" ni por falta de viewers del feed.
         """
         self._ensure_loaded()
 
-        results = self.model(frame, verbose=False)
+        prepared = self._prepare_frame(frame)
+        results = self.model.predict(prepared, **self._predict_kwargs())
         persons = []
+
+        scale_back = 1.0
+        if prepared is not frame and prepared is not None and frame is not None:
+            try:
+                scale_back = frame.shape[1] / float(prepared.shape[1])
+            except Exception:
+                scale_back = 1.0
 
         for result in results:
             for box in result.boxes:
@@ -240,7 +329,14 @@ class YoloPersonDetector:
                 confidence = float(box.conf[0])
 
                 if class_id == _PERSON_CLASS_ID and confidence >= self.confidence_threshold:
-                    x1, y1, x2, y2 = box.xyxy[0].tolist()
+                    x1, y1, x2, y2 = _xyxy_tuple(box.xyxy[0])
+                    if scale_back != 1.0:
+                        x1, y1, x2, y2 = (
+                            x1 * scale_back,
+                            y1 * scale_back,
+                            x2 * scale_back,
+                            y2 * scale_back,
+                        )
                     persons.append({
                         "confidence": confidence,
                         "box": (x1, y1, x2, y2),
@@ -461,20 +557,25 @@ class YoloPersonDetector:
         present_since = None
         enter_grace = _env_float("PRESENCE_ENTER_SECONDS", 0.8)
 
-        print(f"[YOLO] Iniciando detección continua (cámara {camera_index})...")
+        print(
+            f"[YOLO] Iniciando detección continua local (cámara {camera_index}, "
+            f"intervalo {interval_seconds}s, imgsz={self.imgsz})..."
+        )
 
         self._stop_event.clear()
         with Camera(source=camera_index) as cam:
             while not self._stop_event.is_set():
                 frame = cam.read_frame()
                 if frame is None:
-                    time.sleep(0.1)
+                    self._interruptible_sleep(0.1)
                     continue
 
                 now = time.time()
-                # La detección YOLO corre cada *interval_seconds*; entre cuadros se
-                # reutiliza el último análisis para mantener el video fluido sin
-                # saturar la CPU/GPU.
+                # La detección YOLO corre cada *interval_seconds* SIEMPRE
+                # (haya o no personas delante de la cámara). No se apaga el
+                # modelo por sala vacía: solo se espacia el coste de inferencia.
+                # Entre detecciones, con feed activo se reutiliza last_analysis
+                # para el overlay MJPEG.
                 if now - last_detect_time >= interval_seconds:
                     last_detect_time = now
                     analysis = self.analyze_frame(frame)
@@ -537,11 +638,24 @@ class YoloPersonDetector:
                     last_custom_labels = current_custom_labels
 
                 # Publica el cuadro anotado SOLO si alguien mira el feed MJPEG.
-                # Sin suscriptores nos saltamos el imencode (caro a ~30 fps) por
-                # completo; la detección/eventos siguen corriendo igual.
+                # Sin suscriptores nos saltamos el imencode; la detección sigue
+                # al ritmo de *interval_seconds* aunque la sala esté vacía.
                 if self.has_feed_subscribers():
                     self._store_annotated_frame(frame, last_analysis)
-                time.sleep(0.03)
+                    # ~25–30 fps de captura/encode mientras alguien mira el feed.
+                    self._interruptible_sleep(0.03)
+                elif interval_seconds > 0:
+                    # Sin viewers: no girar a 30 fps. Dormir hasta la próxima
+                    # ventana de detección (el modelo no se apaga; solo espera).
+                    # Usar `now` (no un time() extra) mantiene tests deterministas
+                    # que monopatanean time.time() por iteración.
+                    remaining = interval_seconds - (now - last_detect_time)
+                    self._interruptible_sleep(
+                        remaining if remaining > 0 else interval_seconds
+                    )
+                else:
+                    # interval 0 = cada cuadro (tests / modo máximo).
+                    self._interruptible_sleep(0.0)
 
     # ------------------------------------------------------------------
     # Availability check

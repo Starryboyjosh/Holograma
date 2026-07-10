@@ -20,6 +20,21 @@ from utils import _env, _env_float, _env_int, _is_quiet, configure_utf8_stdio
 
 configure_utf8_stdio()
 
+# Caché de hotwords STT: reconstruir desde data/*.json en cada turnos era ~70 ms
+# y generaba decenas de miles de términos. Se invalida si cambia el mtime de las fuentes.
+_HOTWORDS_CACHE: dict[str, object] = {"signature": None, "value": None}
+
+
+def _hotwords_sources_signature(paths) -> str:
+    parts: list[str] = []
+    for path in paths:
+        try:
+            st = path.stat()
+            parts.append(f"{path.name}:{st.st_mtime_ns}:{st.st_size}")
+        except OSError:
+            parts.append(f"{path.name}:missing")
+    return "|".join(parts)
+
 
 # Frases que Whisper suele "alucinar" cuando sólo hay silencio, música o ruido.
 # Se descartan para que la IA no responda a comandos inexistentes.
@@ -326,105 +341,188 @@ class WhisperListener:
     # ------------------------------------------------------------------
 
     def _load_db_hotwords(self):
-        """Carga y genera una lista refinada de hotwords desde las bases de datos locales."""
+        """Hotwords desde data/ para Whisper (cacheadas; no releer JSON en cada turno).
+
+        Antes se parseaba ``honduras_info.json`` (~136 KB) en **cada** transcripción
+        y se generaban decenas de miles de términos (~70 ms y ruido al modelo).
+        Ahora: una sola construcción por cambio de mtime de los ficheros fuente,
+        acotada a ``WHISPER_MAX_HOTWORDS`` (default 400) priorizando siglas y
+        nombres cortos útiles para UNEV/Honduras.
+        """
         import json
         import re
 
-        data_dir = Path(__file__).resolve().parent.parent / "data"
-        hotwords = set()
+        global _HOTWORDS_CACHE
 
-        # 1. Leer open_vocabulary.txt
+        data_dir = Path(__file__).resolve().parent.parent / "data"
         vocab_path = data_dir / "open_vocabulary.txt"
+        unev_path = data_dir / "unev_info.json"
+        honduras_path = data_dir / "honduras_info.json"
+        sources = (vocab_path, unev_path, honduras_path)
+        signature = _hotwords_sources_signature(sources)
+        if (
+            _HOTWORDS_CACHE["signature"] == signature
+            and _HOTWORDS_CACHE["value"] is not None
+        ):
+            return _HOTWORDS_CACHE["value"]
+
+        hotwords: set[str] = set()
+
+        # 1. Vocabulario abierto del operador (prioridad alta).
         if vocab_path.exists():
             try:
-                with open(vocab_path, "r", encoding="utf-8") as f:
-                    for w in re.split(r"[,\n;]+", f.read()):
-                        w_clean = w.strip()
-                        if w_clean:
-                            hotwords.add(w_clean)
+                for w in re.split(r"[,\n;]+", vocab_path.read_text(encoding="utf-8")):
+                    w_clean = w.strip()
+                    if w_clean:
+                        hotwords.add(w_clean)
             except Exception:
                 pass
 
-        # Helper para extraer entidades específicas recursivamente
-        def extract_from_value(val):
-            if isinstance(val, str):
-                for m in re.finditer(r"\b[A-Z]{2,}\b", val):
-                    hotwords.add(m.group())
-                for m in re.finditer(r"\b[A-Z][a-záéíóúüñ]+(?:\s+(?:de|del|la|las|y)\s+[A-Z][a-záéíóúüñ]+)*\b", val):
-                    hotwords.add(m.group())
-                for m in re.finditer(
-                    r"\b(?:baleada|nacatamal|sisimite|comelenguas|alcitrón|garrobo|chortí|lenca|garífuna|misquito|tawahka|tolupan|pesh|voseo|leísmo)\w*\b",
-                    val,
-                    re.IGNORECASE
-                ):
-                    hotwords.add(m.group())
-            elif isinstance(val, dict):
-                for k, v in val.items():
-                    if isinstance(k, str) and len(k) > 2:
-                        if k not in (
-                            "name", "description", "main_claim", "approval", "address",
-                            "website", "programs", "values", "governance", "infrastructure",
-                            "academic_model", "student_support", "admission_requirements",
-                            "social_projection", "virtual_library", "international_presence",
-                            "proceres", "vulgarismos", "simbolos_patrios", "cultura_general"
-                        ):
-                            if k.islower() and not k.startswith("¿") and not k.endswith("?"):
-                                hotwords.add(k.title())
-                            else:
-                                hotwords.add(k)
-                    extract_from_value(v)
-            elif isinstance(val, list):
-                for item in val:
-                    extract_from_value(item)
+        def add_acronyms_and_names(text: str) -> None:
+            if not isinstance(text, str) or not text:
+                return
+            for m in re.finditer(r"\b[A-Z]{2,}\b", text):
+                hotwords.add(m.group())
+            for m in re.finditer(
+                r"\b[A-Z][a-záéíóúüñ]+(?:\s+(?:de|del|la|las|y)\s+[A-Z][a-záéíóúüñ]+)*\b",
+                text,
+            ):
+                hotwords.add(m.group())
 
-        # 2. Cargar unev_info.json
-        unev_path = data_dir / "unev_info.json"
+        def add_dict_keys(mapping: object, *, skip: set[str] | None = None) -> None:
+            if not isinstance(mapping, dict):
+                return
+            skip = skip or set()
+            for key in mapping:
+                if not isinstance(key, str) or len(key) <= 2 or key in skip:
+                    continue
+                if key.startswith("¿") or key.endswith("?"):
+                    # Preguntas de cultura general: demasiado largas como hotword.
+                    continue
+                hotwords.add(key.title() if key.islower() else key)
+
+        meta_keys = {
+            "name",
+            "description",
+            "main_claim",
+            "approval",
+            "address",
+            "website",
+            "programs",
+            "values",
+            "governance",
+            "infrastructure",
+            "academic_model",
+            "student_support",
+            "admission_requirements",
+            "social_projection",
+            "virtual_library",
+            "international_presence",
+            "proceres",
+            "vulgarismos",
+            "simbolos_patrios",
+            "cultura_general",
+            "full_name",
+        }
+
+        # 2. UNEV: nombres + claves de programas + acrónimos del resumen (no todo el JSON).
         if unev_path.exists():
             try:
-                with open(unev_path, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                    hotwords.add(data.get("name", "UNEV"))
-                    hotwords.add(data.get("full_name", ""))
-                    for name in ["Nathalie Cuadrado", "Cesar Arguijo", "Gladys Ferrufino", "Raúl Peña Moreno"]:
-                        hotwords.add(name)
-                    extract_from_value(data)
+                data = json.loads(unev_path.read_text(encoding="utf-8"))
+                hotwords.add(str(data.get("name") or "UNEV"))
+                full = str(data.get("full_name") or "")
+                if full:
+                    hotwords.add(full)
+                for name in (
+                    "Nathalie Cuadrado",
+                    "Cesar Arguijo",
+                    "Gladys Ferrufino",
+                    "Raúl Peña Moreno",
+                    "UNEV",
+                    "PRIND",
+                    "DES",
+                    "CES",
+                ):
+                    hotwords.add(name)
+                add_dict_keys(data.get("programs"), skip=meta_keys)
+                for field in ("name", "full_name", "main_claim", "approval"):
+                    add_acronyms_and_names(str(data.get(field) or ""))
             except Exception:
                 pass
 
-        # 3. Cargar honduras_info.json
-        honduras_path = data_dir / "honduras_info.json"
+        # 3. Honduras: categorías indexadas + lista curada. NO recorrer
+        # cultura_general (miles de entradas) ni todo el cuerpo del JSON.
         if honduras_path.exists():
             try:
-                with open(honduras_path, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                    hotwords.update([
-                        "Garífuna", "Lenca", "Creoles", "Misquito", "Tawahka", "Maya-Chortí",
-                        "Nahua", "Nahualt", "Tolupan", "Pesh", "PIAH", "baleada", "nacatamal",
-                        "pollo chuco", "alcitrón", "sisimite", "comelenguas", "pájaro-león",
-                        "yankopek", "Chikwai", "Mua Mua", "Oro Lenca"
-                    ])
-                    if "cultura_general" in data:
-                        for q in data["cultura_general"].keys():
-                            for genus in re.findall(
-                                r"\b(?:Abarema|Acanthocereus|Acanthoderes|Agalychnis|Amazilia|Amazona|Amorbia|Anelaphus|Anolis|Astrocaryum|Atlantihyla|Bothriechis|Brachymyrmex|Cedrela|Colobothea|Craugastor|Bolitoglossa)\b",
-                                q
-                            ):
-                                hotwords.add(genus)
-                    extract_from_value(data)
+                data = json.loads(honduras_path.read_text(encoding="utf-8"))
+                hotwords.update(
+                    [
+                        "Garífuna",
+                        "Lenca",
+                        "Creoles",
+                        "Misquito",
+                        "Tawahka",
+                        "Maya-Chortí",
+                        "Nahua",
+                        "Tolupan",
+                        "Pesh",
+                        "PIAH",
+                        "baleada",
+                        "nacatamal",
+                        "pollo chuco",
+                        "alcitrón",
+                        "sisimite",
+                        "Honduras",
+                        "Tegucigalpa",
+                    ]
+                )
+                for section in (
+                    "programs",
+                    "proceres",
+                    "vulgarismos",
+                    "simbolos_patrios",
+                ):
+                    add_dict_keys(data.get(section), skip=meta_keys)
+                add_acronyms_and_names(str(data.get("main_claim") or ""))
+                add_acronyms_and_names(str(data.get("approval") or ""))
             except Exception:
                 pass
 
-        # Limpiar y ordenar
-        cleaned = []
+        stop = {
+            "del",
+            "las",
+            "por",
+            "para",
+            "con",
+            "una",
+            "este",
+            "esta",
+            "como",
+            "pero",
+            "tipo",
+            "especie",
+            "dónde",
+            "quién",
+            "quiénes",
+            "cuál",
+            "cuáles",
+            "cómo",
+            "qué",
+        }
+        cleaned: list[str] = []
         for hw in sorted(hotwords):
             hw_clean = hw.strip(".,!?;:()-\" ")
-            if len(hw_clean) > 2 and not hw_clean.lower() in (
-                "del", "las", "por", "para", "con", "una", "este", "esta", "como", "pero",
-                "tipo", "especie", "dónde", "quién", "quiénes", "cuál", "cuáles", "cómo", "qué"
-            ):
+            if len(hw_clean) > 2 and hw_clean.lower() not in stop:
                 cleaned.append(hw_clean)
 
-        return " ".join(cleaned) if cleaned else None
+        # Preferir términos cortos (siglas, nombres) y acotar longitud del string.
+        max_n = max(50, _env_int("WHISPER_MAX_HOTWORDS", 400))
+        cleaned.sort(key=lambda s: (len(s), s.lower()))
+        cleaned = cleaned[:max_n]
+        result = " ".join(cleaned) if cleaned else None
+        _HOTWORDS_CACHE["signature"] = signature
+        _HOTWORDS_CACHE["value"] = result
+        return result
 
     def _transcribe_groq(self, audio_path):
         """Transcribe a WAV file using the Groq API with whisper-large-v3-turbo."""
@@ -484,9 +582,12 @@ class WhisperListener:
         )
         prompt = _env("WHISPER_PROMPT", default_prompt)
 
+        # beam_size=5 era el default de faster-whisper (más lento en CPU).
+        # WHISPER_BEAM_SIZE=1–2 recorta latencia con poca pérdida en español kiosco.
+        beam_size = max(1, _env_int("WHISPER_BEAM_SIZE", 2))
         transcribe_kwargs = {
             "language": self.language,
-            "beam_size": 5,
+            "beam_size": beam_size,
             "vad_filter": True,
             "vad_parameters": dict(min_silence_duration_ms=500),
             "initial_prompt": prompt,

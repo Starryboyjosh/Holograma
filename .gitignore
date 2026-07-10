@@ -1,54 +1,68 @@
+# Secrets and local runtime config
 .env
 .env.*
 !.env.example
+config.json
 
+# Python
 .venv/
 venv/
 env/
 __pycache__/
 *.py[cod]
 *$py.class
+*.egg-info/
+.eggs/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
-
-*.wav
-*.mp3
-*.log
-
-.DS_Store
-.idea/
-.vscode/
+.coverage
+htmlcov/
+.tox/
 dist/
-.zed/
-node_modules/
-whisper_cache/
-models/
 build/
-.git/
 
-# Local/generated model and binary artifacts.
+# Node / frontend / Tauri
+node_modules/
+frontend/dist/
+frontend/src-tauri/target/
+
+# Models and native TTS binaries (download locally)
+models/
 *.pt
 *.onnx
 *.onnx.json
 piper/
 piper_amd64.tar.gz
-piper_wrapper.sh
+whisper_cache/
+
+# Generated frontend static bundle (if present at repo root)
 static/
+
+# Media / audio scratch
+*.wav
+*.mp3
+*.log
+media/*.mp4
+
+# Operator / training scratch (JSON knowledge in data/ stays tracked)
+data/open_vocabulary.txt
+data/images/
+data/training_metadata.json
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/
+.zed/
+
+# Agent tooling local dirs (skills may be force-added; ignore the rest)
 .opencode/
 .claude/
 .codex/
-# Local runtime configuration.
-config.json
 
-# Graphify machine-specific cache/markers. Keep graph outputs tracked.
+# Graphify: keep graph outputs tracked; ignore machine-local markers/cache
 graphify-out/.graphify_python
 graphify-out/.graphify_root
 graphify-out/cache/
-
-# Runtime training scratch data.
-data/open_vocabulary.txt
-
-!data/
-!data/*
-!data/images/*
+graphify-out/.needs_update

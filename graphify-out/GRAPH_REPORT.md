@@ -1,16 +1,16 @@
-# Graph Report - Holograma  (2026-07-06)
+# Graph Report - Holograma  (2026-07-10)
 
 ## Corpus Check
-- 183 files · ~163,085 words
+- 185 files · ~164,877 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1496 nodes · 2372 edges · 122 communities (101 shown, 21 thin omitted)
+- 1536 nodes · 2444 edges · 127 communities (107 shown, 20 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 113 edges (avg confidence: 0.56)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `61ecc990`
+- Built from commit: `d2d1d260`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -97,6 +97,7 @@
 - [[_COMMUNITY_Community 83|Community 83]]
 - [[_COMMUNITY_Community 84|Community 84]]
 - [[_COMMUNITY_Community 85|Community 85]]
+- [[_COMMUNITY_Community 86|Community 86]]
 - [[_COMMUNITY_Community 87|Community 87]]
 - [[_COMMUNITY_Community 88|Community 88]]
 - [[_COMMUNITY_Community 89|Community 89]]
@@ -117,7 +118,6 @@
 - [[_COMMUNITY_Community 106|Community 106]]
 - [[_COMMUNITY_Community 107|Community 107]]
 - [[_COMMUNITY_Community 108|Community 108]]
-- [[_COMMUNITY_Community 109|Community 109]]
 - [[_COMMUNITY_Community 110|Community 110]]
 - [[_COMMUNITY_Community 111|Community 111]]
 - [[_COMMUNITY_Community 112|Community 112]]
@@ -128,60 +128,65 @@
 - [[_COMMUNITY_Community 117|Community 117]]
 - [[_COMMUNITY_Community 118|Community 118]]
 - [[_COMMUNITY_Community 121|Community 121]]
+- [[_COMMUNITY_Community 124|Community 124]]
+- [[_COMMUNITY_Community 125|Community 125]]
+- [[_COMMUNITY_Community 126|Community 126]]
+- [[_COMMUNITY_Community 127|Community 127]]
+- [[_COMMUNITY_Community 128|Community 128]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `HologramFanController` - 32 edges
-2. `ConnectionManager` - 30 edges
-3. `_env()` - 29 edges
-4. `YoloPersonDetector` - 29 edges
+1. `YoloPersonDetector` - 33 edges
+2. `HologramFanController` - 32 edges
+3. `ConnectionManager` - 30 edges
+4. `_env()` - 29 edges
 5. `HologramStateManager` - 27 edges
-6. `CameraContextProvider` - 25 edges
-7. `WhisperListener` - 25 edges
-8. `ConversationService` - 23 edges
+6. `ConversationService` - 25 edges
+7. `CameraContextProvider` - 25 edges
+8. `WhisperListener` - 25 edges
 9. `_is_quiet()` - 23 edges
 10. `LLMService` - 20 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `FakeLLM` --uses--> `ConnectionManager`  [INFERRED]
-  tests/test_app_services.py → app/connection.py
-- `FakeWS` --uses--> `ConnectionManager`  [INFERRED]
-  tests/test_app_services.py → app/connection.py
-- `RecordingConnection` --uses--> `ConnectionManager`  [INFERRED]
-  tests/test_app_services.py → app/connection.py
-- `FastAPI` --uses--> `ConversationService`  [INFERRED]
-  main.py → app/services/conversation.py
-- `BoundingBoxModel` --uses--> `ConversationService`  [INFERRED]
-  main.py → app/services/conversation.py
+- `FastAPI` --uses--> `ConnectionManager`  [INFERRED]
+  main.py → app/connection.py
+- `BoundingBoxModel` --uses--> `ConnectionManager`  [INFERRED]
+  main.py → app/connection.py
+- `CameraToggle` --uses--> `ConnectionManager`  [INFERRED]
+  main.py → app/connection.py
+- `ConfigUpdate` --uses--> `ConnectionManager`  [INFERRED]
+  main.py → app/connection.py
+- `HologramCommand` --uses--> `ConnectionManager`  [INFERRED]
+  main.py → app/connection.py
 
 ## Import Cycles
 - 1-file cycle: `main.py -> main.py`
 - 1-file cycle: `frontend/src-tauri/src/lib.rs -> frontend/src-tauri/src/lib.rs`
 
-## Communities (122 total, 21 thin omitted)
+## Communities (127 total, 20 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.07
-Nodes (63): ask_ai(), _build_camera_context(), _is_greeting(), _is_visual_question(), _build_messages(), _candidate_backends(), _chat_with_backend(), _chat_with_claude_native() (+55 more)
+Cohesion: 0.17
+Nodes (26): _build_messages(), _candidate_backends(), _chat_with_backend(), _chat_with_claude_native(), _chat_with_ollama(), _chat_with_openai_compatible(), generate_reply(), _is_mostly_english() (+18 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.09
-Nodes (17): Load the model if it hasn't been loaded yet., Load custom classes from training_metadata.json and open_vocabulary.txt., Combine custom classes and vocabulary into a single YOLOE text prompt., Detect custom objects using YOLOE text prompts from training data., Return a list of person detections in *frame*.          Each detection is a dict, Return person and custom object detections plus optional safe face count., Detect people using YOLOe26 via the Ultralytics library.      Parameters     ---, Return True if at least one person is detected in *frame*. (+9 more)
+Cohesion: 0.13
+Nodes (11): Argumentos comunes de inferencia local (latencia / recursos)., Opcional: reduce el frame grande antes de YOLO (sin apagar la cámara)., Load the YOLO model.  Downloads weights automatically on first run., Load the model if it hasn't been loaded yet., Load custom classes from training_metadata.json and open_vocabulary.txt., Combine custom classes and vocabulary into a single YOLOE text prompt., Detect custom objects using YOLOE text prompts from training data., Normaliza `box.xyxy[0]` de Ultralytics (tensor) o de fakes de test (list). (+3 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.12
-Nodes (18): get_powershell_command(), is_wsl(), play_wav_file(), play_wav_with_windows(), Return True when running inside Windows Subsystem for Linux., Return a PowerShell executable path on Windows or WSL if available., Run a PowerShell script and return True when it succeeds., Play a WAV file with Windows' built-in SoundPlayer. (+10 more)
+Cohesion: 0.18
+Nodes (14): get_piper_sample_rate(), is_wsl(), play_wav_file(), Read Piper sample rate from the model JSON sidecar when available., Return True when running inside Windows Subsystem for Linux., Play a WAV file on Windows, Linux, or macOS using available system tools., Use lightweight Linux TTS fallbacks when Piper is unavailable., Reproduce un fragmento con el TTS nativo del SO (fallback sin Piper). (+6 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.41
 Nodes (11): check_audio_devices(), check_dependencies(), check_environment(), check_import(), fail(), main(), ok(), test_camera() (+3 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.26
-Nodes (6): Protocol, _Camera, _Connection, _LLM, Orquestador de un turno de conversación (el corazón de la Fase 3).  Recibe un pr, Procesa un turno completo y devuelve el texto generado ("" si falló).
+Cohesion: 0.19
+Nodes (9): Protocol, _Camera, _Connection, _LLM, _pop_ready_speech(), Orquestador de un turno de conversación (el corazón de la Fase 3).  Recibe un pr, Procesa un turno completo y devuelve el texto generado ("" si falló)., Extrae cláusulas/oraciones listas para TTS desde un buffer de stream.      Misma (+1 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.08
-Nodes (36): _camera_detection_callback(), camera_feed_subscribe(), camera_feed_unsubscribe(), chat_to_voice(), clean_for_tts(), get_help_text(), get_latest_camera_jpeg(), handle_command() (+28 more)
+Cohesion: 0.11
+Nodes (20): ask_ai(), _build_camera_context(), _camera_detection_callback(), camera_feed_subscribe(), camera_feed_unsubscribe(), get_latest_camera_jpeg(), _is_greeting(), _is_visual_question() (+12 more)
 
 ### Community 6 - "Community 6"
 Cohesion: 0.09
@@ -212,12 +217,12 @@ Cohesion: 0.14
 Nodes (8): Camera, Release the camera resource., Return True if the camera is currently open., Capture one frame and save it to *output_path*.          Parameters         ----, Return True if OpenCV is importable., Cross-platform wrapper around OpenCV VideoCapture.      Supports both live camer, Open the camera or video source., Read a single frame.  Returns the frame or None on failure.
 
 ### Community 16 - "Community 16"
-Cohesion: 0.18
-Nodes (5): Emisor único de eventos hacia los clientes WebSocket.  El `main.py` actual mezcl, Lo único que el manager necesita de un WebSocket (FastAPI lo cumple)., Envía *message* a todas las conexiones; descarta las que fallen.          Se tom, Difunde *message* desde un hilo (voz/cámara) hacia el event loop.          Los p, WebSocketLike
+Cohesion: 0.11
+Nodes (12): AbstractEventLoop, ConnectionManager, Emisor único de eventos hacia los clientes WebSocket.  El `main.py` actual mezcl, Lo único que el manager necesita de un WebSocket (FastAPI lo cumple)., Registro de conexiones + difusión async, seguro ante sockets caídos., Envía *message* a todas las conexiones; descarta las que fallen.          Se tom, Captura el event loop del servidor para emitir desde hilos no-async.          Se, Difunde *message* desde un hilo (voz/cámara) hacia el event loop.          Los p (+4 more)
 
 ### Community 17 - "Community 17"
-Cohesion: 0.06
-Nodes (40): get_trigger_mode(), Detén la detección y libera la cámara (apagar la cámara = liberarla).      Señal, Solicita una escucha puntual (push-to-talk remoto, p. ej. la WebApp)., Cambia en caliente el modo de activación de voz. Devuelve el modo final., Devuelve el modo de activación de voz actual., request_listen(), set_trigger_mode(), stop_camera_thread() (+32 more)
+Cohesion: 0.08
+Nodes (38): BaseModel, FastAPI, _atomic_write_text(), BoundingBoxModel, ConfigUpdate, _get_holo_manager(), holo_command(), holo_connect() (+30 more)
 
 ### Community 18 - "Community 18"
 Cohesion: 0.06
@@ -249,20 +254,20 @@ Nodes (49): claudeDir, {
 }, fs, { getDefaultMode, getClaudeDir }, { getPonytailInstructions }, mode, output, path (+41 more)
 
 ### Community 24 - "Community 24"
-Cohesion: 0.32
-Nodes (13): get_unev_content(), Contenido institucional de UNEV (fuente única editable)., route_local_skill(), get_unev_info(), Contenido vigente (cacheado). Llamado por las skills en cada respuesta., get_admission_info(), get_approval_info(), get_location_info() (+5 more)
+Cohesion: 0.06
+Nodes (36): get_unev_content(), Contenido institucional de UNEV (fuente única editable)., _build_search_index(), get_program_info(), get_university_context(), Pre-calcula índices de texto normalizados en el arranque del servidor/script., route_local_skill(), _coerce() (+28 more)
 
 ### Community 25 - "Community 25"
 Cohesion: 0.24
 Nodes (11): configure_vision(), print_header(), Flujo interactivo para configurar el Cerebro (LLM local o Cloud)., Flujo interactivo para configurar los Oídos (Whisper)., Flujo interactivo para la Visión (YOLOv26 + OpenCV)., Ejecuta el asistente interactivo de configuración completo., Imprime el header estilo 'hermes setup'., run_setup() (+3 more)
 
 ### Community 26 - "Community 26"
-Cohesion: 0.15
-Nodes (22): ConnectionManager, Registro de conexiones + difusión async, seguro ante sockets caídos., BaseModel, ContextBuilder, FastAPI, BoundingBoxModel, CameraToggle, ConfigUpdate (+14 more)
+Cohesion: 0.18
+Nodes (8): Load the Faster-Whisper model on first use., Transcribe a WAV file using the Groq API with whisper-large-v3-turbo., Transcribe a WAV file and return the text.          Parameters         ---------, Return True if sounddevice and faster-whisper (or groq if selected) are importab, _env(), Helper to retrieve string environment variables., get_vision_status(), Return a human-readable status string for the vision subsystem.
 
 ### Community 27 - "Community 27"
-Cohesion: 0.24
-Nodes (6): _count_stores(), Gating del feed MJPEG: el detector solo codifica JPEG si alguien mira.  Codifica, Corre run_continuous unos cuadros y cuenta cuántas veces guardó un JPEG., test_run_continuous_encodes_with_subscriber(), test_run_continuous_skips_encode_without_subscribers(), Cross-platform OpenCV camera wrapper.  Regla de Oro A: Todas las rutas usan path
+Cohesion: 0.32
+Nodes (5): _count_stores(), Gating del feed MJPEG: el detector solo codifica JPEG si alguien mira.  Codifica, Corre run_continuous unos cuadros y cuenta cuántas veces guardó un JPEG., test_run_continuous_encodes_with_subscriber(), test_run_continuous_skips_encode_without_subscribers()
 
 ### Community 28 - "Community 28"
 Cohesion: 0.08
@@ -313,12 +318,12 @@ Cohesion: 0.18
 Nodes (10): description, keywords, license, name, pi, extensions, skills, scripts (+2 more)
 
 ### Community 40 - "Community 40"
-Cohesion: 0.14
-Nodes (11): fs, path, system, fs, path, system, get_piper_sample_rate(), Read Piper sample rate from the model JSON sidecar when available. (+3 more)
+Cohesion: 0.12
+Nodes (13): fs, path, system, fs, path, system, get_voices(), Path (+5 more)
 
 ### Community 41 - "Community 41"
-Cohesion: 0.24
-Nodes (11): _coerce(), load_unev_info(), Fuente única y editable de la información institucional de UNEV.  Antes, los dat, Normaliza ``data`` a la forma canónica, rellenando faltantes con el respaldo., Devuelve una lista de errores (vacía = válido) para mostrar al operador., Carga el contenido desde el JSON autoritativo; respaldo en código si falla., Recarga desde disco (tras una edición) y actualiza la caché., Valida, escribe atómicamente el JSON autoritativo y recarga la caché.      Lanza (+3 more)
+Cohesion: 0.19
+Nodes (18): get_providers(), Lista de proveedores de IA con metadata segura (sin secretos).      La interfaz, all_providers_public_info(), _canonical_provider(), configured_cloud_providers(), _norm(), Provider, provider_public_info() (+10 more)
 
 ### Community 42 - "Community 42"
 Cohesion: 0.20
@@ -332,9 +337,13 @@ Nodes (7): Cómo funciona, Desarrollo, Empaquetado del backend (PENDIENTE — pa
 Cohesion: 0.33
 Nodes (5): description, identifier, permissions, $schema, windows
 
+### Community 45 - "Community 45"
+Cohesion: 0.17
+Nodes (8): _FakeBox, _FakeBoxes, _FakeModel, _FakeResult, Opciones de inferencia YOLO local (imgsz / device / prepare_frame).  No cargan u, La sala vacía no debe saltarse la inferencia local., test_detect_persons_passes_imgsz_and_conf(), test_empty_room_still_runs_predict()
+
 ### Community 46 - "Community 46"
-Cohesion: 0.20
-Nodes (5): Draw person and custom-object boxes on a copy of *frame*., Encode *frame* (with overlay) to JPEG and cache it for streaming., Da de baja un cliente del feed MJPEG (el contador nunca baja de 0).          Al, ¿Hay al menos un cliente viendo el feed anotado?, Run a detection loop calling *callback(event, count)* on changes.          Param
+Cohesion: 0.09
+Nodes (14): Detect people using YOLO26 / YOLOE-26 via the Ultralytics library (local)., Return the number of people detected in *frame*., Open the camera, read one frame, and return the person count., Draw person and custom-object boxes on a copy of *frame*., Encode *frame* (with overlay) to JPEG and cache it for streaming., Return the most recent annotated frame as JPEG bytes (or None)., Registra un cliente del feed MJPEG (activa la codificación JPEG)., Da de baja un cliente del feed MJPEG (el contador nunca baja de 0).          Al (+6 more)
 
 ### Community 48 - "Community 48"
 Cohesion: 0.20
@@ -369,16 +378,16 @@ Cohesion: 0.16
 Nodes (17): Hologram, HologramConnection(), SaveResult, UnevProgram, useUnevContent(), ContentScreen(), FIELD_LABELS, Card() (+9 more)
 
 ### Community 58 - "Community 58"
-Cohesion: 0.33
-Nodes (4): _looks_like_hallucination(), Record audio from the default microphone until silence is detected.          Usa, Return True if *text* is empty or a known Whisper silence-hallucination., Record from the microphone and return the transcribed text.          Returns an
+Cohesion: 0.25
+Nodes (5): _looks_like_hallucination(), Record audio from the default microphone until silence is detected.          Usa, Write a float32 numpy array to a temporary WAV file.          Returns a ``pathli, Return True if *text* is empty or a known Whisper silence-hallucination., Record from the microphone and return the transcribed text.          Returns an
 
 ### Community 60 - "Community 60"
 Cohesion: 0.22
 Nodes (8): Configuración de IA — Contrato de proveedor y modelo, Cómo se elige el backend (`select_backend`), Endpoints relacionados, Endurecimiento de seguridad (Fase D.1), Interfaz de Ajustes, Límite de tokens y robustez de la respuesta, Proveedores soportados, Pruebas
 
 ### Community 61 - "Community 61"
-Cohesion: 0.28
-Nodes (5): Resuelve un nombre corto a la ruta de un .onnx incluido (0.4.x).          Ej.: `, Bloquea hasta detectar la palabra clave.          Parameters         ----------, Return True if openwakeword and sounddevice are importable., Detecta una palabra clave en streaming con openWakeWord., WakeWordDetector
+Cohesion: 0.50
+Nodes (4): pause_hologram(), Attempt to terminate any running TTS or audio players on Linux., Pause hologram activity: stop speaking, listening and seeing., stop_all_tts_processes()
 
 ### Community 62 - "Community 62"
 Cohesion: 0.39
@@ -425,28 +434,32 @@ Cohesion: 0.27
 Nodes (10): CameraState, SessionCtx, SessionProvider(), SessionValue, ChatSocket, useConfig(), useHologram(), UseHologramOptions (+2 more)
 
 ### Community 76 - "Community 76"
-Cohesion: 0.09
-Nodes (25): get_stt_status(), Speech-to-text listener using Faster-Whisper and sounddevice.  Regla de Oro A: T, Load the Faster-Whisper model on first use., Carga y genera una lista refinada de hotwords desde las bases de datos locales., Transcribe a WAV file using the Groq API with whisper-large-v3-turbo., Transcribe a WAV file and return the text.          Parameters         ---------, Return True if sounddevice and faster-whisper (or groq if selected) are importab, Return a human-readable status string for the STT subsystem. (+17 more)
+Cohesion: 0.11
+Nodes (14): PresenceManager, _hotwords_sources_signature(), Speech-to-text listener using Faster-Whisper and sounddevice.  Regla de Oro A: T, Hotwords desde data/ para Whisper (cacheadas; no releer JSON en cada turno)., Detector de palabra clave (wake word) con openWakeWord.  Regla de Oro A: Todas l, configure_utf8_stdio(), _env_float(), _env_int() (+6 more)
 
 ### Community 80 - "Community 80"
 Cohesion: 0.25
 Nodes (7): description, name, owner, name, url, plugins, $schema
 
 ### Community 81 - "Community 81"
-Cohesion: 0.13
-Nodes (20): ConversationService, FakeLLM, FakeWS, Capa de servicios de Fase 3 (`app/`).  Blinda los contratos del refactor sin nec, Sin loop ligado (arranque incompleto), no revienta el hilo; se descarta., Con `camera_context` inyectado, NO se construye contexto desde `call`., Puente hilo→loop: un hilo no-async difunde encolando en el loop ligado.      Es, RecordingConnection (+12 more)
+Cohesion: 0.09
+Nodes (27): ContextBuilder, ConversationService, LLMService, Servicio de LLM: envuelve la **única** ruta async de generación.  `llm_backend.s, CameraContextProvider, Registra el último análisis de la cámara (lo llamará VisionService)., StreamFn, FakeLLM (+19 more)
 
 ### Community 85 - "Community 85"
-Cohesion: 0.14
-Nodes (6): _build_search_index(), get_program_info(), get_university_context(), Pre-calcula índices de texto normalizados en el arranque del servidor/script., normalize_text(), Normalizes text by removing accents, lowercasing, and stripping whitespace.
+Cohesion: 0.12
+Nodes (21): chat_to_voice(), get_help_text(), handle_command(), main(), Text input loop: keyboard → LLM → TTS., Bloquea hasta que toque escuchar, según el modo dinámico actual.      Devuelve `, Voice input loop: microphone → Whisper → LLM → TTS (Regla B: sounddevice)., Parse flags and run the appropriate loop. (+13 more)
+
+### Community 86 - "Community 86"
+Cohesion: 0.24
+Nodes (13): get_backend_status(), get_selected_backend(), _humanize_probe_error(), _ollama_model_available(), _ollama_model_name(), _ollama_ready(), _ollama_server_available(), _ollama_tags() (+5 more)
 
 ### Community 87 - "Community 87"
 Cohesion: 0.25
 Nodes (7): Configure Default Mode, Deactivate, Levels, More, Ponytail Help, Skills, Update
 
 ### Community 88 - "Community 88"
-Cohesion: 0.08
-Nodes (19): Cierra y olvida todas las conexiones (apagado ordenado del servidor).          E, create_hologram_manager(), discover_devices(), HologramStateManager, =============================================================  Controlador Pytho, Cierra la conexión TCP limpiamente., Salta directamente al video número N de la playlist.          Args:, Escanea la red local buscando hologramas MISSYOU en el puerto 50200.      Útil c (+11 more)
+Cohesion: 0.09
+Nodes (18): create_hologram_manager(), discover_devices(), HologramStateManager, =============================================================  Controlador Pytho, Cierra la conexión TCP limpiamente., Salta directamente al video número N de la playlist.          Args:, Escanea la red local buscando hologramas MISSYOU en el puerto 50200.      Útil c, Construye el mapeo estado→índice respetando el orden real de la playlist.      L (+10 more)
 
 ### Community 89 - "Community 89"
 Cohesion: 0.25
@@ -465,8 +478,8 @@ Cohesion: 0.29
 Nodes (6): Caveman vs Ponytail — 2026-06-12, Ponytail v1 (before this benchmark), Ponytail v2 (after fixes), Ponytail v3 (skill file compressed), v1 findings, Verdict (v3)
 
 ### Community 94 - "Community 94"
-Cohesion: 0.50
-Nodes (4): pause_hologram(), Attempt to terminate any running TTS or audio players on Linux., Pause hologram activity: stop speaking, listening and seeing., stop_all_tts_processes()
+Cohesion: 0.25
+Nodes (8): get_powershell_command(), play_wav_with_windows(), Return a PowerShell executable path on Windows or WSL if available., Run a PowerShell script and return True when it succeeds., Play a WAV file with Windows' built-in SoundPlayer., Use Windows built-in speech synthesis when Piper is unavailable., run_powershell(), speak_with_windows_voice()
 
 ### Community 95 - "Community 95"
 Cohesion: 0.29
@@ -532,25 +545,41 @@ Nodes (3): Boundaries, Output, Scan
 Cohesion: 0.50
 Nodes (3): Boundaries, Output, Scan
 
+### Community 124 - "Community 124"
+Cohesion: 0.50
+Nodes (3): Utilidades de seguridad para Holograma UNEV.  Funciones puras (sin red, sin esta, Aplica :func:`redact_secrets` a una colección (útil para listas de logs)., redact_iter()
+
+### Community 125 - "Community 125"
+Cohesion: 0.22
+Nodes (9): get_trigger_mode(), Solicita una escucha puntual (push-to-talk remoto, p. ej. la WebApp)., Cambia en caliente el modo de activación de voz. Devuelve el modo final., Devuelve el modo de activación de voz actual., Lee ENTER de la terminal y solicita una escucha (push-to-talk en CLI)., request_listen(), set_trigger_mode(), _stdin_ptt_reader() (+1 more)
+
+### Community 126 - "Community 126"
+Cohesion: 0.40
+Nodes (5): Detén la detección y libera la cámara (apagar la cámara = liberarla).      Señal, stop_camera_thread(), CameraToggle, Enciende o **apaga** la cámara liberando el dispositivo.      Apagar no solo ocu, set_camera()
+
+### Community 127 - "Community 127"
+Cohesion: 0.50
+Nodes (4): clean_for_tts(), Remove characters that can sound awkward when read by a TTS engine., Divide el texto en fragmentos listos para TTS.     El primero usa cláusulas para, _split_into_chunks()
+
 ## Knowledge Gaps
 - **455 isolated node(s):** `AbstractEventLoop`, `StreamFn`, `ContextBuilder`, `name`, `private` (+450 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **21 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Path` connect `Community 40` to `Community 1`, `Community 2`, `Community 35`, `Community 36`, `Community 37`, `Community 34`, `Community 41`, `Community 76`, `Community 13`, `Community 15`, `Community 48`, `Community 61`, `Community 23`, `Community 91`, `Community 92`, `Community 29`, `Community 30`, `Community 95`?**
-  _High betweenness centrality (0.139) - this node is a cross-community bridge._
-- **Why does `YoloPersonDetector` connect `Community 1` to `Community 33`, `Community 3`, `Community 5`, `Community 76`, `Community 46`, `Community 15`?**
-  _High betweenness centrality (0.042) - this node is a cross-community bridge._
-- **Why does `HologramFanController` connect `Community 6` to `Community 88`, `Community 17`, `Community 26`?**
-  _High betweenness centrality (0.032) - this node is a cross-community bridge._
+- **Why does `Path` connect `Community 40` to `Community 1`, `Community 2`, `Community 13`, `Community 15`, `Community 23`, `Community 24`, `Community 26`, `Community 29`, `Community 30`, `Community 34`, `Community 35`, `Community 36`, `Community 37`, `Community 48`, `Community 58`, `Community 91`, `Community 92`, `Community 94`, `Community 95`?**
+  _High betweenness centrality (0.134) - this node is a cross-community bridge._
+- **Why does `HologramFanController` connect `Community 6` to `Community 88`, `Community 17`, `Community 126`, `Community 81`?**
+  _High betweenness centrality (0.041) - this node is a cross-community bridge._
+- **Why does `YoloPersonDetector` connect `Community 46` to `Community 128`, `Community 1`, `Community 33`, `Community 3`, `Community 5`, `Community 76`, `Community 15`, `Community 85`?**
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
 - **Are the 14 inferred relationships involving `Path` (e.g. with `get_piper_command_args()` and `get_piper_model_path()`) actually correct?**
   _`Path` has 14 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 2 inferred relationships involving `YoloPersonDetector` (e.g. with `Camera` and `FaceAnalyzer`) actually correct?**
+  _`YoloPersonDetector` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 11 inferred relationships involving `HologramFanController` (e.g. with `FastAPI` and `BoundingBoxModel`) actually correct?**
   _`HologramFanController` has 11 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 14 inferred relationships involving `ConnectionManager` (e.g. with `FastAPI` and `BoundingBoxModel`) actually correct?**
   _`ConnectionManager` has 14 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 2 inferred relationships involving `YoloPersonDetector` (e.g. with `Camera` and `FaceAnalyzer`) actually correct?**
-  _`YoloPersonDetector` has 2 INFERRED edges - model-reasoned connections that need verification._

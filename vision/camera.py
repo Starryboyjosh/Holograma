@@ -41,6 +41,13 @@ class Camera:
             source = str(source)
 
         self.source = source
+        # Resolución pedida al driver: baja el coste de capturar/copiar frames
+        # antes de YOLO. 0 o no definido = no forzar (default de la cámara).
+        # HOLOGRAM_CAMERA_WIDTH/HEIGHT permiten 640x480 en kioscos CPU-bound.
+        if width is None:
+            width = _env_int("HOLOGRAM_CAMERA_WIDTH", 0) or None
+        if height is None:
+            height = _env_int("HOLOGRAM_CAMERA_HEIGHT", 0) or None
         self.width = width
         self.height = height
         self._capture = None

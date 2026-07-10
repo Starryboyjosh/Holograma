@@ -253,10 +253,28 @@ def get_unev_info() -> dict:
     return _cache
 
 
+def _invalidate_skill_caches() -> None:
+    """Tras cambiar UNEV, invalidar contexto LLM y hotwords STT derivados."""
+    try:
+        from skills.university import invalidate_context_cache
+
+        invalidate_context_cache()
+    except Exception:
+        pass
+    try:
+        import stt.listener as stt_listener
+
+        stt_listener._HOTWORDS_CACHE["signature"] = None
+        stt_listener._HOTWORDS_CACHE["value"] = None
+    except Exception:
+        pass
+
+
 def reload() -> dict:
     """Recarga desde disco (tras una edición) y actualiza la caché."""
     global _cache
     _cache = load_unev_info()
+    _invalidate_skill_caches()
     return _cache
 
 
@@ -281,4 +299,5 @@ def save_unev_info(data: object, path: Path | str = JSON_PATH) -> dict:
 
     global _cache
     _cache = merged
+    _invalidate_skill_caches()
     return merged

@@ -1,12 +1,6 @@
-import os
 import time
 
-
-def _env_float(name, default):
-    try:
-        return float(os.getenv(name, str(default)))
-    except (TypeError, ValueError):
-        return default
+from utils import _env_float
 
 
 class PresenceManager:
