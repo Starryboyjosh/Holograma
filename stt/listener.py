@@ -24,6 +24,93 @@ configure_utf8_stdio()
 # y generaba decenas de miles de términos. Se invalida si cambia el mtime de las fuentes.
 _HOTWORDS_CACHE: dict[str, object] = {"signature": None, "value": None}
 
+# Vocabulario base del kiosco (siempre presente): dominio del asistente + UNEV +
+# Honduras. Se combina con data/unev_info.json, honduras_info.json y
+# open_vocabulary.txt. No meter aquí entradas de cultura_general (ruido).
+_CONTEXT_HOTWORDS: tuple[str, ...] = (
+    # Producto / kiosco
+    "Holograma",
+    "Holograma UNEV",
+    "holograma",
+    "asistente virtual",
+    "MISSYOU",
+    # Institución
+    "UNEV",
+    "Instituto Universitario de Educación Virtual",
+    "universidad virtual",
+    "educación virtual",
+    "San Pedro Sula",
+    "Cortés",
+    "ITEE",
+    "Instituto Tecnológico de Electricidad y Electrónica",
+    "Colonia Trejo",
+    "Raúl Peña Moreno",
+    "Nathalie Cuadrado",
+    "Cesar Arguijo",
+    "Gladys Ferrufino",
+    # Programas y admisión
+    "diseño gráfico",
+    "Diseño Gráfico",
+    "programación web",
+    "Programación Web",
+    "administración de empresas",
+    "Administración de Empresas",
+    "técnico universitario",
+    "Técnico Universitario",
+    "admisión",
+    "admisiones",
+    "matrícula",
+    "inscripción",
+    "carreras",
+    "créditos",
+    "cuatrimestre",
+    "ciclos intensivos",
+    "PRIND",
+    "Programa de Inmersión y Nivelación Digital",
+    "Agile Learning",
+    "Tecnoaulas",
+    "Biblioteca Virtual",
+    "SAT",
+    "Sistema de Alerta Temprana",
+    "CES",
+    "Consejo de Educación Superior",
+    "DES",
+    "Dirección de Educación Superior",
+    "UNAH",
+    "LMS",
+    # Honduras (contexto cultural frecuente en el kiosco)
+    "Honduras",
+    "Tegucigalpa",
+    "Comayagüela",
+    "La Ceiba",
+    "San Pedro Sula",
+    "Islas de la Bahía",
+    "Intibucá",
+    "Garífuna",
+    "Lenca",
+    "Creoles",
+    "Misquito",
+    "Miskito",
+    "Tawahka",
+    "Maya-Chortí",
+    "Nahua",
+    "Tolupan",
+    "Pesh",
+    "PIAH",
+    "Pueblos Indígenas y Afrohondureños",
+    "baleada",
+    "nacatamal",
+    "pollo chuco",
+    "alcitrón",
+    "sisimite",
+    "lluvia de peces",
+    "Yoro",
+    "Café de Honduras",
+    "Convenio 169",
+    "OIT",
+    "Academia Hondureña de la Lengua",
+)
+
 
 def _hotwords_sources_signature(paths) -> str:
     parts: list[str] = []
@@ -34,6 +121,36 @@ def _hotwords_sources_signature(paths) -> str:
         except OSError:
             parts.append(f"{path.name}:missing")
     return "|".join(parts)
+
+
+def _normalize_hotword(term: str) -> str:
+    """Limpia un término de hotword (paréntesis rotos, puntuación, basura)."""
+    import re
+
+    hw = (term or "").strip()
+    if not hw:
+        return ""
+    # Quitar colas de paréntesis/corchetes mal cerrados o años largos entre ().
+    hw = re.sub(r"\s*[\(\[][^)\]]*$", "", hw)
+    hw = re.sub(r"\s*[\(\[].*?[\)\]]\s*", " ", hw)
+    hw = hw.strip(".,!?;:()-\"' \t")
+    hw = re.sub(r"\s+", " ", hw)
+    return hw
+
+
+def _hotword_priority(term: str) -> tuple:
+    """Orden: siglas y nombres cortos primero; frases largas al final."""
+    t = term.strip()
+    # Siglas puras (CES, UNEV, PRIND) → máxima prioridad.
+    if t.isupper() and 2 <= len(t) <= 8 and t.isalpha():
+        return (0, len(t), t.lower())
+    # Nombres propios cortos / 1-2 palabras.
+    words = t.split()
+    if len(words) <= 2 and len(t) <= 28:
+        return (1, len(t), t.lower())
+    if len(words) <= 4 and len(t) <= 48:
+        return (2, len(t), t.lower())
+    return (3, len(t), t.lower())
 
 
 # Frases que Whisper suele "alucinar" cuando sólo hay silencio, música o ruido.
@@ -341,13 +458,25 @@ class WhisperListener:
     # ------------------------------------------------------------------
 
     def _load_db_hotwords(self):
-        """Hotwords desde data/ para Whisper (cacheadas; no releer JSON en cada turno).
+        """Hotwords según el contexto del kiosco (cacheadas por mtime de data/).
 
-        Antes se parseaba ``honduras_info.json`` (~136 KB) en **cada** transcripción
-        y se generaban decenas de miles de términos (~70 ms y ruido al modelo).
-        Ahora: una sola construcción por cambio de mtime de los ficheros fuente,
-        acotada a ``WHISPER_MAX_HOTWORDS`` (default 400) priorizando siglas y
-        nombres cortos útiles para UNEV/Honduras.
+        Fuentes (en orden de utilidad):
+        1. ``_CONTEXT_HOTWORDS`` — dominio Holograma/UNEV/Honduras (código).
+        2. ``data/open_vocabulary.txt`` — vocabulario del operador (visión/STT).
+        3. ``data/unev_info.json`` — nombre, programas, siglas, sede.
+        4. ``data/honduras_info.json`` — pueblos, próceres, símbolos (no
+           ``cultura_general``: miles de Q&A ruidosas).
+
+        Antes se parseaba todo ``honduras_info.json`` en cada turno (~70 ms y
+        decenas de miles de términos). Ahora: una construcción por cambio de
+        mtime, acotada a ``WHISPER_MAX_HOTWORDS`` (default 400), priorizando
+        siglas y nombres cortos.
+
+        Returns
+        -------
+        str | None
+            Términos separados por espacio (formato faster-whisper ``hotwords``
+            y reutilizable como base del ``prompt`` de Groq).
         """
         import json
         import re
@@ -366,28 +495,34 @@ class WhisperListener:
         ):
             return _HOTWORDS_CACHE["value"]
 
-        hotwords: set[str] = set()
+        # Lista ordenada: baseline primero, luego operador, luego data JSON.
+        ordered: list[str] = []
+        seen_lower: set[str] = set()
 
-        # 1. Vocabulario abierto del operador (prioridad alta).
-        if vocab_path.exists():
-            try:
-                for w in re.split(r"[,\n;]+", vocab_path.read_text(encoding="utf-8")):
-                    w_clean = w.strip()
-                    if w_clean:
-                        hotwords.add(w_clean)
-            except Exception:
-                pass
+        def add(term: object) -> None:
+            if not isinstance(term, str):
+                return
+            cleaned = _normalize_hotword(term)
+            if len(cleaned) <= 2 or len(cleaned) > 80:
+                return
+            key = cleaned.lower()
+            if key in seen_lower:
+                return
+            seen_lower.add(key)
+            ordered.append(cleaned)
 
         def add_acronyms_and_names(text: str) -> None:
             if not isinstance(text, str) or not text:
                 return
-            for m in re.finditer(r"\b[A-Z]{2,}\b", text):
-                hotwords.add(m.group())
+            for m in re.finditer(r"\b[A-ZÁÉÍÓÚÜÑ]{2,8}\b", text):
+                add(m.group())
             for m in re.finditer(
-                r"\b[A-Z][a-záéíóúüñ]+(?:\s+(?:de|del|la|las|y)\s+[A-Z][a-záéíóúüñ]+)*\b",
+                r"\b[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]+"
+                r"(?:\s+(?:de|del|la|las|los|y|e)\s+"
+                r"[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]+)+\b",
                 text,
             ):
-                hotwords.add(m.group())
+                add(m.group())
 
         def add_dict_keys(mapping: object, *, skip: set[str] | None = None) -> None:
             if not isinstance(mapping, dict):
@@ -399,7 +534,15 @@ class WhisperListener:
                 if key.startswith("¿") or key.endswith("?"):
                     # Preguntas de cultura general: demasiado largas como hotword.
                     continue
-                hotwords.add(key.title() if key.islower() else key)
+                # Mantener minúsculas de programas ("diseño gráfico") y Title Case
+                # de nombres de personas en claves.
+                if key.islower() and " " in key:
+                    add(key)
+                    add(key.title())
+                elif key.islower():
+                    add(key.title())
+                else:
+                    add(key)
 
         meta_keys = {
             "name",
@@ -423,59 +566,51 @@ class WhisperListener:
             "simbolos_patrios",
             "cultura_general",
             "full_name",
+            "mission",
+            "vision",
+            "faculty",
         }
 
-        # 2. UNEV: nombres + claves de programas + acrónimos del resumen (no todo el JSON).
+        # 0. Contexto fijo del kiosco (siempre, aunque falten JSON).
+        for term in _CONTEXT_HOTWORDS:
+            add(term)
+
+        # 1. Vocabulario abierto del operador (visión / personalizado).
+        if vocab_path.exists():
+            try:
+                for w in re.split(r"[,\n;]+", vocab_path.read_text(encoding="utf-8")):
+                    add(w)
+            except Exception:
+                pass
+
+        # 2. UNEV: identidad + programas + siglas de campos clave.
         if unev_path.exists():
             try:
                 data = json.loads(unev_path.read_text(encoding="utf-8"))
-                hotwords.add(str(data.get("name") or "UNEV"))
-                full = str(data.get("full_name") or "")
-                if full:
-                    hotwords.add(full)
-                for name in (
-                    "Nathalie Cuadrado",
-                    "Cesar Arguijo",
-                    "Gladys Ferrufino",
-                    "Raúl Peña Moreno",
-                    "UNEV",
-                    "PRIND",
-                    "DES",
-                    "CES",
-                ):
-                    hotwords.add(name)
+                add(data.get("name") or "UNEV")
+                add(data.get("full_name") or "")
                 add_dict_keys(data.get("programs"), skip=meta_keys)
-                for field in ("name", "full_name", "main_claim", "approval"):
+                for field in (
+                    "name",
+                    "full_name",
+                    "main_claim",
+                    "approval",
+                    "address",
+                    "academic_model",
+                    "faculty",
+                    "admission_requirements",
+                    "social_projection",
+                    "values",
+                ):
                     add_acronyms_and_names(str(data.get(field) or ""))
             except Exception:
                 pass
 
-        # 3. Honduras: categorías indexadas + lista curada. NO recorrer
-        # cultura_general (miles de entradas) ni todo el cuerpo del JSON.
+        # 3. Honduras: secciones indexadas + address (lugares). NO cultura_general.
         if honduras_path.exists():
             try:
                 data = json.loads(honduras_path.read_text(encoding="utf-8"))
-                hotwords.update(
-                    [
-                        "Garífuna",
-                        "Lenca",
-                        "Creoles",
-                        "Misquito",
-                        "Tawahka",
-                        "Maya-Chortí",
-                        "Nahua",
-                        "Tolupan",
-                        "Pesh",
-                        "PIAH",
-                        "baleada",
-                        "nacatamal",
-                        "pollo chuco",
-                        "alcitrón",
-                        "sisimite",
-                        "Honduras",
-                        "Tegucigalpa",
-                    ]
-                )
+                add(data.get("name") or "Honduras")
                 for section in (
                     "programs",
                     "proceres",
@@ -483,18 +618,20 @@ class WhisperListener:
                     "simbolos_patrios",
                 ):
                     add_dict_keys(data.get(section), skip=meta_keys)
-                add_acronyms_and_names(str(data.get("main_claim") or ""))
-                add_acronyms_and_names(str(data.get("approval") or ""))
+                for field in ("main_claim", "approval", "address", "description"):
+                    add_acronyms_and_names(str(data.get(field) or ""))
             except Exception:
                 pass
 
         stop = {
             "del",
             "las",
+            "los",
             "por",
             "para",
             "con",
             "una",
+            "uno",
             "este",
             "esta",
             "como",
@@ -508,24 +645,55 @@ class WhisperListener:
             "cuáles",
             "cómo",
             "qué",
+            "the",
+            "and",
+            "for",
         }
-        cleaned: list[str] = []
-        for hw in sorted(hotwords):
-            hw_clean = hw.strip(".,!?;:()-\" ")
-            if len(hw_clean) > 2 and hw_clean.lower() not in stop:
-                cleaned.append(hw_clean)
+        cleaned = [t for t in ordered if t.lower() not in stop]
 
-        # Preferir términos cortos (siglas, nombres) y acotar longitud del string.
+        # Priorizar siglas/nombres cortos; respetar tope configurable.
         max_n = max(50, _env_int("WHISPER_MAX_HOTWORDS", 400))
-        cleaned.sort(key=lambda s: (len(s), s.lower()))
+        cleaned.sort(key=_hotword_priority)
         cleaned = cleaned[:max_n]
         result = " ".join(cleaned) if cleaned else None
         _HOTWORDS_CACHE["signature"] = signature
         _HOTWORDS_CACHE["value"] = result
         return result
 
+    def _build_stt_prompt(self) -> str:
+        """Prompt de contexto para Whisper (local ``initial_prompt`` y Groq ``prompt``).
+
+        Whisper/Groq no usan el mismo parámetro ``hotwords`` de faster-whisper;
+        el prompt guía el léxico (siglas UNEV, programas, topónimos).
+        ``WHISPER_PROMPT`` en env/config lo sustituye por completo si está definido.
+        """
+        override = (_env("WHISPER_PROMPT") or "").strip()
+        if override:
+            return override
+
+        prefix = (
+            "Asistente del Holograma UNEV en Honduras. "
+            "Universidad virtual: admisión, carreras y cultura hondureña. "
+            "Vocabulario: "
+        )
+        # Límite práctico del prompt de Whisper (~224 tokens ≈ 800-900 chars).
+        max_chars = max(200, _env_int("WHISPER_PROMPT_MAX_CHARS", 800))
+        budget = max_chars - len(prefix)
+        hot = self._load_db_hotwords() or ""
+        if budget <= 0:
+            return prefix.strip()
+        if len(hot) > budget:
+            # Cortar en el último espacio para no partir un término.
+            cut = hot[:budget].rsplit(" ", 1)[0]
+            hot = cut if cut else hot[:budget]
+        return prefix + hot
+
     def _transcribe_groq(self, audio_path):
-        """Transcribe a WAV file using the Groq API with whisper-large-v3-turbo."""
+        """Transcribe a WAV file using the Groq API with whisper-large-v3-turbo.
+
+        Groq no expone ``hotwords`` de faster-whisper; se inyecta el mismo
+        vocabulario de contexto vía ``prompt`` + ``language``.
+        """
         api_key = _env("GROQ_API_KEY")
         if not api_key:
             raise ValueError(
@@ -543,18 +711,23 @@ class WhisperListener:
 
         client = Groq(api_key=api_key)
         audio_path = Path(audio_path)
+        prompt = self._build_stt_prompt()
 
         if not _is_quiet():
             print(f"[STT] Transcribiendo '{audio_path.name}' con Groq (whisper-large-v3-turbo)...")
 
         try:
             with open(audio_path, "rb") as file:
-                transcription = client.audio.transcriptions.create(
-                    file=(audio_path.name, file.read()),
-                    model="whisper-large-v3-turbo",
-                    temperature=0.0,
-                    response_format="verbose_json",
-                )
+                create_kwargs = {
+                    "file": (audio_path.name, file.read()),
+                    "model": "whisper-large-v3-turbo",
+                    "temperature": 0.0,
+                    "response_format": "verbose_json",
+                    "language": self.language or "es",
+                }
+                if prompt:
+                    create_kwargs["prompt"] = prompt
+                transcription = client.audio.transcriptions.create(**create_kwargs)
                 return transcription.text.strip()
         except Exception as error:
             if not _is_quiet():
@@ -575,12 +748,8 @@ class WhisperListener:
 
         model = self._load_model()
 
-        # Prompt inicial para contextualizar el vocabulario de la universidad (mejora transcripción de siglas)
-        default_prompt = (
-            "UNEV, universidad virtual de Honduras, diseño gráfico, "
-            "programación web, administración de empresas, admisión, carreras."
-        )
-        prompt = _env("WHISPER_PROMPT", default_prompt)
+        # Prompt + hotwords del contexto UNEV/Honduras/kiosco.
+        prompt = self._build_stt_prompt()
 
         # beam_size=5 era el default de faster-whisper (más lento en CPU).
         # WHISPER_BEAM_SIZE=1–2 recorta latencia con poca pérdida en español kiosco.
@@ -598,7 +767,6 @@ class WhisperListener:
             "no_speech_threshold": 0.6,
         }
 
-        # Cargar hotwords dinámicas
         db_hotwords = self._load_db_hotwords()
         if db_hotwords:
             transcribe_kwargs["hotwords"] = db_hotwords
