@@ -41,6 +41,16 @@ def test_max_tokens_non_positive_falls_back(monkeypatch):
     assert lb._max_tokens() == 450
 
 
+def test_request_timeout_default(monkeypatch):
+    monkeypatch.delenv("LLM_REQUEST_TIMEOUT", raising=False)
+    assert lb._request_timeout() == 90.0
+
+
+def test_request_timeout_override(monkeypatch):
+    monkeypatch.setenv("LLM_REQUEST_TIMEOUT", "30")
+    assert lb._request_timeout() == 30.0
+
+
 # --------------------------------------------------------------------------- #
 # _postprocess_reply(): el inglés ya no se descarta
 # --------------------------------------------------------------------------- #
@@ -57,6 +67,34 @@ def test_postprocess_strips_thinking_block():
 def test_postprocess_empty_asks_to_retry():
     out = lb._postprocess_reply("    ")
     assert "repetir" in out.lower()
+
+
+# --------------------------------------------------------------------------- #
+# CoT mirror: log en terminal del razonamiento (diagnóstico de atascos)
+# --------------------------------------------------------------------------- #
+def test_cot_stream_mirror_counts_think_and_answer(capsys, monkeypatch):
+    monkeypatch.setenv("LLM_LOG_COT", "1")
+    mirror = lb._CotStreamMirror("ollama", "test-model")
+    # Etiqueta de apertura partida entre chunks (caso real de streaming).
+    mirror.feed("<thi")
+    mirror.feed("nk>paso 1")
+    mirror.feed("</think>")
+    mirror.feed("Hola UNEV")
+    mirror.finish()
+    assert mirror.think_chars > 0
+    assert mirror.answer_chars == len("Hola UNEV")
+    out = capsys.readouterr().out
+    assert "[CoT]" in out
+    assert "Hola UNEV" in out
+    assert "stream end" in out
+
+
+def test_cot_log_disabled_is_silent(capsys, monkeypatch):
+    monkeypatch.setenv("LLM_LOG_COT", "0")
+    mirror = lb._CotStreamMirror("ollama", "m")
+    mirror.feed("<think>secreto</think>ok")
+    mirror.finish()
+    assert capsys.readouterr().out == ""
 
 
 # --------------------------------------------------------------------------- #

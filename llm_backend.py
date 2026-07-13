@@ -59,6 +59,23 @@ def _max_tokens() -> int:
     return value if value > 0 else 450
 
 
+def _request_timeout() -> float:
+    """Timeout HTTP del cliente LLM (segundos). Evita colgarse sin fin en la nube.
+
+    La ruta de voz usa chat no-stream (``generate_reply``). Sin timeout el SDK
+    de OpenAI puede esperar indefinidamente a OpenRouter y la terminal solo
+    muestra ``intento no-stream`` hasta que el usuario mata el proceso.
+    """
+    raw = _env("LLM_REQUEST_TIMEOUT")
+    if not raw:
+        return 90.0
+    try:
+        value = float(raw)
+    except ValueError:
+        return 90.0
+    return value if value > 0 else 90.0
+
+
 def _ollama_request(path, payload=None, timeout=30.0):
     url = f"{_ollama_base_url()}{path}"
     data = None
@@ -372,18 +389,64 @@ def _require(provider, env=None):
 
 
 def _chat_with_openai_compatible(provider, messages):
-    """Chat con cualquier backend compatible con OpenAI (openrouter/openai/nvidia/custom)."""
+    """Chat OpenAI-compatible con stream interno + CoT en terminal + timeout.
+
+    Aunque la API de voz pide una respuesta completa (``generate_reply``),
+    streameamos por debajo para:
+    1. Ver el CoT/tokens en vivo (antes solo aparecía al terminar o nunca).
+    2. Aplicar timeout HTTP y no colgarse indefinidamente en OpenRouter.
+    """
     from openai import OpenAI
 
     api_key, model, base_url = _require(provider)
-    client = OpenAI(api_key=api_key or "none", base_url=base_url or None)
-    response = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature=0.6,
-        max_tokens=_max_tokens(),
+    timeout = _request_timeout()
+    if _cot_log_enabled():
+        print(
+            f"[LLM/CoT] request provider={provider} model={model} "
+            f"timeout={timeout:.0f}s mode=stream-accumulate",
+            flush=True,
+        )
+    client = OpenAI(
+        api_key=api_key or "none",
+        base_url=base_url or None,
+        timeout=timeout,
     )
-    return (response.choices[0].message.content or "").strip()
+    mirror = _CotStreamMirror(provider, model)
+    parts: list[str] = []
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=0.1,
+            max_tokens=_max_tokens(),
+            stream=True,
+        )
+        for chunk in response:
+            if not chunk.choices:
+                continue
+            delta = chunk.choices[0].delta
+            reasoning = _delta_reasoning(delta)
+            if reasoning:
+                mirror.feed_reasoning(reasoning)
+            content = delta.content if delta is not None else None
+            if content:
+                mirror.feed(content)
+                parts.append(content)
+        mirror.finish()
+    except Exception as error:
+        mirror.finish(error=str(error))
+        raise LLMBackendError(
+            f"{provider}/{model} falló o agotó timeout ({timeout:.0f}s): {error}"
+        ) from error
+
+    text = "".join(parts).strip()
+    if not text and _cot_log_enabled():
+        print(
+            f"[LLM/CoT] AVISO: {provider}/{model} cerró el stream sin texto. "
+            "Revisa API key, créditos/cuota y el nombre del modelo.",
+            flush=True,
+        )
+    return text
 
 
 def _strip_qwen_thinking(text):
@@ -405,8 +468,208 @@ def _strip_qwen_thinking(text):
     return text.strip()
 
 
+def _cot_log_enabled() -> bool:
+    """¿Imprimir el CoT/razonamiento crudo en la terminal?
+
+    Activo por defecto para diagnosticar atascos (modelos que piensan mucho
+    y no emiten respuesta). Desactivar con ``LLM_LOG_COT=0``.
+    """
+    return _env("LLM_LOG_COT", "1").lower() not in ("0", "false", "no", "off")
+
+
+def _cot_print(text: str, *, end: str = "", prefix: str | None = None) -> None:
+    """Escribe en stdout con flush inmediato (imprescindible para ver el stream en vivo)."""
+    if not _cot_log_enabled() or text is None:
+        return
+    if prefix:
+        print(prefix, end="", flush=True)
+    print(text, end=end, flush=True)
+
+
+def _dump_raw_reply(label: str, text: str, *, extra: str | None = None) -> None:
+    """Vuelca la respuesta cruda (CoT incluido) al terminar un turno no-streaming."""
+    if not _cot_log_enabled():
+        return
+    print(f"\n[LLM/CoT] --- raw reply ({label}) ---", flush=True)
+    if extra:
+        print(extra, flush=True)
+    if text:
+        print(text, end="" if text.endswith("\n") else "\n", flush=True)
+    else:
+        print("(vacío)", flush=True)
+    stripped = _strip_qwen_thinking(text or "")
+    think_chars = max(0, len(text or "") - len(stripped))
+    print(
+        f"[LLM/CoT] --- fin raw | total={len(text or '')} chars, "
+        f"~cot={think_chars}, respuesta={len(stripped)} ---",
+        flush=True,
+    )
+
+
+class _CotStreamMirror:
+    """Espejo del stream LLM en terminal: CoT + respuesta, en vivo.
+
+    Detecta bloques ``<think>…</think>`` (y variantes) para etiquetar el
+    tramo de razonamiento. Si el proveedor manda ``reasoning_content``
+    aparte, también lo imprime. Sirve para ver *dónde* se traba el modelo
+    cuando "no responde".
+    """
+
+    _OPEN_RE = re.compile(
+        r"<\s*(think|thinking|reasoning|analysis|scratchpad)\s*>",
+        re.IGNORECASE,
+    )
+    _CLOSE_RE = re.compile(
+        r"<\s*/\s*(think|thinking|reasoning|analysis|scratchpad)\s*>",
+        re.IGNORECASE,
+    )
+
+    def __init__(self, backend: str, model: str | None = None):
+        self.backend = backend
+        self.model = model or "?"
+        self.t0 = time.monotonic()
+        self.first_token_at: float | None = None
+        self.in_think = False
+        self.think_chars = 0
+        self.answer_chars = 0
+        self.reasoning_chars = 0  # campo separado (reasoning_content)
+        self.chunks = 0
+        self._header_done = False
+        # Cola corta para no partir etiquetas a medias entre chunks.
+        self._tail = ""
+
+    def _ensure_header(self) -> None:
+        if self._header_done or not _cot_log_enabled():
+            return
+        self._header_done = True
+        print(
+            f"\n[LLM/CoT] stream start backend={self.backend} model={self.model}",
+            flush=True,
+        )
+
+    def _mark_first(self) -> None:
+        if self.first_token_at is None:
+            self.first_token_at = time.monotonic()
+            latency = self.first_token_at - self.t0
+            _cot_print(f"[LLM/CoT] primer token a {latency:.1f}s\n")
+
+    def feed_reasoning(self, text: str) -> None:
+        """Campo de razonamiento separado (OpenRouter/DeepSeek/Qwen, etc.)."""
+        if not text:
+            return
+        self._ensure_header()
+        self._mark_first()
+        self.reasoning_chars += len(text)
+        self.chunks += 1
+        if not self.in_think:
+            _cot_print("\n[CoT] ", end="")
+            self.in_think = True  # visual: estamos en tramo de pensamiento
+        _cot_print(text)
+
+    def feed(self, text: str) -> None:
+        """Trozo de ``delta.content`` (puede mezclar CoT etiquetado + respuesta)."""
+        if not text:
+            return
+        self._ensure_header()
+        self._mark_first()
+        self.chunks += 1
+
+        if not _cot_log_enabled():
+            # Seguimos contando por si alguien habilita el log a mitad de turno.
+            self.answer_chars += len(text)
+            return
+
+        buf = self._tail + text
+        self._tail = ""
+        i = 0
+        while i < len(buf):
+            if self.in_think:
+                m = self._CLOSE_RE.search(buf, i)
+                if not m:
+                    # Puede estar cortada la etiqueta de cierre al final.
+                    hold = min(24, len(buf) - i)
+                    piece = buf[i : len(buf) - hold] if hold else buf[i:]
+                    self._tail = buf[len(buf) - hold :] if hold else ""
+                    if piece:
+                        self.think_chars += len(piece)
+                        _cot_print(piece)
+                    return
+                piece = buf[i : m.start()]
+                if piece:
+                    self.think_chars += len(piece)
+                    _cot_print(piece)
+                _cot_print(m.group(0))  # cierra etiqueta visible
+                self.think_chars += len(m.group(0))
+                self.in_think = False
+                _cot_print("\n[LLM] ")
+                i = m.end()
+            else:
+                m = self._OPEN_RE.search(buf, i)
+                if not m:
+                    hold = min(24, len(buf) - i)
+                    piece = buf[i : len(buf) - hold] if hold else buf[i:]
+                    self._tail = buf[len(buf) - hold :] if hold else ""
+                    if piece:
+                        self.answer_chars += len(piece)
+                        _cot_print(piece)
+                    return
+                piece = buf[i : m.start()]
+                if piece:
+                    self.answer_chars += len(piece)
+                    _cot_print(piece)
+                _cot_print(f"\n[CoT] {m.group(0)}")
+                self.think_chars += len(m.group(0))
+                self.in_think = True
+                i = m.end()
+
+    def finish(self, *, error: str | None = None) -> None:
+        if not _cot_log_enabled():
+            return
+        # Vaciar cola residual.
+        if self._tail:
+            if self.in_think:
+                self.think_chars += len(self._tail)
+            else:
+                self.answer_chars += len(self._tail)
+            _cot_print(self._tail)
+            self._tail = ""
+        elapsed = time.monotonic() - self.t0
+        first = (
+            f"{self.first_token_at - self.t0:.1f}s"
+            if self.first_token_at is not None
+            else "nunca"
+        )
+        print(
+            f"\n[LLM/CoT] stream end backend={self.backend} "
+            f"elapsed={elapsed:.1f}s first_token={first} "
+            f"chunks={self.chunks} cot={self.think_chars + self.reasoning_chars} "
+            f"respuesta={self.answer_chars}"
+            + (f" error={error}" if error else ""),
+            flush=True,
+        )
+        if self.first_token_at is None and not error:
+            print(
+                "[LLM/CoT] AVISO: el backend no emitió ningún token "
+                "(timeout, modelo cargando, o respuesta vacía).",
+                flush=True,
+            )
+        elif self.answer_chars == 0 and (self.think_chars + self.reasoning_chars) > 0:
+            print(
+                "[LLM/CoT] AVISO: solo hubo razonamiento (CoT), sin respuesta "
+                "útil. Suele pasar si LLM_MAX_TOKENS se agota en el thinking.",
+                flush=True,
+            )
+
+
 def _chat_with_ollama(messages):
     model = _ollama_model_name()
+    timeout = _env_float("OLLAMA_TIMEOUT_SECONDS", 60.0)
+    if _cot_log_enabled():
+        print(
+            f"[LLM/CoT] request provider=ollama model={model} "
+            f"timeout={timeout:.0f}s mode=blocking",
+            flush=True,
+        )
     payload = {
         "model": model,
         "messages": messages,
@@ -415,7 +678,7 @@ def _chat_with_ollama(messages):
         # tiempo de recarga (~60s en CPU) en cada pregunta.
         "keep_alive": _env("OLLAMA_KEEP_ALIVE", "30m"),
         "options": {
-            "temperature": 0.6,
+            "temperature": 0.1,
             "top_p": 0.9,
             "num_predict": _max_tokens(),
         },
@@ -427,7 +690,7 @@ def _chat_with_ollama(messages):
             payload=payload,
             # Timeout más corto: si el modelo local no responde a tiempo es
             # preferible caer al siguiente backend que dejar al usuario esperando.
-            timeout=_env_float("OLLAMA_TIMEOUT_SECONDS", 60.0),
+            timeout=timeout,
         )
     except urllib.error.HTTPError as error:
         error_body = error.read().decode("utf-8", errors="replace")
@@ -437,7 +700,13 @@ def _chat_with_ollama(messages):
             "No pude conectarme con Ollama. Verifica que el servicio esté iniciado."
         ) from error
 
-    content = response.get("message", {}).get("content", "")
+    message = response.get("message", {}) or {}
+    content = message.get("content", "") or ""
+    # Algunos modelos (p. ej. razonadores en Ollama) devuelven thinking aparte.
+    thinking = message.get("thinking") or message.get("reasoning") or ""
+    extra = f"[thinking field]\n{thinking}" if thinking else None
+    raw = f"{thinking}\n{content}".strip() if thinking else content
+    _dump_raw_reply(f"ollama/{model}", raw, extra=extra)
     return _strip_qwen_thinking(content)
 
 
@@ -445,8 +714,14 @@ def _chat_with_claude_native(messages):
     from anthropic import Anthropic
 
     api_key, model, _ = _require("claude_native")
-
-    client = Anthropic(api_key=api_key)
+    timeout = _request_timeout()
+    if _cot_log_enabled():
+        print(
+            f"[LLM/CoT] request provider=claude_native model={model} "
+            f"timeout={timeout:.0f}s mode=stream-accumulate",
+            flush=True,
+        )
+    client = Anthropic(api_key=api_key, timeout=timeout)
 
     # Format messages for Anthropic
     system_content = "\n".join([m["content"] for m in messages if m["role"] == "system"])
@@ -457,15 +732,27 @@ def _chat_with_claude_native(messages):
         role = m["role"] if m["role"] in ["user", "assistant"] else "user"
         formatted_messages.append({"role": role, "content": m["content"]})
 
-    response = client.messages.create(
-        model=model,
-        max_tokens=_max_tokens(),
-        system=system_content,
-        messages=formatted_messages,
-        temperature=0.6
-    )
+    mirror = _CotStreamMirror("claude_native", model)
+    parts: list[str] = []
+    try:
+        with client.messages.stream(
+            model=model,
+            max_tokens=_max_tokens(),
+            system=system_content,
+            messages=formatted_messages,
+            temperature=0.1,
+        ) as stream:
+            for text in stream.text_stream:
+                mirror.feed(text)
+                parts.append(text)
+        mirror.finish()
+    except Exception as error:
+        mirror.finish(error=str(error))
+        raise LLMBackendError(
+            f"claude_native/{model} falló o agotó timeout ({timeout:.0f}s): {error}"
+        ) from error
 
-    return "".join([block.text for block in response.content if hasattr(block, 'text')]).strip()
+    return "".join(parts).strip()
 
 
 def _is_mostly_english(text):
@@ -511,6 +798,12 @@ def generate_reply(user_input, system_prompt, university_context, camera_context
             return _local_only_reply(user_input)
 
         try:
+            if _cot_log_enabled():
+                print(
+                    f"[LLM/CoT] intento voice/blocking backend={backend} "
+                    f"(tokens en vivo vía stream interno)",
+                    flush=True,
+                )
             reply = _chat_with_backend(backend, messages)
             return _postprocess_reply(reply)
         except Exception as error:
@@ -519,17 +812,40 @@ def generate_reply(user_input, system_prompt, university_context, camera_context
     return _local_only_reply(user_input)
 
 
+def _delta_reasoning(delta) -> str:
+    """Extrae CoT de campos separados del delta (si el proveedor los manda)."""
+    if delta is None:
+        return ""
+    for attr in ("reasoning_content", "reasoning", "thinking"):
+        value = getattr(delta, attr, None)
+        if isinstance(value, str) and value:
+            return value
+    # Algunos SDKs exponen model_extra / dict-like.
+    extra = getattr(delta, "model_extra", None) or {}
+    if isinstance(extra, dict):
+        for key in ("reasoning_content", "reasoning", "thinking"):
+            value = extra.get(key)
+            if isinstance(value, str) and value:
+                return value
+    return ""
+
+
 async def _stream_backend_response(backend, messages):
     if backend == "ollama":
         from openai import AsyncOpenAI
         model = _ollama_model_name()
         base_url = f"{_ollama_base_url()}/v1"
-        client = AsyncOpenAI(api_key="ollama", base_url=base_url)
+        client = AsyncOpenAI(
+            api_key="ollama",
+            base_url=base_url,
+            timeout=_env_float("OLLAMA_TIMEOUT_SECONDS", 60.0),
+        )
 
     elif backend == "claude_native":
         from anthropic import AsyncAnthropic
         api_key, model, _ = _require("claude_native")
-        client = AsyncAnthropic(api_key=api_key)
+        timeout = _request_timeout()
+        client = AsyncAnthropic(api_key=api_key, timeout=timeout)
         system_content = "\n".join([m["content"] for m in messages if m["role"] == "system"])
         user_messages = [m for m in messages if m["role"] != "system"]
         formatted_messages = []
@@ -537,36 +853,72 @@ async def _stream_backend_response(backend, messages):
             role = m["role"] if m["role"] in ["user", "assistant"] else "user"
             formatted_messages.append({"role": role, "content": m["content"]})
 
-        async with client.messages.stream(
-            model=model,
-            max_tokens=_max_tokens(),
-            system=system_content,
-            messages=formatted_messages,
-            temperature=0.6,
-        ) as stream:
-            async for text in stream.text_stream:
-                yield text
+        mirror = _CotStreamMirror("claude_native", model)
+        try:
+            if _cot_log_enabled():
+                print(
+                    f"[LLM/CoT] request provider=claude_native model={model} "
+                    f"mode=async-stream",
+                    flush=True,
+                )
+            async with client.messages.stream(
+                model=model,
+                max_tokens=_max_tokens(),
+                system=system_content,
+                messages=formatted_messages,
+                temperature=0.1,
+            ) as stream:
+                async for text in stream.text_stream:
+                    mirror.feed(text)
+                    yield text
+            mirror.finish()
+        except Exception as error:
+            mirror.finish(error=str(error))
+            raise
         return
 
     elif backend in PROVIDERS and PROVIDERS[backend].openai_compatible:
         from openai import AsyncOpenAI
         api_key, model, base_url = _require(backend)
-        client = AsyncOpenAI(api_key=api_key or "none", base_url=base_url or None)
+        timeout = _request_timeout()
+        client = AsyncOpenAI(
+            api_key=api_key or "none",
+            base_url=base_url or None,
+            timeout=timeout,
+        )
 
     else:
         raise LLMBackendError(f"Backend no soportado para streaming: {backend}")
 
-    response = await client.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature=0.6,
-        max_tokens=_max_tokens(),
-        stream=True,
-    )
-    async for chunk in response:
-        content = chunk.choices[0].delta.content
-        if content:
-            yield content
+    mirror = _CotStreamMirror(backend, model)
+    try:
+        if _cot_log_enabled():
+            print(
+                f"[LLM/CoT] request provider={backend} model={model} mode=async-stream",
+                flush=True,
+            )
+        response = await client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=0.1,
+            max_tokens=_max_tokens(),
+            stream=True,
+        )
+        async for chunk in response:
+            if not chunk.choices:
+                continue
+            delta = chunk.choices[0].delta
+            reasoning = _delta_reasoning(delta)
+            if reasoning:
+                mirror.feed_reasoning(reasoning)
+            content = delta.content if delta is not None else None
+            if content:
+                mirror.feed(content)
+                yield content
+        mirror.finish()
+    except Exception as error:
+        mirror.finish(error=str(error))
+        raise
 
 
 async def stream_llm_response(
@@ -615,6 +967,8 @@ async def stream_llm_response(
 
         produced = False
         try:
+            if _cot_log_enabled():
+                print(f"[LLM/CoT] intento stream backend={backend}", flush=True)
             async for chunk in _stream_backend_response(backend, messages):
                 produced = True
                 yield chunk
