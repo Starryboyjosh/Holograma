@@ -1,11 +1,16 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Card, SectionTitle } from './ui/Card';
 import { Field, Select, TextInput } from './ui/Field';
 import { apiKeyPlaceholder, buildLlmTestInput } from '../lib/providerForm';
-import type { LlmTestInput, LlmTestResult, ProviderInfo } from '../types';
+import type {
+  LlmTestInput,
+  LlmTestResult,
+  OllamaModelsResult,
+  ProviderInfo,
+} from '../types';
 
-// Convenience presets for the Ollama model field (free text is still allowed).
-const OLLAMA_SUGGESTIONS = ['gemma3:1b', 'gemma4:e4b', 'qwen3:8b', 'llama3.2:3b'];
+// Fallback presets when Ollama is down or has no models (free text still allowed).
+const OLLAMA_FALLBACK_SUGGESTIONS = ['gemma3:1b', 'gemma4:e4b', 'qwen3:8b', 'llama3.2:3b'];
 
 interface Props {
   llmProvider: string;
@@ -19,12 +24,15 @@ interface Props {
   providers: ProviderInfo[];
   loading: boolean;
   testConnection: (input: LlmTestInput) => Promise<LlmTestResult>;
+  /** Live list from GET /api/ollama/models (optional; without it, static hints only). */
+  listOllamaModels?: () => Promise<OllamaModelsResult>;
   showToast: (message: string) => void;
 }
 
 // The AI-brain settings card: one authoritative provider picker driven by
 // GET /api/providers (friendly labels, configured state, base-url/discovery
 // hints) plus a real "Probar conexión" against POST /api/llm/test.
+// When provider is Ollama, the model field becomes a select of installed tags.
 export function ProviderConfigCard({
   llmProvider,
   setLlmProvider,
@@ -37,14 +45,49 @@ export function ProviderConfigCard({
   providers,
   loading,
   testConnection,
+  listOllamaModels,
   showToast,
 }: Props) {
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState<LlmTestResult | null>(null);
+  const [ollamaModels, setOllamaModels] = useState<string[]>([]);
+  const [ollamaStatus, setOllamaStatus] = useState<'idle' | 'loading' | 'ok' | 'error'>('idle');
+  const [ollamaMessage, setOllamaMessage] = useState('');
 
   const selected: ProviderInfo | undefined = providers.find((p) => p.id === llmProvider);
   const cloud = providers.filter((p) => p.kind === 'cloud');
   const local = providers.filter((p) => p.kind === 'local');
+  const isOllama = selected?.id === 'ollama';
+
+  const refreshOllamaModels = useCallback(async () => {
+    if (!listOllamaModels) {
+      setOllamaStatus('idle');
+      setOllamaModels([]);
+      setOllamaMessage('');
+      return;
+    }
+    setOllamaStatus('loading');
+    const result = await listOllamaModels();
+    setOllamaModels(result.models);
+    setOllamaMessage(result.message);
+    setOllamaStatus(result.status === 'ok' ? 'ok' : 'error');
+    // If the form model is empty and Ollama has installs, pick the first one.
+    if (result.status === 'ok' && result.models.length > 0) {
+      // leave caller's model if already set (possibly to a valid tag)
+    }
+  }, [listOllamaModels]);
+
+  useEffect(() => {
+    if (!isOllama) {
+      setOllamaStatus('idle');
+      setOllamaModels([]);
+      setOllamaMessage('');
+      return;
+    }
+    // Fetch installed models whenever Ollama is the selected provider.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void refreshOllamaModels();
+  }, [isOllama, refreshOllamaModels]);
 
   const onProviderChange = (id: string) => {
     setLlmProvider(id);
@@ -68,6 +111,16 @@ export function ProviderConfigCard({
   };
 
   const usesModel = selected ? selected.id !== 'local_only' : true;
+
+  // Options for the Ollama select: installed tags + current value if not listed.
+  const ollamaSelectOptions = (() => {
+    const opts = [...ollamaModels];
+    if (model && !opts.includes(model)) {
+      opts.unshift(model);
+    }
+    return opts;
+  })();
+  const showOllamaSelect = isOllama && ollamaStatus === 'ok' && ollamaModels.length > 0;
 
   return (
     <Card>
@@ -116,19 +169,80 @@ export function ProviderConfigCard({
 
       {usesModel && (
         <Field label="Modelo">
-          <TextInput
-            type="text"
-            list={selected?.id === 'ollama' ? 'ollama-model-suggestions' : undefined}
-            value={model}
-            onChange={(e) => setModel(e.target.value)}
-            placeholder={selected?.default_model || 'nombre-del-modelo'}
-          />
-          {selected?.id === 'ollama' && (
-            <datalist id="ollama-model-suggestions">
-              {OLLAMA_SUGGESTIONS.map((m) => (
-                <option key={m} value={m} />
-              ))}
-            </datalist>
+          {showOllamaSelect ? (
+            <div className="space-y-2">
+              <Select
+                aria-label="Modelo Ollama instalado"
+                value={model}
+                disabled={loading || ollamaStatus === 'loading'}
+                onChange={(e) => setModel(e.target.value)}
+              >
+                {ollamaSelectOptions.map((m) => (
+                  <option key={m} value={m}>
+                    {m}
+                    {ollamaModels.includes(m) ? '' : ' (no instalado)'}
+                  </option>
+                ))}
+              </Select>
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                  {ollamaMessage || 'Modelos detectados en este PC (ollama list).'}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => void refreshOllamaModels()}
+                  disabled={ollamaStatus === 'loading'}
+                  className="shrink-0 text-[11px] font-semibold uppercase tracking-wider text-[#E25C1D] hover:underline disabled:opacity-50"
+                >
+                  {ollamaStatus === 'loading' ? 'Actualizando…' : 'Actualizar lista'}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <TextInput
+                type="text"
+                list={isOllama ? 'ollama-model-suggestions' : undefined}
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+                placeholder={selected?.default_model || 'nombre-del-modelo'}
+              />
+              {isOllama && (
+                <>
+                  <datalist id="ollama-model-suggestions">
+                    {(ollamaModels.length > 0 ? ollamaModels : OLLAMA_FALLBACK_SUGGESTIONS).map(
+                      (m) => (
+                        <option key={m} value={m} />
+                      ),
+                    )}
+                  </datalist>
+                  <div className="flex items-center justify-between gap-2 pt-1">
+                    <p
+                      className={`text-[11px] ${
+                        ollamaStatus === 'error'
+                          ? 'text-amber-600 dark:text-amber-400'
+                          : 'text-gray-500 dark:text-gray-400'
+                      }`}
+                    >
+                      {ollamaStatus === 'loading'
+                        ? 'Consultando modelos instalados en Ollama…'
+                        : ollamaMessage ||
+                          'Escribe el nombre del modelo o inicia Ollama para listarlos.'}
+                    </p>
+                    {listOllamaModels && (
+                      <button
+                        type="button"
+                        onClick={() => void refreshOllamaModels()}
+                        disabled={ollamaStatus === 'loading'}
+                        className="shrink-0 text-[11px] font-semibold uppercase tracking-wider text-[#E25C1D] hover:underline disabled:opacity-50"
+                      >
+                        {ollamaStatus === 'loading' ? 'Actualizando…' : 'Actualizar lista'}
+                      </button>
+                    )}
+                  </div>
+                </>
+              )}
+            </>
           )}
         </Field>
       )}

@@ -29,11 +29,10 @@ _REDACTED = "***REDACTED***"
 
 # Variables de entorno que contienen secretos. Se derivan del registro único de
 # proveedores (provider_config.PROVIDERS[*].key_env) para no desincronizarse
-# cuando se añada un proveedor nuevo; ``GROQ_API_KEY`` es de STT, no de LLM,
-# así que se mantiene explícita.
+# cuando se añada un proveedor nuevo (p. ej. Groq: LLM + STT comparten la key).
 SECRET_ENV_VARS: tuple[str, ...] = tuple(
     p.key_env for p in PROVIDERS.values() if p.key_env
-) + ("GROQ_API_KEY",)
+)
 
 # Tokens con forma de API key de los proveedores soportados (y prefijos comunes).
 _KEY_PATTERNS = [

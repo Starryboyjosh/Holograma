@@ -12,9 +12,13 @@ La interfaz de Ajustes y `llm_backend.py` la consumen; no hay reglas duplicadas.
 | `openai`                   | nube  | `OPENAI_API_KEY`     | `OPENAI_MODEL` → `LLM_MODEL`           | `OPENAI_BASE_URL` |
 | `claude_native` (Anthropic)| nube  | `ANTHROPIC_API_KEY`  | `ANTHROPIC_MODEL` → `LLM_MODEL`        | fija     |
 | `nvidia`                   | nube  | `NVIDIA_API_KEY`     | `NVIDIA_MODEL` → `LLM_MODEL`           | `NVIDIA_BASE_URL` |
+| `groq`                     | nube  | `GROQ_API_KEY`       | `GROQ_MODEL` → `LLM_MODEL`             | `GROQ_BASE_URL` (default API Groq) |
 | `custom_openai`            | nube  | `OPENAI_COMPAT_API_KEY` | `OPENAI_COMPAT_MODEL` → `LLM_MODEL` | `OPENAI_COMPAT_BASE_URL` (obligatoria) |
 | `ollama`                   | local | — (ninguna)        | `OLLAMA_MODEL` (nunca hereda `LLM_MODEL`) | `OLLAMA_BASE_URL` |
 | `local_only`               | local | — (ninguna)        | — (solo skills)                          | —        |
+
+`GROQ_API_KEY` es la misma que usa el STT cloud (`whisper-large-v3-turbo`): una sola
+key sirve para transcripción y para el LLM si eliges el proveedor Groq.
 
 "`X → LLM_MODEL`" significa: se usa el override específico del proveedor si está
 definido; si no, el modelo genérico `LLM_MODEL` que escribe la interfaz; si no,
@@ -31,7 +35,7 @@ En orden:
    silencio a la nube. Si la key del proveedor elegido falta, el error lo dice
    con claridad en vez de saltar a otro proveedor.
 3. Sin elección explícita → autodetección por la primera API key presente
-   (orden: OpenRouter, NVIDIA, OpenAI, Anthropic).
+   (orden: OpenRouter, NVIDIA, OpenAI, Groq, Anthropic).
 4. Sin keys → `ollama` si el servicio responde; si no, `local_only`.
 
 > Corrige el bug anterior: elegir "Local (Ollama)" seguía usando la nube cuando

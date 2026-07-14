@@ -37,6 +37,32 @@ def test_autodetect_falls_through_to_next_key():
     assert pc.select_backend({"NVIDIA_API_KEY": "c"}) == "nvidia"
 
 
+def test_explicit_groq_is_authoritative():
+    env = {"LLM_PROVIDER": "groq", "OPENROUTER_API_KEY": "sk-old"}
+    assert pc.select_backend(env) == "groq"
+
+
+def test_autodetect_picks_groq_when_only_groq_key():
+    assert pc.select_backend({"GROQ_API_KEY": "gsk-x"}) == "groq"
+
+
+def test_groq_resolves_key_model_and_base_url():
+    env = {
+        "GROQ_API_KEY": "gsk-test",
+        "LLM_MODEL": "llama-3.1-8b-instant",
+    }
+    assert pc.resolve_api_key("groq", env) == "gsk-test"
+    assert pc.resolve_model("groq", env) == "llama-3.1-8b-instant"
+    assert pc.resolve_model("groq", {"GROQ_MODEL": "gemma2-9b-it"}) == "gemma2-9b-it"
+    assert pc.resolve_base_url("groq", {}) == "https://api.groq.com/openai/v1"
+    info = {p["id"]: p for p in pc.all_providers_public_info(env)}
+    assert info["groq"]["key_configured"] is True
+    assert info["groq"]["requires_key"] is True
+    assert info["groq"]["kind"] == "cloud"
+    assert info["groq"]["default_model"] == "llama-3.3-70b-versatile"
+    assert pc.PROVIDERS["groq"].openai_compatible is True
+
+
 def test_no_keys_no_ollama_is_local_only():
     assert pc.select_backend({}, ollama_ready=lambda: False) == "local_only"
 

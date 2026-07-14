@@ -1,6 +1,7 @@
 {
     "OLLAMA_MODEL": "gemma3:1b",
     "WHISPER_MODEL": "small",
+    "WHISPER_LANGUAGE": "es",
     "HOLOGRAM_INPUT": "voice",
     "HOLOGRAM_CAMERA": "1",
     "YOLO_MODEL": "yolo26n.pt",

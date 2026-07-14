@@ -1,10 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '../lib/backend';
-import type { LlmTestInput, LlmTestResult, ProviderInfo } from '../types';
+import type {
+  LlmTestInput,
+  LlmTestResult,
+  OllamaModelsResult,
+  ProviderInfo,
+} from '../types';
 
 // Provider catalogue for the Settings picker, sourced from GET /api/providers
 // (friendly labels/descriptions, configured state, base-url/discovery hints).
-// Also exposes the non-persisting connection probe (POST /api/llm/test).
+// Also exposes the non-persisting connection probe (POST /api/llm/test) and the
+// live Ollama model list (GET /api/ollama/models ≈ `ollama list`).
 export function useProviders() {
   const [providers, setProviders] = useState<ProviderInfo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,5 +56,26 @@ export function useProviders() {
     [],
   );
 
-  return { providers, loading, refresh, testConnection };
+  const listOllamaModels = useCallback(async (): Promise<OllamaModelsResult> => {
+    try {
+      const res = await apiFetch('/api/ollama/models');
+      const data = await res.json();
+      const models = Array.isArray(data.models)
+        ? (data.models as unknown[]).filter((m): m is string => typeof m === 'string')
+        : [];
+      return {
+        status: data.status === 'ok' ? 'ok' : 'error',
+        models,
+        message: typeof data.message === 'string' ? data.message : '',
+      };
+    } catch {
+      return {
+        status: 'error',
+        models: [],
+        message: 'No se pudo contactar al backend para listar modelos de Ollama.',
+      };
+    }
+  }, []);
+
+  return { providers, loading, refresh, testConnection, listOllamaModels };
 }

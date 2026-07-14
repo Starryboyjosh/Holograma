@@ -46,6 +46,44 @@ def test_probe_ollama_server_down(monkeypatch):
     assert "no responde" in result["message"].lower()
 
 
+def test_list_ollama_models_sorted_unique(monkeypatch):
+    monkeypatch.setattr(
+        lb,
+        "_ollama_tags",
+        lambda timeout=1.5: {
+            "models": [
+                {"name": "llama3.2:3b"},
+                {"name": "gemma3:1b"},
+                {"name": "gemma3:1b"},
+                {"name": ""},
+            ]
+        },
+    )
+    result = lb.list_ollama_models()
+    assert result["ok"] is True
+    assert result["models"] == ["gemma3:1b", "llama3.2:3b"]
+    assert "2" in result["message"]
+
+
+def test_list_ollama_models_server_down(monkeypatch):
+    def boom(timeout=1.5):
+        raise OSError("connection refused")
+
+    monkeypatch.setattr(lb, "_ollama_tags", boom)
+    result = lb.list_ollama_models()
+    assert result["ok"] is False
+    assert result["models"] == []
+    assert "no responde" in result["message"].lower()
+
+
+def test_list_ollama_models_empty_install(monkeypatch):
+    monkeypatch.setattr(lb, "_ollama_tags", lambda timeout=1.5: {"models": []})
+    result = lb.list_ollama_models()
+    assert result["ok"] is True
+    assert result["models"] == []
+    assert "no hay modelos" in result["message"].lower()
+
+
 def test_probe_ollama_model_missing(monkeypatch):
     monkeypatch.setattr(lb, "_ollama_server_available", lambda: True)
     monkeypatch.setattr(lb, "_ollama_model_available", lambda m=None: False)

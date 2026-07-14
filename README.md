@@ -73,7 +73,7 @@ Todo el catálogo de variables está en **`.env.example`**. Lo mínimo para un k
 
 | Variable | Uso típico |
 |----------|------------|
-| `LLM_PROVIDER` / `OLLAMA_MODEL` | Cerebro (nube o local); la elección de proveedor es autoritativa |
+| `LLM_PROVIDER` / `OLLAMA_MODEL` | Cerebro (nube, Groq, o local); la elección de proveedor es autoritativa |
 | `LLM_MAX_TOKENS` | Límite de salida unificado (default `450`) para todos los backends |
 | `LLM_REQUEST_TIMEOUT` | Timeout HTTP en la nube (default `90` s); evita colgar la voz |
 | `LLM_LOG_COT` | CoT/razonamiento en terminal (`1` por defecto; `0` para silenciar) |

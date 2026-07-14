@@ -55,3 +55,10 @@ export interface LlmTestResult {
   status: 'ok' | 'error';
   message: string;
 }
+
+// GET /api/ollama/models — installed tags from the local Ollama daemon.
+export interface OllamaModelsResult {
+  status: 'ok' | 'error';
+  models: string[];
+  message: string;
+}

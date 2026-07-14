@@ -100,6 +100,22 @@ PROVIDERS: dict[str, Provider] = {
         openai_compatible=True,
         supports_discovery=True,
     ),
+    "groq": Provider(
+        id="groq",
+        label="Groq",
+        description=(
+            "LLM en la nube vía API key (console.groq.com). "
+            "Rápido: Llama, Gemma, etc. Requiere GROQ_API_KEY."
+        ),
+        kind="cloud",
+        key_env="GROQ_API_KEY",
+        model_env="GROQ_MODEL",
+        default_model="llama-3.3-70b-versatile",
+        base_url_env="GROQ_BASE_URL",
+        default_base_url="https://api.groq.com/openai/v1",
+        openai_compatible=True,
+        supports_discovery=True,
+    ),
     "custom_openai": Provider(
         id="custom_openai",
         label="Endpoint compatible con OpenAI",
@@ -144,7 +160,13 @@ CLOUD_PROVIDERS: tuple[str, ...] = tuple(
 )
 
 # Orden de auto-detección por key presente (solo cuando no hay elección explícita).
-AUTODETECT_ORDER: tuple[str, ...] = ("openrouter", "nvidia", "openai", "claude_native")
+AUTODETECT_ORDER: tuple[str, ...] = (
+    "openrouter",
+    "nvidia",
+    "openai",
+    "groq",
+    "claude_native",
+)
 
 # Alias históricos aceptados en LLM_PROVIDER / LLM_BACKEND.
 _PROVIDER_ALIASES = {

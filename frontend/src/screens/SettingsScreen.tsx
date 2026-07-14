@@ -22,6 +22,7 @@ export function SettingsScreen() {
     providers,
     loading: providersLoading,
     testConnection,
+    listOllamaModels,
   } = useProviders();
   const [playingSample, setPlayingSample] = useState(false);
 
@@ -100,6 +101,7 @@ export function SettingsScreen() {
         providers={providers}
         loading={providersLoading}
         testConnection={testConnection}
+        listOllamaModels={listOllamaModels}
         showToast={showToast}
       />
 

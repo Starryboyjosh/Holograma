@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ProviderConfigCard } from './ProviderConfigCard';
-import type { LlmTestResult, ProviderInfo } from '../types';
+import type { LlmTestResult, OllamaModelsResult, ProviderInfo } from '../types';
 
 const PROVIDERS: ProviderInfo[] = [
   {
@@ -38,13 +38,19 @@ const PROVIDERS: ProviderInfo[] = [
 
 function Harness({
   testConnection,
+  listOllamaModels,
+  initialProvider = 'openrouter',
 }: {
   testConnection: (i: { provider: string }) => Promise<LlmTestResult>;
+  listOllamaModels?: () => Promise<OllamaModelsResult>;
+  initialProvider?: string;
 }) {
-  const [llmProvider, setLlmProvider] = useState('openrouter');
-  const [model, setModel] = useState('meta-llama/llama-3.3-70b-instruct');
+  const initial =
+    PROVIDERS.find((p) => p.id === initialProvider) ?? PROVIDERS[0];
+  const [llmProvider, setLlmProvider] = useState(initial.id);
+  const [model, setModel] = useState(initial.current_model);
   const [apiKey, setApiKey] = useState('');
-  const [baseUrl, setBaseUrl] = useState('https://openrouter.ai/api/v1');
+  const [baseUrl, setBaseUrl] = useState(initial.base_url);
   return (
     <ProviderConfigCard
       llmProvider={llmProvider}
@@ -58,6 +64,7 @@ function Harness({
       providers={PROVIDERS}
       loading={false}
       testConnection={testConnection}
+      listOllamaModels={listOllamaModels}
       showToast={vi.fn()}
     />
   );
@@ -95,8 +102,39 @@ describe('ProviderConfigCard', () => {
 
     await user.selectOptions(screen.getByLabelText('Proveedor de IA'), 'ollama');
 
+    // Without listOllamaModels, free-text field remains (fallback).
     const modelInput = screen.getByPlaceholderText('gemma3:1b') as HTMLInputElement;
     expect(modelInput.value).toBe('qwen3:8b'); // current_model from metadata
     expect(screen.queryByText(/API key/i)).not.toBeInTheDocument();
+  });
+
+  it('shows a select of models installed on the PC when Ollama is selected', async () => {
+    const user = userEvent.setup();
+    const listOllamaModels = vi.fn().mockResolvedValue({
+      status: 'ok',
+      models: ['gemma3:1b', 'llama3.2:3b'],
+      message: '2 modelo(s) instalado(s).',
+    });
+
+    render(
+      <Harness
+        testConnection={vi.fn()}
+        listOllamaModels={listOllamaModels}
+        initialProvider="ollama"
+      />,
+    );
+
+    await waitFor(() => expect(listOllamaModels).toHaveBeenCalled());
+
+    const select = await screen.findByLabelText('Modelo Ollama instalado');
+    expect(select).toBeInTheDocument();
+    // current_model qwen3:8b is kept even if not installed
+    expect(select).toHaveValue('qwen3:8b');
+    expect(screen.getByRole('option', { name: /gemma3:1b/ })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: /llama3.2:3b/ })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: /qwen3:8b.*no instalado/i })).toBeInTheDocument();
+
+    await user.selectOptions(select, 'gemma3:1b');
+    expect(select).toHaveValue('gemma3:1b');
   });
 });

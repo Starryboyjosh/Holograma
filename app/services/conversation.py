@@ -26,7 +26,7 @@ from __future__ import annotations
 
 import asyncio
 import os
-from collections.abc import Callable
+from collections.abc import AsyncIterator, Callable
 from typing import Protocol
 
 from utils import (
@@ -72,7 +72,9 @@ def _pop_ready_speech(buf: str, first_chunk: bool) -> tuple[list[str], str, bool
 
 
 class _LLM(Protocol):
-    def stream(self, prompt: str, camera_context: str | None = None): ...
+    def stream(
+        self, prompt: str, camera_context: str | None = None
+    ) -> AsyncIterator[str]: ...
 
 
 class _Connection(Protocol):

@@ -148,7 +148,7 @@ def select_brain():
         console.print("\n[accent]Configuración de API de Nube (Cloud LLM)[/accent]")
         provider = Prompt.ask(
             "Selecciona el proveedor de LLM",
-            choices=["openai", "claude_native", "openrouter"],
+            choices=["openai", "claude_native", "openrouter", "groq"],
             default="openrouter",
         )
 
@@ -157,6 +157,8 @@ def select_brain():
             default_model = "gpt-4o-mini"
         elif provider == "claude_native":
             default_model = "claude-3-5-sonnet-20241022"
+        elif provider == "groq":
+            default_model = "llama-3.3-70b-versatile"
 
         model = Prompt.ask(
             f"Escribe el nombre del modelo (ej: {default_model})", default=default_model
@@ -172,6 +174,9 @@ def select_brain():
         elif provider == "openrouter":
             key = Prompt.ask("Introduce tu OPENROUTER_API_KEY", password=True)
             api_keys["OPENROUTER_API_KEY"] = key
+        elif provider == "groq":
+            key = Prompt.ask("Introduce tu GROQ_API_KEY", password=True)
+            api_keys["GROQ_API_KEY"] = key
 
         update_env_file(provider, model, api_keys)
 

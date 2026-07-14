@@ -362,7 +362,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "app_connection_connectionmanager_close_all",
-      "community": 45,
+      "community": 10,
       "norm_label": ".close_all()"
     },
     {
@@ -432,7 +432,7 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "app_connection_rationale_91",
-      "community": 45,
+      "community": 10,
       "norm_label": "cierra y olvida todas las conexiones (apagado ordenado del servidor).          e"
     },
     {
@@ -509,7 +509,7 @@
       "label": "_Connection",
       "file_type": "code",
       "source_file": "app/services/conversation.py",
-      "source_location": "L78",
+      "source_location": "L80",
       "_origin": "ast",
       "id": "services_conversation_connection",
       "community": 31,
@@ -519,7 +519,7 @@
       "label": ".broadcast()",
       "file_type": "code",
       "source_file": "app/services/conversation.py",
-      "source_location": "L79",
+      "source_location": "L81",
       "_origin": "ast",
       "id": "services_conversation_connection_broadcast",
       "community": 31,
@@ -529,7 +529,7 @@
       "label": "_Camera",
       "file_type": "code",
       "source_file": "app/services/conversation.py",
-      "source_location": "L82",
+      "source_location": "L84",
       "_origin": "ast",
       "id": "services_conversation_camera",
       "community": 31,
@@ -539,7 +539,7 @@
       "label": ".build_context()",
       "file_type": "code",
       "source_file": "app/services/conversation.py",
-      "source_location": "L83",
+      "source_location": "L85",
       "_origin": "ast",
       "id": "services_conversation_camera_build_context",
       "community": 31,
@@ -549,7 +549,7 @@
       "label": "ConversationService",
       "file_type": "code",
       "source_file": "app/services/conversation.py",
-      "source_location": "L86",
+      "source_location": "L88",
       "_origin": "ast",
       "id": "services_conversation_conversationservice",
       "community": 26,
@@ -559,7 +559,7 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "app/services/conversation.py",
-      "source_location": "L87",
+      "source_location": "L89",
       "_origin": "ast",
       "id": "services_conversation_conversationservice_init",
       "community": 31,
@@ -569,7 +569,7 @@
       "label": "._speak_piece()",
       "file_type": "code",
       "source_file": "app/services/conversation.py",
-      "source_location": "L100",
+      "source_location": "L102",
       "_origin": "ast",
       "id": "services_conversation_conversationservice_speak_piece",
       "community": 31,
@@ -579,7 +579,7 @@
       "label": ".handle_prompt()",
       "file_type": "code",
       "source_file": "app/services/conversation.py",
-      "source_location": "L105",
+      "source_location": "L107",
       "_origin": "ast",
       "id": "services_conversation_conversationservice_handle_prompt",
       "community": 31,
@@ -609,9 +609,9 @@
       "label": "Procesa un turno completo y devuelve el texto generado (\"\" si fall\u00f3).",
       "file_type": "rationale",
       "source_file": "app/services/conversation.py",
-      "source_location": "L106",
+      "source_location": "L108",
       "_origin": "ast",
-      "id": "services_conversation_rationale_106",
+      "id": "services_conversation_rationale_108",
       "community": 31,
       "norm_label": "procesa un turno completo y devuelve el texto generado (\"\" si fallo)."
     },
@@ -622,7 +622,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_llm",
-      "community": 65,
+      "community": 66,
       "norm_label": "llm.py"
     },
     {
@@ -632,7 +632,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "services_llm_llmservice",
-      "community": 65,
+      "community": 66,
       "norm_label": "llmservice"
     },
     {
@@ -642,7 +642,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "services_llm_llmservice_init",
-      "community": 65,
+      "community": 66,
       "norm_label": ".__init__()"
     },
     {
@@ -652,7 +652,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "streamfn",
-      "community": 65,
+      "community": 66,
       "norm_label": "streamfn"
     },
     {
@@ -662,7 +662,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "services_llm_llmservice_stream",
-      "community": 65,
+      "community": 66,
       "norm_label": ".stream()"
     },
     {
@@ -672,7 +672,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_llm_rationale_1",
-      "community": 65,
+      "community": 66,
       "norm_label": "servicio de llm: envuelve la **unica** ruta async de generacion.  `llm_backend.s"
     },
     {
@@ -692,7 +692,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "services_vision_cameracontextprovider",
-      "community": 63,
+      "community": 20,
       "norm_label": "cameracontextprovider"
     },
     {
@@ -702,7 +702,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "services_vision_cameracontextprovider_init",
-      "community": 63,
+      "community": 20,
       "norm_label": ".__init__()"
     },
     {
@@ -712,7 +712,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "contextbuilder",
-      "community": 63,
+      "community": 20,
       "norm_label": "contextbuilder"
     },
     {
@@ -722,7 +722,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "services_vision_cameracontextprovider_analysis",
-      "community": 63,
+      "community": 20,
       "norm_label": ".analysis()"
     },
     {
@@ -732,7 +732,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "services_vision_cameracontextprovider_update",
-      "community": 63,
+      "community": 20,
       "norm_label": ".update()"
     },
     {
@@ -742,7 +742,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "services_vision_cameracontextprovider_build_context",
-      "community": 63,
+      "community": 20,
       "norm_label": ".build_context()"
     },
     {
@@ -772,7 +772,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "services_vision_rationale_29",
-      "community": 63,
+      "community": 20,
       "norm_label": "registra el ultimo analisis de la camara (lo llamara visionservice)."
     },
     {
@@ -792,7 +792,7 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "call_stop_all_tts_processes",
-      "community": 72,
+      "community": 3,
       "norm_label": "stop_all_tts_processes()"
     },
     {
@@ -802,7 +802,7 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "call_pause_hologram",
-      "community": 72,
+      "community": 3,
       "norm_label": "pause_hologram()"
     },
     {
@@ -862,7 +862,7 @@
       "source_location": "L225",
       "_origin": "ast",
       "id": "call_is_wsl",
-      "community": 58,
+      "community": 42,
       "norm_label": "is_wsl()"
     },
     {
@@ -892,7 +892,7 @@
       "source_location": "L289",
       "_origin": "ast",
       "id": "call_play_wav_with_windows",
-      "community": 42,
+      "community": 58,
       "norm_label": "play_wav_with_windows()"
     },
     {
@@ -952,7 +952,7 @@
       "source_location": "L477",
       "_origin": "ast",
       "id": "call_speak_with_linux_tts",
-      "community": 58,
+      "community": 42,
       "norm_label": "speak_with_linux_tts()"
     },
     {
@@ -972,7 +972,7 @@
       "source_location": "L569",
       "_origin": "ast",
       "id": "call_speak_chunk_os",
-      "community": 58,
+      "community": 42,
       "norm_label": "_speak_chunk_os()"
     },
     {
@@ -1112,7 +1112,7 @@
       "source_location": "L985",
       "_origin": "ast",
       "id": "call_stop_camera_thread",
-      "community": 59,
+      "community": 65,
       "norm_label": "stop_camera_thread()"
     },
     {
@@ -1132,7 +1132,7 @@
       "source_location": "L1079",
       "_origin": "ast",
       "id": "call_request_listen",
-      "community": 66,
+      "community": 63,
       "norm_label": "request_listen()"
     },
     {
@@ -1142,7 +1142,7 @@
       "source_location": "L1084",
       "_origin": "ast",
       "id": "call_set_trigger_mode",
-      "community": 58,
+      "community": 3,
       "norm_label": "set_trigger_mode()"
     },
     {
@@ -1162,7 +1162,7 @@
       "source_location": "L1100",
       "_origin": "ast",
       "id": "call_stdin_ptt_reader",
-      "community": 66,
+      "community": 3,
       "norm_label": "_stdin_ptt_reader()"
     },
     {
@@ -1189,7 +1189,7 @@
       "label": "main()",
       "file_type": "code",
       "source_file": "call.py",
-      "source_location": "L1244",
+      "source_location": "L1245",
       "_origin": "ast",
       "id": "call_main",
       "community": 56,
@@ -1212,7 +1212,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "call_rationale_73",
-      "community": 72,
+      "community": 3,
       "norm_label": "attempt to terminate any running tts or audio players on linux."
     },
     {
@@ -1222,7 +1222,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "call_rationale_86",
-      "community": 72,
+      "community": 3,
       "norm_label": "pause hologram activity: stop speaking, listening and seeing."
     },
     {
@@ -1282,7 +1282,7 @@
       "source_location": "L226",
       "_origin": "ast",
       "id": "call_rationale_226",
-      "community": 58,
+      "community": 42,
       "norm_label": "return true when running inside windows subsystem for linux."
     },
     {
@@ -1312,7 +1312,7 @@
       "source_location": "L290",
       "_origin": "ast",
       "id": "call_rationale_290",
-      "community": 42,
+      "community": 58,
       "norm_label": "play a wav file with windows' built-in soundplayer."
     },
     {
@@ -1372,7 +1372,7 @@
       "source_location": "L478",
       "_origin": "ast",
       "id": "call_rationale_478",
-      "community": 58,
+      "community": 42,
       "norm_label": "use lightweight linux tts fallbacks when piper is unavailable."
     },
     {
@@ -1392,7 +1392,7 @@
       "source_location": "L570",
       "_origin": "ast",
       "id": "call_rationale_570",
-      "community": 58,
+      "community": 42,
       "norm_label": "reproduce un fragmento con el tts nativo del so (fallback sin piper)."
     },
     {
@@ -1472,7 +1472,7 @@
       "source_location": "L986",
       "_origin": "ast",
       "id": "call_rationale_986",
-      "community": 59,
+      "community": 65,
       "norm_label": "deten la deteccion y libera la camara (apagar la camara = liberarla).      senal"
     },
     {
@@ -1492,7 +1492,7 @@
       "source_location": "L1080",
       "_origin": "ast",
       "id": "call_rationale_1080",
-      "community": 66,
+      "community": 63,
       "norm_label": "solicita una escucha puntual (push-to-talk remoto, p. ej. la webapp)."
     },
     {
@@ -1502,7 +1502,7 @@
       "source_location": "L1085",
       "_origin": "ast",
       "id": "call_rationale_1085",
-      "community": 58,
+      "community": 3,
       "norm_label": "cambia en caliente el modo de activacion de voz. devuelve el modo final."
     },
     {
@@ -1522,7 +1522,7 @@
       "source_location": "L1101",
       "_origin": "ast",
       "id": "call_rationale_1101",
-      "community": 66,
+      "community": 3,
       "norm_label": "lee enter de la terminal y solicita una escucha (push-to-talk en cli)."
     },
     {
@@ -1549,9 +1549,9 @@
       "label": "Parse flags and run the appropriate loop.",
       "file_type": "rationale",
       "source_file": "call.py",
-      "source_location": "L1245",
+      "source_location": "L1246",
       "_origin": "ast",
-      "id": "call_rationale_1245",
+      "id": "call_rationale_1246",
       "community": 56,
       "norm_label": "parse flags and run the appropriate loop."
     },
@@ -2452,7 +2452,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app",
-      "community": 5,
+      "community": 40,
       "norm_label": "app.tsx"
     },
     {
@@ -2462,7 +2462,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_app_shelllayout",
-      "community": 5,
+      "community": 40,
       "norm_label": "shelllayout()"
     },
     {
@@ -2472,7 +2472,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "src_app_app",
-      "community": 5,
+      "community": 40,
       "norm_label": "app()"
     },
     {
@@ -2482,7 +2482,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_appshell",
-      "community": 46,
+      "community": 43,
       "norm_label": "appshell.tsx"
     },
     {
@@ -2492,7 +2492,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "components_appshell_nav_items",
-      "community": 46,
+      "community": 43,
       "norm_label": "nav_items"
     },
     {
@@ -2502,7 +2502,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "components_appshell_wschip",
-      "community": 46,
+      "community": 43,
       "norm_label": "wschip()"
     },
     {
@@ -2512,7 +2512,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "components_appshell_appshell",
-      "community": 46,
+      "community": 43,
       "norm_label": "appshell()"
     },
     {
@@ -2572,7 +2572,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "components_detachbutton_detachbutton",
-      "community": 47,
+      "community": 5,
       "norm_label": "detachbutton()"
     },
     {
@@ -2676,20 +2676,20 @@
       "norm_label": "providerconfigcard.tsx"
     },
     {
-      "label": "OLLAMA_SUGGESTIONS",
+      "label": "OLLAMA_FALLBACK_SUGGESTIONS",
       "file_type": "code",
       "source_file": "frontend/src/components/ProviderConfigCard.tsx",
-      "source_location": "L8",
+      "source_location": "L13",
       "_origin": "ast",
-      "id": "components_providerconfigcard_ollama_suggestions",
+      "id": "components_providerconfigcard_ollama_fallback_suggestions",
       "community": 19,
-      "norm_label": "ollama_suggestions"
+      "norm_label": "ollama_fallback_suggestions"
     },
     {
       "label": "Props",
       "file_type": "code",
       "source_file": "frontend/src/components/ProviderConfigCard.tsx",
-      "source_location": "L10",
+      "source_location": "L15",
       "_origin": "ast",
       "id": "components_providerconfigcard_props",
       "community": 19,
@@ -2699,7 +2699,7 @@
       "label": "ProviderConfigCard()",
       "file_type": "code",
       "source_file": "frontend/src/components/ProviderConfigCard.tsx",
-      "source_location": "L28",
+      "source_location": "L36",
       "_origin": "ast",
       "id": "components_providerconfigcard_providerconfigcard",
       "community": 19,
@@ -2892,7 +2892,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "context_sessioncontext_usesession",
-      "community": 46,
+      "community": 43,
       "norm_label": "usesession()"
     },
     {
@@ -2972,7 +2972,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "context_themecontext_usetheme",
-      "community": 46,
+      "community": 43,
       "norm_label": "usetheme()"
     },
     {
@@ -2982,7 +2982,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "context_toastcontext",
-      "community": 43,
+      "community": 40,
       "norm_label": "toastcontext.tsx"
     },
     {
@@ -2992,7 +2992,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "context_toastcontext_showtoast",
-      "community": 43,
+      "community": 40,
       "norm_label": "showtoast"
     },
     {
@@ -3002,7 +3002,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "context_toastcontext_toastctx",
-      "community": 43,
+      "community": 40,
       "norm_label": "toastctx"
     },
     {
@@ -3022,7 +3022,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "context_toastcontext_usetoast",
-      "community": 5,
+      "community": 40,
       "norm_label": "usetoast()"
     },
     {
@@ -3052,7 +3052,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usechatsocket",
-      "community": 36,
+      "community": 40,
       "norm_label": "usechatsocket.ts"
     },
     {
@@ -3062,7 +3062,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "hooks_usechatsocket_usechatsocketoptions",
-      "community": 36,
+      "community": 40,
       "norm_label": "usechatsocketoptions"
     },
     {
@@ -3082,7 +3082,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "hooks_usechatsocket_usechatsocket",
-      "community": 5,
+      "community": 40,
       "norm_label": "usechatsocket()"
     },
     {
@@ -3092,7 +3092,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_useconfig",
-      "community": 40,
+      "community": 36,
       "norm_label": "useconfig.ts"
     },
     {
@@ -3112,7 +3112,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_usehologram",
-      "community": 40,
+      "community": 36,
       "norm_label": "usehologram.ts"
     },
     {
@@ -3122,7 +3122,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "hooks_usehologram_usehologramoptions",
-      "community": 40,
+      "community": 36,
       "norm_label": "usehologramoptions"
     },
     {
@@ -3149,10 +3149,10 @@
       "label": "useProviders()",
       "file_type": "code",
       "source_file": "frontend/src/hooks/useProviders.ts",
-      "source_location": "L8",
+      "source_location": "L14",
       "_origin": "ast",
       "id": "hooks_useproviders_useproviders",
-      "community": 46,
+      "community": 43,
       "norm_label": "useproviders()"
     },
     {
@@ -3262,7 +3262,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "lib_backend_apifetch",
-      "community": 40,
+      "community": 36,
       "norm_label": "apifetch()"
     },
     {
@@ -3522,7 +3522,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "screens_contentscreen_contentscreen",
-      "community": 12,
+      "community": 40,
       "norm_label": "contentscreen()"
     },
     {
@@ -3542,7 +3542,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "screens_settingsscreen_settingsscreen",
-      "community": 46,
+      "community": 43,
       "norm_label": "settingsscreen()"
     },
     {
@@ -3552,7 +3552,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "screens_teachingscreen",
-      "community": 46,
+      "community": 40,
       "norm_label": "teachingscreen.tsx"
     },
     {
@@ -3562,7 +3562,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "screens_teachingscreen_teachingscreen",
-      "community": 46,
+      "community": 40,
       "norm_label": "teachingscreen()"
     },
     {
@@ -3622,7 +3622,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "src_theme_state_meta",
-      "community": 5,
+      "community": 40,
       "norm_label": "state_meta"
     },
     {
@@ -3652,7 +3652,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_types_boundingbox",
-      "community": 46,
+      "community": 19,
       "norm_label": "boundingbox"
     },
     {
@@ -3662,7 +3662,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_types_savedobject",
-      "community": 40,
+      "community": 36,
       "norm_label": "savedobject"
     },
     {
@@ -3706,13 +3706,23 @@
       "norm_label": "llmtestresult"
     },
     {
+      "label": "OllamaModelsResult",
+      "file_type": "code",
+      "source_file": "frontend/src/types.ts",
+      "source_location": "L60",
+      "_origin": "ast",
+      "id": "src_types_ollamamodelsresult",
+      "community": 19,
+      "norm_label": "ollamamodelsresult"
+    },
+    {
       "label": "CameraWidget.tsx",
       "file_type": "code",
       "source_file": "frontend/src/widgets/CameraWidget.tsx",
       "source_location": "L1",
       "_origin": "ast",
       "id": "widgets_camerawidget",
-      "community": 5,
+      "community": 36,
       "norm_label": "camerawidget.tsx"
     },
     {
@@ -3722,7 +3732,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "widgets_camerawidget_camerawidget",
-      "community": 5,
+      "community": 36,
       "norm_label": "camerawidget()"
     },
     {
@@ -3732,7 +3742,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "widgets_chatwidget",
-      "community": 5,
+      "community": 40,
       "norm_label": "chatwidget.tsx"
     },
     {
@@ -3742,7 +3752,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "widgets_chatwidget_suggestions",
-      "community": 5,
+      "community": 40,
       "norm_label": "suggestions"
     },
     {
@@ -3752,7 +3762,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "widgets_chatwidget_chatwidget",
-      "community": 5,
+      "community": 40,
       "norm_label": "chatwidget()"
     },
     {
@@ -3762,7 +3772,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "widgets_transcriptwidget",
-      "community": 5,
+      "community": 40,
       "norm_label": "transcriptwidget.tsx"
     },
     {
@@ -3772,7 +3782,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "widgets_transcriptwidget_transcriptwidget",
-      "community": 5,
+      "community": 40,
       "norm_label": "transcriptwidget()"
     },
     {
@@ -3782,7 +3792,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "widgets_widgetframe",
-      "community": 5,
+      "community": 40,
       "norm_label": "widgetframe.tsx"
     },
     {
@@ -3792,7 +3802,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "widgets_widgetframe_widgetframe",
-      "community": 5,
+      "community": 40,
       "norm_label": "widgetframe()"
     },
     {
@@ -4262,7 +4272,7 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_is_connected",
-      "community": 97,
+      "community": 10,
       "norm_label": ".is_connected()"
     },
     {
@@ -4282,7 +4292,7 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_disconnect",
-      "community": 45,
+      "community": 10,
       "norm_label": ".disconnect()"
     },
     {
@@ -4312,7 +4322,7 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_shutdown",
-      "community": 45,
+      "community": 10,
       "norm_label": ".shutdown()"
     },
     {
@@ -4352,7 +4362,7 @@
       "source_location": "L145",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_play_file",
-      "community": 20,
+      "community": 10,
       "norm_label": ".play_file()"
     },
     {
@@ -4412,7 +4422,7 @@
       "source_location": "L183",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_exit",
-      "community": 45,
+      "community": 10,
       "norm_label": ".__exit__()"
     },
     {
@@ -4442,7 +4452,7 @@
       "source_location": "L292",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager",
-      "community": 20,
+      "community": 65,
       "norm_label": "hologramstatemanager"
     },
     {
@@ -4452,7 +4462,7 @@
       "source_location": "L314",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_init",
-      "community": 20,
+      "community": 65,
       "norm_label": ".__init__()"
     },
     {
@@ -4462,7 +4472,7 @@
       "source_location": "L343",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_is_connected",
-      "community": 20,
+      "community": 65,
       "norm_label": ".is_connected()"
     },
     {
@@ -4472,7 +4482,7 @@
       "source_location": "L348",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_configure",
-      "community": 20,
+      "community": 10,
       "norm_label": ".configure()"
     },
     {
@@ -4482,7 +4492,7 @@
       "source_location": "L378",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_disable",
-      "community": 45,
+      "community": 10,
       "norm_label": ".disable()"
     },
     {
@@ -4492,7 +4502,7 @@
       "source_location": "L385",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_execute",
-      "community": 20,
+      "community": 10,
       "norm_label": ".execute()"
     },
     {
@@ -4502,7 +4512,7 @@
       "source_location": "L413",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_start",
-      "community": 20,
+      "community": 10,
       "norm_label": ".start()"
     },
     {
@@ -4512,7 +4522,7 @@
       "source_location": "L424",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_set_state",
-      "community": 20,
+      "community": 10,
       "norm_label": ".set_state()"
     },
     {
@@ -4522,7 +4532,7 @@
       "source_location": "L435",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_close",
-      "community": 45,
+      "community": 10,
       "norm_label": ".close()"
     },
     {
@@ -4532,7 +4542,7 @@
       "source_location": "L457",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_run",
-      "community": 20,
+      "community": 10,
       "norm_label": "._run()"
     },
     {
@@ -4542,7 +4552,7 @@
       "source_location": "L477",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_apply",
-      "community": 20,
+      "community": 10,
       "norm_label": "._apply()"
     },
     {
@@ -4552,7 +4562,7 @@
       "source_location": "L500",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_ensure_connected",
-      "community": 20,
+      "community": 10,
       "norm_label": "._ensure_connected()"
     },
     {
@@ -4562,7 +4572,7 @@
       "source_location": "L525",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_drop_connection",
-      "community": 20,
+      "community": 10,
       "norm_label": "._drop_connection()"
     },
     {
@@ -4612,7 +4622,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "hologram_controller_rationale_79",
-      "community": 97,
+      "community": 10,
       "norm_label": "true si el socket tcp sigue abierto."
     },
     {
@@ -4632,7 +4642,7 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "hologram_controller_rationale_103",
-      "community": 45,
+      "community": 10,
       "norm_label": "cierra la conexion tcp limpiamente."
     },
     {
@@ -4662,7 +4672,7 @@
       "source_location": "L130",
       "_origin": "ast",
       "id": "hologram_controller_rationale_130",
-      "community": 45,
+      "community": 10,
       "norm_label": "detiene la rotacion y apaga el holograma. [stop]"
     },
     {
@@ -4702,7 +4712,7 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "hologram_controller_rationale_146",
-      "community": 20,
+      "community": 10,
       "norm_label": "salta directamente al video numero n de la playlist.          args:"
     },
     {
@@ -4772,7 +4782,7 @@
       "source_location": "L293",
       "_origin": "ast",
       "id": "hologram_controller_rationale_293",
-      "community": 20,
+      "community": 65,
       "norm_label": "puente thread-safe entre los estados de la ia y los clips del holograma.      la"
     },
     {
@@ -4782,7 +4792,7 @@
       "source_location": "L344",
       "_origin": "ast",
       "id": "hologram_controller_rationale_344",
-      "community": 20,
+      "community": 65,
       "norm_label": "true cuando el gestor automatico tiene un socket tcp activo."
     },
     {
@@ -4792,7 +4802,7 @@
       "source_location": "L349",
       "_origin": "ast",
       "id": "hologram_controller_rationale_349",
-      "community": 20,
+      "community": 10,
       "norm_label": "aplica un destino tcp nuevo y activa el cambio automatico de clips."
     },
     {
@@ -4802,7 +4812,7 @@
       "source_location": "L379",
       "_origin": "ast",
       "id": "hologram_controller_rationale_379",
-      "community": 45,
+      "community": 10,
       "norm_label": "desconecta el dispositivo y desactiva los reintentos automaticos."
     },
     {
@@ -4812,7 +4822,7 @@
       "source_location": "L386",
       "_origin": "ast",
       "id": "hologram_controller_rationale_386",
-      "community": 20,
+      "community": 10,
       "norm_label": "compatibilidad con la api: ejecuta un comando usando la conexion compartida."
     },
     {
@@ -4822,7 +4832,7 @@
       "source_location": "L414",
       "_origin": "ast",
       "id": "hologram_controller_rationale_414",
-      "community": 20,
+      "community": 10,
       "norm_label": "arranca el hilo de control y deja el holograma en idle. no-op si esta deshabilit"
     },
     {
@@ -4832,7 +4842,7 @@
       "source_location": "L425",
       "_origin": "ast",
       "id": "hologram_controller_rationale_425",
-      "community": 20,
+      "community": 10,
       "norm_label": "solicita un cambio de estado del holograma. no bloquea ni lanza excepciones."
     },
     {
@@ -4842,7 +4852,7 @@
       "source_location": "L436",
       "_origin": "ast",
       "id": "hologram_controller_rationale_436",
-      "community": 45,
+      "community": 10,
       "norm_label": "detiene el hilo, apaga el giro y cierra la conexion limpiamente."
     },
     {
@@ -4862,7 +4872,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "llm_backend",
-      "community": 9,
+      "community": 30,
       "norm_label": "llm_backend.py"
     },
     {
@@ -4892,7 +4902,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "llm_backend_ollama_base_url",
-      "community": 9,
+      "community": 30,
       "norm_label": "_ollama_base_url()"
     },
     {
@@ -4902,7 +4912,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "llm_backend_ollama_model_name",
-      "community": 9,
+      "community": 30,
       "norm_label": "_ollama_model_name()"
     },
     {
@@ -4932,7 +4942,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "llm_backend_ollama_request",
-      "community": 9,
+      "community": 30,
       "norm_label": "_ollama_request()"
     },
     {
@@ -4942,7 +4952,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "llm_backend_ollama_tags",
-      "community": 9,
+      "community": 30,
       "norm_label": "_ollama_tags()"
     },
     {
@@ -4952,7 +4962,7 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "llm_backend_ollama_server_available",
-      "community": 9,
+      "community": 30,
       "norm_label": "_ollama_server_available()"
     },
     {
@@ -4962,84 +4972,94 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "llm_backend_ollama_model_available",
-      "community": 9,
+      "community": 30,
       "norm_label": "_ollama_model_available()"
+    },
+    {
+      "label": "list_ollama_models()",
+      "file_type": "code",
+      "source_file": "llm_backend.py",
+      "source_location": "L129",
+      "_origin": "ast",
+      "id": "llm_backend_list_ollama_models",
+      "community": 30,
+      "norm_label": "list_ollama_models()"
     },
     {
       "label": "_ollama_ready()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L138",
+      "source_location": "L191",
       "_origin": "ast",
       "id": "llm_backend_ollama_ready",
-      "community": 9,
+      "community": 30,
       "norm_label": "_ollama_ready()"
     },
     {
       "label": "get_selected_backend()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L168",
+      "source_location": "L221",
       "_origin": "ast",
       "id": "llm_backend_get_selected_backend",
-      "community": 9,
+      "community": 30,
       "norm_label": "get_selected_backend()"
     },
     {
       "label": "get_backend_status()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L183",
+      "source_location": "L236",
       "_origin": "ast",
       "id": "llm_backend_get_backend_status",
-      "community": 9,
+      "community": 30,
       "norm_label": "get_backend_status()"
     },
     {
       "label": "_humanize_probe_error()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L213",
+      "source_location": "L266",
       "_origin": "ast",
       "id": "llm_backend_humanize_probe_error",
-      "community": 9,
+      "community": 30,
       "norm_label": "_humanize_probe_error()"
     },
     {
       "label": "probe_backend()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L229",
+      "source_location": "L282",
       "_origin": "ast",
       "id": "llm_backend_probe_backend",
-      "community": 9,
+      "community": 30,
       "norm_label": "probe_backend()"
     },
     {
       "label": "_candidate_backends()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L288",
+      "source_location": "L341",
       "_origin": "ast",
       "id": "llm_backend_candidate_backends",
-      "community": 9,
+      "community": 30,
       "norm_label": "_candidate_backends()"
     },
     {
       "label": "_local_only_reply()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L313",
+      "source_location": "L366",
       "_origin": "ast",
       "id": "llm_backend_local_only_reply",
-      "community": 9,
+      "community": 30,
       "norm_label": "_local_only_reply()"
     },
     {
       "label": "_chat_with_backend()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L330",
+      "source_location": "L383",
       "_origin": "ast",
       "id": "llm_backend_chat_with_backend",
       "community": 9,
@@ -5049,17 +5069,17 @@
       "label": "_build_messages()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L342",
+      "source_location": "L395",
       "_origin": "ast",
       "id": "llm_backend_build_messages",
-      "community": 9,
+      "community": 30,
       "norm_label": "_build_messages()"
     },
     {
       "label": "_require()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L367",
+      "source_location": "L420",
       "_origin": "ast",
       "id": "llm_backend_require",
       "community": 9,
@@ -5069,7 +5089,7 @@
       "label": "_chat_with_openai_compatible()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L391",
+      "source_location": "L444",
       "_origin": "ast",
       "id": "llm_backend_chat_with_openai_compatible",
       "community": 9,
@@ -5079,17 +5099,17 @@
       "label": "_strip_qwen_thinking()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L452",
+      "source_location": "L505",
       "_origin": "ast",
       "id": "llm_backend_strip_qwen_thinking",
-      "community": 9,
+      "community": 44,
       "norm_label": "_strip_qwen_thinking()"
     },
     {
       "label": "_cot_log_enabled()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L471",
+      "source_location": "L524",
       "_origin": "ast",
       "id": "llm_backend_cot_log_enabled",
       "community": 9,
@@ -5099,7 +5119,7 @@
       "label": "_cot_print()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L480",
+      "source_location": "L533",
       "_origin": "ast",
       "id": "llm_backend_cot_print",
       "community": 9,
@@ -5109,17 +5129,17 @@
       "label": "_dump_raw_reply()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L489",
+      "source_location": "L542",
       "_origin": "ast",
       "id": "llm_backend_dump_raw_reply",
-      "community": 9,
+      "community": 44,
       "norm_label": "_dump_raw_reply()"
     },
     {
       "label": "_CotStreamMirror",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L509",
+      "source_location": "L562",
       "_origin": "ast",
       "id": "llm_backend_cotstreammirror",
       "community": 9,
@@ -5129,7 +5149,7 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L527",
+      "source_location": "L580",
       "_origin": "ast",
       "id": "llm_backend_cotstreammirror_init",
       "community": 9,
@@ -5139,7 +5159,7 @@
       "label": "._ensure_header()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L541",
+      "source_location": "L594",
       "_origin": "ast",
       "id": "llm_backend_cotstreammirror_ensure_header",
       "community": 9,
@@ -5149,7 +5169,7 @@
       "label": "._mark_first()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L550",
+      "source_location": "L603",
       "_origin": "ast",
       "id": "llm_backend_cotstreammirror_mark_first",
       "community": 9,
@@ -5159,7 +5179,7 @@
       "label": ".feed_reasoning()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L556",
+      "source_location": "L609",
       "_origin": "ast",
       "id": "llm_backend_cotstreammirror_feed_reasoning",
       "community": 9,
@@ -5169,7 +5189,7 @@
       "label": ".feed()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L569",
+      "source_location": "L622",
       "_origin": "ast",
       "id": "llm_backend_cotstreammirror_feed",
       "community": 9,
@@ -5179,7 +5199,7 @@
       "label": ".finish()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L625",
+      "source_location": "L678",
       "_origin": "ast",
       "id": "llm_backend_cotstreammirror_finish",
       "community": 9,
@@ -5189,7 +5209,7 @@
       "label": "_chat_with_ollama()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L664",
+      "source_location": "L717",
       "_origin": "ast",
       "id": "llm_backend_chat_with_ollama",
       "community": 9,
@@ -5199,7 +5219,7 @@
       "label": "_chat_with_claude_native()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L713",
+      "source_location": "L766",
       "_origin": "ast",
       "id": "llm_backend_chat_with_claude_native",
       "community": 9,
@@ -5209,37 +5229,37 @@
       "label": "_is_mostly_english()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L758",
+      "source_location": "L811",
       "_origin": "ast",
       "id": "llm_backend_is_mostly_english",
-      "community": 9,
+      "community": 44,
       "norm_label": "_is_mostly_english()"
     },
     {
       "label": "_postprocess_reply()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L777",
+      "source_location": "L830",
       "_origin": "ast",
       "id": "llm_backend_postprocess_reply",
-      "community": 9,
+      "community": 44,
       "norm_label": "_postprocess_reply()"
     },
     {
       "label": "generate_reply()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L793",
+      "source_location": "L846",
       "_origin": "ast",
       "id": "llm_backend_generate_reply",
-      "community": 9,
+      "community": 30,
       "norm_label": "generate_reply()"
     },
     {
       "label": "_delta_reasoning()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L815",
+      "source_location": "L868",
       "_origin": "ast",
       "id": "llm_backend_delta_reasoning",
       "community": 9,
@@ -5249,7 +5269,7 @@
       "label": "_stream_backend_response()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L833",
+      "source_location": "L886",
       "_origin": "ast",
       "id": "llm_backend_stream_backend_response",
       "community": 9,
@@ -5259,10 +5279,10 @@
       "label": "stream_llm_response()",
       "file_type": "code",
       "source_file": "llm_backend.py",
-      "source_location": "L924",
+      "source_location": "L977",
       "_origin": "ast",
       "id": "llm_backend_stream_llm_response",
-      "community": 9,
+      "community": 30,
       "norm_label": "stream_llm_response()"
     },
     {
@@ -5286,62 +5306,72 @@
       "norm_label": "timeout http del cliente llm (segundos). evita colgarse sin fin en la nube."
     },
     {
+      "label": "Modelos instalados en el Ollama local (equivalente a ``ollama list``).      Devu",
+      "file_type": "rationale",
+      "source_file": "llm_backend.py",
+      "source_location": "L130",
+      "_origin": "ast",
+      "id": "llm_backend_rationale_130",
+      "community": 30,
+      "norm_label": "modelos instalados en el ollama local (equivalente a ``ollama list``).      devu"
+    },
+    {
       "label": "\u00bfOllama est\u00e1 listo (servidor arriba + modelo instalado)?  Cacheado.      El resu",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L139",
+      "source_location": "L192",
       "_origin": "ast",
-      "id": "llm_backend_rationale_139",
-      "community": 9,
+      "id": "llm_backend_rationale_192",
+      "community": 30,
       "norm_label": "\u00bfollama esta listo (servidor arriba + modelo instalado)?  cacheado.      el resu"
     },
     {
       "label": "Backend efectivo seg\u00fan la configuraci\u00f3n actual.      Delega en :func:`provider_c",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L169",
+      "source_location": "L222",
       "_origin": "ast",
-      "id": "llm_backend_rationale_169",
-      "community": 9,
+      "id": "llm_backend_rationale_222",
+      "community": 30,
       "norm_label": "backend efectivo segun la configuracion actual.      delega en :func:`provider_c"
     },
     {
       "label": "Traduce errores de proveedor a un mensaje accionable para el operador.",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L214",
+      "source_location": "L267",
       "_origin": "ast",
-      "id": "llm_backend_rationale_214",
-      "community": 9,
+      "id": "llm_backend_rationale_267",
+      "community": 30,
       "norm_label": "traduce errores de proveedor a un mensaje accionable para el operador."
     },
     {
       "label": "Prueba real de conexi\u00f3n a un proveedor sin persistir nada.      Devuelve ``{\"ok\"",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L230",
+      "source_location": "L283",
       "_origin": "ast",
-      "id": "llm_backend_rationale_230",
-      "community": 9,
+      "id": "llm_backend_rationale_283",
+      "community": 30,
       "norm_label": "prueba real de conexion a un proveedor sin persistir nada.      devuelve ``{\"ok\""
     },
     {
       "label": "Orden de intentos del LLM, de m\u00e1s a menos preferente.      primario -> otros pro",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L289",
+      "source_location": "L342",
       "_origin": "ast",
-      "id": "llm_backend_rationale_289",
-      "community": 9,
+      "id": "llm_backend_rationale_342",
+      "community": 30,
       "norm_label": "orden de intentos del llm, de mas a menos preferente.      primario -> otros pro"
     },
     {
       "label": "Resuelve (api_key, model, base_url) o lanza un error claro y accionable.",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L368",
+      "source_location": "L421",
       "_origin": "ast",
-      "id": "llm_backend_rationale_368",
+      "id": "llm_backend_rationale_421",
       "community": 9,
       "norm_label": "resuelve (api_key, model, base_url) o lanza un error claro y accionable."
     },
@@ -5349,9 +5379,9 @@
       "label": "Chat OpenAI-compatible con stream interno + CoT en terminal + timeout.      Aunq",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L392",
+      "source_location": "L445",
       "_origin": "ast",
-      "id": "llm_backend_rationale_392",
+      "id": "llm_backend_rationale_445",
       "community": 9,
       "norm_label": "chat openai-compatible con stream interno + cot en terminal + timeout.      aunq"
     },
@@ -5359,19 +5389,19 @@
       "label": "Remove reasoning/thinking blocks so they are not spoken by TTS.      Cubre vario",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L453",
+      "source_location": "L506",
       "_origin": "ast",
-      "id": "llm_backend_rationale_453",
-      "community": 9,
+      "id": "llm_backend_rationale_506",
+      "community": 44,
       "norm_label": "remove reasoning/thinking blocks so they are not spoken by tts.      cubre vario"
     },
     {
       "label": "\u00bfImprimir el CoT/razonamiento crudo en la terminal?      Activo por defecto para",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L472",
+      "source_location": "L525",
       "_origin": "ast",
-      "id": "llm_backend_rationale_472",
+      "id": "llm_backend_rationale_525",
       "community": 9,
       "norm_label": "\u00bfimprimir el cot/razonamiento crudo en la terminal?      activo por defecto para"
     },
@@ -5379,9 +5409,9 @@
       "label": "Escribe en stdout con flush inmediato (imprescindible para ver el stream en vivo",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L481",
+      "source_location": "L534",
       "_origin": "ast",
-      "id": "llm_backend_rationale_481",
+      "id": "llm_backend_rationale_534",
       "community": 9,
       "norm_label": "escribe en stdout con flush inmediato (imprescindible para ver el stream en vivo"
     },
@@ -5389,19 +5419,19 @@
       "label": "Vuelca la respuesta cruda (CoT incluido) al terminar un turno no-streaming.",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L490",
+      "source_location": "L543",
       "_origin": "ast",
-      "id": "llm_backend_rationale_490",
-      "community": 9,
+      "id": "llm_backend_rationale_543",
+      "community": 44,
       "norm_label": "vuelca la respuesta cruda (cot incluido) al terminar un turno no-streaming."
     },
     {
       "label": "Espejo del stream LLM en terminal: CoT + respuesta, en vivo.      Detecta bloque",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L510",
+      "source_location": "L563",
       "_origin": "ast",
-      "id": "llm_backend_rationale_510",
+      "id": "llm_backend_rationale_563",
       "community": 9,
       "norm_label": "espejo del stream llm en terminal: cot + respuesta, en vivo.      detecta bloque"
     },
@@ -5409,9 +5439,9 @@
       "label": "Campo de razonamiento separado (OpenRouter/DeepSeek/Qwen, etc.).",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L557",
+      "source_location": "L610",
       "_origin": "ast",
-      "id": "llm_backend_rationale_557",
+      "id": "llm_backend_rationale_610",
       "community": 9,
       "norm_label": "campo de razonamiento separado (openrouter/deepseek/qwen, etc.)."
     },
@@ -5419,9 +5449,9 @@
       "label": "Trozo de ``delta.content`` (puede mezclar CoT etiquetado + respuesta).",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L570",
+      "source_location": "L623",
       "_origin": "ast",
-      "id": "llm_backend_rationale_570",
+      "id": "llm_backend_rationale_623",
       "community": 9,
       "norm_label": "trozo de ``delta.content`` (puede mezclar cot etiquetado + respuesta)."
     },
@@ -5429,29 +5459,29 @@
       "label": "Heuristic: return True only when the text is clearly English.      Se exige evid",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L759",
+      "source_location": "L812",
       "_origin": "ast",
-      "id": "llm_backend_rationale_759",
-      "community": 9,
+      "id": "llm_backend_rationale_812",
+      "community": 44,
       "norm_label": "heuristic: return true only when the text is clearly english.      se exige evid"
     },
     {
       "label": "Clean up LLM response: strip thinking blocks and handle language issues.",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L778",
+      "source_location": "L831",
       "_origin": "ast",
-      "id": "llm_backend_rationale_778",
-      "community": 9,
+      "id": "llm_backend_rationale_831",
+      "community": 44,
       "norm_label": "clean up llm response: strip thinking blocks and handle language issues."
     },
     {
       "label": "Extrae CoT de campos separados del delta (si el proveedor los manda).",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L816",
+      "source_location": "L869",
       "_origin": "ast",
-      "id": "llm_backend_rationale_816",
+      "id": "llm_backend_rationale_869",
       "community": 9,
       "norm_label": "extrae cot de campos separados del delta (si el proveedor los manda)."
     },
@@ -5459,10 +5489,10 @@
       "label": "Generador as\u00edncrono para transmitir la respuesta del LLM en tiempo real.      ``",
       "file_type": "rationale",
       "source_file": "llm_backend.py",
-      "source_location": "L927",
+      "source_location": "L980",
       "_origin": "ast",
-      "id": "llm_backend_rationale_927",
-      "community": 9,
+      "id": "llm_backend_rationale_980",
+      "community": 30,
       "norm_label": "generador asincrono para transmitir la respuesta del llm en tiempo real.      ``"
     },
     {
@@ -5592,7 +5622,7 @@
       "source_location": "L495",
       "_origin": "ast",
       "id": "main_llmtestpayload",
-      "community": 65,
+      "community": 66,
       "norm_label": "llmtestpayload"
     },
     {
@@ -5602,64 +5632,74 @@
       "source_location": "L503",
       "_origin": "ast",
       "id": "main_get_providers",
-      "community": 11,
+      "community": 0,
       "norm_label": "get_providers()"
+    },
+    {
+      "label": "get_ollama_models()",
+      "file_type": "code",
+      "source_file": "main.py",
+      "source_location": "L514",
+      "_origin": "ast",
+      "id": "main_get_ollama_models",
+      "community": 66,
+      "norm_label": "get_ollama_models()"
     },
     {
       "label": "test_llm()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L514",
+      "source_location": "L529",
       "_origin": "ast",
       "id": "main_test_llm",
-      "community": 65,
+      "community": 66,
       "norm_label": "test_llm()"
     },
     {
       "label": "get_unev_content()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L530",
+      "source_location": "L545",
       "_origin": "ast",
       "id": "main_get_unev_content",
-      "community": 11,
+      "community": 23,
       "norm_label": "get_unev_content()"
     },
     {
       "label": "update_unev_content()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L536",
+      "source_location": "L551",
       "_origin": "ast",
       "id": "main_update_unev_content",
-      "community": 11,
+      "community": 65,
       "norm_label": "update_unev_content()"
     },
     {
       "label": "CameraToggle",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L551",
+      "source_location": "L566",
       "_origin": "ast",
       "id": "main_cameratoggle",
-      "community": 59,
+      "community": 65,
       "norm_label": "cameratoggle"
     },
     {
       "label": "set_camera()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L556",
+      "source_location": "L571",
       "_origin": "ast",
       "id": "main_set_camera",
-      "community": 59,
+      "community": 65,
       "norm_label": "set_camera()"
     },
     {
       "label": "SpeakPayload",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L576",
+      "source_location": "L591",
       "_origin": "ast",
       "id": "main_speakpayload",
       "community": 65,
@@ -5669,17 +5709,17 @@
       "label": "get_voices()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L582",
+      "source_location": "L597",
       "_origin": "ast",
       "id": "main_get_voices",
-      "community": 11,
+      "community": 41,
       "norm_label": "get_voices()"
     },
     {
       "label": "play_speak()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L594",
+      "source_location": "L609",
       "_origin": "ast",
       "id": "main_play_speak",
       "community": 65,
@@ -5689,7 +5729,7 @@
       "label": "train_image()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L620",
+      "source_location": "L635",
       "_origin": "ast",
       "id": "main_train_image",
       "community": 65,
@@ -5699,7 +5739,7 @@
       "label": "get_training_metadata()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L673",
+      "source_location": "L688",
       "_origin": "ast",
       "id": "main_get_training_metadata",
       "community": 11,
@@ -5709,7 +5749,7 @@
       "label": "train_vocabulary()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L682",
+      "source_location": "L697",
       "_origin": "ast",
       "id": "main_train_vocabulary",
       "community": 65,
@@ -5719,7 +5759,7 @@
       "label": "HologramConnect",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L693",
+      "source_location": "L708",
       "_origin": "ast",
       "id": "main_hologramconnect",
       "community": 11,
@@ -5729,7 +5769,7 @@
       "label": "HologramCommand",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L698",
+      "source_location": "L713",
       "_origin": "ast",
       "id": "main_hologramcommand",
       "community": 11,
@@ -5739,7 +5779,7 @@
       "label": "_get_holo_manager()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L706",
+      "source_location": "L721",
       "_origin": "ast",
       "id": "main_get_holo_manager",
       "community": 11,
@@ -5749,7 +5789,7 @@
       "label": "holo_connect()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L713",
+      "source_location": "L728",
       "_origin": "ast",
       "id": "main_holo_connect",
       "community": 11,
@@ -5759,7 +5799,7 @@
       "label": "holo_disconnect()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L730",
+      "source_location": "L745",
       "_origin": "ast",
       "id": "main_holo_disconnect",
       "community": 11,
@@ -5769,7 +5809,7 @@
       "label": "holo_command()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L739",
+      "source_location": "L754",
       "_origin": "ast",
       "id": "main_holo_command",
       "community": 11,
@@ -5779,7 +5819,7 @@
       "label": "holo_status()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L749",
+      "source_location": "L764",
       "_origin": "ast",
       "id": "main_holo_status",
       "community": 11,
@@ -5789,7 +5829,7 @@
       "label": "pause_ai()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L762",
+      "source_location": "L777",
       "_origin": "ast",
       "id": "main_pause_ai",
       "community": 11,
@@ -5799,7 +5839,7 @@
       "label": "resume_ai()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L773",
+      "source_location": "L788",
       "_origin": "ast",
       "id": "main_resume_ai",
       "community": 11,
@@ -5809,7 +5849,7 @@
       "label": "_placeholder_jpeg()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L786",
+      "source_location": "L801",
       "_origin": "ast",
       "id": "main_placeholder_jpeg",
       "community": 11,
@@ -5819,7 +5859,7 @@
       "label": "video_feed()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L804",
+      "source_location": "L819",
       "_origin": "ast",
       "id": "main_video_feed",
       "community": 11,
@@ -5829,7 +5869,7 @@
       "label": "read_root()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L849",
+      "source_location": "L864",
       "_origin": "ast",
       "id": "main_read_root",
       "community": 11,
@@ -5839,7 +5879,7 @@
       "label": "read_all_other_paths()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L871",
+      "source_location": "L886",
       "_origin": "ast",
       "id": "main_read_all_other_paths",
       "community": 11,
@@ -5849,7 +5889,7 @@
       "label": "websocket_chat_endpoint()",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L887",
+      "source_location": "L902",
       "_origin": "ast",
       "id": "main_websocket_chat_endpoint",
       "community": 63,
@@ -5859,7 +5899,7 @@
       "label": "WebSocket",
       "file_type": "code",
       "source_file": "main.py",
-      "source_location": "L887",
+      "source_location": "L902",
       "_origin": "ast",
       "id": "websocket",
       "community": 63,
@@ -5892,56 +5932,66 @@
       "source_location": "L504",
       "_origin": "ast",
       "id": "main_rationale_504",
-      "community": 11,
+      "community": 0,
       "norm_label": "lista de proveedores de ia con metadata segura (sin secretos).      la interfaz"
     },
     {
-      "label": "Prueba real de proveedor/modelo/key/URL sin guardar nada.      Devuelve un mensa",
+      "label": "Modelos instalados en el Ollama local (equivalente a ``ollama list``).      La p",
       "file_type": "rationale",
       "source_file": "main.py",
       "source_location": "L515",
       "_origin": "ast",
       "id": "main_rationale_515",
-      "community": 65,
+      "community": 66,
+      "norm_label": "modelos instalados en el ollama local (equivalente a ``ollama list``).      la p"
+    },
+    {
+      "label": "Prueba real de proveedor/modelo/key/URL sin guardar nada.      Devuelve un mensa",
+      "file_type": "rationale",
+      "source_file": "main.py",
+      "source_location": "L530",
+      "_origin": "ast",
+      "id": "main_rationale_530",
+      "community": 66,
       "norm_label": "prueba real de proveedor/modelo/key/url sin guardar nada.      devuelve un mensa"
     },
     {
       "label": "Contenido institucional de UNEV (fuente \u00fanica editable).",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L531",
+      "source_location": "L546",
       "_origin": "ast",
-      "id": "main_rationale_531",
-      "community": 11,
+      "id": "main_rationale_546",
+      "community": 23,
       "norm_label": "contenido institucional de unev (fuente unica editable)."
     },
     {
       "label": "Valida y guarda el contenido de UNEV; recarga la fuente en caliente.      Devuel",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L537",
+      "source_location": "L552",
       "_origin": "ast",
-      "id": "main_rationale_537",
-      "community": 11,
+      "id": "main_rationale_552",
+      "community": 65,
       "norm_label": "valida y guarda el contenido de unev; recarga la fuente en caliente.      devuel"
     },
     {
       "label": "Enciende o **apaga** la c\u00e1mara liberando el dispositivo.      Apagar no solo ocu",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L557",
+      "source_location": "L572",
       "_origin": "ast",
-      "id": "main_rationale_557",
-      "community": 59,
+      "id": "main_rationale_572",
+      "community": 65,
       "norm_label": "enciende o **apaga** la camara liberando el dispositivo.      apagar no solo ocu"
     },
     {
       "label": "Build a simple 'no signal' JPEG so the <img> always shows something.",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L787",
+      "source_location": "L802",
       "_origin": "ast",
-      "id": "main_rationale_787",
+      "id": "main_rationale_802",
       "community": 11,
       "norm_label": "build a simple 'no signal' jpeg so the <img> always shows something."
     },
@@ -5949,9 +5999,9 @@
       "label": "Transmite los cuadros YOLO anotados como MJPEG (async: no bloquea el loop).",
       "file_type": "rationale",
       "source_file": "main.py",
-      "source_location": "L805",
+      "source_location": "L820",
       "_origin": "ast",
-      "id": "main_rationale_805",
+      "id": "main_rationale_820",
       "community": 11,
       "norm_label": "transmite los cuadros yolo anotados como mjpeg (async: no bloquea el loop)."
     },
@@ -5962,7 +6012,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "provider_config",
-      "community": 9,
+      "community": 0,
       "norm_label": "provider_config.py"
     },
     {
@@ -5972,97 +6022,97 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "provider_config_provider",
-      "community": 9,
+      "community": 0,
       "norm_label": "provider"
     },
     {
       "label": "_norm()",
       "file_type": "code",
       "source_file": "provider_config.py",
-      "source_location": "L160",
+      "source_location": "L182",
       "_origin": "ast",
       "id": "provider_config_norm",
-      "community": 9,
+      "community": 0,
       "norm_label": "_norm()"
     },
     {
       "label": "_canonical_provider()",
       "file_type": "code",
       "source_file": "provider_config.py",
-      "source_location": "L164",
+      "source_location": "L186",
       "_origin": "ast",
       "id": "provider_config_canonical_provider",
-      "community": 9,
+      "community": 0,
       "norm_label": "_canonical_provider()"
     },
     {
       "label": "select_backend()",
       "file_type": "code",
       "source_file": "provider_config.py",
-      "source_location": "L170",
+      "source_location": "L192",
       "_origin": "ast",
       "id": "provider_config_select_backend",
-      "community": 9,
+      "community": 0,
       "norm_label": "select_backend()"
     },
     {
       "label": "resolve_model()",
       "file_type": "code",
       "source_file": "provider_config.py",
-      "source_location": "L208",
+      "source_location": "L230",
       "_origin": "ast",
       "id": "provider_config_resolve_model",
-      "community": 9,
+      "community": 0,
       "norm_label": "resolve_model()"
     },
     {
       "label": "resolve_api_key()",
       "file_type": "code",
       "source_file": "provider_config.py",
-      "source_location": "L235",
+      "source_location": "L257",
       "_origin": "ast",
       "id": "provider_config_resolve_api_key",
-      "community": 9,
+      "community": 0,
       "norm_label": "resolve_api_key()"
     },
     {
       "label": "resolve_base_url()",
       "file_type": "code",
       "source_file": "provider_config.py",
-      "source_location": "L243",
+      "source_location": "L265",
       "_origin": "ast",
       "id": "provider_config_resolve_base_url",
-      "community": 9,
+      "community": 0,
       "norm_label": "resolve_base_url()"
     },
     {
       "label": "configured_cloud_providers()",
       "file_type": "code",
       "source_file": "provider_config.py",
-      "source_location": "L255",
+      "source_location": "L277",
       "_origin": "ast",
       "id": "provider_config_configured_cloud_providers",
-      "community": 9,
+      "community": 0,
       "norm_label": "configured_cloud_providers()"
     },
     {
       "label": "provider_public_info()",
       "file_type": "code",
       "source_file": "provider_config.py",
-      "source_location": "L285",
+      "source_location": "L307",
       "_origin": "ast",
       "id": "provider_config_provider_public_info",
-      "community": 9,
+      "community": 0,
       "norm_label": "provider_public_info()"
     },
     {
       "label": "all_providers_public_info()",
       "file_type": "code",
       "source_file": "provider_config.py",
-      "source_location": "L305",
+      "source_location": "L327",
       "_origin": "ast",
       "id": "provider_config_all_providers_public_info",
-      "community": 9,
+      "community": 0,
       "norm_label": "all_providers_public_info()"
     },
     {
@@ -6072,7 +6122,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "provider_config_rationale_1",
-      "community": 9,
+      "community": 0,
       "norm_label": "unified llm provider/model configuration contract for holograma unev.  antes de"
     },
     {
@@ -6082,47 +6132,47 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "provider_config_rationale_34",
-      "community": 9,
+      "community": 0,
       "norm_label": "descripcion de un proveedor de llm y como alcanzarlo."
     },
     {
       "label": "Devuelve el backend a usar seg\u00fan la configuraci\u00f3n. Determinista.      Reglas (en",
       "file_type": "rationale",
       "source_file": "provider_config.py",
-      "source_location": "L174",
+      "source_location": "L196",
       "_origin": "ast",
-      "id": "provider_config_rationale_174",
-      "community": 9,
+      "id": "provider_config_rationale_196",
+      "community": 0,
       "norm_label": "devuelve el backend a usar segun la configuracion. determinista.      reglas (en"
     },
     {
       "label": "Modelo efectivo para un proveedor.      Precedencia: variable espec\u00edfica del pro",
       "file_type": "rationale",
       "source_file": "provider_config.py",
-      "source_location": "L209",
+      "source_location": "L231",
       "_origin": "ast",
-      "id": "provider_config_rationale_209",
-      "community": 9,
+      "id": "provider_config_rationale_231",
+      "community": 0,
       "norm_label": "modelo efectivo para un proveedor.      precedencia: variable especifica del pro"
     },
     {
       "label": "IDs de proveedores en la nube con credenciales utilizables (key + modelo).",
       "file_type": "rationale",
       "source_file": "provider_config.py",
-      "source_location": "L256",
+      "source_location": "L278",
       "_origin": "ast",
-      "id": "provider_config_rationale_256",
-      "community": 9,
+      "id": "provider_config_rationale_278",
+      "community": 0,
       "norm_label": "ids de proveedores en la nube con credenciales utilizables (key + modelo)."
     },
     {
       "label": "Metadata segura para la interfaz (sin secretos).",
       "file_type": "rationale",
       "source_file": "provider_config.py",
-      "source_location": "L286",
+      "source_location": "L308",
       "_origin": "ast",
-      "id": "provider_config_rationale_286",
-      "community": 9,
+      "id": "provider_config_rationale_308",
+      "community": 0,
       "norm_label": "metadata segura para la interfaz (sin secretos)."
     },
     {
@@ -6424,7 +6474,7 @@
       "label": "select_ears()",
       "file_type": "code",
       "source_file": "scripts/setup_hologram.py",
-      "source_location": "L184",
+      "source_location": "L189",
       "_origin": "ast",
       "id": "scripts_setup_hologram_select_ears",
       "community": 15,
@@ -6434,7 +6484,7 @@
       "label": "configure_vision()",
       "file_type": "code",
       "source_file": "scripts/setup_hologram.py",
-      "source_location": "L218",
+      "source_location": "L223",
       "_origin": "ast",
       "id": "scripts_setup_hologram_configure_vision",
       "community": 15,
@@ -6444,7 +6494,7 @@
       "label": "run_setup()",
       "file_type": "code",
       "source_file": "scripts/setup_hologram.py",
-      "source_location": "L242",
+      "source_location": "L247",
       "_origin": "ast",
       "id": "scripts_setup_hologram_run_setup",
       "community": 15,
@@ -6474,9 +6524,9 @@
       "label": "Flujo interactivo para configurar los O\u00eddos (Whisper).",
       "file_type": "rationale",
       "source_file": "scripts/setup_hologram.py",
-      "source_location": "L185",
+      "source_location": "L190",
       "_origin": "ast",
-      "id": "scripts_setup_hologram_rationale_185",
+      "id": "scripts_setup_hologram_rationale_190",
       "community": 15,
       "norm_label": "flujo interactivo para configurar los oidos (whisper)."
     },
@@ -6484,9 +6534,9 @@
       "label": "Flujo interactivo para la Visi\u00f3n (YOLOv26 + OpenCV).",
       "file_type": "rationale",
       "source_file": "scripts/setup_hologram.py",
-      "source_location": "L219",
+      "source_location": "L224",
       "_origin": "ast",
-      "id": "scripts_setup_hologram_rationale_219",
+      "id": "scripts_setup_hologram_rationale_224",
       "community": 15,
       "norm_label": "flujo interactivo para la vision (yolov26 + opencv)."
     },
@@ -6494,9 +6544,9 @@
       "label": "Ejecuta el asistente interactivo de configuraci\u00f3n completo.",
       "file_type": "rationale",
       "source_file": "scripts/setup_hologram.py",
-      "source_location": "L243",
+      "source_location": "L248",
       "_origin": "ast",
-      "id": "scripts_setup_hologram_rationale_243",
+      "id": "scripts_setup_hologram_rationale_248",
       "community": 15,
       "norm_label": "ejecuta el asistente interactivo de configuracion completo."
     },
@@ -6507,27 +6557,27 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "security",
-      "community": 0,
+      "community": 65,
       "norm_label": "security.py"
     },
     {
       "label": "redact_secrets()",
       "file_type": "code",
       "source_file": "security.py",
-      "source_location": "L62",
+      "source_location": "L61",
       "_origin": "ast",
       "id": "security_redact_secrets",
-      "community": 9,
+      "community": 65,
       "norm_label": "redact_secrets()"
     },
     {
       "label": "clamp_text()",
       "file_type": "code",
       "source_file": "security.py",
-      "source_location": "L85",
+      "source_location": "L84",
       "_origin": "ast",
       "id": "security_clamp_text",
-      "community": 0,
+      "community": 65,
       "norm_label": "clamp_text()"
     },
     {
@@ -6537,27 +6587,27 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "security_rationale_1",
-      "community": 0,
+      "community": 65,
       "norm_label": "utilidades de seguridad para holograma unev.  funciones puras (sin red, sin esta"
     },
     {
       "label": "Devuelve ``text`` con cualquier secreto enmascarado.      Enmascara (1) los valo",
       "file_type": "rationale",
       "source_file": "security.py",
-      "source_location": "L63",
+      "source_location": "L62",
       "_origin": "ast",
-      "id": "security_rationale_63",
-      "community": 9,
+      "id": "security_rationale_62",
+      "community": 65,
       "norm_label": "devuelve ``text`` con cualquier secreto enmascarado.      enmascara (1) los valo"
     },
     {
       "label": "Sanea texto no confiable: elimina caracteres de control y trunca a ``max_len``.",
       "file_type": "rationale",
       "source_file": "security.py",
-      "source_location": "L86",
+      "source_location": "L85",
       "_origin": "ast",
-      "id": "security_rationale_86",
-      "community": 0,
+      "id": "security_rationale_85",
+      "community": 65,
       "norm_label": "sanea texto no confiable: elimina caracteres de control y trunca a ``max_len``."
     },
     {
@@ -6647,7 +6697,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_honduras",
-      "community": 30,
+      "community": 23,
       "norm_label": "honduras.py"
     },
     {
@@ -6657,7 +6707,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "skills_honduras_build_search_index",
-      "community": 30,
+      "community": 23,
       "norm_label": "_build_search_index()"
     },
     {
@@ -6667,7 +6717,7 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "skills_honduras_get_university_summary",
-      "community": 30,
+      "community": 23,
       "norm_label": "get_university_summary()"
     },
     {
@@ -6677,7 +6727,7 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "skills_honduras_get_programs_summary",
-      "community": 30,
+      "community": 23,
       "norm_label": "get_programs_summary()"
     },
     {
@@ -6687,7 +6737,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "skills_honduras_get_program_info",
-      "community": 30,
+      "community": 23,
       "norm_label": "get_program_info()"
     },
     {
@@ -6697,7 +6747,7 @@
       "source_location": "L137",
       "_origin": "ast",
       "id": "skills_honduras_get_admission_info",
-      "community": 30,
+      "community": 23,
       "norm_label": "get_admission_info()"
     },
     {
@@ -6707,7 +6757,7 @@
       "source_location": "L148",
       "_origin": "ast",
       "id": "skills_honduras_get_location_info",
-      "community": 30,
+      "community": 23,
       "norm_label": "get_location_info()"
     },
     {
@@ -6717,7 +6767,7 @@
       "source_location": "L152",
       "_origin": "ast",
       "id": "skills_honduras_get_approval_info",
-      "community": 30,
+      "community": 23,
       "norm_label": "get_approval_info()"
     },
     {
@@ -6727,7 +6777,7 @@
       "source_location": "L156",
       "_origin": "ast",
       "id": "skills_honduras_get_website_info",
-      "community": 30,
+      "community": 23,
       "norm_label": "get_website_info()"
     },
     {
@@ -6737,7 +6787,7 @@
       "source_location": "L160",
       "_origin": "ast",
       "id": "skills_honduras_get_proceres_info",
-      "community": 30,
+      "community": 23,
       "norm_label": "get_proceres_info()"
     },
     {
@@ -6747,7 +6797,7 @@
       "source_location": "L171",
       "_origin": "ast",
       "id": "skills_honduras_get_vulgarismos_info",
-      "community": 30,
+      "community": 23,
       "norm_label": "get_vulgarismos_info()"
     },
     {
@@ -6757,7 +6807,7 @@
       "source_location": "L182",
       "_origin": "ast",
       "id": "skills_honduras_get_simbolos_patrios_info",
-      "community": 30,
+      "community": 23,
       "norm_label": "get_simbolos_patrios_info()"
     },
     {
@@ -6777,7 +6827,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "skills_honduras_rationale_60",
-      "community": 30,
+      "community": 23,
       "norm_label": "pre-calcula indices de texto normalizados en el arranque del servidor/script."
     },
     {
@@ -6797,7 +6847,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "skills_presence_presencemanager",
-      "community": 18,
+      "community": 45,
       "norm_label": "presencemanager"
     },
     {
@@ -6807,7 +6857,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "skills_presence_presencemanager_init",
-      "community": 18,
+      "community": 45,
       "norm_label": ".__init__()"
     },
     {
@@ -6817,7 +6867,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "skills_presence_presencemanager_update",
-      "community": 18,
+      "community": 45,
       "norm_label": ".update()"
     },
     {
@@ -6827,7 +6877,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "skills_presence_presencemanager_should_greet",
-      "community": 18,
+      "community": 45,
       "norm_label": ".should_greet()"
     },
     {
@@ -6837,7 +6887,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "skills_presence_presencemanager_should_greet_group",
-      "community": 18,
+      "community": 45,
       "norm_label": ".should_greet_group()"
     },
     {
@@ -6847,7 +6897,7 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "skills_presence_presencemanager_force_person_left",
-      "community": 18,
+      "community": 45,
       "norm_label": ".force_person_left()"
     },
     {
@@ -6877,7 +6927,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_unev_content",
-      "community": 0,
+      "community": 23,
       "norm_label": "unev_content.py"
     },
     {
@@ -6887,7 +6937,7 @@
       "source_location": "L196",
       "_origin": "ast",
       "id": "skills_unev_content_coerce",
-      "community": 0,
+      "community": 23,
       "norm_label": "_coerce()"
     },
     {
@@ -6897,7 +6947,7 @@
       "source_location": "L217",
       "_origin": "ast",
       "id": "skills_unev_content_validate_unev_info",
-      "community": 0,
+      "community": 23,
       "norm_label": "validate_unev_info()"
     },
     {
@@ -6907,7 +6957,7 @@
       "source_location": "L237",
       "_origin": "ast",
       "id": "skills_unev_content_load_unev_info",
-      "community": 0,
+      "community": 23,
       "norm_label": "load_unev_info()"
     },
     {
@@ -6937,7 +6987,7 @@
       "source_location": "L256",
       "_origin": "ast",
       "id": "skills_unev_content_invalidate_skill_caches",
-      "community": 0,
+      "community": 23,
       "norm_label": "_invalidate_skill_caches()"
     },
     {
@@ -6947,7 +6997,7 @@
       "source_location": "L273",
       "_origin": "ast",
       "id": "skills_unev_content_reload",
-      "community": 0,
+      "community": 23,
       "norm_label": "reload()"
     },
     {
@@ -6957,7 +7007,7 @@
       "source_location": "L281",
       "_origin": "ast",
       "id": "skills_unev_content_save_unev_info",
-      "community": 0,
+      "community": 23,
       "norm_label": "save_unev_info()"
     },
     {
@@ -6967,7 +7017,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_1",
-      "community": 0,
+      "community": 23,
       "norm_label": "fuente unica y editable de la informacion institucional de unev.  antes, los dat"
     },
     {
@@ -6977,7 +7027,7 @@
       "source_location": "L197",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_197",
-      "community": 0,
+      "community": 23,
       "norm_label": "normaliza ``data`` a la forma canonica, rellenando faltantes con el respaldo."
     },
     {
@@ -6987,7 +7037,7 @@
       "source_location": "L218",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_218",
-      "community": 0,
+      "community": 23,
       "norm_label": "devuelve una lista de errores (vacia = valido) para mostrar al operador."
     },
     {
@@ -6997,7 +7047,7 @@
       "source_location": "L238",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_238",
-      "community": 0,
+      "community": 23,
       "norm_label": "carga el contenido desde el json autoritativo; respaldo en codigo si falla."
     },
     {
@@ -7017,7 +7067,7 @@
       "source_location": "L257",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_257",
-      "community": 0,
+      "community": 23,
       "norm_label": "tras cambiar unev, invalidar contexto llm y hotwords stt derivados."
     },
     {
@@ -7027,7 +7077,7 @@
       "source_location": "L274",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_274",
-      "community": 0,
+      "community": 23,
       "norm_label": "recarga desde disco (tras una edicion) y actualiza la cache."
     },
     {
@@ -7037,7 +7087,7 @@
       "source_location": "L282",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_282",
-      "community": 0,
+      "community": 23,
       "norm_label": "valida, escribe atomicamente el json autoritativo y recarga la cache.      lanza"
     },
     {
@@ -7057,7 +7107,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "skills_university_invalidate_context_cache",
-      "community": 0,
+      "community": 23,
       "norm_label": "invalidate_context_cache()"
     },
     {
@@ -7157,7 +7207,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "skills_university_rationale_28",
-      "community": 0,
+      "community": 23,
       "norm_label": "limpia la cache de ``get_university_context`` (p. ej. tras editar json)."
     },
     {
@@ -7187,7 +7237,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_utils",
-      "community": 30,
+      "community": 23,
       "norm_label": "utils.py"
     },
     {
@@ -7241,10 +7291,30 @@
       "norm_label": "listener.py"
     },
     {
+      "label": "_resolve_stt_language()",
+      "file_type": "code",
+      "source_file": "stt/listener.py",
+      "source_location": "L44",
+      "_origin": "ast",
+      "id": "stt_listener_resolve_stt_language",
+      "community": 18,
+      "norm_label": "_resolve_stt_language()"
+    },
+    {
+      "label": "_truncate_stt_prompt()",
+      "file_type": "code",
+      "source_file": "stt/listener.py",
+      "source_location": "L64",
+      "_origin": "ast",
+      "id": "stt_listener_truncate_stt_prompt",
+      "community": 53,
+      "norm_label": "_truncate_stt_prompt()"
+    },
+    {
       "label": "_hotwords_sources_signature()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L115",
+      "source_location": "L178",
       "_origin": "ast",
       "id": "stt_listener_hotwords_sources_signature",
       "community": 53,
@@ -7254,7 +7324,7 @@
       "label": "_normalize_hotword()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L126",
+      "source_location": "L189",
       "_origin": "ast",
       "id": "stt_listener_normalize_hotword",
       "community": 18,
@@ -7264,7 +7334,7 @@
       "label": "_hotword_priority()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L141",
+      "source_location": "L204",
       "_origin": "ast",
       "id": "stt_listener_hotword_priority",
       "community": 18,
@@ -7274,7 +7344,7 @@
       "label": "_looks_like_hallucination()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L173",
+      "source_location": "L236",
       "_origin": "ast",
       "id": "stt_listener_looks_like_hallucination",
       "community": 53,
@@ -7284,7 +7354,7 @@
       "label": "WhisperListener",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L185",
+      "source_location": "L248",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener",
       "community": 53,
@@ -7294,17 +7364,17 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L205",
+      "source_location": "L268",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_init",
-      "community": 53,
+      "community": 18,
       "norm_label": ".__init__()"
     },
     {
       "label": "._load_model()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L251",
+      "source_location": "L314",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_load_model",
       "community": 53,
@@ -7314,7 +7384,7 @@
       "label": "._record_until_silence()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L305",
+      "source_location": "L368",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_record_until_silence",
       "community": 53,
@@ -7324,7 +7394,7 @@
       "label": "._audio_to_wav_path()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L434",
+      "source_location": "L497",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_audio_to_wav_path",
       "community": 53,
@@ -7334,7 +7404,7 @@
       "label": "._load_db_hotwords()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L460",
+      "source_location": "L523",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_load_db_hotwords",
       "community": 53,
@@ -7344,17 +7414,27 @@
       "label": "._build_stt_prompt()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L663",
+      "source_location": "L726",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_build_stt_prompt",
       "community": 53,
       "norm_label": "._build_stt_prompt()"
     },
     {
+      "label": "._log_stt_decode_config()",
+      "file_type": "code",
+      "source_file": "stt/listener.py",
+      "source_location": "L762",
+      "_origin": "ast",
+      "id": "stt_listener_whisperlistener_log_stt_decode_config",
+      "community": 53,
+      "norm_label": "._log_stt_decode_config()"
+    },
+    {
       "label": "._transcribe_groq()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L691",
+      "source_location": "L774",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_transcribe_groq",
       "community": 53,
@@ -7364,7 +7444,7 @@
       "label": ".transcribe_file()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L737",
+      "source_location": "L828",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_transcribe_file",
       "community": 53,
@@ -7374,7 +7454,7 @@
       "label": ".listen_once()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L808",
+      "source_location": "L908",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_listen_once",
       "community": 53,
@@ -7384,7 +7464,7 @@
       "label": ".is_available()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L849",
+      "source_location": "L949",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_is_available",
       "community": 53,
@@ -7394,10 +7474,10 @@
       "label": "get_stt_status()",
       "file_type": "code",
       "source_file": "stt/listener.py",
-      "source_location": "L863",
+      "source_location": "L963",
       "_origin": "ast",
       "id": "stt_listener_get_stt_status",
-      "community": 18,
+      "community": 56,
       "norm_label": "get_stt_status()"
     },
     {
@@ -7411,12 +7491,32 @@
       "norm_label": "speech-to-text listener using faster-whisper and sounddevice.  regla de oro a: t"
     },
     {
+      "label": "Idioma efectivo para STT. Por defecto y en duda: espa\u00f1ol (``es``).      ``WHISPE",
+      "file_type": "rationale",
+      "source_file": "stt/listener.py",
+      "source_location": "L45",
+      "_origin": "ast",
+      "id": "stt_listener_rationale_45",
+      "community": 18,
+      "norm_label": "idioma efectivo para stt. por defecto y en duda: espanol (``es``).      ``whispe"
+    },
+    {
+      "label": "Corta el prompt al tope, preferiblemente en un espacio (no parte un t\u00e9rmino).",
+      "file_type": "rationale",
+      "source_file": "stt/listener.py",
+      "source_location": "L65",
+      "_origin": "ast",
+      "id": "stt_listener_rationale_65",
+      "community": 53,
+      "norm_label": "corta el prompt al tope, preferiblemente en un espacio (no parte un termino)."
+    },
+    {
       "label": "Limpia un t\u00e9rmino de hotword (par\u00e9ntesis rotos, puntuaci\u00f3n, basura).",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L127",
+      "source_location": "L190",
       "_origin": "ast",
-      "id": "stt_listener_rationale_127",
+      "id": "stt_listener_rationale_190",
       "community": 18,
       "norm_label": "limpia un termino de hotword (parentesis rotos, puntuacion, basura)."
     },
@@ -7424,9 +7524,9 @@
       "label": "Orden: siglas y nombres cortos primero; frases largas al final.",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L142",
+      "source_location": "L205",
       "_origin": "ast",
-      "id": "stt_listener_rationale_142",
+      "id": "stt_listener_rationale_205",
       "community": 18,
       "norm_label": "orden: siglas y nombres cortos primero; frases largas al final."
     },
@@ -7434,9 +7534,9 @@
       "label": "Return True if *text* is empty or a known Whisper silence-hallucination.",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L174",
+      "source_location": "L237",
       "_origin": "ast",
-      "id": "stt_listener_rationale_174",
+      "id": "stt_listener_rationale_237",
       "community": 53,
       "norm_label": "return true if *text* is empty or a known whisper silence-hallucination."
     },
@@ -7444,9 +7544,9 @@
       "label": "Record from the microphone and transcribe with Faster-Whisper.      Parameters",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L186",
+      "source_location": "L249",
       "_origin": "ast",
-      "id": "stt_listener_rationale_186",
+      "id": "stt_listener_rationale_249",
       "community": 53,
       "norm_label": "record from the microphone and transcribe with faster-whisper.      parameters"
     },
@@ -7454,9 +7554,9 @@
       "label": "Load the Faster-Whisper model on first use.",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L252",
+      "source_location": "L315",
       "_origin": "ast",
-      "id": "stt_listener_rationale_252",
+      "id": "stt_listener_rationale_315",
       "community": 53,
       "norm_label": "load the faster-whisper model on first use."
     },
@@ -7464,9 +7564,9 @@
       "label": "Record audio from the default microphone until silence is detected.          Usa",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L306",
+      "source_location": "L369",
       "_origin": "ast",
-      "id": "stt_listener_rationale_306",
+      "id": "stt_listener_rationale_369",
       "community": 53,
       "norm_label": "record audio from the default microphone until silence is detected.          usa"
     },
@@ -7474,9 +7574,9 @@
       "label": "Write a float32 numpy array to a temporary WAV file.          Returns a ``pathli",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L435",
+      "source_location": "L498",
       "_origin": "ast",
-      "id": "stt_listener_rationale_435",
+      "id": "stt_listener_rationale_498",
       "community": 53,
       "norm_label": "write a float32 numpy array to a temporary wav file.          returns a ``pathli"
     },
@@ -7484,9 +7584,9 @@
       "label": "Hotwords seg\u00fan el contexto del kiosco (cacheadas por mtime de data/).          F",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L461",
+      "source_location": "L524",
       "_origin": "ast",
-      "id": "stt_listener_rationale_461",
+      "id": "stt_listener_rationale_524",
       "community": 53,
       "norm_label": "hotwords segun el contexto del kiosco (cacheadas por mtime de data/).          f"
     },
@@ -7494,9 +7594,9 @@
       "label": "Prompt de contexto para Whisper (local ``initial_prompt`` y Groq ``prompt``).",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L664",
+      "source_location": "L727",
       "_origin": "ast",
-      "id": "stt_listener_rationale_664",
+      "id": "stt_listener_rationale_727",
       "community": 53,
       "norm_label": "prompt de contexto para whisper (local ``initial_prompt`` y groq ``prompt``)."
     },
@@ -7504,9 +7604,9 @@
       "label": "Transcribe a WAV file using the Groq API with whisper-large-v3-turbo.          G",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L692",
+      "source_location": "L775",
       "_origin": "ast",
-      "id": "stt_listener_rationale_692",
+      "id": "stt_listener_rationale_775",
       "community": 53,
       "norm_label": "transcribe a wav file using the groq api with whisper-large-v3-turbo.          g"
     },
@@ -7514,9 +7614,9 @@
       "label": "Transcribe a WAV file and return the text.          Parameters         ---------",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L738",
+      "source_location": "L829",
       "_origin": "ast",
-      "id": "stt_listener_rationale_738",
+      "id": "stt_listener_rationale_829",
       "community": 53,
       "norm_label": "transcribe a wav file and return the text.          parameters         ---------"
     },
@@ -7524,9 +7624,9 @@
       "label": "Record from the microphone and return the transcribed text.          Returns an",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L809",
+      "source_location": "L909",
       "_origin": "ast",
-      "id": "stt_listener_rationale_809",
+      "id": "stt_listener_rationale_909",
       "community": 53,
       "norm_label": "record from the microphone and return the transcribed text.          returns an"
     },
@@ -7534,9 +7634,9 @@
       "label": "Return True if sounddevice and faster-whisper (or groq if selected) are importab",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L850",
+      "source_location": "L950",
       "_origin": "ast",
-      "id": "stt_listener_rationale_850",
+      "id": "stt_listener_rationale_950",
       "community": 53,
       "norm_label": "return true if sounddevice and faster-whisper (or groq if selected) are importab"
     },
@@ -7544,10 +7644,10 @@
       "label": "Return a human-readable status string for the STT subsystem.",
       "file_type": "rationale",
       "source_file": "stt/listener.py",
-      "source_location": "L864",
+      "source_location": "L964",
       "_origin": "ast",
-      "id": "stt_listener_rationale_864",
-      "community": 18,
+      "id": "stt_listener_rationale_964",
+      "community": 56,
       "norm_label": "return a human-readable status string for the stt subsystem."
     },
     {
@@ -7577,7 +7677,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_init",
-      "community": 53,
+      "community": 18,
       "norm_label": ".__init__()"
     },
     {
@@ -7677,7 +7777,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_app_services",
-      "community": 26,
+      "community": 6,
       "norm_label": "test_app_services.py"
     },
     {
@@ -7817,7 +7917,7 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "tests_test_app_services_test_llm_service_passes_camera_context_through",
-      "community": 26,
+      "community": 66,
       "norm_label": "test_llm_service_passes_camera_context_through()"
     },
     {
@@ -7827,7 +7927,7 @@
       "source_location": "L151",
       "_origin": "ast",
       "id": "tests_test_app_services_test_camera_context_builds_with_injected_builder",
-      "community": 63,
+      "community": 20,
       "norm_label": "test_camera_context_builds_with_injected_builder()"
     },
     {
@@ -7837,7 +7937,7 @@
       "source_location": "L157",
       "_origin": "ast",
       "id": "tests_test_app_services_test_camera_context_is_none_without_analysis",
-      "community": 63,
+      "community": 20,
       "norm_label": "test_camera_context_is_none_without_analysis()"
     },
     {
@@ -7897,7 +7997,7 @@
       "source_location": "L262",
       "_origin": "ast",
       "id": "tests_test_app_services_test_stream_skips_call_import_when_context_injected",
-      "community": 26,
+      "community": 6,
       "norm_label": "test_stream_skips_call_import_when_context_injected()"
     },
     {
@@ -7907,7 +8007,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_app_services_rationale_1",
-      "community": 26,
+      "community": 6,
       "norm_label": "capa de servicios de fase 3 (`app/`).  blinda los contratos del refactor sin nec"
     },
     {
@@ -7947,7 +8047,7 @@
       "source_location": "L263",
       "_origin": "ast",
       "id": "tests_test_app_services_rationale_263",
-      "community": 26,
+      "community": 6,
       "norm_label": "con `camera_context` inyectado, no se construye contexto desde `call`."
     },
     {
@@ -8037,7 +8137,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_camera_stop",
-      "community": 44,
+      "community": 37,
       "norm_label": "test_camera_stop.py"
     },
     {
@@ -8047,7 +8147,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_test_camera_stop_test_run_continuous_stops_and_releases_camera",
-      "community": 44,
+      "community": 37,
       "norm_label": "test_run_continuous_stops_and_releases_camera()"
     },
     {
@@ -8057,7 +8157,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "tests_test_camera_stop_test_stop_is_idempotent_before_run",
-      "community": 44,
+      "community": 37,
       "norm_label": "test_stop_is_idempotent_before_run()"
     },
     {
@@ -8067,7 +8167,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_camera_stop_rationale_1",
-      "community": 44,
+      "community": 37,
       "norm_label": "test del mecanismo de parada/liberacion de la camara (fase b).  no requiere cama"
     },
     {
@@ -8544,17 +8644,47 @@
       "label": "test_stt_prompt_env_override()",
       "file_type": "code",
       "source_file": "tests/test_hotwords_cache.py",
-      "source_location": "L76",
+      "source_location": "L77",
       "_origin": "ast",
       "id": "tests_test_hotwords_cache_test_stt_prompt_env_override",
       "community": 21,
       "norm_label": "test_stt_prompt_env_override()"
     },
     {
+      "label": "test_resolve_stt_language_defaults_to_spanish()",
+      "file_type": "code",
+      "source_file": "tests/test_hotwords_cache.py",
+      "source_location": "L83",
+      "_origin": "ast",
+      "id": "tests_test_hotwords_cache_test_resolve_stt_language_defaults_to_spanish",
+      "community": 21,
+      "norm_label": "test_resolve_stt_language_defaults_to_spanish()"
+    },
+    {
+      "label": "test_stt_prompt_respects_groq_char_limit()",
+      "file_type": "code",
+      "source_file": "tests/test_hotwords_cache.py",
+      "source_location": "L94",
+      "_origin": "ast",
+      "id": "tests_test_hotwords_cache_test_stt_prompt_respects_groq_char_limit",
+      "community": 21,
+      "norm_label": "test_stt_prompt_respects_groq_char_limit()"
+    },
+    {
+      "label": "test_local_transcribe_passes_spanish_and_hotwords()",
+      "file_type": "code",
+      "source_file": "tests/test_hotwords_cache.py",
+      "source_location": "L107",
+      "_origin": "ast",
+      "id": "tests_test_hotwords_cache_test_local_transcribe_passes_spanish_and_hotwords",
+      "community": 21,
+      "norm_label": "test_local_transcribe_passes_spanish_and_hotwords()"
+    },
+    {
       "label": "test_groq_receives_language_and_prompt()",
       "file_type": "code",
       "source_file": "tests/test_hotwords_cache.py",
-      "source_location": "L82",
+      "source_location": "L142",
       "_origin": "ast",
       "id": "tests_test_hotwords_cache_test_groq_receives_language_and_prompt",
       "community": 21,
@@ -8581,14 +8711,34 @@
       "norm_label": "vocabulario del kiosco + unev + honduras siempre presente."
     },
     {
-      "label": "La ruta Groq (config actual) debe inyectar prompt de contexto.",
+      "label": "Groq exige prompt \u2264896; tildes no deben empujar el conteo del API.",
       "file_type": "rationale",
       "source_file": "tests/test_hotwords_cache.py",
-      "source_location": "L83",
+      "source_location": "L95",
       "_origin": "ast",
-      "id": "tests_test_hotwords_cache_rationale_83",
+      "id": "tests_test_hotwords_cache_rationale_95",
       "community": 21,
-      "norm_label": "la ruta groq (config actual) debe inyectar prompt de contexto."
+      "norm_label": "groq exige prompt \u2264896; tildes no deben empujar el conteo del api."
+    },
+    {
+      "label": "faster-whisper debe recibir language=es, task=transcribe y hotwords.",
+      "file_type": "rationale",
+      "source_file": "tests/test_hotwords_cache.py",
+      "source_location": "L108",
+      "_origin": "ast",
+      "id": "tests_test_hotwords_cache_rationale_108",
+      "community": 21,
+      "norm_label": "faster-whisper debe recibir language=es, task=transcribe y hotwords."
+    },
+    {
+      "label": "La ruta Groq (config actual) debe inyectar prompt de contexto + espa\u00f1ol.",
+      "file_type": "rationale",
+      "source_file": "tests/test_hotwords_cache.py",
+      "source_location": "L143",
+      "_origin": "ast",
+      "id": "tests_test_hotwords_cache_rationale_143",
+      "community": 21,
+      "norm_label": "la ruta groq (config actual) debe inyectar prompt de contexto + espanol."
     },
     {
       "label": "test_llm_backend.py",
@@ -8661,10 +8811,40 @@
       "norm_label": "test_probe_ollama_server_down()"
     },
     {
-      "label": "test_probe_ollama_model_missing()",
+      "label": "test_list_ollama_models_sorted_unique()",
       "file_type": "code",
       "source_file": "tests/test_llm_backend.py",
       "source_location": "L49",
+      "_origin": "ast",
+      "id": "tests_test_llm_backend_test_list_ollama_models_sorted_unique",
+      "community": 38,
+      "norm_label": "test_list_ollama_models_sorted_unique()"
+    },
+    {
+      "label": "test_list_ollama_models_server_down()",
+      "file_type": "code",
+      "source_file": "tests/test_llm_backend.py",
+      "source_location": "L68",
+      "_origin": "ast",
+      "id": "tests_test_llm_backend_test_list_ollama_models_server_down",
+      "community": 38,
+      "norm_label": "test_list_ollama_models_server_down()"
+    },
+    {
+      "label": "test_list_ollama_models_empty_install()",
+      "file_type": "code",
+      "source_file": "tests/test_llm_backend.py",
+      "source_location": "L79",
+      "_origin": "ast",
+      "id": "tests_test_llm_backend_test_list_ollama_models_empty_install",
+      "community": 38,
+      "norm_label": "test_list_ollama_models_empty_install()"
+    },
+    {
+      "label": "test_probe_ollama_model_missing()",
+      "file_type": "code",
+      "source_file": "tests/test_llm_backend.py",
+      "source_location": "L87",
       "_origin": "ast",
       "id": "tests_test_llm_backend_test_probe_ollama_model_missing",
       "community": 38,
@@ -8674,7 +8854,7 @@
       "label": "test_probe_cloud_missing_key_is_actionable()",
       "file_type": "code",
       "source_file": "tests/test_llm_backend.py",
-      "source_location": "L57",
+      "source_location": "L95",
       "_origin": "ast",
       "id": "tests_test_llm_backend_test_probe_cloud_missing_key_is_actionable",
       "community": 38,
@@ -8684,7 +8864,7 @@
       "label": "test_probe_custom_openai_requires_base_url()",
       "file_type": "code",
       "source_file": "tests/test_llm_backend.py",
-      "source_location": "L64",
+      "source_location": "L102",
       "_origin": "ast",
       "id": "tests_test_llm_backend_test_probe_custom_openai_requires_base_url",
       "community": 38,
@@ -8694,7 +8874,7 @@
       "label": "test_humanize_probe_error_maps_common_cases()",
       "file_type": "code",
       "source_file": "tests/test_llm_backend.py",
-      "source_location": "L71",
+      "source_location": "L109",
       "_origin": "ast",
       "id": "tests_test_llm_backend_test_humanize_probe_error_maps_common_cases",
       "community": 38,
@@ -8704,7 +8884,7 @@
       "label": "test_humanize_probe_error_redacts_leaked_key_in_generic_branch()",
       "file_type": "code",
       "source_file": "tests/test_llm_backend.py",
-      "source_location": "L77",
+      "source_location": "L115",
       "_origin": "ast",
       "id": "tests_test_llm_backend_test_humanize_probe_error_redacts_leaked_key_in_generic_branch",
       "community": 38,
@@ -9321,10 +9501,40 @@
       "norm_label": "test_autodetect_falls_through_to_next_key()"
     },
     {
-      "label": "test_no_keys_no_ollama_is_local_only()",
+      "label": "test_explicit_groq_is_authoritative()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
       "source_location": "L40",
+      "_origin": "ast",
+      "id": "tests_test_provider_config_test_explicit_groq_is_authoritative",
+      "community": 2,
+      "norm_label": "test_explicit_groq_is_authoritative()"
+    },
+    {
+      "label": "test_autodetect_picks_groq_when_only_groq_key()",
+      "file_type": "code",
+      "source_file": "tests/test_provider_config.py",
+      "source_location": "L45",
+      "_origin": "ast",
+      "id": "tests_test_provider_config_test_autodetect_picks_groq_when_only_groq_key",
+      "community": 2,
+      "norm_label": "test_autodetect_picks_groq_when_only_groq_key()"
+    },
+    {
+      "label": "test_groq_resolves_key_model_and_base_url()",
+      "file_type": "code",
+      "source_file": "tests/test_provider_config.py",
+      "source_location": "L49",
+      "_origin": "ast",
+      "id": "tests_test_provider_config_test_groq_resolves_key_model_and_base_url",
+      "community": 2,
+      "norm_label": "test_groq_resolves_key_model_and_base_url()"
+    },
+    {
+      "label": "test_no_keys_no_ollama_is_local_only()",
+      "file_type": "code",
+      "source_file": "tests/test_provider_config.py",
+      "source_location": "L66",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_no_keys_no_ollama_is_local_only",
       "community": 2,
@@ -9334,7 +9544,7 @@
       "label": "test_no_keys_with_ollama_ready_is_ollama()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L44",
+      "source_location": "L70",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_no_keys_with_ollama_ready_is_ollama",
       "community": 2,
@@ -9344,7 +9554,7 @@
       "label": "test_legacy_llm_backend_override_wins()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L48",
+      "source_location": "L74",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_legacy_llm_backend_override_wins",
       "community": 2,
@@ -9354,7 +9564,7 @@
       "label": "test_legacy_auto_is_ignored()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L53",
+      "source_location": "L79",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_legacy_auto_is_ignored",
       "community": 2,
@@ -9364,7 +9574,7 @@
       "label": "test_model_uses_llm_model_for_cloud_providers()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L61",
+      "source_location": "L87",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_model_uses_llm_model_for_cloud_providers",
       "community": 2,
@@ -9374,7 +9584,7 @@
       "label": "test_provider_specific_model_overrides_generic()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L67",
+      "source_location": "L93",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_provider_specific_model_overrides_generic",
       "community": 2,
@@ -9384,7 +9594,7 @@
       "label": "test_model_defaults_when_unset()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L72",
+      "source_location": "L98",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_model_defaults_when_unset",
       "community": 2,
@@ -9394,7 +9604,7 @@
       "label": "test_ollama_never_inherits_generic_cloud_model()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L76",
+      "source_location": "L102",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_ollama_never_inherits_generic_cloud_model",
       "community": 2,
@@ -9404,7 +9614,7 @@
       "label": "test_resolve_api_key_reads_provider_field()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L85",
+      "source_location": "L111",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_resolve_api_key_reads_provider_field",
       "community": 2,
@@ -9414,7 +9624,7 @@
       "label": "test_resolve_base_url_override_and_default()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L90",
+      "source_location": "L116",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_resolve_base_url_override_and_default",
       "community": 2,
@@ -9424,7 +9634,7 @@
       "label": "test_custom_openai_needs_explicit_base_url()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L95",
+      "source_location": "L121",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_custom_openai_needs_explicit_base_url",
       "community": 2,
@@ -9434,7 +9644,7 @@
       "label": "test_custom_openai_resolves_key_and_model_from_compat_env()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L100",
+      "source_location": "L126",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_custom_openai_resolves_key_and_model_from_compat_env",
       "community": 2,
@@ -9444,7 +9654,7 @@
       "label": "test_custom_openai_public_info_flags_base_url_requirement()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L117",
+      "source_location": "L143",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_custom_openai_public_info_flags_base_url_requirement",
       "community": 2,
@@ -9454,7 +9664,7 @@
       "label": "test_configured_cloud_providers_empty_without_keys()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L129",
+      "source_location": "L155",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_configured_cloud_providers_empty_without_keys",
       "community": 2,
@@ -9464,7 +9674,7 @@
       "label": "test_configured_cloud_providers_single_key()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L133",
+      "source_location": "L159",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_configured_cloud_providers_single_key",
       "community": 2,
@@ -9474,7 +9684,7 @@
       "label": "test_configured_cloud_providers_follows_autodetect_order()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L137",
+      "source_location": "L163",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_configured_cloud_providers_follows_autodetect_order",
       "community": 2,
@@ -9484,7 +9694,7 @@
       "label": "test_configured_cloud_providers_excludes_custom_openai_without_base_url()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L147",
+      "source_location": "L173",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_configured_cloud_providers_excludes_custom_openai_without_base_url",
       "community": 2,
@@ -9494,7 +9704,7 @@
       "label": "test_public_info_reports_key_configured_without_leaking()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L158",
+      "source_location": "L184",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_public_info_reports_key_configured_without_leaking",
       "community": 2,
@@ -9504,7 +9714,7 @@
       "label": "test_keyless_providers_report_configured_true()",
       "file_type": "code",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L166",
+      "source_location": "L192",
       "_origin": "ast",
       "id": "tests_test_provider_config_test_keyless_providers_report_configured_true",
       "community": 2,
@@ -9544,9 +9754,9 @@
       "label": "El modelo de la interfaz (LLM_MODEL) aplica tambi\u00e9n a OpenAI/NVIDIA.",
       "file_type": "rationale",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L62",
+      "source_location": "L88",
       "_origin": "ast",
-      "id": "tests_test_provider_config_rationale_62",
+      "id": "tests_test_provider_config_rationale_88",
       "community": 2,
       "norm_label": "el modelo de la interfaz (llm_model) aplica tambien a openai/nvidia."
     },
@@ -9554,9 +9764,9 @@
       "label": "Ollama no debe usar un modelo de la nube si solo est\u00e1 LLM_MODEL.",
       "file_type": "rationale",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L77",
+      "source_location": "L103",
       "_origin": "ast",
-      "id": "tests_test_provider_config_rationale_77",
+      "id": "tests_test_provider_config_rationale_103",
       "community": 2,
       "norm_label": "ollama no debe usar un modelo de la nube si solo esta llm_model."
     },
@@ -9564,9 +9774,9 @@
       "label": "El proveedor 'custom_openai' lee key/modelo de las variables OPENAI_COMPAT_*.",
       "file_type": "rationale",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L101",
+      "source_location": "L127",
       "_origin": "ast",
-      "id": "tests_test_provider_config_rationale_101",
+      "id": "tests_test_provider_config_rationale_127",
       "community": 2,
       "norm_label": "el proveedor 'custom_openai' lee key/modelo de las variables openai_compat_*."
     },
@@ -9574,9 +9784,9 @@
       "label": "Con varias keys, el orden es determinista (AUTODETECT_ORDER), no el del dict.",
       "file_type": "rationale",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L138",
+      "source_location": "L164",
       "_origin": "ast",
-      "id": "tests_test_provider_config_rationale_138",
+      "id": "tests_test_provider_config_rationale_164",
       "community": 2,
       "norm_label": "con varias keys, el orden es determinista (autodetect_order), no el del dict."
     },
@@ -9584,9 +9794,9 @@
       "label": "custom_openai necesita key, modelo y base-url; sin base-url no se encola.",
       "file_type": "rationale",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L148",
+      "source_location": "L174",
       "_origin": "ast",
-      "id": "tests_test_provider_config_rationale_148",
+      "id": "tests_test_provider_config_rationale_174",
       "community": 2,
       "norm_label": "custom_openai necesita key, modelo y base-url; sin base-url no se encola."
     },
@@ -9707,7 +9917,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_unev_content",
-      "community": 51,
+      "community": 23,
       "norm_label": "test_unev_content.py"
     },
     {
@@ -9717,7 +9927,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_load_defaults_when_file_missing",
-      "community": 51,
+      "community": 23,
       "norm_label": "test_load_defaults_when_file_missing()"
     },
     {
@@ -9727,7 +9937,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_save_then_load_roundtrip",
-      "community": 51,
+      "community": 23,
       "norm_label": "test_save_then_load_roundtrip()"
     },
     {
@@ -9737,7 +9947,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_merge_fills_missing_keys_from_default",
-      "community": 51,
+      "community": 23,
       "norm_label": "test_merge_fills_missing_keys_from_default()"
     },
     {
@@ -9747,7 +9957,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_program_keys_are_lowercased",
-      "community": 51,
+      "community": 23,
       "norm_label": "test_program_keys_are_lowercased()"
     },
     {
@@ -9757,7 +9967,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_validation_reports_actionable_errors",
-      "community": 51,
+      "community": 23,
       "norm_label": "test_validation_reports_actionable_errors()"
     },
     {
@@ -9767,7 +9977,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_save_rejects_invalid",
-      "community": 51,
+      "community": 23,
       "norm_label": "test_save_rejects_invalid()"
     },
     {
@@ -9777,7 +9987,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_save_updates_cache_and_university_reads_it",
-      "community": 51,
+      "community": 23,
       "norm_label": "test_save_updates_cache_and_university_reads_it()"
     },
     {
@@ -9787,7 +9997,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "tests_test_unev_content_test_clamp_strips_control_chars_in_content",
-      "community": 51,
+      "community": 23,
       "norm_label": "test_clamp_strips_control_chars_in_content()"
     },
     {
@@ -9797,7 +10007,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_unev_content_rationale_1",
-      "community": 51,
+      "community": 23,
       "norm_label": "tests de la fuente unica de contenido unev (skills/unev_content).  puras: usan r"
     },
     {
@@ -9977,7 +10187,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "utils_env",
-      "community": 53,
+      "community": 18,
       "norm_label": "_env()"
     },
     {
@@ -9997,7 +10207,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "utils_env_int",
-      "community": 53,
+      "community": 18,
       "norm_label": "_env_int()"
     },
     {
@@ -10007,7 +10217,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "utils_is_quiet",
-      "community": 58,
+      "community": 53,
       "norm_label": "_is_quiet()"
     },
     {
@@ -10077,7 +10287,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "utils_rationale_17",
-      "community": 53,
+      "community": 18,
       "norm_label": "helper to retrieve string environment variables."
     },
     {
@@ -10097,7 +10307,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "utils_rationale_31",
-      "community": 53,
+      "community": 18,
       "norm_label": "helper to retrieve integer environment variables."
     },
     {
@@ -10107,7 +10317,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "utils_rationale_41",
-      "community": 58,
+      "community": 53,
       "norm_label": "returns true if hologram_quiet env var is set to 1/true/yes."
     },
     {
@@ -10197,7 +10407,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_camera",
-      "community": 37,
+      "community": 18,
       "norm_label": "camera.py"
     },
     {
@@ -10307,7 +10517,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_camera_rationale_1",
-      "community": 37,
+      "community": 18,
       "norm_label": "cross-platform opencv camera wrapper.  regla de oro a: todas las rutas usan path"
     },
     {
@@ -10407,7 +10617,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "vision_face_analyzer_faceanalyzer_init",
-      "community": 69,
+      "community": 18,
       "norm_label": ".__init__()"
     },
     {
@@ -10497,7 +10707,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_person_detector",
-      "community": 44,
+      "community": 37,
       "norm_label": "person_detector.py"
     },
     {
@@ -10537,7 +10747,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector",
-      "community": 4,
+      "community": 60,
       "norm_label": "yolopersondetector"
     },
     {
@@ -10547,7 +10757,7 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_init",
-      "community": 53,
+      "community": 18,
       "norm_label": ".__init__()"
     },
     {
@@ -10557,7 +10767,7 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_stop",
-      "community": 4,
+      "community": 60,
       "norm_label": ".stop()"
     },
     {
@@ -10667,7 +10877,7 @@
       "source_location": "L377",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_detect_person_in_frame",
-      "community": 4,
+      "community": 60,
       "norm_label": ".detect_person_in_frame()"
     },
     {
@@ -10677,7 +10887,7 @@
       "source_location": "L381",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_count_persons_in_frame",
-      "community": 4,
+      "community": 46,
       "norm_label": ".count_persons_in_frame()"
     },
     {
@@ -10687,7 +10897,7 @@
       "source_location": "L389",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_detect_person_once",
-      "community": 4,
+      "community": 60,
       "norm_label": ".detect_person_once()"
     },
     {
@@ -10697,7 +10907,7 @@
       "source_location": "L402",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_count_persons_once",
-      "community": 4,
+      "community": 46,
       "norm_label": ".count_persons_once()"
     },
     {
@@ -10727,7 +10937,7 @@
       "source_location": "L484",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_get_latest_jpeg",
-      "community": 4,
+      "community": 60,
       "norm_label": ".get_latest_jpeg()"
     },
     {
@@ -10737,7 +10947,7 @@
       "source_location": "L489",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_feed_subscribe",
-      "community": 4,
+      "community": 60,
       "norm_label": ".feed_subscribe()"
     },
     {
@@ -10747,7 +10957,7 @@
       "source_location": "L494",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_feed_unsubscribe",
-      "community": 4,
+      "community": 60,
       "norm_label": ".feed_unsubscribe()"
     },
     {
@@ -10777,7 +10987,7 @@
       "source_location": "L662",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_is_available",
-      "community": 4,
+      "community": 60,
       "norm_label": ".is_available()"
     },
     {
@@ -10787,7 +10997,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_1",
-      "community": 44,
+      "community": 37,
       "norm_label": "yolov8/v11 person detector for the unev hologram.  regla de oro a: todas las rut"
     },
     {
@@ -10827,7 +11037,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_54",
-      "community": 4,
+      "community": 60,
       "norm_label": "detect people using yolo26 / yoloe-26 via the ultralytics library (local)."
     },
     {
@@ -10837,7 +11047,7 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_113",
-      "community": 4,
+      "community": 60,
       "norm_label": "solicita que run_continuous termine y libere la camara."
     },
     {
@@ -10947,7 +11157,7 @@
       "source_location": "L378",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_378",
-      "community": 4,
+      "community": 60,
       "norm_label": "return true if at least one person is detected in *frame*."
     },
     {
@@ -10957,7 +11167,7 @@
       "source_location": "L382",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_382",
-      "community": 4,
+      "community": 46,
       "norm_label": "return the number of people detected in *frame*."
     },
     {
@@ -10967,7 +11177,7 @@
       "source_location": "L390",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_390",
-      "community": 4,
+      "community": 60,
       "norm_label": "open the camera, read one frame, and return true if a person is found."
     },
     {
@@ -10977,7 +11187,7 @@
       "source_location": "L403",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_403",
-      "community": 4,
+      "community": 46,
       "norm_label": "open the camera, read one frame, and return the person count."
     },
     {
@@ -11007,7 +11217,7 @@
       "source_location": "L485",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_485",
-      "community": 4,
+      "community": 60,
       "norm_label": "return the most recent annotated frame as jpeg bytes (or none)."
     },
     {
@@ -11017,7 +11227,7 @@
       "source_location": "L490",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_490",
-      "community": 4,
+      "community": 60,
       "norm_label": "registra un cliente del feed mjpeg (activa la codificacion jpeg)."
     },
     {
@@ -11027,7 +11237,7 @@
       "source_location": "L495",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_495",
-      "community": 4,
+      "community": 60,
       "norm_label": "da de baja un cliente del feed mjpeg (el contador nunca baja de 0).          al"
     },
     {
@@ -11057,7 +11267,7 @@
       "source_location": "L663",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_663",
-      "community": 4,
+      "community": 60,
       "norm_label": "return true if ultralytics and opencv are importable."
     },
     {
@@ -11141,10 +11351,20 @@
       "norm_label": "que hay en el repo"
     },
     {
+      "label": "Dos rutas de LLM (intencional)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "readme_dos_rutas_de_llm_intencional",
+      "community": 85,
+      "norm_label": "dos rutas de llm (intencional)"
+    },
+    {
       "label": "Reglas de compatibilidad Linux \u2194 Windows",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L24",
+      "source_location": "L37",
       "_origin": "ast",
       "id": "readme_reglas_de_compatibilidad_linux_windows",
       "community": 85,
@@ -11154,7 +11374,7 @@
       "label": "Instalaci\u00f3n",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L30",
+      "source_location": "L43",
       "_origin": "ast",
       "id": "readme_instalaci\u00f3n",
       "community": 85,
@@ -11164,7 +11384,7 @@
       "label": "Ejecutar",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L46",
+      "source_location": "L59",
       "_origin": "ast",
       "id": "readme_ejecutar",
       "community": 85,
@@ -11174,7 +11394,7 @@
       "label": "Configuraci\u00f3n esencial",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L57",
+      "source_location": "L70",
       "_origin": "ast",
       "id": "readme_configuraci\u00f3n_esencial",
       "community": 85,
@@ -11184,7 +11404,7 @@
       "label": "Pruebas",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L74",
+      "source_location": "L92",
       "_origin": "ast",
       "id": "readme_pruebas",
       "community": 85,
@@ -11194,17 +11414,27 @@
       "label": "Comandos de chat",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L83",
+      "source_location": "L103",
       "_origin": "ast",
       "id": "readme_comandos_de_chat",
       "community": 85,
       "norm_label": "comandos de chat"
     },
     {
+      "label": "Grafo del c\u00f3digo (graphify)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L107",
+      "_origin": "ast",
+      "id": "readme_grafo_del_c\u00f3digo_graphify",
+      "community": 85,
+      "norm_label": "grafo del codigo (graphify)"
+    },
+    {
       "label": "Licencia",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L87",
+      "source_location": "L121",
       "_origin": "ast",
       "id": "readme_licencia",
       "community": 85,
@@ -11244,7 +11474,7 @@
       "label": "C\u00f3mo se elige el backend (`select_backend`)",
       "file_type": "document",
       "source_file": "docs/CONFIG.md",
-      "source_location": "L23",
+      "source_location": "L27",
       "_origin": "ast",
       "id": "docs_config_c\u00f3mo_se_elige_el_backend_select_backend",
       "community": 14,
@@ -11254,7 +11484,7 @@
       "label": "L\u00edmite de tokens y robustez de la respuesta",
       "file_type": "document",
       "source_file": "docs/CONFIG.md",
-      "source_location": "L43",
+      "source_location": "L47",
       "_origin": "ast",
       "id": "docs_config_l\u00edmite_de_tokens_y_robustez_de_la_respuesta",
       "community": 14,
@@ -11264,7 +11494,7 @@
       "label": "Endpoints relacionados",
       "file_type": "document",
       "source_file": "docs/CONFIG.md",
-      "source_location": "L59",
+      "source_location": "L63",
       "_origin": "ast",
       "id": "docs_config_endpoints_relacionados",
       "community": 14,
@@ -11274,7 +11504,7 @@
       "label": "Interfaz de Ajustes",
       "file_type": "document",
       "source_file": "docs/CONFIG.md",
-      "source_location": "L75",
+      "source_location": "L79",
       "_origin": "ast",
       "id": "docs_config_interfaz_de_ajustes",
       "community": 14,
@@ -11284,7 +11514,7 @@
       "label": "Pruebas",
       "file_type": "document",
       "source_file": "docs/CONFIG.md",
-      "source_location": "L86",
+      "source_location": "L90",
       "_origin": "ast",
       "id": "docs_config_pruebas",
       "community": 14,
@@ -11294,7 +11524,7 @@
       "label": "Endurecimiento de seguridad (Fase D.1)",
       "file_type": "document",
       "source_file": "docs/CONFIG.md",
-      "source_location": "L104",
+      "source_location": "L108",
       "_origin": "ast",
       "id": "docs_config_endurecimiento_de_seguridad_fase_d_1",
       "community": 14,
@@ -15857,10 +16087,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "app/services/conversation.py",
-      "source_location": "L106",
+      "source_location": "L108",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "services_conversation_rationale_106",
+      "source": "services_conversation_rationale_108",
       "target": "services_conversation_conversationservice_handle_prompt"
     },
     {
@@ -18435,11 +18665,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "call.py",
-      "source_location": "L1245",
+      "source_location": "L1246",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "call_rationale_1245",
-      "target": "call_main"
+      "source": "call_rationale_1246",
+      "target": "call_main",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -20275,17 +20505,28 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "components_providerconfigcard_test",
+      "target": "src_types_ollamamodelsresult"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ProviderConfigCard.test.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_providerconfigcard_test",
       "target": "src_types_providerinfo"
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/components/ProviderConfigCard.tsx",
-      "source_location": "L8",
+      "source_location": "L13",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "components_providerconfigcard",
-      "target": "components_providerconfigcard_ollama_suggestions"
+      "target": "components_providerconfigcard_ollama_fallback_suggestions"
     },
     {
       "relation": "contains",
@@ -20372,6 +20613,17 @@
       "confidence_score": 1.0,
       "source": "components_providerconfigcard",
       "target": "src_types_llmtestresult"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ProviderConfigCard.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_providerconfigcard",
+      "target": "src_types_ollamamodelsresult"
     },
     {
       "relation": "imports",
@@ -20493,6 +20745,17 @@
       "confidence_score": 1.0,
       "source": "components_providerconfigcard_props",
       "target": "src_types_llmtestresult"
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/ProviderConfigCard.tsx",
+      "source_location": "L28",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_providerconfigcard_props",
+      "target": "src_types_ollamamodelsresult"
     },
     {
       "relation": "references",
@@ -21987,6 +22250,17 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "hooks_useproviders",
+      "target": "src_types_ollamamodelsresult"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/hooks/useProviders.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "hooks_useproviders",
       "target": "src_types_providerinfo"
     },
     {
@@ -22939,6 +23213,16 @@
       "confidence_score": 1.0,
       "source": "src_types",
       "target": "src_types_llmtestresult"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/types.ts",
+      "source_location": "L60",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_types",
+      "target": "src_types_ollamamodelsresult"
     },
     {
       "relation": "contains",
@@ -24724,6 +25008,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
+      "source_location": "L129",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "llm_backend",
+      "target": "llm_backend_list_ollama_models"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "llm_backend.py",
       "source_location": "L32",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -25442,6 +25736,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
+      "source_location": "L146",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "llm_backend_list_ollama_models",
+      "target": "llm_backend_ollama_tags"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "llm_backend.py",
       "source_location": "L121",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -25541,6 +25846,49 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
+      "source_location": "L143",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "llm_backend_list_ollama_models",
+      "target": "utils_env_float"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "llm_backend.py",
+      "source_location": "L130",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "llm_backend_rationale_130",
+      "target": "llm_backend_list_ollama_models"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L28",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "main",
+      "target": "llm_backend_list_ollama_models"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "main.py",
+      "source_location": "L520",
+      "weight": 1.0,
+      "source": "main_get_ollama_models",
+      "target": "llm_backend_list_ollama_models"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "llm_backend.py",
       "source_location": "L308",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -25562,10 +25910,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L139",
+      "source_location": "L192",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_139",
+      "source": "llm_backend_rationale_192",
       "target": "llm_backend_ollama_ready"
     },
     {
@@ -25616,10 +25964,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L169",
+      "source_location": "L222",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_169",
+      "source": "llm_backend_rationale_222",
       "target": "llm_backend_get_selected_backend"
     },
     {
@@ -25670,10 +26018,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L214",
+      "source_location": "L267",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_214",
+      "source": "llm_backend_rationale_267",
       "target": "llm_backend_humanize_probe_error"
     },
     {
@@ -25702,10 +26050,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L230",
+      "source_location": "L283",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_230",
+      "source": "llm_backend_rationale_283",
       "target": "llm_backend_probe_backend"
     },
     {
@@ -25756,10 +26104,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L289",
+      "source_location": "L342",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_289",
+      "source": "llm_backend_rationale_342",
       "target": "llm_backend_candidate_backends"
     },
     {
@@ -25898,10 +26246,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L368",
+      "source_location": "L421",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_368",
+      "source": "llm_backend_rationale_421",
       "target": "llm_backend_require"
     },
     {
@@ -26018,10 +26366,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L392",
+      "source_location": "L445",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_392",
+      "source": "llm_backend_rationale_445",
       "target": "llm_backend_chat_with_openai_compatible"
     },
     {
@@ -26061,10 +26409,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L453",
+      "source_location": "L506",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_453",
+      "source": "llm_backend_rationale_506",
       "target": "llm_backend_strip_qwen_thinking"
     },
     {
@@ -26170,10 +26518,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L472",
+      "source_location": "L525",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_472",
+      "source": "llm_backend_rationale_525",
       "target": "llm_backend_cot_log_enabled"
     },
     {
@@ -26246,10 +26594,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L481",
+      "source_location": "L534",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_481",
+      "source": "llm_backend_rationale_534",
       "target": "llm_backend_cot_print"
     },
     {
@@ -26267,10 +26615,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L490",
+      "source_location": "L543",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_490",
+      "source": "llm_backend_rationale_543",
       "target": "llm_backend_dump_raw_reply"
     },
     {
@@ -26348,10 +26696,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L510",
+      "source_location": "L563",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_510",
+      "source": "llm_backend_rationale_563",
       "target": "llm_backend_cotstreammirror"
     },
     {
@@ -26413,10 +26761,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L557",
+      "source_location": "L610",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_557",
+      "source": "llm_backend_rationale_610",
       "target": "llm_backend_cotstreammirror_feed_reasoning"
     },
     {
@@ -26445,10 +26793,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L570",
+      "source_location": "L623",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_570",
+      "source": "llm_backend_rationale_623",
       "target": "llm_backend_cotstreammirror_feed"
     },
     {
@@ -26521,10 +26869,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L759",
+      "source_location": "L812",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_759",
+      "source": "llm_backend_rationale_812",
       "target": "llm_backend_is_mostly_english"
     },
     {
@@ -26542,20 +26890,20 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L778",
+      "source_location": "L831",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_778",
+      "source": "llm_backend_rationale_831",
       "target": "llm_backend_postprocess_reply"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L816",
+      "source_location": "L869",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_816",
+      "source": "llm_backend_rationale_869",
       "target": "llm_backend_delta_reasoning"
     },
     {
@@ -26595,10 +26943,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "llm_backend.py",
-      "source_location": "L927",
+      "source_location": "L980",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "llm_backend_rationale_927",
+      "source": "llm_backend_rationale_980",
       "target": "llm_backend_stream_llm_response"
     },
     {
@@ -26704,6 +27052,16 @@
       "confidence_score": 1.0,
       "source": "main",
       "target": "main_get_holo_manager"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L514",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "main",
+      "target": "main_get_ollama_models"
     },
     {
       "relation": "contains",
@@ -27501,6 +27859,26 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "main_rationale_515",
+      "target": "main_get_ollama_models"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L515",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "main_rationale_515",
+      "target": "main_test_llm"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L530",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "main_rationale_530",
       "target": "main_test_llm"
     },
     {
@@ -27518,20 +27896,20 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L531",
+      "source_location": "L546",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "main_rationale_531",
+      "source": "main_rationale_546",
       "target": "main_get_unev_content"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L537",
+      "source_location": "L552",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "main_rationale_537",
+      "source": "main_rationale_552",
       "target": "main_update_unev_content"
     },
     {
@@ -27581,10 +27959,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L557",
+      "source_location": "L572",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "main_rationale_557",
+      "source": "main_rationale_572",
       "target": "main_set_camera"
     },
     {
@@ -27808,20 +28186,20 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L787",
+      "source_location": "L802",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "main_rationale_787",
+      "source": "main_rationale_802",
       "target": "main_placeholder_jpeg"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "main.py",
-      "source_location": "L805",
+      "source_location": "L820",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "main_rationale_805",
+      "source": "main_rationale_820",
       "target": "main_video_feed"
     },
     {
@@ -28068,10 +28446,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "provider_config.py",
-      "source_location": "L174",
+      "source_location": "L196",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "provider_config_rationale_174",
+      "source": "provider_config_rationale_196",
       "target": "provider_config_select_backend"
     },
     {
@@ -28100,10 +28478,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "provider_config.py",
-      "source_location": "L209",
+      "source_location": "L231",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "provider_config_rationale_209",
+      "source": "provider_config_rationale_231",
       "target": "provider_config_resolve_model"
     },
     {
@@ -28154,10 +28532,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "provider_config.py",
-      "source_location": "L256",
+      "source_location": "L278",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "provider_config_rationale_256",
+      "source": "provider_config_rationale_278",
       "target": "provider_config_configured_cloud_providers"
     },
     {
@@ -28175,10 +28553,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "provider_config.py",
-      "source_location": "L286",
+      "source_location": "L308",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "provider_config_rationale_286",
+      "source": "provider_config_rationale_308",
       "target": "provider_config_provider_public_info"
     },
     {
@@ -28820,10 +29198,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "scripts/setup_hologram.py",
-      "source_location": "L185",
+      "source_location": "L190",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "scripts_setup_hologram_rationale_185",
+      "source": "scripts_setup_hologram_rationale_190",
       "target": "scripts_setup_hologram_select_ears"
     },
     {
@@ -28841,10 +29219,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "scripts/setup_hologram.py",
-      "source_location": "L219",
+      "source_location": "L224",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "scripts_setup_hologram_rationale_219",
+      "source": "scripts_setup_hologram_rationale_224",
       "target": "scripts_setup_hologram_configure_vision"
     },
     {
@@ -28862,10 +29240,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "scripts/setup_hologram.py",
-      "source_location": "L243",
+      "source_location": "L248",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "scripts_setup_hologram_rationale_243",
+      "source": "scripts_setup_hologram_rationale_248",
       "target": "scripts_setup_hologram_run_setup"
     },
     {
@@ -28935,20 +29313,20 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "security.py",
-      "source_location": "L63",
+      "source_location": "L62",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "security_rationale_63",
+      "source": "security_rationale_62",
       "target": "security_redact_secrets"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "security.py",
-      "source_location": "L86",
+      "source_location": "L85",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "security_rationale_86",
+      "source": "security_rationale_85",
       "target": "security_clamp_text"
     },
     {
@@ -29844,6 +30222,17 @@
       "context": "call",
       "confidence": "INFERRED",
       "confidence_score": 0.8,
+      "source_file": "tests/test_hotwords_cache.py",
+      "source_location": "L126",
+      "weight": 1.0,
+      "source": "tests_test_hotwords_cache_test_local_transcribe_passes_spanish_and_hotwords",
+      "target": "path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "vision/camera.py",
       "source_location": "L154",
       "weight": 1.0,
@@ -30291,6 +30680,26 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "stt_listener",
+      "target": "stt_listener_resolve_stt_language",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "stt/listener.py",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "stt_listener",
+      "target": "stt_listener_truncate_stt_prompt",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "stt/listener.py",
       "source_location": "L185",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -30385,6 +30794,92 @@
       "target": "stt_listener"
     },
     {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "stt/listener.py",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "stt_listener_rationale_45",
+      "target": "stt_listener_resolve_stt_language",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "stt/listener.py",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "stt_listener_resolve_stt_language",
+      "target": "utils_env",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "stt/listener.py",
+      "source_location": "L279",
+      "weight": 1.0,
+      "source": "stt_listener_whisperlistener_init",
+      "target": "stt_listener_resolve_stt_language",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "stt/listener.py",
+      "source_location": "L838",
+      "weight": 1.0,
+      "source": "stt_listener_whisperlistener_transcribe_file",
+      "target": "stt_listener_resolve_stt_language",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "stt/listener.py",
+      "source_location": "L799",
+      "weight": 1.0,
+      "source": "stt_listener_whisperlistener_transcribe_groq",
+      "target": "stt_listener_resolve_stt_language",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "stt/listener.py",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "stt_listener_rationale_65",
+      "target": "stt_listener_truncate_stt_prompt",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "stt/listener.py",
+      "source_location": "L745",
+      "weight": 1.0,
+      "source": "stt_listener_whisperlistener_build_stt_prompt",
+      "target": "stt_listener_truncate_stt_prompt",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "stt/listener.py",
+      "source_location": "L802",
+      "weight": 1.0,
+      "source": "stt_listener_whisperlistener_transcribe_groq",
+      "target": "stt_listener_truncate_stt_prompt",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -30399,31 +30894,31 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L127",
+      "source_location": "L190",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "stt_listener_rationale_127",
-      "target": "stt_listener_normalize_hotword"
+      "source": "stt_listener_rationale_190",
+      "target": "stt_listener_normalize_hotword",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L142",
+      "source_location": "L205",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "stt_listener_rationale_142",
-      "target": "stt_listener_hotword_priority"
+      "source": "stt_listener_rationale_205",
+      "target": "stt_listener_hotword_priority",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L174",
+      "source_location": "L237",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "stt_listener_rationale_174",
-      "target": "stt_listener_looks_like_hallucination"
+      "source": "stt_listener_rationale_237",
+      "target": "stt_listener_looks_like_hallucination",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -30440,11 +30935,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L186",
+      "source_location": "L249",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "stt_listener_rationale_186",
-      "target": "stt_listener_whisperlistener"
+      "source": "stt_listener_rationale_249",
+      "target": "stt_listener_whisperlistener",
+      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -30520,6 +31015,16 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
+      "source_location": "L762",
+      "weight": 1.0,
+      "source": "stt_listener_whisperlistener",
+      "target": "stt_listener_whisperlistener_log_stt_decode_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "stt/listener.py",
       "source_location": "L305",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -30583,11 +31088,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L252",
+      "source_location": "L315",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "stt_listener_rationale_252",
-      "target": "stt_listener_whisperlistener_load_model"
+      "source": "stt_listener_rationale_315",
+      "target": "stt_listener_whisperlistener_load_model",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -30626,11 +31131,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L306",
+      "source_location": "L369",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "stt_listener_rationale_306",
-      "target": "stt_listener_whisperlistener_record_until_silence"
+      "source": "stt_listener_rationale_369",
+      "target": "stt_listener_whisperlistener_record_until_silence",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -30658,11 +31163,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L435",
+      "source_location": "L498",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "stt_listener_rationale_435",
-      "target": "stt_listener_whisperlistener_audio_to_wav_path"
+      "source": "stt_listener_rationale_498",
+      "target": "stt_listener_whisperlistener_audio_to_wav_path",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -30679,11 +31184,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L461",
+      "source_location": "L524",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "stt_listener_rationale_461",
-      "target": "stt_listener_whisperlistener_load_db_hotwords"
+      "source": "stt_listener_rationale_524",
+      "target": "stt_listener_whisperlistener_load_db_hotwords",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -30719,14 +31224,25 @@
       "target": "stt_listener_whisperlistener_load_db_hotwords"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "stt/listener.py",
+      "source_location": "L803",
+      "weight": 1.0,
+      "source": "stt_listener_whisperlistener_transcribe_groq",
+      "target": "stt_listener_whisperlistener_load_db_hotwords",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L664",
+      "source_location": "L727",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "stt_listener_rationale_664",
-      "target": "stt_listener_whisperlistener_build_stt_prompt"
+      "source": "stt_listener_rationale_727",
+      "target": "stt_listener_whisperlistener_build_stt_prompt",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -30773,14 +31289,47 @@
       "target": "stt_listener_whisperlistener_build_stt_prompt"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "stt/listener.py",
+      "source_location": "L763",
+      "weight": 1.0,
+      "source": "stt_listener_whisperlistener_log_stt_decode_config",
+      "target": "utils_is_quiet"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "stt/listener.py",
+      "source_location": "L847",
+      "weight": 1.0,
+      "source": "stt_listener_whisperlistener_transcribe_file",
+      "target": "stt_listener_whisperlistener_log_stt_decode_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "stt/listener.py",
+      "source_location": "L804",
+      "weight": 1.0,
+      "source": "stt_listener_whisperlistener_transcribe_groq",
+      "target": "stt_listener_whisperlistener_log_stt_decode_config",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L692",
+      "source_location": "L775",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "stt_listener_rationale_692",
-      "target": "stt_listener_whisperlistener_transcribe_groq"
+      "source": "stt_listener_rationale_775",
+      "target": "stt_listener_whisperlistener_transcribe_groq",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -30819,11 +31368,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L738",
+      "source_location": "L829",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "stt_listener_rationale_738",
-      "target": "stt_listener_whisperlistener_transcribe_file"
+      "source": "stt_listener_rationale_829",
+      "target": "stt_listener_whisperlistener_transcribe_file",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -30873,11 +31422,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L809",
+      "source_location": "L909",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "stt_listener_rationale_809",
-      "target": "stt_listener_whisperlistener_listen_once"
+      "source": "stt_listener_rationale_909",
+      "target": "stt_listener_whisperlistener_listen_once",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -30894,11 +31443,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L850",
+      "source_location": "L950",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "stt_listener_rationale_850",
-      "target": "stt_listener_whisperlistener_is_available"
+      "source": "stt_listener_rationale_950",
+      "target": "stt_listener_whisperlistener_is_available",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -30926,11 +31475,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "stt/listener.py",
-      "source_location": "L864",
+      "source_location": "L964",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "stt_listener_rationale_864",
-      "target": "stt_listener_get_stt_status"
+      "source": "stt_listener_rationale_964",
+      "target": "stt_listener_get_stt_status",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -32307,6 +32856,26 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_hotwords_cache.py",
+      "source_location": "L107",
+      "weight": 1.0,
+      "source": "tests_test_hotwords_cache",
+      "target": "tests_test_hotwords_cache_test_local_transcribe_passes_spanish_and_hotwords",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_hotwords_cache.py",
+      "source_location": "L83",
+      "weight": 1.0,
+      "source": "tests_test_hotwords_cache",
+      "target": "tests_test_hotwords_cache_test_resolve_stt_language_defaults_to_spanish",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_hotwords_cache.py",
       "source_location": "L76",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -32322,6 +32891,16 @@
       "confidence_score": 1.0,
       "source": "tests_test_hotwords_cache",
       "target": "tests_test_hotwords_cache_test_stt_prompt_includes_context"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_hotwords_cache.py",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "tests_test_hotwords_cache",
+      "target": "tests_test_hotwords_cache_test_stt_prompt_respects_groq_char_limit",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -32382,6 +32961,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_hotwords_cache.py",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "tests_test_hotwords_cache_test_local_transcribe_passes_spanish_and_hotwords",
+      "target": "tests_test_hotwords_cache_fresh_listener",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_hotwords_cache.py",
       "source_location": "L78",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -32400,6 +32990,17 @@
       "target": "tests_test_hotwords_cache_fresh_listener"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_hotwords_cache.py",
+      "source_location": "L96",
+      "weight": 1.0,
+      "source": "tests_test_hotwords_cache_test_stt_prompt_respects_groq_char_limit",
+      "target": "tests_test_hotwords_cache_fresh_listener",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_hotwords_cache.py",
@@ -32413,11 +33014,31 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_hotwords_cache.py",
-      "source_location": "L83",
+      "source_location": "L95",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "tests_test_hotwords_cache_rationale_83",
-      "target": "tests_test_hotwords_cache_test_groq_receives_language_and_prompt"
+      "source": "tests_test_hotwords_cache_rationale_95",
+      "target": "tests_test_hotwords_cache_test_stt_prompt_respects_groq_char_limit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_hotwords_cache.py",
+      "source_location": "L108",
+      "weight": 1.0,
+      "source": "tests_test_hotwords_cache_rationale_108",
+      "target": "tests_test_hotwords_cache_test_local_transcribe_passes_spanish_and_hotwords",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_hotwords_cache.py",
+      "source_location": "L143",
+      "weight": 1.0,
+      "source": "tests_test_hotwords_cache_rationale_143",
+      "target": "tests_test_hotwords_cache_test_groq_receives_language_and_prompt",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -32468,6 +33089,36 @@
       "confidence_score": 1.0,
       "source": "tests_test_llm_backend",
       "target": "tests_test_llm_backend_test_invalid_legacy_backend_is_dropped"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_llm_backend.py",
+      "source_location": "L79",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_llm_backend",
+      "target": "tests_test_llm_backend_test_list_ollama_models_empty_install"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_llm_backend.py",
+      "source_location": "L68",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_llm_backend",
+      "target": "tests_test_llm_backend_test_list_ollama_models_server_down"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_llm_backend.py",
+      "source_location": "L49",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_llm_backend",
+      "target": "tests_test_llm_backend_test_list_ollama_models_sorted_unique"
     },
     {
       "relation": "contains",
@@ -33271,6 +33922,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_provider_config.py",
+      "source_location": "L45",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_provider_config",
+      "target": "tests_test_provider_config_test_autodetect_picks_groq_when_only_groq_key"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_provider_config.py",
       "source_location": "L129",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -33351,11 +34012,31 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_provider_config.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_provider_config",
+      "target": "tests_test_provider_config_test_explicit_groq_is_authoritative"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_provider_config.py",
       "source_location": "L11",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "tests_test_provider_config",
       "target": "tests_test_provider_config_test_explicit_ollama_ignores_stale_cloud_key"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_provider_config.py",
+      "source_location": "L49",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_test_provider_config",
+      "target": "tests_test_provider_config_test_groq_resolves_key_model_and_base_url"
     },
     {
       "relation": "contains",
@@ -33521,50 +34202,50 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L62",
+      "source_location": "L88",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "tests_test_provider_config_rationale_62",
+      "source": "tests_test_provider_config_rationale_88",
       "target": "tests_test_provider_config_test_model_uses_llm_model_for_cloud_providers"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L77",
+      "source_location": "L103",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "tests_test_provider_config_rationale_77",
+      "source": "tests_test_provider_config_rationale_103",
       "target": "tests_test_provider_config_test_ollama_never_inherits_generic_cloud_model"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L101",
+      "source_location": "L127",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "tests_test_provider_config_rationale_101",
+      "source": "tests_test_provider_config_rationale_127",
       "target": "tests_test_provider_config_test_custom_openai_resolves_key_and_model_from_compat_env"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L138",
+      "source_location": "L164",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "tests_test_provider_config_rationale_138",
+      "source": "tests_test_provider_config_rationale_164",
       "target": "tests_test_provider_config_test_configured_cloud_providers_follows_autodetect_order"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_provider_config.py",
-      "source_location": "L148",
+      "source_location": "L174",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "tests_test_provider_config_rationale_148",
+      "source": "tests_test_provider_config_rationale_174",
       "target": "tests_test_provider_config_test_configured_cloud_providers_excludes_custom_openai_without_base_url"
     },
     {
@@ -35720,9 +36401,9 @@
       "source_file": "AGENTS.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "agents",
-      "target": "agents_graphify",
-      "confidence_score": 1.0
+      "target": "agents_graphify"
     },
     {
       "relation": "references",
@@ -35790,9 +36471,9 @@
       "source_file": "CLAUDE.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "claude",
-      "target": "claude_graphify",
-      "confidence_score": 1.0
+      "target": "claude_graphify"
     },
     {
       "relation": "contains",
@@ -35800,9 +36481,9 @@
       "source_file": "CLAUDE.md",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "claude",
-      "target": "claude_model_pipeline_division_of_labor",
-      "confidence_score": 1.0
+      "target": "claude_model_pipeline_division_of_labor"
     },
     {
       "relation": "references",
@@ -35810,9 +36491,9 @@
       "source_file": "README.md",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme",
-      "target": "docs_config",
-      "confidence_score": 1.0
+      "target": "docs_config"
     },
     {
       "relation": "references",
@@ -35820,9 +36501,9 @@
       "source_file": "README.md",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme",
-      "target": "docs_hologram",
-      "confidence_score": 1.0
+      "target": "docs_hologram"
     },
     {
       "relation": "contains",
@@ -35830,9 +36511,9 @@
       "source_file": "README.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme",
-      "target": "readme_holograma_unev",
-      "confidence_score": 1.0
+      "target": "readme_holograma_unev"
     },
     {
       "relation": "conceptually_related_to",
@@ -35870,9 +36551,9 @@
       "source_file": "README.md",
       "source_location": "L83",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_holograma_unev",
-      "target": "readme_comandos_de_chat",
-      "confidence_score": 1.0
+      "target": "readme_comandos_de_chat"
     },
     {
       "relation": "contains",
@@ -35880,9 +36561,9 @@
       "source_file": "README.md",
       "source_location": "L57",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_holograma_unev",
-      "target": "readme_configuraci\u00f3n_esencial",
-      "confidence_score": 1.0
+      "target": "readme_configuraci\u00f3n_esencial"
     },
     {
       "relation": "contains",
@@ -35890,9 +36571,9 @@
       "source_file": "README.md",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_holograma_unev",
-      "target": "readme_ejecutar",
-      "confidence_score": 1.0
+      "target": "readme_ejecutar"
     },
     {
       "relation": "references",
@@ -35903,6 +36584,16 @@
       "weight": 1.0,
       "source": "readme_holograma_unev",
       "target": "readme_frontend"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L107",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "readme_holograma_unev",
+      "target": "readme_grafo_del_c\u00f3digo_graphify"
     },
     {
       "relation": "references",
@@ -35920,9 +36611,9 @@
       "source_file": "README.md",
       "source_location": "L30",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_holograma_unev",
-      "target": "readme_instalaci\u00f3n",
-      "confidence_score": 1.0
+      "target": "readme_instalaci\u00f3n"
     },
     {
       "relation": "contains",
@@ -35930,9 +36621,9 @@
       "source_file": "README.md",
       "source_location": "L87",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_holograma_unev",
-      "target": "readme_licencia",
-      "confidence_score": 1.0
+      "target": "readme_licencia"
     },
     {
       "relation": "rationale_for",
@@ -35990,9 +36681,9 @@
       "source_file": "README.md",
       "source_location": "L74",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_holograma_unev",
-      "target": "readme_pruebas",
-      "confidence_score": 1.0
+      "target": "readme_pruebas"
     },
     {
       "relation": "contains",
@@ -36000,9 +36691,9 @@
       "source_file": "README.md",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_holograma_unev",
-      "target": "readme_qu\u00e9_hay_en_el_repo",
-      "confidence_score": 1.0
+      "target": "readme_qu\u00e9_hay_en_el_repo"
     },
     {
       "relation": "contains",
@@ -36010,9 +36701,9 @@
       "source_file": "README.md",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_holograma_unev",
-      "target": "readme_reglas_de_compatibilidad_linux_windows",
-      "confidence_score": 1.0
+      "target": "readme_reglas_de_compatibilidad_linux_windows"
     },
     {
       "relation": "references",
@@ -36057,12 +36748,22 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L28",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "readme_qu\u00e9_hay_en_el_repo",
+      "target": "readme_dos_rutas_de_llm_intencional"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "docs/CONFIG.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_config",
-      "target": "docs_config_configuraci\u00f3n_de_ia_contrato_de_proveedor_y_modelo",
-      "confidence_score": 1.0
+      "target": "docs_config_configuraci\u00f3n_de_ia_contrato_de_proveedor_y_modelo"
     },
     {
       "relation": "contains",
@@ -36070,9 +36771,9 @@
       "source_file": "docs/CONFIG.md",
       "source_location": "L23",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_config_configuraci\u00f3n_de_ia_contrato_de_proveedor_y_modelo",
-      "target": "docs_config_c\u00f3mo_se_elige_el_backend_select_backend",
-      "confidence_score": 1.0
+      "target": "docs_config_c\u00f3mo_se_elige_el_backend_select_backend"
     },
     {
       "relation": "contains",
@@ -36080,9 +36781,9 @@
       "source_file": "docs/CONFIG.md",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_config_configuraci\u00f3n_de_ia_contrato_de_proveedor_y_modelo",
-      "target": "docs_config_endpoints_relacionados",
-      "confidence_score": 1.0
+      "target": "docs_config_endpoints_relacionados"
     },
     {
       "relation": "contains",
@@ -36090,9 +36791,9 @@
       "source_file": "docs/CONFIG.md",
       "source_location": "L104",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_config_configuraci\u00f3n_de_ia_contrato_de_proveedor_y_modelo",
-      "target": "docs_config_endurecimiento_de_seguridad_fase_d_1",
-      "confidence_score": 1.0
+      "target": "docs_config_endurecimiento_de_seguridad_fase_d_1"
     },
     {
       "relation": "contains",
@@ -36100,9 +36801,9 @@
       "source_file": "docs/CONFIG.md",
       "source_location": "L75",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_config_configuraci\u00f3n_de_ia_contrato_de_proveedor_y_modelo",
-      "target": "docs_config_interfaz_de_ajustes",
-      "confidence_score": 1.0
+      "target": "docs_config_interfaz_de_ajustes"
     },
     {
       "relation": "contains",
@@ -36110,9 +36811,9 @@
       "source_file": "docs/CONFIG.md",
       "source_location": "L43",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_config_configuraci\u00f3n_de_ia_contrato_de_proveedor_y_modelo",
-      "target": "docs_config_l\u00edmite_de_tokens_y_robustez_de_la_respuesta",
-      "confidence_score": 1.0
+      "target": "docs_config_l\u00edmite_de_tokens_y_robustez_de_la_respuesta"
     },
     {
       "relation": "contains",
@@ -36120,9 +36821,9 @@
       "source_file": "docs/CONFIG.md",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_config_configuraci\u00f3n_de_ia_contrato_de_proveedor_y_modelo",
-      "target": "docs_config_proveedores_soportados",
-      "confidence_score": 1.0
+      "target": "docs_config_proveedores_soportados"
     },
     {
       "relation": "contains",
@@ -36130,9 +36831,9 @@
       "source_file": "docs/CONFIG.md",
       "source_location": "L86",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_config_configuraci\u00f3n_de_ia_contrato_de_proveedor_y_modelo",
-      "target": "docs_config_pruebas",
-      "confidence_score": 1.0
+      "target": "docs_config_pruebas"
     },
     {
       "relation": "contains",
@@ -36140,9 +36841,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram",
-      "target": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp",
-      "confidence_score": 1.0
+      "target": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp"
     },
     {
       "relation": "contains",
@@ -36150,9 +36851,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp",
-      "target": "docs_hologram_arquitectura_del_c\u00f3digo",
-      "confidence_score": 1.0
+      "target": "docs_hologram_arquitectura_del_c\u00f3digo"
     },
     {
       "relation": "contains",
@@ -36160,9 +36861,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L111",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp",
-      "target": "docs_hologram_autor\u00eda_de_los_clips_condiciona_toda_la_parte_visual",
-      "confidence_score": 1.0
+      "target": "docs_hologram_autor\u00eda_de_los_clips_condiciona_toda_la_parte_visual"
     },
     {
       "relation": "contains",
@@ -36170,9 +36871,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L124",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp",
-      "target": "docs_hologram_conexi\u00f3n",
-      "confidence_score": 1.0
+      "target": "docs_hologram_conexi\u00f3n"
     },
     {
       "relation": "contains",
@@ -36180,9 +36881,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L85",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp",
-      "target": "docs_hologram_mapeo_estado_de_la_ia_clip_y_por_qu\u00e9_se_hizo_configurable",
-      "confidence_score": 1.0
+      "target": "docs_hologram_mapeo_estado_de_la_ia_clip_y_por_qu\u00e9_se_hizo_configurable"
     },
     {
       "relation": "contains",
@@ -36190,9 +36891,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L133",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp",
-      "target": "docs_hologram_pendientes_opcional_no_hechos_a_prop\u00f3sito",
-      "confidence_score": 1.0
+      "target": "docs_hologram_pendientes_opcional_no_hechos_a_prop\u00f3sito"
     },
     {
       "relation": "contains",
@@ -36200,9 +36901,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp",
-      "target": "docs_hologram_reparto_de_responsabilidades_app_holomissyou_este_controlador",
-      "confidence_score": 1.0
+      "target": "docs_hologram_reparto_de_responsabilidades_app_holomissyou_este_controlador"
     },
     {
       "relation": "contains",
@@ -36210,9 +36911,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram_holograma_f\u00edsico_missyou_integraci\u00f3n_por_tcp",
-      "target": "docs_hologram_tl_dr_cambiar_el_video_por_\u00edndice_ya_es_el_mecanismo",
-      "confidence_score": 1.0
+      "target": "docs_hologram_tl_dr_cambiar_el_video_por_\u00edndice_ya_es_el_mecanismo"
     },
     {
       "relation": "contains",
@@ -36220,9 +36921,9 @@
       "source_file": "docs/HOLOGRAM.md",
       "source_location": "L70",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_hologram_arquitectura_del_c\u00f3digo",
-      "target": "docs_hologram_endpoints_main_py",
-      "confidence_score": 1.0
+      "target": "docs_hologram_endpoints_main_py"
     },
     {
       "relation": "contains",
@@ -36230,9 +36931,9 @@
       "source_file": "docs/PACKAGING.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_packaging",
-      "target": "docs_packaging_empaquetado_windows_first_fase_c_gu\u00eda_para_el_pr\u00f3ximo_agente",
-      "confidence_score": 1.0
+      "target": "docs_packaging_empaquetado_windows_first_fase_c_gu\u00eda_para_el_pr\u00f3ximo_agente"
     },
     {
       "relation": "contains",
@@ -36240,9 +36941,9 @@
       "source_file": "docs/PACKAGING.md",
       "source_location": "L89",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_packaging_empaquetado_windows_first_fase_c_gu\u00eda_para_el_pr\u00f3ximo_agente",
-      "target": "docs_packaging_aceptaci\u00f3n",
-      "confidence_score": 1.0
+      "target": "docs_packaging_aceptaci\u00f3n"
     },
     {
       "relation": "contains",
@@ -36250,9 +36951,9 @@
       "source_file": "docs/PACKAGING.md",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_packaging_empaquetado_windows_first_fase_c_gu\u00eda_para_el_pr\u00f3ximo_agente",
-      "target": "docs_packaging_objetivo",
-      "confidence_score": 1.0
+      "target": "docs_packaging_objetivo"
     },
     {
       "relation": "contains",
@@ -36260,9 +36961,9 @@
       "source_file": "docs/PACKAGING.md",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_packaging_empaquetado_windows_first_fase_c_gu\u00eda_para_el_pr\u00f3ximo_agente",
-      "target": "docs_packaging_pasos",
-      "confidence_score": 1.0
+      "target": "docs_packaging_pasos"
     },
     {
       "relation": "contains",
@@ -36270,9 +36971,9 @@
       "source_file": "docs/PACKAGING.md",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_packaging_empaquetado_windows_first_fase_c_gu\u00eda_para_el_pr\u00f3ximo_agente",
-      "target": "docs_packaging_restricci\u00f3n_dura",
-      "confidence_score": 1.0
+      "target": "docs_packaging_restricci\u00f3n_dura"
     },
     {
       "relation": "contains",
@@ -36280,9 +36981,9 @@
       "source_file": "docs/PACKAGING.md",
       "source_location": "L67",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_packaging_empaquetado_windows_first_fase_c_gu\u00eda_para_el_pr\u00f3ximo_agente",
-      "target": "docs_packaging_spec_de_partida_validar_en_el_runner",
-      "confidence_score": 1.0
+      "target": "docs_packaging_spec_de_partida_validar_en_el_runner"
     },
     {
       "relation": "contains",
@@ -36290,9 +36991,9 @@
       "source_file": "frontend/README.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_readme",
-      "target": "frontend_readme_react_typescript_vite",
-      "confidence_score": 1.0
+      "target": "frontend_readme_react_typescript_vite"
     },
     {
       "relation": "contains",
@@ -36300,9 +37001,9 @@
       "source_file": "frontend/README.md",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_readme_react_typescript_vite",
-      "target": "frontend_readme_expanding_the_eslint_configuration",
-      "confidence_score": 1.0
+      "target": "frontend_readme_expanding_the_eslint_configuration"
     },
     {
       "relation": "contains",
@@ -36310,9 +37011,9 @@
       "source_file": "frontend/README.md",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_readme_react_typescript_vite",
-      "target": "frontend_readme_react_compiler",
-      "confidence_score": 1.0
+      "target": "frontend_readme_react_compiler"
     },
     {
       "relation": "contains",
@@ -36320,9 +37021,9 @@
       "source_file": "frontend/src-tauri/README.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_tauri_readme",
-      "target": "src_tauri_readme_holograma_unev_shell_de_escritorio_tauri_v2",
-      "confidence_score": 1.0
+      "target": "src_tauri_readme_holograma_unev_shell_de_escritorio_tauri_v2"
     },
     {
       "relation": "contains",
@@ -36330,9 +37031,9 @@
       "source_file": "frontend/src-tauri/README.md",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_tauri_readme_holograma_unev_shell_de_escritorio_tauri_v2",
-      "target": "src_tauri_readme_c\u00f3mo_funciona",
-      "confidence_score": 1.0
+      "target": "src_tauri_readme_c\u00f3mo_funciona"
     },
     {
       "relation": "contains",
@@ -36340,9 +37041,9 @@
       "source_file": "frontend/src-tauri/README.md",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_tauri_readme_holograma_unev_shell_de_escritorio_tauri_v2",
-      "target": "src_tauri_readme_desarrollo",
-      "confidence_score": 1.0
+      "target": "src_tauri_readme_desarrollo"
     },
     {
       "relation": "contains",
@@ -36350,9 +37051,9 @@
       "source_file": "frontend/src-tauri/README.md",
       "source_location": "L65",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_tauri_readme_holograma_unev_shell_de_escritorio_tauri_v2",
-      "target": "src_tauri_readme_empaquetado_del_backend_pendiente_paso_posterior",
-      "confidence_score": 1.0
+      "target": "src_tauri_readme_empaquetado_del_backend_pendiente_paso_posterior"
     },
     {
       "relation": "contains",
@@ -36360,9 +37061,9 @@
       "source_file": "frontend/src-tauri/README.md",
       "source_location": "L23",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_tauri_readme_holograma_unev_shell_de_escritorio_tauri_v2",
-      "target": "src_tauri_readme_requisitos",
-      "confidence_score": 1.0
+      "target": "src_tauri_readme_requisitos"
     },
     {
       "relation": "contains",
@@ -36370,9 +37071,9 @@
       "source_file": "frontend/src-tauri/README.md",
       "source_location": "L52",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_tauri_readme_holograma_unev_shell_de_escritorio_tauri_v2",
-      "target": "src_tauri_readme_widgets_desprendibles",
-      "confidence_score": 1.0
+      "target": "src_tauri_readme_widgets_desprendibles"
     },
     {
       "relation": "contains",
@@ -36380,9 +37081,9 @@
       "source_file": "frontend/src-tauri/README.md",
       "source_location": "L44",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_tauri_readme_desarrollo",
-      "target": "src_tauri_readme_variables_de_entorno_\u00fatiles",
-      "confidence_score": 1.0
+      "target": "src_tauri_readme_variables_de_entorno_\u00fatiles"
     },
     {
       "relation": "references",
@@ -39575,5 +40276,5 @@
       "source_file": "frontend/src-tauri/icons/ios/AppIcon-20x20@1x.png"
     }
   ],
-  "built_at_commit": "68cabe7bad0f477d3226942e838a6028826eb2f9"
+  "built_at_commit": "20919aefac8741869578dbd7bc60461600d9707a"
 }

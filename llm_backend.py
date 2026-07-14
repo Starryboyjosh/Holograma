@@ -126,6 +126,59 @@ def _ollama_model_available(model=None):
     return model in model_names
 
 
+def list_ollama_models(timeout: float | None = None) -> dict:
+    """Modelos instalados en el Ollama local (equivalente a ``ollama list``).
+
+    Devuelve un dict listo para la API:
+
+    ``{"ok": bool, "models": [str, ...], "message": str}``
+
+    Los nombres salen de ``GET /api/tags`` (campo ``name``, p. ej. ``gemma3:1b``).
+    Si el servicio no responde, ``ok=False`` y ``models=[]`` con un mensaje
+    accionable — la UI puede mostrar el error y seguir permitiendo texto libre.
+    """
+    t = (
+        timeout
+        if timeout is not None
+        else _env_float("OLLAMA_STATUS_TIMEOUT_SECONDS", 1.5)
+    )
+    try:
+        tags = _ollama_tags(timeout=t)
+    except Exception:
+        return {
+            "ok": False,
+            "models": [],
+            "message": (
+                "Ollama no responde. ¿Está iniciado el servicio? "
+                "Prueba: ollama serve"
+            ),
+        }
+
+    names: list[str] = []
+    seen: set[str] = set()
+    for item in tags.get("models", []) or []:
+        name = (item.get("name") or "").strip()
+        if name and name not in seen:
+            seen.add(name)
+            names.append(name)
+    names.sort(key=str.lower)
+
+    if not names:
+        return {
+            "ok": True,
+            "models": [],
+            "message": (
+                "Ollama responde, pero no hay modelos instalados. "
+                "Descarga uno con: ollama pull gemma3:1b"
+            ),
+        }
+    return {
+        "ok": True,
+        "models": names,
+        "message": f"{len(names)} modelo(s) instalado(s).",
+    }
+
+
 # Readiness de Ollama cacheada con TTL. Antes `_ollama_ready()` se invocaba 2–4
 # veces por mensaje (get_selected_backend + _candidate_backends) y cada
 # invocación lanzaba DOS sondas HTTP bloqueantes a /api/tags (1.5 s c/u). Sobre

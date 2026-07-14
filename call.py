@@ -1161,7 +1161,8 @@ def voice_loop():
         chat_to_voice()
         return
 
-    listener = WhisperListener()
+    # Español fijo + hotwords de data/ (UNEV/Honduras): ver stt/listener.py.
+    listener = WhisperListener(language="es")
 
     # Lector de teclado para push-to-talk en CLI (ENTER para hablar). En modo
     # web el disparador llega por WebSocket, así que no tocamos stdin.

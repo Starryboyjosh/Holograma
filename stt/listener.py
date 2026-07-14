@@ -24,6 +24,69 @@ configure_utf8_stdio()
 # y generaba decenas de miles de términos. Se invalida si cambia el mtime de las fuentes.
 _HOTWORDS_CACHE: dict[str, object] = {"signature": None, "value": None}
 
+# Kiosco UNEV: el visitante habla en español. Cualquier valor vacío/auto cae a "es"
+# para que Whisper no auto-detecte inglés en entornos ruidosos.
+_SPANISH_LANGUAGE_ALIASES = frozenset(
+    {
+        "es",
+        "es-es",
+        "es-mx",
+        "es-hn",
+        "es-419",
+        "spanish",
+        "español",
+        "espanol",
+        "castellano",
+    }
+)
+
+
+def _resolve_stt_language(language: str | None = None) -> str:
+    """Idioma efectivo para STT. Por defecto y en duda: español (``es``).
+
+    ``WHISPER_LANGUAGE=auto`` (o vacío) se fuerza a ``es``: en el holograma no
+    queremos detección automática de idioma (suele equivocarse con ruido/música).
+    """
+    raw = (language if language is not None else _env("WHISPER_LANGUAGE", "es") or "es")
+    raw = str(raw).strip().lower()
+    if not raw or raw in ("auto", "none", "null", "detect"):
+        return "es"
+    if raw in _SPANISH_LANGUAGE_ALIASES:
+        return "es"
+    return raw
+
+
+# Límite duro de la API de Groq Whisper (error 400 si se supera).
+# https://console.groq.com — "prompt length must be 896 characters or fewer"
+_GROQ_STT_PROMPT_MAX = 896
+
+
+def _truncate_stt_prompt(text: str, max_chars: int) -> str:
+    """Corta el prompt al tope, preferiblemente en un espacio (no parte un término).
+
+    Además se acota por bytes UTF-8 al mismo tope: Groq a veces reporta longitudes
+    distintas al ``len()`` de Python con tildes/ñ (español).
+    """
+    if not text:
+        return ""
+    max_chars = max(1, int(max_chars))
+    text = text.strip()
+    if len(text) > max_chars:
+        cut = text[:max_chars].rsplit(" ", 1)[0]
+        text = cut if cut else text[:max_chars]
+    # Tope por bytes UTF-8 (tildes, ñ, etc. pesan 2 bytes).
+    encoded = text.encode("utf-8")
+    if len(encoded) <= max_chars:
+        return text
+    # Recortar hasta caber en max_chars bytes; luego en el último espacio.
+    while text and len(text.encode("utf-8")) > max_chars:
+        text = text[:-1]
+    if " " in text:
+        maybe = text.rsplit(" ", 1)[0]
+        if maybe:
+            text = maybe
+    return text.strip()
+
 # Vocabulario base del kiosco (siempre presente): dominio del asistente + UNEV +
 # Honduras. Se combina con data/unev_info.json, honduras_info.json y
 # open_vocabulary.txt. No meter aquí entradas de cultura_general (ruido).
@@ -213,7 +276,7 @@ class WhisperListener:
         max_threshold=None,
     ):
         self.model_size = model_size or _env("WHISPER_MODEL", "base")
-        self.language = language or _env("WHISPER_LANGUAGE", "es")
+        self.language = _resolve_stt_language(language)
         self.sample_rate = sample_rate or _env_int("WHISPER_SAMPLE_RATE", 16000)
         self.silence_threshold = silence_threshold or _env_float(
             "WHISPER_SILENCE_THRESHOLD", 0.02
@@ -660,39 +723,60 @@ class WhisperListener:
         _HOTWORDS_CACHE["value"] = result
         return result
 
-    def _build_stt_prompt(self) -> str:
+    def _build_stt_prompt(self, *, max_chars: int | None = None) -> str:
         """Prompt de contexto para Whisper (local ``initial_prompt`` y Groq ``prompt``).
 
-        Whisper/Groq no usan el mismo parámetro ``hotwords`` de faster-whisper;
-        el prompt guía el léxico (siglas UNEV, programas, topónimos).
-        ``WHISPER_PROMPT`` en env/config lo sustituye por completo si está definido.
+        Siempre declara **español** y empuja el léxico del kiosco (hotwords de
+        ``data/``). Groq no tiene el parámetro ``hotwords`` de faster-whisper;
+        el prompt es el canal compartido. ``WHISPER_PROMPT`` en env/config lo
+        sustituye por completo si está definido.
+
+        ``max_chars`` acota el resultado (Groq exige ≤896). Por defecto se usa
+        ``WHISPER_PROMPT_MAX_CHARS`` (880) para dejar margen con tildes UTF-8.
         """
+        # Por defecto bajo el techo de Groq (896): tildes/ñ pueden hacer que el
+        # conteo del API sea mayor que len() en Python.
+        if max_chars is None:
+            max_chars = max(200, _env_int("WHISPER_PROMPT_MAX_CHARS", 880))
+        max_chars = min(int(max_chars), _GROQ_STT_PROMPT_MAX)
+
         override = (_env("WHISPER_PROMPT") or "").strip()
         if override:
-            return override
+            return _truncate_stt_prompt(override, max_chars)
 
         prefix = (
-            "Asistente del Holograma UNEV en Honduras. "
-            "Universidad virtual: admisión, carreras y cultura hondureña. "
-            "Vocabulario: "
+            "Transcripción en español de Honduras. "
+            "El hablante habla solo en español (no en inglés). "
+            "Asistente del Holograma UNEV: admisión, carreras y cultura. "
+            "Vocabulario preferido: "
         )
-        # Límite práctico del prompt de Whisper (~224 tokens ≈ 800-900 chars).
-        max_chars = max(200, _env_int("WHISPER_PROMPT_MAX_CHARS", 800))
         budget = max_chars - len(prefix)
         hot = self._load_db_hotwords() or ""
         if budget <= 0:
-            return prefix.strip()
+            return _truncate_stt_prompt(prefix, max_chars)
         if len(hot) > budget:
-            # Cortar en el último espacio para no partir un término.
             cut = hot[:budget].rsplit(" ", 1)[0]
             hot = cut if cut else hot[:budget]
-        return prefix + hot
+        return _truncate_stt_prompt(prefix + hot, max_chars)
+
+    def _log_stt_decode_config(self, *, backend: str, prompt: str, hotwords: str | None) -> None:
+        if _is_quiet():
+            return
+        n_hot = len((hotwords or "").split()) if hotwords else 0
+        utf8_len = len((prompt or "").encode("utf-8"))
+        print(
+            f"[STT] idioma={self.language} backend={backend} "
+            f"hotwords={n_hot} prompt_chars={len(prompt or '')} "
+            f"prompt_utf8={utf8_len}",
+            flush=True,
+        )
 
     def _transcribe_groq(self, audio_path):
         """Transcribe a WAV file using the Groq API with whisper-large-v3-turbo.
 
         Groq no expone ``hotwords`` de faster-whisper; se inyecta el mismo
-        vocabulario de contexto vía ``prompt`` + ``language``.
+        vocabulario de contexto vía ``prompt`` + ``language="es"``.
+        El prompt se trunca a ≤896 caracteres (límite de la API Groq).
         """
         api_key = _env("GROQ_API_KEY")
         if not api_key:
@@ -711,7 +795,13 @@ class WhisperListener:
 
         client = Groq(api_key=api_key)
         audio_path = Path(audio_path)
-        prompt = self._build_stt_prompt()
+        # Re-resolver idioma por si cambió el env en caliente desde Ajustes.
+        self.language = _resolve_stt_language(self.language)
+        # Techo duro de Groq (896). Margen por UTF-8 de tildes/ñ.
+        prompt = self._build_stt_prompt(max_chars=_GROQ_STT_PROMPT_MAX)
+        prompt = _truncate_stt_prompt(prompt, _GROQ_STT_PROMPT_MAX)
+        hotwords = self._load_db_hotwords()
+        self._log_stt_decode_config(backend="groq", prompt=prompt, hotwords=hotwords)
 
         if not _is_quiet():
             print(f"[STT] Transcribiendo '{audio_path.name}' con Groq (whisper-large-v3-turbo)...")
@@ -723,6 +813,7 @@ class WhisperListener:
                     "model": "whisper-large-v3-turbo",
                     "temperature": 0.0,
                     "response_format": "verbose_json",
+                    # Fijo a español del kiosco (no auto-detect).
                     "language": self.language or "es",
                 }
                 if prompt:
@@ -743,19 +834,28 @@ class WhisperListener:
             Path to the WAV file (Regla A: accepts Path objects).
         """
         audio_path = Path(audio_path)  # Regla A
+        # Idioma y hotwords se re-evalúan cada turno (Ajustes / env en caliente).
+        self.language = _resolve_stt_language(self.language)
         if self.model_size == "whisper-large-v3-turbo":
             return self._transcribe_groq(audio_path)
 
         model = self._load_model()
 
-        # Prompt + hotwords del contexto UNEV/Honduras/kiosco.
+        # Prompt + hotwords del contexto UNEV/Honduras/kiosco (español).
         prompt = self._build_stt_prompt()
+        db_hotwords = self._load_db_hotwords()
+        self._log_stt_decode_config(
+            backend=f"faster-whisper/{self.model_size}",
+            prompt=prompt,
+            hotwords=db_hotwords,
+        )
 
         # beam_size=5 era el default de faster-whisper (más lento en CPU).
         # WHISPER_BEAM_SIZE=1–2 recorta latencia con poca pérdida en español kiosco.
         beam_size = max(1, _env_int("WHISPER_BEAM_SIZE", 2))
         transcribe_kwargs = {
-            "language": self.language,
+            "language": self.language or "es",
+            "task": "transcribe",  # nunca "translate" a inglés
             "beam_size": beam_size,
             "vad_filter": True,
             "vad_parameters": dict(min_silence_duration_ms=500),
@@ -765,9 +865,9 @@ class WhisperListener:
             "temperature": 0.0,
             "condition_on_previous_text": False,
             "no_speech_threshold": 0.6,
+            "multilingual": False,
         }
 
-        db_hotwords = self._load_db_hotwords()
         if db_hotwords:
             transcribe_kwargs["hotwords"] = db_hotwords
 

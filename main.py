@@ -25,7 +25,7 @@ from app.services.conversation import ConversationService
 from app.services.llm import LLMService
 from app.services.vision import CameraContextProvider
 from auth_token import request_authorized
-from llm_backend import probe_backend, stream_llm_response
+from llm_backend import list_ollama_models, probe_backend, stream_llm_response
 from provider_config import all_providers_public_info
 from security import (
     MAX_LABEL_CHARS,
@@ -508,6 +508,21 @@ def get_providers():
     modelos o requiere URL base.
     """
     return {"providers": all_providers_public_info(os.environ)}
+
+
+@app.get("/api/ollama/models")
+def get_ollama_models():
+    """Modelos instalados en el Ollama local (equivalente a ``ollama list``).
+
+    La pantalla de Ajustes lo usa para rellenar el desplegable de modelo cuando
+    el proveedor es Ollama. No requiere token (solo lectura, como /api/providers).
+    """
+    result = list_ollama_models()
+    return {
+        "status": "ok" if result["ok"] else "error",
+        "models": result["models"],
+        "message": result["message"],
+    }
 
 
 @app.post("/api/llm/test")
