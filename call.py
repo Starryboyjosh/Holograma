@@ -36,7 +36,15 @@ from skills.event_mode import get_greeting, get_system_prompt
 from skills.presence import PresenceManager
 from skills.router import route_local_skill
 from skills.university import get_university_context, normalize_text
-from utils import _is_quiet, configure_utf8_stdio
+from utils import (
+    _is_quiet,
+    apply_config_to_env,
+    configure_utf8_stdio,
+    load_config,
+)
+
+# Contexto de cámara: lógica neutra compartida (rompe el ciclo call↔llm_backend).
+from camera_context import build_camera_context as _build_camera_context
 
 configure_utf8_stdio()
 
@@ -46,17 +54,10 @@ os.environ["QT_QPA_PLATFORM"] = "xcb"
 BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / ".env")
 
-# Cargar configuración unificada desde config.json (Regla A: Path)
+# Cargar configuración unificada desde config.json (Regla A: Path).
+# Mantiene la precedencia: .env (ya en os.environ) gana; config.json es fallback.
 CONFIG_FILE = BASE_DIR / "config.json"
-if CONFIG_FILE.exists():
-    try:
-        with CONFIG_FILE.open("r", encoding="utf-8") as f:
-            config_data = json.load(f)
-            for key, val in config_data.items():
-                if val is not None and str(val) != "" and not os.environ.get(key):
-                    os.environ[key] = str(val)
-    except Exception as e:
-        print(f"AVISO: No se pudo cargar {CONFIG_FILE.name}: {e}")
+apply_config_to_env(load_config(CONFIG_FILE))
 
 CURRENT_MODE = os.getenv("HOLOGRAM_MODE", "normal")
 DEFAULT_PIPER_MODEL = "es_MX-claude-high.onnx"
@@ -219,24 +220,6 @@ def get_piper_model_path():
         return str(spanish_models[0])
 
     return str(default_model)
-
-
-def get_piper_sample_rate(model_path):
-    """Read Piper sample rate from the model JSON sidecar when available."""
-    config_path = Path(f"{model_path}.json")  # Regla A
-
-    try:
-        with config_path.open("r", encoding="utf-8") as config_file:
-            config = json.load(config_file)
-    except FileNotFoundError:
-        return "22050"
-    except json.JSONDecodeError:
-        if not _is_quiet():
-            print(f"AVISO: No pude leer {config_path}. Usando 22050 Hz.")
-        return "22050"
-
-    sample_rate = config.get("audio", {}).get("sample_rate", 22050)
-    return str(sample_rate)
 
 
 def is_wsl():
@@ -535,11 +518,13 @@ def speak_with_linux_tts(text):
     return False
 
 
-# Configuración del pipeline de streaming TTS
-_MIN_FIRST_CHUNK_LEN = 23  # Latencia baja inicial (ej. "Hola, buenas tardes.")
-_MIN_SENTENCE_LEN = 30  # Oración promedio
-_CLAUSE_RE = re.compile(r"(?<=[.!?;:—])\s+")
-_SENTENCE_RE = re.compile(r"(?<=[.!?])\s+")
+# Configuración del pipeline de streaming TTS (heurística compartida en utils)
+from utils import (
+    _CLAUSE_RE,
+    _MIN_FIRST_CHUNK_LEN,
+    _MIN_SENTENCE_LEN,
+    _SENTENCE_RE,
+)
 
 
 def _split_into_chunks(text):
@@ -700,8 +685,6 @@ def speak(text, blocking=True):
 # ======================================================================
 
 _last_camera_analysis = {}
-_last_person_time = 0
-_cached_person_analysis = {}
 _visual_keywords = [
     "ves",
     "mir",
@@ -728,40 +711,6 @@ _visual_keywords = [
     "persona",
     "gente",
 ]
-
-
-def _build_camera_context(analysis):
-    global _last_person_time, _cached_person_analysis
-    import time
-
-    if analysis.get("person_count", 0) > 0:
-        _last_person_time = time.time()
-        _cached_person_analysis = analysis.copy()
-        active_analysis = analysis
-    else:
-        if time.time() - _last_person_time <= 60.0:
-            active_analysis = _cached_person_analysis
-        else:
-            active_analysis = analysis
-
-    parts = []
-    pc = active_analysis.get("person_count", 0)
-    if pc == 1:
-        parts.append("Veo a una persona frente a ti en este momento.")
-    elif pc > 1:
-        parts.append(f"Veo a {pc} personas frente a ti en este momento.")
-    fd = active_analysis.get("face_description")
-    if fd:
-        parts.append(fd)
-    co = active_analysis.get("custom_objects", [])
-    if co:
-        labels = list({o["label"] for o in co})
-        parts.append(
-            f"Objetos que reconozco visualmente frente a ti: {', '.join(labels[:5])}"
-        )
-    if not parts:
-        parts.append("No veo a nadie frente a ti en este momento.")
-    return "\n".join(parts)
 
 
 def _is_visual_question(user_input):

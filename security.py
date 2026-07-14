@@ -15,7 +15,9 @@ probarlas con ``pytest`` en cualquier entorno.
 from __future__ import annotations
 
 import re
-from collections.abc import Iterable, Mapping
+from collections.abc import Mapping
+
+from provider_config import PROVIDERS
 
 # Límites de tamaño (caracteres). Generosos para uso real, pero acotados.
 MAX_PROMPT_CHARS = 4000  # mensaje de chat del visitante → LLM
@@ -25,18 +27,13 @@ MAX_VOCAB_CHARS = 4000  # vocabulario UNEV pegado por el operador
 
 _REDACTED = "***REDACTED***"
 
-# Variables de entorno que contienen secretos. Es deliberadamente un espejo
-# pequeño y estable de provider_config.PROVIDERS[*].key_env: se mantiene aquí
-# para que la redacción no dependa del registro de proveedores (módulo crítico
-# de seguridad, sin acoplamientos).
-SECRET_ENV_VARS: tuple[str, ...] = (
-    "OPENROUTER_API_KEY",
-    "OPENAI_API_KEY",
-    "ANTHROPIC_API_KEY",
-    "NVIDIA_API_KEY",
-    "OPENAI_COMPAT_API_KEY",
-    "GROQ_API_KEY",
-)
+# Variables de entorno que contienen secretos. Se derivan del registro único de
+# proveedores (provider_config.PROVIDERS[*].key_env) para no desincronizarse
+# cuando se añada un proveedor nuevo; ``GROQ_API_KEY`` es de STT, no de LLM,
+# así que se mantiene explícita.
+SECRET_ENV_VARS: tuple[str, ...] = tuple(
+    p.key_env for p in PROVIDERS.values() if p.key_env
+) + ("GROQ_API_KEY",)
 
 # Tokens con forma de API key de los proveedores soportados (y prefijos comunes).
 _KEY_PATTERNS = [
@@ -98,6 +95,4 @@ def clamp_text(text: object, max_len: int) -> str:
     return s.strip()
 
 
-def redact_iter(values: Iterable[object], env: Mapping[str, str] | None = None) -> list[str]:
-    """Aplica :func:`redact_secrets` a una colección (útil para listas de logs)."""
-    return [redact_secrets(v, env) for v in values]
+

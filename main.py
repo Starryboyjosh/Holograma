@@ -36,6 +36,12 @@ from security import (
     redact_secrets,
 )
 from skills.unev_content import get_unev_info, save_unev_info
+from utils import (
+    _atomic_write_text,
+    load_config,
+    read_dotenv,
+    write_dotenv,
+)
 
 # Regla de Oro A: rutas absolutas basadas en este archivo. Al ejecutarse como
 # sidecar de Tauri el CWD puede ser arbitrario, así que anclamos CADA ruta a
@@ -53,21 +59,6 @@ MODELS_DIR = os.path.join(BASE_DIR, "models")
 INDEX_HTML = os.path.join(STATIC_DIR, "index.html")
 
 load_dotenv(ENV_PATH)
-
-
-def _atomic_write_text(path: str, text: str) -> None:
-    """Escritura atómica: archivo temporal + os.replace.
-
-    Evita config.json / .env truncados si el proceso muere a mitad de escritura
-    (corte de luz en el kiosko, cierre de la app, etc.).
-    """
-    directory = os.path.dirname(os.path.abspath(path)) or "."
-    tmp = os.path.join(directory, f".{os.path.basename(path)}.tmp")
-    with open(tmp, "w", encoding="utf-8") as f:
-        f.write(text)
-        f.flush()
-        os.fsync(f.fileno())
-    os.replace(tmp, path)
 
 
 @asynccontextmanager
@@ -119,9 +110,9 @@ async def lifespan(app: FastAPI):
             manager.broadcast_threadsafe(
                 {"type": "camera_event", "event": event, "count": count}
             )
-            # Alimenta el proveedor de visión para que el ConversationService pueda
-            # inyectar el contexto de cámara al LLM (rompe el ciclo call↔llm_backend
-            # cuando hay análisis; si no, stream_llm_response usa el fallback legado).
+            # Alimenta el proveedor de visión: ConversationService lee
+            # camera_provider.build_context() e inyecta camera_context en
+            # stream_llm_response. llm_backend ya no importa call (sin fallback).
             camera_provider.update(analysis)
             original_callback(event, count, analysis)
 
@@ -137,13 +128,7 @@ async def lifespan(app: FastAPI):
 
     # Leer config.json
     config_path = CONFIG_PATH
-    config_data = {}
-    if os.path.exists(config_path):
-        try:
-            with open(config_path, encoding="utf-8") as f:
-                config_data = json.load(f)
-        except Exception:
-            pass
+    config_data = load_config(config_path)
 
     use_voice = (
         os.getenv("HOLOGRAM_INPUT", config_data.get("HOLOGRAM_INPUT", "")).lower()
@@ -320,13 +305,7 @@ class VocabularyPayload(BaseModel):
 @app.get("/api/config")
 def get_config():
     config_path = CONFIG_PATH
-    config_data = {}
-    if os.path.exists(config_path):
-        try:
-            with open(config_path, encoding="utf-8") as f:
-                config_data = json.load(f)
-        except Exception as e:
-            print(f"Error reading config.json: {e}")
+    config_data = load_config(config_path)
 
     openrouter_key = os.getenv("OPENROUTER_API_KEY") or config_data.get(
         "OPENROUTER_API_KEY", ""
@@ -375,13 +354,7 @@ def get_config():
 @app.post("/api/config")
 def update_config(payload: ConfigUpdate):
     config_path = CONFIG_PATH
-    config_data = {}
-    if os.path.exists(config_path):
-        try:
-            with open(config_path, encoding="utf-8") as f:
-                config_data = json.load(f)
-        except Exception:
-            pass
+    config_data = load_config(config_path)
 
     if payload.OLLAMA_MODEL is not None:
         val = payload.OLLAMA_MODEL if payload.OLLAMA_MODEL is not None else ""
@@ -471,16 +444,7 @@ def update_config(payload: ConfigUpdate):
 
         # Also write to .env for persistence
         env_path = ENV_PATH
-        env_lines = []
-        if os.path.exists(env_path):
-            with open(env_path, encoding="utf-8") as f:
-                env_lines = f.readlines()
-
-        new_env_data = {}
-        for line in env_lines:
-            if "=" in line and not line.strip().startswith("#"):
-                parts = line.split("=", 1)
-                new_env_data[parts[0].strip()] = parts[1].strip()
+        new_env_data = read_dotenv(env_path)
 
         if payload.LLM_PROVIDER is not None:
             new_env_data["LLM_PROVIDER"] = payload.LLM_PROVIDER
@@ -505,9 +469,7 @@ def update_config(payload: ConfigUpdate):
         if payload.HOLOGRAM_TCP_PORT is not None:
             new_env_data["HOLOGRAM_TCP_PORT"] = str(payload.HOLOGRAM_TCP_PORT)
 
-        _atomic_write_text(
-            env_path, "".join(f"{k}={v}\n" for k, v in new_env_data.items())
-        )
+        write_dotenv(env_path, new_env_data)
 
         # Aplicar el destino físico en caliente; no hace falta reiniciar FastAPI.
         if payload.HOLOGRAM_TCP_IP is not None or payload.HOLOGRAM_TCP_PORT is not None:
@@ -710,13 +672,10 @@ def train_image(payload: TrainImagePayload):
 @app.get("/api/train/metadata")
 def get_training_metadata():
     meta_path = os.path.join(DATA_DIR, "training_metadata.json")
-    if os.path.exists(meta_path):
-        try:
-            with open(meta_path, encoding="utf-8") as f:
-                return {"status": "ok", "items": json.load(f)}
-        except Exception:
-            pass
-    return {"status": "ok", "items": []}
+    items = load_config(meta_path)
+    if not isinstance(items, list):
+        items = []
+    return {"status": "ok", "items": items}
 
 
 @app.post("/api/train/vocabulary")

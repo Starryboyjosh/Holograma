@@ -7,7 +7,7 @@ un objeto y no del módulo —así se puede testear con un stream falso, sin toc
 proveedores ni red.
 """
 
-from collections.abc import AsyncGenerator, Awaitable, Callable
+from collections.abc import AsyncGenerator, Callable
 
 # Una función de stream: (prompt, camera_context) -> async generator de fragmentos.
 StreamFn = Callable[..., AsyncGenerator[str, None]]
@@ -29,7 +29,3 @@ class LLMService:
             stream_fn = llm_backend.stream_llm_response
         async for chunk in stream_fn(prompt, camera_context=camera_context):
             yield chunk
-
-
-# Tipo de ayuda para anotar callables de TTS que pueden ser sync o async.
-SpeakResult = None | Awaitable[None]

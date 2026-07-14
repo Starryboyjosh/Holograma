@@ -26,14 +26,15 @@ from __future__ import annotations
 
 import asyncio
 import os
-import re
 from collections.abc import Callable
 from typing import Protocol
 
-_CLAUSE_RE = re.compile(r"(?<=[.!?;:—])\s+")
-_SENTENCE_RE = re.compile(r"(?<=[.!?])\s+")
-_MIN_FIRST_CHUNK_LEN = 23
-_MIN_SENTENCE_LEN = 30
+from utils import (
+    _CLAUSE_RE,
+    _MIN_FIRST_CHUNK_LEN,
+    _MIN_SENTENCE_LEN,
+    _SENTENCE_RE,
+)
 
 
 def _tts_stream_enabled() -> bool:

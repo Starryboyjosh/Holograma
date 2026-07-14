@@ -224,22 +224,3 @@ class WakeWordDetector:
             return True
         except ImportError:
             return False
-
-
-def get_wakeword_status():
-    """Return a human-readable status string for the wake-word subsystem."""
-    try:
-        import openwakeword  # noqa: F401
-    except ImportError:
-        return (
-            "Wake word no disponible: falta openwakeword. "
-            "Ejecuta: pip install openwakeword"
-        )
-    try:
-        import sounddevice  # noqa: F401
-    except ImportError:
-        return "Wake word no disponible: falta sounddevice. Ejecuta: pip install sounddevice"
-
-    model = _env("WAKEWORD_MODEL", "hey_jarvis")
-    threshold = _env_float("WAKEWORD_THRESHOLD", 0.5)
-    return f"Wake word activo: modelo '{model}', umbral {threshold}."

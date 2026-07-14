@@ -31,6 +31,25 @@ def _xyxy_tuple(xyxy) -> tuple[float, float, float, float]:
     return float(vals[0]), float(vals[1]), float(vals[2]), float(vals[3])
 
 
+def _compute_scale_back(frame, prepared) -> float:
+    """Factor para reescalar cajas del frame reducido al frame original."""
+    scale_back = 1.0
+    if prepared is not frame and prepared is not None and frame is not None:
+        try:
+            scale_back = frame.shape[1] / float(prepared.shape[1])
+        except Exception:
+            scale_back = 1.0
+    return scale_back
+
+
+def _scale_box(box, scale_back) -> tuple[float, float, float, float]:
+    """Reescala una caja ``(x1, y1, x2, y2)`` si ``scale_back != 1.0``."""
+    x1, y1, x2, y2 = box
+    if scale_back != 1.0:
+        return (x1 * scale_back, y1 * scale_back, x2 * scale_back, y2 * scale_back)
+    return box
+
+
 class YoloPersonDetector:
     """Detect people using YOLO26 / YOLOE-26 via the Ultralytics library (local).
 
@@ -259,12 +278,7 @@ class YoloPersonDetector:
             )
             # Si redimensionamos, las cajas vienen en coords del frame reducido;
             # escalar de vuelta al frame original para overlays/UI.
-            scale_back = 1.0
-            if prepared is not frame and prepared is not None and frame is not None:
-                try:
-                    scale_back = frame.shape[1] / float(prepared.shape[1])
-                except Exception:
-                    scale_back = 1.0
+            scale_back = _compute_scale_back(frame, prepared)
             for result in results:
                 for box in result.boxes:
                     confidence = float(box.conf[0])
@@ -272,13 +286,7 @@ class YoloPersonDetector:
                         cls_id = int(box.cls[0])
                         cls_name = result.names.get(cls_id, "unknown")
                         x1, y1, x2, y2 = _xyxy_tuple(box.xyxy[0])
-                        if scale_back != 1.0:
-                            x1, y1, x2, y2 = (
-                                x1 * scale_back,
-                                y1 * scale_back,
-                                x2 * scale_back,
-                                y2 * scale_back,
-                            )
+                        x1, y1, x2, y2 = _scale_box((x1, y1, x2, y2), scale_back)
                         objects.append({
                             "label": cls_name,
                             "confidence": confidence,
@@ -316,12 +324,7 @@ class YoloPersonDetector:
         results = self.model.predict(prepared, **self._predict_kwargs())
         persons = []
 
-        scale_back = 1.0
-        if prepared is not frame and prepared is not None and frame is not None:
-            try:
-                scale_back = frame.shape[1] / float(prepared.shape[1])
-            except Exception:
-                scale_back = 1.0
+        scale_back = _compute_scale_back(frame, prepared)
 
         for result in results:
             for box in result.boxes:
@@ -330,13 +333,7 @@ class YoloPersonDetector:
 
                 if class_id == _PERSON_CLASS_ID and confidence >= self.confidence_threshold:
                     x1, y1, x2, y2 = _xyxy_tuple(box.xyxy[0])
-                    if scale_back != 1.0:
-                        x1, y1, x2, y2 = (
-                            x1 * scale_back,
-                            y1 * scale_back,
-                            x2 * scale_back,
-                            y2 * scale_back,
-                        )
+                    x1, y1, x2, y2 = _scale_box((x1, y1, x2, y2), scale_back)
                     persons.append({
                         "confidence": confidence,
                         "box": (x1, y1, x2, y2),
@@ -670,20 +667,3 @@ class YoloPersonDetector:
             return True
         except ImportError:
             return False
-
-
-def get_vision_status():
-    """Return a human-readable status string for the vision subsystem."""
-    try:
-        import cv2
-        cv_version = cv2.__version__
-    except ImportError:
-        return "Visión no disponible: falta opencv-python. Ejecuta: pip install opencv-python"
-
-    try:
-        from ultralytics import YOLO  # noqa: F401
-    except ImportError:
-        return "Visión no disponible: falta ultralytics. Ejecuta: pip install ultralytics"
-
-    model = _env("YOLO_MODEL", "yolo26n.pt")
-    return f"Visión activa: OpenCV {cv_version}, modelo YOLO '{model}'."

@@ -417,7 +417,7 @@ def _chat_with_openai_compatible(provider, messages):
         response = client.chat.completions.create(
             model=model,
             messages=messages,
-            temperature=0.1,
+            temperature=0.6,
             max_tokens=_max_tokens(),
             stream=True,
         )
@@ -678,7 +678,7 @@ def _chat_with_ollama(messages):
         # tiempo de recarga (~60s en CPU) en cada pregunta.
         "keep_alive": _env("OLLAMA_KEEP_ALIVE", "30m"),
         "options": {
-            "temperature": 0.1,
+            "temperature": 0.6,
             "top_p": 0.9,
             "num_predict": _max_tokens(),
         },
@@ -740,7 +740,7 @@ def _chat_with_claude_native(messages):
             max_tokens=_max_tokens(),
             system=system_content,
             messages=formatted_messages,
-            temperature=0.1,
+            temperature=0.6,
         ) as stream:
             for text in stream.text_stream:
                 mirror.feed(text)
@@ -866,7 +866,7 @@ async def _stream_backend_response(backend, messages):
                 max_tokens=_max_tokens(),
                 system=system_content,
                 messages=formatted_messages,
-                temperature=0.1,
+                temperature=0.6,
             ) as stream:
                 async for text in stream.text_stream:
                     mirror.feed(text)
@@ -900,7 +900,7 @@ async def _stream_backend_response(backend, messages):
         response = await client.chat.completions.create(
             model=model,
             messages=messages,
-            temperature=0.1,
+            temperature=0.6,
             max_tokens=_max_tokens(),
             stream=True,
         )
@@ -926,10 +926,10 @@ async def stream_llm_response(
 ) -> AsyncGenerator[str, None]:
     """Generador asíncrono para transmitir la respuesta del LLM en tiempo real.
 
-    ``camera_context`` lo puede inyectar el llamador (p. ej. el
-    ``ConversationService`` de ``app/``). Si llega como ``None`` se recurre al
-    import perezoso de ``call`` por compatibilidad con la ruta heredada; inyectarlo
-    rompe el ciclo ``call ↔ llm_backend``.
+    ``camera_context`` debe inyectarlo el llamador (p. ej. el
+    ``ConversationService`` vía ``CameraContextProvider``). No se recurre a
+    ``call``: inyectarlo rompe el ciclo ``call ↔ llm_backend`` y evita que la
+    capa de LLM dependa del estado global de la CLI.
     """
     try:
         from skills.event_mode import get_system_prompt
@@ -939,17 +939,6 @@ async def stream_llm_response(
     except ImportError:
         system_prompt = "Eres un asistente de la UNEV."
         university_context = ""
-
-    # Contexto de cámara: si el llamador no lo inyectó, recurrimos al import
-    # perezoso de `call` (ruta heredada). Mantener este fallback aquí evita romper
-    # el voice loop actual mientras la nueva capa de servicios inyecta el contexto.
-    if camera_context is None:
-        try:
-            from call import _build_camera_context, _last_camera_analysis
-            if _last_camera_analysis:
-                camera_context = _build_camera_context(_last_camera_analysis)
-        except ImportError:
-            pass
 
     messages = _build_messages(prompt, system_prompt, university_context, camera_context)
 

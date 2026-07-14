@@ -1,6 +1,16 @@
 import os
 import platform
+import re
 import sys
+import json
+
+# --- Segmentación de texto para TTS (fuente única) ---
+# Compartido por ``call._split_into_chunks`` y ``app.services.conversation``
+# para que la heurística de latencia no diverja entre ambos caminos.
+_CLAUSE_RE = re.compile(r"(?<=[.!?;:—])\s+")
+_SENTENCE_RE = re.compile(r"(?<=[.!?])\s+")
+_MIN_FIRST_CHUNK_LEN = 23  # Latencia baja inicial (ej. "Hola, buenas tardes.")
+_MIN_SENTENCE_LEN = 30  # Oración promedio
 
 
 def _env(name: str, default: str = "") -> str:
@@ -42,3 +52,58 @@ def configure_utf8_stdio():
             sys.stderr.reconfigure(encoding='utf-8')
         except AttributeError:
             pass
+
+
+# --- Configuración: lectura/escritura segura de config.json y .env ---
+
+def _atomic_write_text(path: str, text: str) -> None:
+    """Escritura atómica: archivo temporal + ``os.replace``.
+
+    Evita ``config.json`` / ``.env`` truncados si el proceso muere a mitad de
+    escritura (corte de luz en el kiosko, cierre de la app, etc.).
+    """
+    directory = os.path.dirname(os.path.abspath(path)) or "."
+    tmp = os.path.join(directory, f".{os.path.basename(path)}.tmp")
+    with open(tmp, "w", encoding="utf-8") as f:
+        f.write(text)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp, path)
+
+
+def load_config(path) -> dict:
+    """Lee ``config.json`` de forma segura; devuelve ``{}`` si no existe/inválido."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+def read_dotenv(path) -> dict:
+    """Lee un ``.env`` (``KEY=VALUE``, ignora comentarios) en un dict."""
+    data: dict[str, str] = {}
+    try:
+        with open(path, encoding="utf-8") as f:
+            for line in f:
+                if "=" in line and not line.strip().startswith("#"):
+                    key, _, val = line.partition("=")
+                    data[key.strip()] = val.split("#", 1)[0].strip()
+    except (OSError, ValueError):
+        return {}
+    return data
+
+
+def write_dotenv(path, mapping) -> None:
+    """Escribe el ``.env`` de forma atómica desde un mapping (conserva orden)."""
+    _atomic_write_text(path, "".join(f"{k}={v}\n" for k, v in mapping.items()))
+
+
+def apply_config_to_env(config_data: dict) -> None:
+    """Vuelca ``config.json`` a ``os.environ`` solo donde la variable no exista ya.
+
+    Precedencia: ``.env`` (ya en ``os.environ``) gana; ``config.json`` es fallback.
+    """
+    for key, val in config_data.items():
+        if val is not None and str(val) != "" and not os.environ.get(key):
+            os.environ[key] = str(val)

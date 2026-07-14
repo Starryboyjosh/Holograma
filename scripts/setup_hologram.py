@@ -28,6 +28,9 @@ except ImportError:
     print("  pip install rich")
     sys.exit(1)
 
+# Helpers de configuración compartidos con la app (escritura atómica, .env, etc.).
+from utils import _atomic_write_text, read_dotenv, write_dotenv
+
 # Configuración del tema visual estilo Hermes (Cyberpunk / Terminal Retro)
 hermes_theme = Theme(
     {
@@ -79,20 +82,7 @@ def print_header():
 
 def update_env_file(provider, model, keys):
     env_path = BASE_DIR / ".env"
-    existing = {}
-    if env_path.exists():
-        try:
-            with env_path.open("r", encoding="utf-8") as f:
-                for line in f:
-                    if "=" in line and not line.strip().startswith("#"):
-                        parts = line.split("=", 1)
-                        key = parts[0].strip()
-                        val = parts[1].split("#", 1)[0].strip()
-                        existing[key] = val
-        except Exception as e:
-            console.print(
-                f"[warning]No se pudo leer el archivo .env existente: {e}[/warning]"
-            )
+    existing = read_dotenv(env_path)
 
     # Update values
     existing["LLM_PROVIDER"] = provider
@@ -103,14 +93,9 @@ def update_env_file(provider, model, keys):
         elif k not in existing:
             existing[k] = ""
 
-    # Write back
+    # Write back (atómico, sin truncar si falla)
     try:
-        with env_path.open("w", encoding="utf-8") as f:
-            f.write(f"LLM_PROVIDER={existing.get('LLM_PROVIDER', '')}\n")
-            f.write(f"LLM_MODEL={existing.get('LLM_MODEL', '')}\n")
-            f.write(f"OPENAI_API_KEY={existing.get('OPENAI_API_KEY', '')}\n")
-            f.write(f"ANTHROPIC_API_KEY={existing.get('ANTHROPIC_API_KEY', '')}\n")
-            f.write(f"OPENROUTER_API_KEY={existing.get('OPENROUTER_API_KEY', '')}\n")
+        write_dotenv(env_path, existing)
     except Exception as e:
         console.print(f"[danger]Error escribiendo archivo .env: {e}[/danger]")
 
@@ -346,9 +331,10 @@ def run_setup():
         }
 
         try:
-            # Escribir la configuración usando Path (Regla A)
-            with CONFIG_FILE.open("w", encoding="utf-8") as f:
-                json.dump(config_data, f, indent=4)
+            # Escribir la configuración usando Path (Regla A) de forma atómica
+            _atomic_write_text(
+                str(CONFIG_FILE), json.dumps(config_data, indent=4)
+            )
 
             console.print(
                 f"\n[success]✔ Configuración guardada con éxito en {CONFIG_FILE}[/success]"
