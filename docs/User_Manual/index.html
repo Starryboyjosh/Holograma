@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Manual operativo · Holograma UNEV</title>
+<style>
+
+:root{
+  --navy:#1C2D5A; --navy-2:#0B0F19; --orange:#E25C1D; --orange-2:#ff8246;
+  --paper:#fbfaf7; --ink:#1f2937; --muted:#64748b; --line:#dbe1ea;
+  --ok:#16a34a; --warn:#d97706; --danger:#dc2626; --cyan:#22d3ee;
+  --page-w:580px; --page-h:760px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:#070a12;color:var(--ink)}
+body{overflow:hidden;background:
+ radial-gradient(circle at 18% 18%,rgba(226,92,29,.18),transparent 32%),
+ radial-gradient(circle at 82% 28%,rgba(34,211,238,.12),transparent 34%),
+ linear-gradient(160deg,#070a12,#111a31 60%,#070a12)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:36px 36px}
+button{font:inherit}
+.toolbar{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;color:#fff;position:relative;z-index:20;border-bottom:1px solid rgba(255,255,255,.1);background:rgba(7,10,18,.74);backdrop-filter:blur(16px)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.02em}.brand-mark{width:34px;height:34px;border-radius:11px;background:var(--navy);border:1px solid rgba(226,92,29,.45);display:grid;place-items:center;color:var(--orange);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.brand small{display:block;font-size:10px;font-weight:700;letter-spacing:.16em;color:#94a3b8;text-transform:uppercase;margin-top:2px}
+.actions{display:flex;align-items:center;gap:8px}.tool-btn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#e2e8f0;border-radius:10px;padding:8px 12px;cursor:pointer;font-size:12px;font-weight:750;transition:.2s}.tool-btn:hover{background:rgba(255,255,255,.12);transform:translateY(-1px)}
+.counter{min-width:92px;text-align:center;color:#cbd5e1;font-size:12px;font-weight:800;letter-spacing:.05em}
+.stage{height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;position:relative;perspective:2500px;overflow:hidden;padding:24px}
+.book-scale{transform-origin:center center;transition:transform .2s ease}
+.book{width:calc(var(--page-w) * 2);height:var(--page-h);position:relative;transform-style:preserve-3d;filter:drop-shadow(0 34px 46px rgba(0,0,0,.58))}
+.book:before{content:"";position:absolute;left:calc(50% - 5px);top:8px;bottom:8px;width:10px;border-radius:50%;z-index:50;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.28),rgba(255,255,255,.26),rgba(0,0,0,.3));filter:blur(1px);opacity:.75}
+.book:after{content:"";position:absolute;left:3%;right:3%;bottom:-18px;height:28px;background:radial-gradient(ellipse,rgba(0,0,0,.65),transparent 67%);filter:blur(7px);z-index:-1}
+.leaf{position:absolute;left:50%;top:0;width:var(--page-w);height:var(--page-h);transform-origin:left center;transform-style:preserve-3d;transition:transform .92s cubic-bezier(.2,.72,.18,1);will-change:transform}
+.leaf.flipped{transform:rotateY(-180deg)}
+.surface{position:absolute;inset:0;backface-visibility:hidden;overflow:hidden;background:var(--paper);border:1px solid #cfd5df}
+.leaf-front{border-radius:0 10px 10px 0;box-shadow:inset 18px 0 26px -25px rgba(0,0,0,.65)}
+.leaf-back{transform:rotateY(180deg);border-radius:10px 0 0 10px;box-shadow:inset -18px 0 26px -25px rgba(0,0,0,.65)}
+.surface:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.18;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.11'/%3E%3C/svg%3E")}
+.page{height:100%;padding:34px 38px 30px;position:relative;display:flex;flex-direction:column;overflow:hidden}
+.page>*{position:relative;z-index:1}
+.page-no{position:absolute;bottom:14px;right:22px;font-size:10px;font-weight:900;letter-spacing:.16em;color:#9aa6b4}.leaf-back .page-no{right:auto;left:22px}
+.kicker{font-size:10px;letter-spacing:.24em;text-transform:uppercase;font-weight:900;color:var(--orange);margin-bottom:8px}.title{font-size:28px;line-height:1.05;color:var(--navy);margin:0 0 10px;font-weight:950;letter-spacing:-.025em}.subtitle{font-size:13px;line-height:1.5;color:var(--muted);margin:0 0 18px}.rule{height:3px;width:72px;background:linear-gradient(90deg,var(--orange),transparent);border-radius:5px;margin:2px 0 16px}
+.section-title{font-size:15px;color:var(--navy);font-weight:900;margin:12px 0 8px}.body{font-size:12.4px;line-height:1.56;color:#374151}.small{font-size:10.8px;line-height:1.5;color:#64748b}.strong{font-weight:900;color:var(--navy)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stack{display:flex;flex-direction:column;gap:10px}.card{background:rgba(255,255,255,.77);border:1px solid var(--line);border-radius:16px;padding:13px;box-shadow:0 8px 22px rgba(28,45,90,.055)}.card.orange{background:#fff5ef;border-color:#ffd7c3}.card.navy{background:#eef2ff;border-color:#ccd6f5}.card.dark{background:#0f172a;border-color:#25314c;color:#e5e7eb}.card.good{background:#effcf3;border-color:#bde8ca}.card.warn{background:#fff8e7;border-color:#f3d695}.card.danger{background:#fff0f0;border-color:#f2b8b8}
+.icon{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--navy);color:white;font-size:17px;flex:0 0 auto}.icon.orange{background:var(--orange)}.icon.good{background:var(--ok)}.icon.warn{background:var(--warn)}
+.row{display:flex;gap:10px;align-items:flex-start}.row h3{font-size:12px;margin:1px 0 3px;color:var(--navy)}.row p{font-size:10.6px;line-height:1.42;color:#64748b;margin:0}
+.steps{display:flex;flex-direction:column;gap:8px}.step{display:grid;grid-template-columns:30px 1fr;gap:9px;align-items:start}.step-num{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--orange);color:#fff;font-size:11px;font-weight:900;box-shadow:0 6px 14px rgba(226,92,29,.25)}.step h3{font-size:12px;color:var(--navy);margin:0 0 2px}.step p{font-size:10.5px;line-height:1.4;color:#64748b;margin:0}
+.checklist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}.checklist li{position:relative;padding-left:23px;font-size:11.2px;line-height:1.42;color:#374151}.checklist li:before{content:"✓";position:absolute;left:0;top:0;width:16px;height:16px;border-radius:50%;display:grid;place-items:center;background:#dcfce7;color:#15803d;font-size:10px;font-weight:900}.checklist.warn-list li:before{content:"!";background:#ffedd5;color:#c2410c}
+.code{position:relative;background:#0b1020;color:#e2e8f0;border:1px solid #28334f;border-radius:13px;padding:12px 42px 12px 13px;font:10.3px/1.55 Consolas,"Courier New",monospace;white-space:pre-wrap;word-break:break-word;box-shadow:inset 0 1px rgba(255,255,255,.04)}.copy{position:absolute;right:7px;top:7px;border:1px solid #3b4869;background:#172033;color:#cbd5e1;border-radius:7px;padding:5px 7px;font-size:9px;font-weight:800;cursor:pointer}.copy:hover{background:#25304a}.code .comment{color:#7dd3fc}
+.tip{border-left:4px solid var(--orange);padding:9px 10px;background:#fff7ed;border-radius:0 10px 10px 0;font-size:10.7px;line-height:1.45;color:#6b4a32}.note{border-left-color:#38bdf8;background:#effaff;color:#315469}.danger-note{border-left-color:#ef4444;background:#fff1f2;color:#7f1d1d}
+.mock-window{border:1px solid #cbd5e1;border-radius:15px;overflow:hidden;background:#fff;box-shadow:0 12px 26px rgba(15,23,42,.1)}.mock-top{height:27px;background:#eef2f7;border-bottom:1px solid #d6dee9;display:flex;align-items:center;padding:0 9px;gap:5px}.dot{width:7px;height:7px;border-radius:50%;background:#fb7185}.dot:nth-child(2){background:#fbbf24}.dot:nth-child(3){background:#4ade80}.mock-body{padding:11px}.mock-nav{display:flex;gap:5px;flex-wrap:wrap}.pill{font-size:8.5px;font-weight:800;padding:5px 8px;border-radius:999px;background:#f1f5f9;color:#475569}.pill.active{background:#fff0e8;color:var(--orange)}.status{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:5px 8px;font-size:8.5px;font-weight:900;background:#ecfdf5;color:#15803d;border:1px solid #bbf7d0}.status i{width:6px;height:6px;border-radius:50%;background:#22c55e}.orb{width:116px;height:116px;margin:12px auto;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:28px;background:radial-gradient(circle at 35% 30%,#ffb089,var(--orange) 34%,#6f1e08 70%,#160906 100%);box-shadow:0 0 0 10px rgba(226,92,29,.08),0 0 38px rgba(226,92,29,.44);position:relative}.orb:after{content:"";position:absolute;inset:-12px;border:1px solid rgba(226,92,29,.38);border-radius:50%;animation:pulse 2s infinite}@keyframes pulse{50%{transform:scale(1.08);opacity:.3}}
+.flow{display:flex;align-items:center;justify-content:space-between;gap:6px}.flow-node{flex:1;min-height:72px;border-radius:13px;padding:9px 6px;text-align:center;background:#fff;border:1px solid #dce3ed}.flow-node b{display:block;font-size:10px;color:var(--navy);margin-top:5px}.flow-node span{font-size:20px}.arrow{color:var(--orange);font-weight:900;font-size:17px}
+.network{position:relative;height:220px;border-radius:18px;background:linear-gradient(180deg,#0b1020,#121b31);overflow:hidden;border:1px solid #2c3c5d}.network:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:28px 28px}.network .device{position:absolute;width:105px;height:66px;border-radius:15px;background:#17233e;border:1px solid #40547c;color:#e2e8f0;text-align:center;padding:10px;font-size:9px;font-weight:800}.network .pc{left:25px;top:75px}.network .fan{right:25px;top:75px}.network .router{left:50%;top:28px;transform:translateX(-50%);width:90px;height:52px}.network .line{position:absolute;height:2px;background:linear-gradient(90deg,var(--cyan),var(--orange));transform-origin:left}.network .l1{width:155px;left:119px;top:107px;transform:rotate(-25deg)}.network .l2{width:155px;left:298px;top:43px;transform:rotate(25deg)}.network .ip{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);font:10px Consolas,monospace;color:#cbd5e1;background:#080d19;border:1px solid #2c3c5d;border-radius:999px;padding:7px 12px;white-space:nowrap}
+.toc{display:grid;grid-template-columns:1fr 1fr;gap:8px}.toc button{border:1px solid var(--line);background:rgba(255,255,255,.74);border-radius:13px;padding:10px;text-align:left;cursor:pointer;transition:.18s}.toc button:hover{transform:translateX(3px);border-color:#f2a57d;background:#fff7f1}.toc b{display:block;font-size:10.8px;color:var(--navy);margin-bottom:2px}.toc span{font-size:9.5px;color:#778399}
+.cover{background:linear-gradient(145deg,#070b15 0%,#16244a 46%,#10172b 75%,#080b13);color:white;padding:0}.cover:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 75% 20%,rgba(34,211,238,.17),transparent 26%),radial-gradient(circle at 18% 78%,rgba(226,92,29,.27),transparent 30%),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px);background-size:auto,auto,40px 40px,40px 40px}.cover-inner{height:100%;padding:52px 44px;display:flex;flex-direction:column;justify-content:center}.cover-badge{display:inline-flex;align-items:center;gap:7px;width:max-content;padding:7px 11px;border:1px solid rgba(255,255,255,.18);border-radius:999px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#cbd5e1;background:rgba(255,255,255,.055)}.cover-badge i{width:7px;height:7px;background:var(--orange);border-radius:50%;box-shadow:0 0 12px var(--orange)}.cover h1{font-size:54px;line-height:.92;margin:30px 0 16px;letter-spacing:-.055em}.cover h1 span{display:block;color:var(--orange)}.cover p{font-size:15px;line-height:1.55;color:#cbd5e1;max-width:390px}.cover-line{height:2px;width:170px;background:linear-gradient(90deg,var(--orange),transparent);margin:22px 0}.cover-meta{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#8190ac}.cover-visual{position:absolute;right:28px;bottom:31px;width:205px;opacity:.22;filter:drop-shadow(0 12px 32px rgba(0,0,0,.5))}.cover .page-no{color:rgba(255,255,255,.34)}
+.back-cover{background:linear-gradient(145deg,#080b13,#152344 55%,#070a12);color:#fff;text-align:center;justify-content:center;align-items:center}.back-cover:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at center,rgba(226,92,29,.2),transparent 38%)}.back-logo{width:92px;height:92px;border-radius:28px;background:var(--navy);border:2px solid rgba(226,92,29,.55);display:grid;place-items:center;color:var(--orange);font-size:38px;font-weight:950;box-shadow:0 0 40px rgba(226,92,29,.2)}.back-cover h2{font-size:27px;margin:22px 0 8px}.back-cover p{color:#9fb0cb;font-size:12px;line-height:1.6;max-width:330px}.quick-card{width:90%;margin-top:25px;text-align:left;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:16px}.quick-card div{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:10px}.quick-card div:last-child{border-bottom:0}.quick-card b{color:#fff}.quick-card span{color:#9fb0cb;text-align:right}
+@media(max-width:900px){.toolbar{padding:0 10px}.brand div:last-child{display:none}.tool-btn span{display:none}.nav-arrow{width:38px;height:38px}.nav-arrow.prev{left:6px}.nav-arrow.next{right:6px}}
+@media print{
+  @page{size:A4 portrait;margin:0}
+  body{overflow:visible;background:white}.toolbar,.nav-arrow{display:none!important}.stage{height:auto;display:block;padding:0;perspective:none;overflow:visible}.book-scale{transform:none!important}.book{display:block;width:auto;height:auto;filter:none}.book:before,.book:after{display:none}.leaf{position:static;width:210mm;height:auto;transform:none!important;display:block}.surface{position:relative;width:210mm;height:297mm;transform:none!important;backface-visibility:visible;border:0;border-radius:0!important;box-shadow:none!important;page-break-after:always}.page{height:297mm;padding:16mm 17mm}.cover,.back-cover{height:297mm}.page-no{bottom:10mm;right:12mm}.leaf-back .page-no{left:12mm}
+}
+
+
+/* ===== REALISTIC POINTER-FOLLOWING PAGE CURL ===== */
+body{user-select:none;-webkit-user-select:none}
+.stage{padding:24px 58px 30px;perspective:none;overflow:hidden}
+.book-host{
+  width:min(1160px,calc(100vw - 116px));
+  height:min(760px,calc(100vh - 124px));
+  min-width:300px;min-height:394px;
+  position:relative;display:flex;align-items:center;justify-content:center;
+  filter:drop-shadow(0 34px 46px rgba(0,0,0,.58));
+}
+.flip-book{width:100%;height:100%;position:relative}
+.stf__parent{background:transparent!important;margin:auto!important;overflow:visible!important}
+.stf__parent .stf__block{background:transparent!important;overflow:visible!important}
+.stf__parent .stf__book{box-shadow:none!important}
+.stf__parent .stf__item{cursor:grab;will-change:transform,clip-path;transform-style:preserve-3d}
+body.dragging-page .stf__parent .stf__item{cursor:grabbing!important}
+.manual-sheet{
+  overflow:hidden;background:var(--paper);border:1px solid #cfd5df;
+  box-shadow:0 1px 0 rgba(255,255,255,.8) inset;
+  contain:paint;
+}
+.manual-sheet:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:60;opacity:.18;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.11'/%3E%3C/svg%3E")}
+.manual-sheet.--left .page{box-shadow:inset -25px 0 28px -30px rgba(0,0,0,.72)}
+.manual-sheet.--right .page{box-shadow:inset 25px 0 28px -30px rgba(0,0,0,.72)}
+.manual-sheet.--left .page:after,.manual-sheet.--right .page:after{content:"";position:absolute;top:0;bottom:0;width:38px;z-index:55;pointer-events:none;opacity:.55}
+.manual-sheet.--left .page:after{right:0;background:linear-gradient(90deg,transparent,rgba(15,23,42,.13))}
+.manual-sheet.--right .page:after{left:0;background:linear-gradient(90deg,rgba(15,23,42,.13),transparent)}
+.book-spine{position:absolute;left:50%;top:1.2%;bottom:1.2%;width:10px;transform:translateX(-50%);z-index:3;pointer-events:none;border-radius:50%;background:linear-gradient(90deg,rgba(0,0,0,.23),rgba(255,255,255,.36),rgba(0,0,0,.32));filter:blur(.6px);opacity:.75;mix-blend-mode:multiply}
+.nav-arrow{z-index:25}
+.library-warning{display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:999;max-width:520px;padding:24px;border-radius:18px;background:#fff7ed;border:2px solid #fb923c;box-shadow:0 24px 80px rgba(0,0,0,.5);color:#7c2d12;font:600 14px/1.5 Inter,Segoe UI,sans-serif;text-align:center}
+.no-pageflip .library-warning{display:block}
+.no-pageflip .book-host{opacity:.15;pointer-events:none}
+.print-book{display:none}
+@media (max-width:760px){
+  .toolbar{padding:0 10px}.brand small,.tool-btn span{display:none}.actions{gap:4px}.tool-btn{padding:8px}.counter{min-width:80px;font-size:10px}
+  .stage{padding:16px 8px 42px}.book-host{width:calc(100vw - 16px);height:calc(100vh - 128px)}
+  .nav-arrow{width:38px;height:38px;top:auto;bottom:5px;transform:none}.nav-arrow:hover{transform:scale(1.04)}.nav-arrow.prev{left:12px}.nav-arrow.next{right:12px}
+  .book-spine{display:none}
+}
+@media print{
+  html,body{background:#fff!important;overflow:visible!important;height:auto!important}
+  .toolbar,.stage,.nav-arrow,.library-warning{display:none!important}
+  .print-book{display:block!important}
+  .print-book .manual-sheet{position:relative!important;display:block!important;width:210mm!important;height:297mm!important;transform:none!important;clip-path:none!important;border:0!important;box-shadow:none!important;page-break-after:always;overflow:hidden!important}
+  .print-book .page{height:297mm!important;padding:16mm 17mm!important;box-shadow:none!important}
+  .print-book .cover,.print-book .back-cover{height:297mm!important}
+  .print-book .manual-sheet:after,.print-book .page:after{display:none!important}
+}
+
+</style>
+</head>
+<body>
+<header class="toolbar">
+<div class="brand"><div class="brand-mark">U</div><div>Holograma UNEV<small>Manual operativo visual</small></div></div>
+<div class="actions">
+<button class="tool-btn" id="tocBtn">☰ <span>Índice</span></button>
+<button class="tool-btn" id="printBtn">⎙ <span>Imprimir</span></button>
+<div class="counter" id="counter">Página 1 / 18</div>
+<button class="tool-btn" id="fullscreenBtn">⛶ <span>Pantalla completa</span></button>
+</div>
+</header>
+<div class="stage" id="stage">
+  <div class="book-host">
+    <div class="book-spine" aria-hidden="true"></div>
+    <div id="book" class="flip-book">
+      <section class="manual-sheet" data-density="hard" aria-label="Página 1">
+<div class="page cover">
+<div class="cover-inner">
+<div class="cover-badge"><i></i> Manual para operadores · Windows y Linux</div>
+<h1>HOLOGRAMA <span>UNEV</span></h1>
+<p>Guía visual para instalar, encender, conversar, conectar el ventilador holográfico y resolver problemas comunes, sin conocimientos técnicos.</p>
+<div class="cover-line"></div>
+<div class="cover-meta">Versión del proyecto 0.1.0 · Edición operativa 2026</div>
+</div>
+<img alt="Base ilustrada del holograma" class="cover-visual" src="assets/holograma-base.png"/>
+<div class="page-no">01</div>
+</div>
+</section><section class="manual-sheet" aria-label="Página 2">
+<div class="page">
+<div class="kicker">Comience aquí</div><h2 class="title">Cómo usar este manual</h2><div class="rule"></div>
+<div class="grid2">
+<div class="card navy row"><div class="icon">☰</div><div><h3>Vaya directo a una sección</h3><p>Abra el índice y elija la página que necesita.</p></div></div>
+<div class="card row"><div class="icon good">⎘</div><div><h3>Copie los comandos</h3><p>Pulse “Copiar” y luego pegue en PowerShell o Terminal.</p></div></div>
+<div class="card row"><div class="icon warn">⎙</div><div><h3>Versión imprimible</h3><p>El botón Imprimir convierte el libro en páginas A4.</p></div></div>
+</div>
+<h3 class="section-title">Índice rápido</h3>
+<div class="toc">
+<button data-page="3"><b>1. Conocer el sistema</b><span>Qué hace y qué necesita</span></button>
+<button data-page="5"><b>2. Primera instalación</b><span>Windows y Linux</span></button>
+<button data-page="8"><b>3. Encendido diario</b><span>Arranque normal</span></button>
+<button data-page="10"><b>4. Uso de la interfaz</b><span>Voz, texto y cámara</span></button>
+<button data-page="13"><b>5. Ventilador físico</b><span>Wi‑Fi, IP y clips</span></button>
+<button data-page="17"><b>6. Solución de problemas</b><span>Diagnóstico rápido</span></button>
+</div>
+<div class="tip note" style="margin-top:12px"><b>Alcance:</b> esta guía explica la operación del proyecto tal como está en el repositorio. La preparación inicial usa comandos copiados y pegados porque el instalador de escritorio todavía está pendiente.</div>
+<div class="page-no">02</div>
+</div>
+</section><section class="manual-sheet" aria-label="Página 3">
+<div class="page">
+<div class="kicker">Vista general</div><h2 class="title">¿Qué es Holograma UNEV?</h2><div class="rule"></div>
+<p class="body">Es un asistente multimodal que combina conversación por IA, voz, cámara y una interfaz web. Puede funcionar solo como software o controlar un ventilador holográfico físico.</p>
+<div class="flow" style="margin:18px 0 16px">
+<div class="flow-node"><span>👤</span><b>Operador</b></div><div class="arrow">→</div>
+<div class="flow-node"><span>🖥️</span><b>Interfaz</b></div><div class="arrow">→</div>
+<div class="flow-node"><span>🧠</span><b>IA</b></div><div class="arrow">→</div>
+<div class="flow-node"><span>🌀</span><b>Holograma</b></div>
+</div>
+<div class="grid2">
+<div class="card row"><div class="icon">💬</div><div><h3>Conversación</h3><p>Responde por texto y puede hablar mediante síntesis de voz.</p></div></div>
+<div class="card row"><div class="icon orange">🎙</div><div><h3>Escucha</h3><p>Transcribe español con Whisper, local o en la nube.</p></div></div>
+<div class="card row"><div class="icon good">👁</div><div><h3>Visión</h3><p>La cámara y YOLO detectan personas y objetos configurados.</p></div></div>
+<div class="card row"><div class="icon warn">🌀</div><div><h3>Proyección física</h3><p>Cambia clips del ventilador según escucha, piensa, habla o espera.</p></div></div>
+</div>
+<div class="tip note" style="margin-top:13px">El equipo físico no genera gráficos 3D en tiempo real: reproduce archivos MP4 o JPG ya cargados en su tarjeta.</div>
+<div class="page-no">03</div>
+</div>
+</section><section class="manual-sheet" aria-label="Página 4">
+<div class="page">
+<div class="kicker">Preparación</div><h2 class="title">Antes de encender</h2><div class="rule"></div>
+<div class="grid2">
+<div class="card"><h3 class="section-title" style="margin-top:0">Necesario</h3><ul class="checklist"><li>Computadora con Windows o Linux.</li><li>Python 3.11 o superior.</li><li>Node.js 20.19 o superior para construir la interfaz.</li><li>Micrófono y altavoces para usar voz.</li><li>Internet y una API key, o un modelo local con Ollama.</li></ul></div>
+<div class="card"><h3 class="section-title" style="margin-top:0">Opcional</h3><ul class="checklist"><li>Cámara USB o integrada.</li><li>Ventilador holográfico MISSYOU.</li><li>Router o conexión Wi‑Fi directa al ventilador.</li><li>Clips MP4 preparados y cargados.</li></ul></div>
+</div>
+<h3 class="section-title">Comprobación física rápida</h3>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div><h3>Deje espacio libre</h3><p>El ventilador debe estar firme, sin cables ni personas cerca de las aspas.</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h3>Conecte audio y cámara</h3><p>El sistema operativo debe reconocerlos antes de iniciar Holograma.</p></div></div>
+<div class="step"><div class="step-num">3</div><div><h3>Decida el tipo de IA</h3><p>Nube: más fácil, requiere clave. Local: sin clave, requiere Ollama y más recursos.</p></div></div>
+<div class="step"><div class="step-num">4</div><div><h3>Prepare la red del ventilador</h3><p>Use su Wi‑Fi directo o la IP reservada en el router del montaje.</p></div></div>
+</div>
+<div class="tip danger-note" style="margin-top:14px"><b>Seguridad:</b> nunca toque el ventilador mientras gira. Corte la alimentación antes de moverlo, limpiarlo o revisar la tarjeta.</div>
+<div class="page-no">04</div>
+</div>
+</section><section class="manual-sheet" aria-label="Página 5">
+<div class="page">
+<div class="kicker">Primera instalación</div><h2 class="title">Windows</h2><div class="rule"></div>
+<p class="subtitle">Realice esta página una sola vez. Abra la carpeta del proyecto, haga clic en la barra de dirección, escriba <b>powershell</b> y presione Enter.</p>
+<div class="steps" style="margin-bottom:10px">
+<div class="step"><div class="step-num">1</div><div><h3>Instale los requisitos</h3><p>Python 3.11+ marcando “Add Python to PATH”, y Node.js 20.19+.</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h3>Copie y pegue el bloque completo</h3><p>Espere a que cada instalación termine. Puede tardar varios minutos.</p></div></div>
+</div>
+<div class="code no-flip" data-copy="">py -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip setuptools wheel
+.\.venv\Scripts\pip.exe install -r requirements.txt
+cd frontend
+npm install
+npm run build
+cd ..
+Copy-Item .env.example .env -ErrorAction SilentlyContinue<button class="copy">Copiar</button></div>
+<div class="tip" style="margin-top:12px">Cuando termine, debe existir una carpeta <b>.venv</b> y otra llamada <b>static</b>. La carpeta <b>static</b> contiene la interfaz ya construida.</div>
+<h3 class="section-title">Prueba inicial</h3>
+<div class="code no-flip" data-copy="">.\.venv\Scripts\python.exe main.py<button class="copy">Copiar</button></div>
+<p class="small" style="margin-top:8px">Cuando aparezca la dirección del servidor, abra <b>http://127.0.0.1:8000</b> en Chrome, Edge o Firefox. Para detenerlo, vuelva a PowerShell y presione <b>Ctrl + C</b>.</p>
+<div class="page-no">05</div>
+</div>
+</section><section class="manual-sheet" aria-label="Página 6">
+<div class="page">
+<div class="kicker">Primera instalación</div><h2 class="title">Linux</h2><div class="rule"></div>
+<p class="subtitle">Abra Terminal dentro de la carpeta del proyecto. En la mayoría de escritorios puede hacer clic derecho sobre la carpeta y elegir “Abrir en terminal”.</p>
+<div class="steps" style="margin-bottom:10px">
+<div class="step"><div class="step-num">1</div><div><h3>Instale los requisitos</h3><p>Python 3.11+, el módulo venv y Node.js 20.19+.</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h3>Copie y pegue el bloque</h3><p>Si el sistema solicita la contraseña, escríbala aunque no aparezcan caracteres.</p></div></div>
+</div>
+<div class="code no-flip" data-copy="">python3 -m venv .venv
+./.venv/bin/python -m pip install --upgrade pip setuptools wheel
+./.venv/bin/pip install -r requirements.txt
+cd frontend
+npm install
+npm run build
+cd ..
+cp -n .env.example .env
+chmod +x scripts/run_web.sh scripts/Holograma.sh<button class="copy">Copiar</button></div>
+<div class="tip note" style="margin-top:12px">La instalación de audio, cámara o aceleración puede requerir paquetes propios de su distribución. Primero ejecute el diagnóstico de la página 17; así sabrá exactamente qué componente falta.</div>
+<h3 class="section-title">Prueba inicial</h3>
+<div class="code no-flip" data-copy="">./.venv/bin/python main.py<button class="copy">Copiar</button></div>
+<p class="small" style="margin-top:8px">Abra <b>http://127.0.0.1:8000</b>. Detenga el servidor con <b>Ctrl + C</b>.</p>
+<div class="page-no">06</div>
+</div>
+</section><section class="manual-sheet" aria-label="Página 7">
+<div class="page">
+<div class="kicker">Configuración inicial</div><h2 class="title">Elija el “cerebro” de IA</h2><div class="rule"></div>
+<p class="body">La forma más sencilla es configurar el proveedor desde la interfaz. El servidor puede arrancar aunque todavía no haya una clave válida.</p>
+<div class="mock-window" style="margin:14px 0">
+<div class="mock-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+<div class="mock-body">
+<div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:11px;color:var(--navy)">Configuración de IA</b><span class="status"><i></i>Servidor activo</span></div>
+<div class="card orange" style="margin-top:9px;padding:10px"><div class="small"><b>Proveedor</b></div><div style="margin-top:5px;border:1px solid #fed7c3;border-radius:9px;padding:8px;font-size:10px">OpenRouter / OpenAI / Claude / NVIDIA / Groq / Ollama / Local only</div></div>
+<div class="grid2" style="margin-top:8px"><div class="card" style="padding:9px"><div class="small"><b>Modelo</b></div><div class="small">Escriba o seleccione el nombre.</div></div><div class="card" style="padding:9px"><div class="small"><b>API key</b></div><div class="small">Solo para proveedores en la nube.</div></div></div>
+<div style="display:flex;justify-content:flex-end;gap:7px;margin-top:9px"><span class="pill">Probar conexión</span><span class="pill active">Guardar y aplicar</span></div>
+</div>
+</div>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div><h3>Abra Configuración</h3><p>Entre a la sección “Configuración” de la barra superior.</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h3>Seleccione proveedor y modelo</h3><p>Ollama funciona localmente; los proveedores en la nube requieren su clave.</p></div></div>
+<div class="step"><div class="step-num">3</div><div><h3>Pulse Probar conexión</h3><p>No guarde hasta recibir una confirmación.</p></div></div>
+<div class="step"><div class="step-num">4</div><div><h3>Guarde</h3><p>Pulse “Guardar y aplicar cambios” y vuelva a Hablar.</p></div></div>
+</div>
+<div class="tip danger-note" style="margin-top:10px">No comparta ni fotografíe sus API keys. Escríbalas únicamente en la pantalla de Configuración.</div>
+<div class="page-no">07</div>
+</div>
+</section><section class="manual-sheet" aria-label="Página 8">
+<div class="page">
+<div class="kicker">Uso diario</div><h2 class="title">Encender en Windows</h2><div class="rule"></div>
+<div class="grid2" style="align-items:center">
+<div>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div><h3>Abra la carpeta del proyecto</h3><p>No mueva ni elimine la carpeta <b>.venv</b>.</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h3>Ejecute el lanzador</h3><p>Haga doble clic en <b>scripts\run_web.cmd</b>.</p></div></div>
+<div class="step"><div class="step-num">3</div><div><h3>Espere el mensaje del servidor</h3><p>La ventana negra debe permanecer abierta.</p></div></div>
+<div class="step"><div class="step-num">4</div><div><h3>Abra la interfaz</h3><p>Visite <b>http://127.0.0.1:8000</b>.</p></div></div>
+</div>
+</div>
+<div class="mock-window">
+<div class="mock-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+<div class="mock-body" style="background:#0b1020;color:#dbeafe;font:10px/1.7 Consolas,monospace;min-height:180px">Iniciando Servidor Web...<br/>INFO: Application startup complete.<br/>INFO: Uvicorn running on<br/><b style="color:#7dd3fc">http://127.0.0.1:8000</b><br/><br/><span style="color:#86efac">Listo para usar.</span></div>
+</div>
+</div>
+<div class="tip" style="margin-top:18px"><b>Firewall:</b> si Windows pregunta, permita Python en redes privadas. No es necesario abrir acceso público.</div>
+<h3 class="section-title">Apagado normal</h3>
+<p class="body">Cierre la pestaña del navegador, vuelva a la ventana negra y presione <b>Ctrl + C</b>. Espere el mensaje de apagado antes de cerrar la ventana.</p>
+<div class="page-no">08</div>
+</div>
+</section><section class="manual-sheet" aria-label="Página 9">
+<div class="page">
+<div class="kicker">Uso diario</div><h2 class="title">Encender en Linux</h2><div class="rule"></div>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div><h3>Abra una terminal en el proyecto</h3><p>La terminal debe mostrar la carpeta donde están <b>main.py</b> y <b>scripts</b>.</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h3>Ejecute el lanzador</h3><p>Copie el comando siguiente.</p></div></div>
+</div>
+<div class="code no-flip" data-copy="" style="margin:12px 0">./scripts/run_web.sh<button class="copy">Copiar</button></div>
+<div class="steps">
+<div class="step"><div class="step-num">3</div><div><h3>Abra la interfaz</h3><p>Visite <b>http://127.0.0.1:8000</b> en el navegador.</p></div></div>
+<div class="step"><div class="step-num">4</div><div><h3>Mantenga la terminal abierta</h3><p>El servidor se detiene si la cierra.</p></div></div>
+</div>
+<div class="grid2" style="margin-top:16px">
+<div class="card warn"><h3 class="section-title" style="margin-top:0">“Permiso denegado”</h3><div class="code no-flip" data-copy="">chmod +x scripts/run_web.sh
+./scripts/run_web.sh<button class="copy">Copiar</button></div></div>
+<div class="card good"><h3 class="section-title" style="margin-top:0">Apagado</h3><p class="body">Presione <b>Ctrl + C</b> en la terminal y espere el cierre limpio.</p></div>
+</div>
+<div class="tip note" style="margin-top:14px">Si el navegador no se abre solo, escriba la dirección manualmente. “127.0.0.1” significa que la aplicación está en la misma computadora.</div>
+<div class="page-no">09</div>
+</div>
+</section><section class="manual-sheet" aria-label="Página 10">
+<div class="page">
+<div class="kicker">Interfaz principal</div><h2 class="title">Conozca la pantalla</h2><div class="rule"></div>
+<div class="mock-window" style="margin-bottom:14px">
+<div class="mock-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+<div class="mock-body" style="background:#f8fafc">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="color:var(--navy);font-size:12px">UNEV AI</b><span class="status"><i></i>Conectado</span></div>
+<div class="mock-nav"><span class="pill active">Hablar</span><span class="pill">Entrenar Visión</span><span class="pill">Información UNEV</span><span class="pill">Configuración</span></div>
+<div class="grid2" style="margin-top:12px"><div class="card dark" style="min-height:190px;text-align:center"><div class="small" style="color:#cbd5e1">HABLAR CON EL ASISTENTE</div><div class="orb" style="width:84px;height:84px;font-size:20px">🎙</div><b style="font-size:11px">Toca el círculo para hablar</b></div><div class="card" style="min-height:190px"><div class="small"><b>VISIÓN EN VIVO</b></div><div style="height:112px;margin-top:8px;border-radius:11px;background:linear-gradient(145deg,#0f172a,#263653);display:grid;place-items:center;color:#94a3b8;font-size:24px">📷</div><div class="small" style="margin-top:8px">Sin personas a la vista</div></div></div>
+</div>
+</div>
+<div class="grid2">
+<div class="card"><h3 class="section-title" style="margin-top:0">Estado superior</h3><p class="small"><b>Conectado:</b> la interfaz habla con el servidor.<br/><b>Reconectando:</b> espere o revise la terminal.</p></div>
+<div class="card"><h3 class="section-title" style="margin-top:0">Secciones</h3><p class="small"><b>Hablar</b> uso normal. <b>Entrenar</b> objetos. <b>Información</b> contenido institucional. <b>Configuración</b> IA y equipos.</p></div>
+</div>
+<div class="page-no">10</div>
+</div>
+</section><section class="manual-sheet" aria-label="Página 11">
+<div class="page">
+<div class="kicker">Conversación</div><h2 class="title">Hablar o escribir</h2><div class="rule"></div>
+<div class="grid2" style="align-items:center">
+<div>
+<div class="orb">🎙</div>
+<div style="text-align:center;font-size:12px;font-weight:900;color:var(--navy)">Toca para hablar</div>
+</div>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div><h3>Pulse el círculo</h3><p>Espere a que aparezca “Te escucho”.</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h3>Hable con claridad</h3><p>Use frases cortas y deje de hablar al terminar.</p></div></div>
+<div class="step"><div class="step-num">3</div><div><h3>Espere la respuesta</h3><p>El estado pasará por escuchando, pensando y hablando.</p></div></div>
+</div>
+</div>
+<h3 class="section-title">Escribir una consulta</h3>
+<div class="card orange"><div class="row"><div class="icon orange">⌨</div><div><h3>Abra el cuadro de texto</h3><p>Pulse el botón de teclado, escriba la pregunta y elija “Enviar”. También puede usar Saludar, Carreras, Admisiones o Ayuda.</p></div></div></div>
+<h3 class="section-title">Qué significan los estados</h3>
+<div class="grid2">
+<div class="card"><b class="small">● En espera</b><p class="small">Listo para una nueva pregunta.</p></div>
+<div class="card"><b class="small" style="color:#0284c7">● Escuchando</b><p class="small">El micrófono está capturando.</p></div>
+<div class="card"><b class="small" style="color:#d97706">● Pensando</b><p class="small">La IA prepara la respuesta.</p></div>
+<div class="card"><b class="small" style="color:#16a34a">● Hablando</b><p class="small">La voz se está reproduciendo.</p></div>
+</div>
+<div class="tip note" style="margin-top:12px">Si no desea voz, escriba las consultas. El sistema sigue funcionando sin micrófono.</div>
+<div class="page-no">11</div>
+</div>
+</section><section class="manual-sheet" aria-label="Página 12">
+<div class="page">
+<div class="kicker">Cámara y eventos</div><h2 class="title">Modo presentación</h2><div class="rule"></div>
+<div class="grid2">
+<div class="card orange"><h3 class="section-title" style="margin-top:0">🎙 Toca para hablar</h3><p class="body">Modo controlado. El asistente solo escucha cuando alguien pulsa el círculo.</p></div>
+<div class="card navy"><h3 class="section-title" style="margin-top:0">👥 Presentación</h3><p class="body">Pensado para un stand. El sistema usa la presencia detectada para responder cuando ve personas.</p></div>
+</div>
+<div class="mock-window" style="margin:14px 0">
+<div class="mock-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+<div class="mock-body" style="background:#0f172a;color:#e2e8f0">
+<div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:10px">VISIÓN EN VIVO</b><span class="pill" style="background:#1e293b;color:#fff">Desprender ⧉</span></div>
+<div style="height:170px;margin-top:9px;border-radius:13px;background:linear-gradient(135deg,#243451,#0b1020);display:grid;place-items:center;position:relative"><span style="font-size:38px">👤</span><span style="position:absolute;left:17px;top:17px;border:2px solid #22c55e;width:95px;height:125px;border-radius:8px"></span></div>
+<div style="display:flex;justify-content:space-between;margin-top:9px;font-size:9px"><span>● 1 persona frente a mí</span><span class="pill">Apagar cámara</span></div>
+</div>
+</div>
+<ul class="checklist">
+<li>Active YOLO en Configuración.</li>
+<li>Encienda la cámara desde la pantalla Hablar.</li>
+<li>Conceda permiso de cámara al navegador o a la aplicación.</li>
+<li>Coloque la cámara a una altura estable, sin contraluz fuerte.</li>
+</ul>
+<div class="tip danger-note" style="margin-top:13px">Use cámara y análisis de presencia respetando la autorización y las reglas de privacidad del lugar.</div>
+<div class="page-no">12</div>
+</div>
+</section><section class="manual-sheet" aria-label="Página 13">
+<div class="page">
+<div class="kicker">Equipo físico</div><h2 class="title">Conectar el ventilador</h2><div class="rule"></div>
+<div class="network">
+<div class="device pc">💻<br/>Computadora<br/><span style="color:#7dd3fc">Holograma UNEV</span></div>
+<div class="device router">📶<br/>Wi‑Fi / Router</div>
+<div class="device fan">🌀<br/>MISSYOU<br/><span style="color:#fb923c">Puerto 50200</span></div>
+<div class="line l1"></div><div class="line l2"></div><div class="ip">IP directa habitual: 10.10.10.1</div>
+</div>
+<div class="steps" style="margin-top:14px">
+<div class="step"><div class="step-num">1</div><div><h3>Active “Third party control”</h3><p>Hágalo en la aplicación del ventilador antes de conectar.</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h3>Conecte la computadora</h3><p>Wi‑Fi directo: red FXXXXXX, contraseña 12345678; o use el router del montaje.</p></div></div>
+<div class="step"><div class="step-num">3</div><div><h3>Abra Configuración → Conexión del holograma</h3><p>Escriba la IP y el puerto <b>50200</b>.</p></div></div>
+<div class="step"><div class="step-num">4</div><div><h3>Pulse Conectar</h3><p>El indicador debe cambiar a <b>Conectado</b>.</p></div></div>
+</div>
+<div class="tip" style="margin-top:10px">Con router, la IP puede ser distinta. Conviene reservarla para que no cambie entre eventos.</div>
+<div class="page-no">13</div>
+</div>
+</section><section class="manual-sheet" aria-label="Página 14">
+<div class="page">
+<div class="kicker">Contenido del ventilador</div><h2 class="title">Prepare los clips</h2><div class="rule"></div>
+<img alt="Vista previa de contenido para tres paneles" src="assets/paneles-preview.png" style="width:100%;border-radius:14px;border:1px solid #243451;background:#000;margin-bottom:12px"/>
+<div class="grid2">
+<div class="card"><h3 class="section-title" style="margin-top:0">Formato visual</h3><ul class="checklist"><li>MP4 para video o JPG para imagen.</li><li>Fondo negro obligatorio.</li><li>Una unidad: relación 1:1.</li><li>Tres unidades: relación 5:12.</li></ul></div>
+<div class="card"><h3 class="section-title" style="margin-top:0">Orden recomendado</h3><ol class="body" style="margin:0;padding-left:18px"><li>Espera / idle</li><li>Escuchando</li><li>Hablando</li><li>Pensando</li></ol><p class="small">El índice depende del orden de carga, no del nombre del archivo.</p></div>
+</div>
+<div class="grid2" style="margin-top:10px">
+<div class="card good"><b class="small">Duración sugerida</b><p class="body" style="margin:4px 0 0">Hasta 30 segundos por clip, en bucle.</p></div>
+<div class="card warn"><b class="small">Cambio automático</b><p class="body" style="margin:4px 0 0">La IA selecciona el clip según su estado.</p></div>
+</div>
+<div class="tip note" style="margin-top:12px">Para tres ventiladores unidos, envíe el comando a la unidad host del montaje. La propagación debe validarse en el hardware real.</div>
+<div class="page-no">14</div>
+</div>
+</section><section class="manual-sheet" aria-label="Página 15">
+<div class="page">
+<div class="kicker">Administración</div><h2 class="title">Ajustes importantes</h2><div class="rule"></div>
+<div class="grid2">
+<div class="card row"><div class="icon">🧠</div><div><h3>Proveedor y modelo</h3><p>Elija la IA, escriba la clave si corresponde y pruebe la conexión.</p></div></div>
+<div class="card row"><div class="icon orange">🎤</div><div><h3>Whisper</h3><p>Small o Medium local; large-v3-turbo usa Groq.</p></div></div>
+<div class="card row"><div class="icon good">👁</div><div><h3>YOLO</h3><p>Active o desactive visión y ajuste el intervalo de detección.</p></div></div>
+<div class="card row"><div class="icon warn">🔊</div><div><h3>Voz Piper</h3><p>Seleccione voz y use “Probar Voz” antes del evento.</p></div></div>
+<div class="card row"><div class="icon">🌓</div><div><h3>Apariencia</h3><p>Claro, oscuro o según el sistema.</p></div></div>
+<div class="card row"><div class="icon orange">🌀</div><div><h3>Conexión física</h3><p>IP, puerto, conectar, reconectar o desconectar.</p></div></div>
+</div>
+<div class="tip" style="margin-top:15px"><b>Regla de operación:</b> cambie una cosa a la vez, pulse “Probar conexión” cuando exista y después “Guardar y aplicar cambios”.</div>
+<h3 class="section-title">Antes de una exposición</h3>
+<ul class="checklist"><li>Pruebe una pregunta por voz.</li><li>Compruebe que se escucha la respuesta.</li><li>Encienda la cámara y verifique el contador.</li><li>Confirme que el ventilador cambia de clip.</li><li>Deje la terminal abierta y visible para el operador.</li></ul>
+<div class="page-no">15</div>
+</div>
+</section><section class="manual-sheet" aria-label="Página 16">
+<div class="page">
+<div class="kicker">Contenido y visión</div><h2 class="title">Funciones de administrador</h2><div class="rule"></div>
+<div class="card orange">
+<h3 class="section-title" style="margin-top:0">Entrenar Visión</h3>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div><h3>Suba una imagen</h3><p>Arrástrela o haga clic en el área de carga.</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h3>Marque el objeto</h3><p>Dibuje un cuadro sobre la región correcta.</p></div></div>
+<div class="step"><div class="step-num">3</div><div><h3>Escriba clase y descripción</h3><p>Ejemplo: “Carnet UNEV” e “Identificación estudiantil oficial”.</p></div></div>
+<div class="step"><div class="step-num">4</div><div><h3>Guarde y entrene</h3><p>También existe “Vocabulario Rápido” con términos separados por comas.</p></div></div>
+</div>
+</div>
+<div class="card navy" style="margin-top:12px">
+<h3 class="section-title" style="margin-top:0">Información UNEV</h3>
+<p class="body">Permite editar información institucional y la lista de carreras. Revise cuidadosamente cada campo y pulse <b>Guardar contenido</b>.</p>
+</div>
+<div class="tip danger-note" style="margin-top:14px"><b>Acceso restringido:</b> estas funciones cambian lo que el sistema reconoce y responde. Deben ser utilizadas por una persona autorizada.</div>
+<div class="tip note" style="margin-top:10px">En entrenamiento visual, dibuje cuadros precisos. Un cuadro muy grande o una etiqueta ambigua reduce la calidad del reconocimiento.</div>
+<div class="page-no">16</div>
+</div>
+</section><section class="manual-sheet" aria-label="Página 17">
+<div class="page">
+<div class="kicker">Ayuda rápida</div><h2 class="title">Problemas comunes</h2><div class="rule"></div>
+<div class="stack">
+<div class="card danger row"><div class="icon" style="background:#dc2626">!</div><div><h3>La página no abre</h3><p>Compruebe que la terminal sigue abierta y que muestra <b>http://127.0.0.1:8000</b>. Reinicie el lanzador.</p></div></div>
+<div class="card warn row"><div class="icon warn">↻</div><div><h3>Dice “Reconectando”</h3><p>Espere unos segundos. Si continúa, recargue la página y revise los errores de la terminal.</p></div></div>
+<div class="card row"><div class="icon">🎙</div><div><h3>No escucha</h3><p>Verifique permisos del micrófono, el dispositivo de entrada del sistema y el modelo Whisper.</p></div></div>
+<div class="card row"><div class="icon good">📷</div><div><h3>No aparece la cámara</h3><p>Pruebe otro índice de cámara, cierre otras aplicaciones que la usen y confirme los permisos.</p></div></div>
+<div class="card orange row"><div class="icon orange">🧠</div><div><h3>La IA no responde</h3><p>Abra Configuración y use “Probar conexión”. Revise proveedor, modelo, Internet o servicio Ollama.</p></div></div>
+<div class="card row"><div class="icon warn">🌀</div><div><h3>El ventilador no cambia</h3><p>Confirme Third party control, Wi‑Fi, IP, puerto 50200 y el indicador Conectado.</p></div></div>
+</div>
+<h3 class="section-title">Ejecute el diagnóstico</h3>
+<div class="grid2">
+<div><div class="small"><b>Windows</b></div><div class="code no-flip" data-copy="">.\.venv\Scripts\python.exe scripts\diagnose_hologram.py<button class="copy">Copiar</button></div></div>
+<div><div class="small"><b>Linux</b></div><div class="code no-flip" data-copy="">./.venv/bin/python scripts/diagnose_hologram.py<button class="copy">Copiar</button></div></div>
+</div>
+<p class="small" style="margin-top:7px">Busque las líneas <b>[FAIL]</b>. Ellas indican el componente que necesita atención.</p>
+<div class="page-no">17</div>
+</div>
+</section><section class="manual-sheet" data-density="hard" aria-label="Página 18">
+<div class="page back-cover">
+<div class="back-logo">U</div>
+<h2>Holograma UNEV</h2>
+<p>Tarjeta rápida para el operador. Mantenga este manual junto al equipo durante demostraciones y eventos.</p>
+<div class="quick-card">
+<div><b>Interfaz</b><span>http://127.0.0.1:8000</span></div>
+<div><b>Windows</b><span>scripts\run_web.cmd</span></div>
+<div><b>Linux</b><span>./scripts/run_web.sh</span></div>
+<div><b>Fan directo</b><span>10.10.10.1 : 50200</span></div>
+<div><b>Detener</b><span>Ctrl + C en la terminal</span></div>
+<div><b>Diagnóstico</b><span>scripts/diagnose_hologram.py</span></div>
+</div>
+<div class="cover-line" style="margin:24px auto 13px"></div>
+<div class="cover-meta">Manual operativo visual · 2026</div>
+<div class="page-no">18</div>
+</div>
+</section>
+    </div>
+  </div>
+</div>
+<button class="nav-arrow prev" id="prevBtn" aria-label="Página anterior">‹</button>
+<button class="nav-arrow next" id="nextBtn" aria-label="Página siguiente">›</button>
+<div class="library-warning"><b>No se pudo cargar el motor de páginas.</b><br>Conecte el equipo a Internet y vuelva a abrir el manual. El contenido sigue disponible al imprimir con Ctrl+P.</div>
+<div class="print-book" id="printBook" aria-hidden="true"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+<script>
+if(!window.St){document.write('<script src="https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.js"><\\/script>')}
+</script>
+<script>
+(() => {
+  const totalPages=document.querySelectorAll('#book .manual-sheet').length;
+  const counter=document.getElementById('counter');
+  const prevBtn=document.getElementById('prevBtn');
+  const nextBtn=document.getElementById('nextBtn');
+  const printBook=document.getElementById('printBook');
+  document.querySelectorAll('#book .manual-sheet').forEach(p=>printBook.appendChild(p.cloneNode(true)));
+
+  if(!window.St || !St.PageFlip){document.documentElement.classList.add('no-pageflip');return}
+
+  const pageFlip=new St.PageFlip(document.getElementById('book'),{
+    width:580,height:760,size:'stretch',
+    minWidth:300,maxWidth:580,minHeight:393,maxHeight:760,
+    startPage:0,drawShadow:true,flippingTime:1050,
+    usePortrait:true,startZIndex:10,autoSize:true,
+    maxShadowOpacity:.58,showCover:true,mobileScrollSupport:false,
+    clickEventForward:true,useMouseEvents:true,swipeDistance:18,
+    disableFlipByClick:false
+  });
+  pageFlip.loadFromHTML(document.querySelectorAll('#book .manual-sheet'));
+
+  function updateCounter(index=pageFlip.getCurrentPageIndex()){
+    const idx=Math.max(0,Math.min(totalPages-1,Number(index)||0));
+    const portrait=pageFlip.getOrientation()==='portrait';
+    let label='';
+    if(idx===0) label=`Página 1 / ${totalPages}`;
+    else if(idx>=totalPages-1) label=`Página ${totalPages} / ${totalPages}`;
+    else if(portrait) label=`Página ${idx+1} / ${totalPages}`;
+    else label=`Páginas ${idx+1}–${Math.min(totalPages,idx+2)} / ${totalPages}`;
+    counter.textContent=label;
+    prevBtn.disabled=idx<=0; nextBtn.disabled=idx>=totalPages-1;
+  }
+  function next(){pageFlip.flipNext('bottom')}
+  function prev(){pageFlip.flipPrev('bottom')}
+  function goToPage(page){const p=Math.max(1,Math.min(totalPages,Number(page)||1));pageFlip.flip(p-1,'bottom')}
+
+  pageFlip.on('flip',e=>updateCounter(e.data));
+  pageFlip.on('changeOrientation',()=>updateCounter());
+  pageFlip.on('changeState',e=>document.body.classList.toggle('dragging-page',e.data==='user_fold'));
+  pageFlip.on('init',e=>updateCounter(e.data.page));
+
+  prevBtn.addEventListener('click',e=>{e.stopPropagation();prev()});
+  nextBtn.addEventListener('click',e=>{e.stopPropagation();next()});
+  document.getElementById('tocBtn').addEventListener('click',e=>{e.stopPropagation();goToPage(2)});
+  document.getElementById('printBtn').addEventListener('click',e=>{e.stopPropagation();window.print()});
+  document.getElementById('fullscreenBtn').addEventListener('click',e=>{e.stopPropagation();if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.()});
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();next()}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev()}
+    if(e.key==='Home'){e.preventDefault();pageFlip.flip(0,'top')}
+    if(e.key==='End'){e.preventDefault();pageFlip.flip(totalPages-1,'bottom')}
+  });
+
+  document.addEventListener('click',async e=>{
+    const toc=e.target.closest('[data-page]');
+    if(toc && toc.closest('#book')){e.preventDefault();e.stopPropagation();goToPage(toc.dataset.page);return}
+    const btn=e.target.closest('.copy');
+    if(!btn || !btn.closest('#book')) return;
+    e.preventDefault();e.stopPropagation();
+    const block=btn.closest('[data-copy]');
+    const clone=block.cloneNode(true);clone.querySelector('.copy')?.remove();
+    const text=clone.textContent.trim();
+    try{await navigator.clipboard.writeText(text)}catch{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove()}
+    btn.textContent='Copiado';setTimeout(()=>btn.textContent='Copiar',1300);
+  },true);
+  updateCounter(0);
+})();
+</script>
+
+</body>
+</html>
