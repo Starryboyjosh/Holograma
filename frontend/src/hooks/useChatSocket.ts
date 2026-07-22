@@ -96,6 +96,29 @@ export function useChatSocket(options: UseChatSocketOptions = {}): ChatSocket {
           setHighlightKeyword('');
           setUserSpokenText('Generando respuesta...');
           armWatchdog();
+        } else if (data.type === 'status' && data.status === 'listen_arming') {
+          // El botón PTT se recibió; el mic aún no abre (espera TTS/eco).
+          setAssistantState('listening');
+          setUserSpokenText(
+            typeof data.message === 'string' && data.message
+              ? data.message
+              : 'Activando micrófono… habla en un momento',
+          );
+          clearWatchdog();
+        } else if (data.type === 'status' && data.status === 'listening') {
+          // Micrófono realmente abierto en el servidor.
+          setAssistantState('listening');
+          setUserSpokenText('Te escucho… habla ahora');
+          clearWatchdog();
+        } else if (data.type === 'status' && data.status === 'listen_idle') {
+          // STT vacío / timeout: volver a idle (antes la UI se quedaba colgada).
+          setAssistantState('idle');
+          setUserSpokenText(
+            typeof data.message === 'string' && data.message
+              ? data.message
+              : 'No te escuché. Toca de nuevo para hablar.',
+          );
+          clearWatchdog();
         } else if (data.type === 'text_chunk') {
           setAssistantState('speaking');
           setAiSpokenText((prev) => prev + data.text);
@@ -182,8 +205,10 @@ export function useChatSocket(options: UseChatSocketOptions = {}): ChatSocket {
       const ws = socketRef.current;
       if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({ type: 'listen' }));
-        setUserSpokenText('Te escucho… habla ahora');
-        return 'listening';
+        // No marcar "listening" aún: el mic se abre cuando el servidor emite
+        // status:listening. Así el visitante no habla al vacío.
+        setUserSpokenText('Solicitando micrófono…');
+        return current === 'listening' ? 'listening' : 'idle';
       }
       onToastRef.current?.('Conectando con el holograma… intenta de nuevo en un momento.');
       void connect();

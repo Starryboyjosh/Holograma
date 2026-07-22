@@ -1067,6 +1067,12 @@ _listen_requested = threading.Event()
 # no leer stdin (la terminal del servidor) como push-to-talk.
 WEB_MODE = False
 
+# True mientras voice_loop está vivo (el botón PTT de la WebApp lo necesita).
+_voice_loop_running = False
+
+# main.py asigna manager.broadcast_threadsafe para emitir estados de voz a la UI.
+_ws_emit = None
+
 # Modo de activación actual (dinámico: la WebApp puede cambiarlo sin reiniciar).
 _voice_trigger_mode = os.getenv("HOLOGRAM_VOICE_TRIGGER", "ptt").lower().strip()
 if _voice_trigger_mode not in ("ptt", "presentation", "auto"):
@@ -1076,8 +1082,30 @@ if _voice_trigger_mode not in ("ptt", "presentation", "auto"):
 _person_present = False
 
 
+def _emit_voice_event(payload: dict) -> None:
+    """Difunde un evento de voz a la WebApp si hay puente WS (main.py)."""
+    fn = _ws_emit
+    if callable(fn):
+        try:
+            fn(payload)
+        except Exception as error:  # noqa: BLE001 - no tumbar el hilo de voz
+            if not _is_quiet():
+                print(f"[VOZ] No se pudo emitir evento WS: {error}")
+
+
 def request_listen():
     """Solicita una escucha puntual (push-to-talk remoto, p. ej. la WebApp)."""
+    if WEB_MODE and not _voice_loop_running:
+        _emit_voice_event(
+            {
+                "type": "error",
+                "message": (
+                    "El modo voz no está activo en el servidor "
+                    "(HOLOGRAM_INPUT debe ser 'voice')."
+                ),
+            }
+        )
+        return
     _listen_requested.set()
 
 
@@ -1141,6 +1169,7 @@ def _wait_for_trigger():
 
 def voice_loop():
     """Voice input loop: microphone → Whisper → LLM → TTS (Regla B: sounddevice)."""
+    global _voice_loop_running, ai_busy
     try:
         from stt.listener import WhisperListener, get_stt_status
     except ImportError:
@@ -1163,6 +1192,13 @@ def voice_loop():
 
     # Español fijo + hotwords de data/ (UNEV/Honduras): ver stt/listener.py.
     listener = WhisperListener(language="es")
+    # En push-to-talk el visitante ya tocó el botón: dar más margen para empezar
+    # a hablar (la UI antes decía "te escucho" antes de abrir el micrófono).
+    try:
+        ptt_wait = float(os.getenv("WHISPER_PTT_MAX_WAIT_SECONDS", "12") or 12)
+        listener.max_wait_seconds = max(listener.max_wait_seconds, ptt_wait)
+    except (TypeError, ValueError):
+        listener.max_wait_seconds = max(listener.max_wait_seconds, 12.0)
 
     # Lector de teclado para push-to-talk en CLI (ENTER para hablar). En modo
     # web el disparador llega por WebSocket, así que no tocamos stdin.
@@ -1186,55 +1222,76 @@ def voice_loop():
         print("[STT] Preparando modelo de voz...")
     listener._load_model()
 
-    global ai_busy
     ai_busy = True
-
-    while True:
-        if _hologram_paused:
-            time.sleep(0.5)
-            continue
-
-        # Esperar el disparador de activación según el modo actual (ptt /
-        # presentation / auto). Bloquea hasta que el botón/ENTER soliciten
-        # escuchar, o (en presentación) hasta que la cámara vea gente.
-        hologram.set_state("idle")
-        if not _wait_for_trigger():
-            continue
-
-        if not _is_quiet():
-            print("\n[STT] Esperando tu voz...")
-
-        # Esperar a que el TTS termine de hablar antes de escuchar al micrófono
-        speak_lock.acquire()
-        speak_lock.release()
-        # Pequeña pausa para que el eco de las bocinas se disipe
-        time.sleep(0.8)
-
-        ai_busy = False  # El holograma está libre justo cuando empieza a escuchar
-        hologram.set_state("listening")
-        user_input = listener.listen_once()
-        ai_busy = True  # El holograma vuelve a estar ocupado procesando el input
-
-        if not user_input:
-            continue
-
-        if normalize_text(user_input) in ["quit", "exit", "salir"]:
-            if not _is_quiet():
-                print("¡Hasta pronto!")
-            break
-
-        try:
-            command_response = handle_command(user_input)
-            if command_response:
-                speak(command_response)
+    _voice_loop_running = True
+    try:
+        while True:
+            if _hologram_paused:
+                time.sleep(0.5)
                 continue
 
-            print("The AI is thinking...")
-            hologram.set_state("thinking")
-            reply = ask_ai(user_input, CURRENT_MODE)
-            speak(reply)
-        finally:
-            pass  # ai_busy se controla al inicio del loop
+            # Esperar el disparador de activación según el modo actual (ptt /
+            # presentation / auto). Bloquea hasta que el botón/ENTER soliciten
+            # escuchar, o (en presentación) hasta que la cámara vea gente.
+            hologram.set_state("idle")
+            if not _wait_for_trigger():
+                continue
+
+            if not _is_quiet():
+                print("\n[STT] Esperando tu voz...")
+
+            # Avisar a la UI: el botón ya se procesó; el mic aún no abre (TTS/eco).
+            _emit_voice_event(
+                {
+                    "type": "status",
+                    "status": "listen_arming",
+                    "message": "Activando micrófono… habla en un momento",
+                }
+            )
+
+            # Esperar a que el TTS termine de hablar antes de escuchar al micrófono
+            speak_lock.acquire()
+            speak_lock.release()
+            # Pequeña pausa para que el eco de las bocinas se disipe
+            time.sleep(0.5)
+
+            ai_busy = False  # El holograma está libre justo cuando empieza a escuchar
+            hologram.set_state("listening")
+            # Solo ahora el micrófono está abierto: la UI debe mostrar "listening".
+            _emit_voice_event({"type": "status", "status": "listening"})
+            user_input = listener.listen_once()
+            ai_busy = True  # El holograma vuelve a estar ocupado procesando el input
+
+            if not user_input:
+                # Sin esto la WebApp se queda en "Te escucho…" para siempre.
+                _emit_voice_event(
+                    {
+                        "type": "status",
+                        "status": "listen_idle",
+                        "message": "No te escuché. Toca de nuevo para hablar.",
+                    }
+                )
+                continue
+
+            if normalize_text(user_input) in ["quit", "exit", "salir"]:
+                if not _is_quiet():
+                    print("¡Hasta pronto!")
+                break
+
+            try:
+                command_response = handle_command(user_input)
+                if command_response:
+                    speak(command_response)
+                    continue
+
+                print("The AI is thinking...")
+                hologram.set_state("thinking")
+                reply = ask_ai(user_input, CURRENT_MODE)
+                speak(reply)
+            finally:
+                pass  # ai_busy se controla al inicio del loop
+    finally:
+        _voice_loop_running = False
 
 
 # ======================================================================

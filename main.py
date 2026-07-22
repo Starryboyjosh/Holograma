@@ -82,6 +82,8 @@ async def lifespan(app: FastAPI):
         # El audio se procesa en el servidor: marcar modo web para que
         # voice_loop no lea stdin como push-to-talk (el botón llega por WS).
         call.WEB_MODE = True
+        # Puente hilo de voz → WebSocket (estados listening / listen_idle / error).
+        call._ws_emit = manager.broadcast_threadsafe
 
         # Antes aquí se parcheaba call.speak con un wrapper no-op para "no reemitir
         # texto desde el hilo de TTS". Ya es innecesario: el WS emite el texto vía

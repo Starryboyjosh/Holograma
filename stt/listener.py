@@ -99,6 +99,7 @@ _CONTEXT_HOTWORDS: tuple[str, ...] = (
     "MISSYOU",
     # Institución
     "UNEV",
+    "U N E V",
     "Instituto Universitario de Educación Virtual",
     "universidad virtual",
     "educación virtual",
@@ -106,7 +107,12 @@ _CONTEXT_HOTWORDS: tuple[str, ...] = (
     "Cortés",
     "ITEE",
     "Instituto Tecnológico de Electricidad y Electrónica",
+    "Instituto Tecnológico de Excelencia Educativa",
     "Colonia Trejo",
+    "ExpoTech",
+    "Expo Tech",
+    "feria tecnológica",
+    "Feria Tecnológica",
     "Raúl Peña Moreno",
     "Nathalie Cuadrado",
     "Cesar Arguijo",
@@ -243,6 +249,41 @@ def _looks_like_hallucination(text):
     if len(stripped) <= 1:
         return True
     return cleaned in _HALLUCINATION_PHRASES
+
+
+def _correct_kiosk_stt(text: str) -> str:
+    """Corrige confusiones frecuentes del STT en el dominio del kiosco UNEV.
+
+    Whisper a menudo oye «UNED» (España) en lugar de «UNEV» (Honduras). No
+    inventa contenido: solo normaliza siglas y nombres del campus.
+    """
+    import re
+
+    if not text:
+        return text
+    out = text
+    # Orden: frases largas primero; luego siglas sueltas.
+    replacements = (
+        (
+            r"\b[Uu]niversidad\s+[Nn]acional\s+de\s+[Ee]ducaci[oó]n\s+a\s+[Dd]istancia\b",
+            "Instituto Universitario de Educación Virtual (UNEV)",
+        ),
+        (r"\bU\.?\s*N\.?\s*E\.?\s*D\.?\b", "UNEV"),
+        (r"\bUNED\b", "UNEV"),
+        (r"\bUned\b", "UNEV"),
+        (r"\buned\b", "UNEV"),
+        (r"\bUNEB\b", "UNEV"),
+        (r"\bUneb\b", "UNEV"),
+        (r"\bUNE\s+V\b", "UNEV"),
+        (r"\bExpo\s*tec\b", "ExpoTech"),
+        (r"\bEXPO\s*TEC\b", "ExpoTech"),
+        (r"\bexpotech\b", "ExpoTech"),
+        (r"\bItee\b", "ITEE"),
+        (r"\bittee\b", "ITEE"),
+    )
+    for pattern, repl in replacements:
+        out = re.sub(pattern, repl, out)
+    return out
 
 
 class WhisperListener:
@@ -747,6 +788,9 @@ class WhisperListener:
         prefix = (
             "Transcripción en español de Honduras. "
             "El hablante habla solo en español (no en inglés). "
+            "La institución se llama UNEV (no UNED ni UNEB): "
+            "Instituto Universitario de Educación Virtual. "
+            "Campus ITEE Colonia Trejo San Pedro Sula; ExpoTech feria tecnológica. "
             "Asistente del Holograma UNEV: admisión, carreras y cultura. "
             "Vocabulario preferido: "
         )
@@ -819,7 +863,7 @@ class WhisperListener:
                 if prompt:
                     create_kwargs["prompt"] = prompt
                 transcription = client.audio.transcriptions.create(**create_kwargs)
-                return transcription.text.strip()
+                return _correct_kiosk_stt(transcription.text.strip())
         except Exception as error:
             if not _is_quiet():
                 print(f"[STT] Error en la transcripción con Groq: {error}")
@@ -903,7 +947,7 @@ class WhisperListener:
             segments, info = self._model.transcribe(str(audio_path), **transcribe_kwargs)
             text_parts = [segment.text.strip() for segment in segments]
 
-        return " ".join(text_parts).strip()
+        return _correct_kiosk_stt(" ".join(text_parts).strip())
 
     def listen_once(self):
         """Record from the microphone and return the transcribed text.
@@ -930,6 +974,8 @@ class WhisperListener:
                 wav_path.unlink()  # Regla A: pathlib for deletion too
             except OSError:
                 pass
+
+        text = _correct_kiosk_stt(text)
 
         if _looks_like_hallucination(text):
             if not _is_quiet():

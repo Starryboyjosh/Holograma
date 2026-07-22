@@ -105,13 +105,49 @@ def get_website_info():
     return f"Puedes visitar la página oficial de UNEV en {get_unev_info()['website']}"
 
 
+# Etiquetas legibles para el bloque de contexto del LLM (orden de lectura).
+_CONTEXT_FIELD_LABELS: dict[str, str] = {
+    "name": "Nombre corto / sigla",
+    "full_name": "Nombre completo",
+    "acronyms": "Siglas y expansión",
+    "main_claim": "Diferenciador",
+    "description": "Descripción",
+    "mission": "Misión",
+    "vision": "Visión",
+    "values": "Valores",
+    "approval": "Aprobación y validez de títulos",
+    "governance": "Gobernanza y liderazgo",
+    "address": "Dirección / sede",
+    "infrastructure": "Infraestructura",
+    "academic_model": "Modelo académico",
+    "faculty": "Cuerpo docente",
+    "student_support": "Acompañamiento estudiantil",
+    "admission_requirements": "Requisitos de admisión",
+    "social_projection": "Proyección social",
+    "virtual_library": "Biblioteca virtual",
+    "international_presence": "Presencia internacional",
+    "website": "Sitio web oficial",
+    "history": "Historia y trayectoria",
+    "independence_note": "Independencia institucional (no confundir)",
+    "itee_campus": "Campus ITEE y alianza",
+    "expotech": "ExpoTech / feria tecnológica ITEE",
+    "common_questions": "Preguntas frecuentes (respuestas oficiales)",
+}
+
+
 def get_university_context():
-    """Contexto de sistema UNEV + Honduras (cacheado entre turnos del LLM)."""
+    """Contexto de sistema UNEV + Honduras (cacheado entre turnos del LLM).
+
+    Entrega la información **completa** de ``data/unev_info.json`` (todos los
+    campos de texto y la descripción íntegra de cada programa), sin resumir
+    carreras a un listado de nombres.
+    """
     global _CONTEXT_CACHE
     if _CONTEXT_CACHE is not None:
         return _CONTEXT_CACHE
 
     from skills.honduras import get_university_context as get_honduras_context
+    from skills.unev_content import TEXT_FIELDS
 
     try:
         honduras_ctx = get_honduras_context()
@@ -119,30 +155,28 @@ def get_university_context():
         honduras_ctx = ""
 
     info = get_unev_info()
-    programs = ", ".join(program.title() for program in info["programs"].keys())
-    unev_ctx = (
-        "Información institucional de UNEV:\n"
-        f"- Nombre: {info['name']} ({info['full_name']})\n"
-        f"- Descripción: {info['description']}\n"
-        f"- Diferenciador: {info['main_claim']}\n"
-        f"- Misión: {info['mission']}\n"
-        f"- Visión: {info['vision']}\n"
-        f"- Valores: {info['values']}\n"
-        f"- Aprobación: {info['approval']}\n"
-        f"- Gobernanza: {info['governance']}\n"
-        f"- Dirección: {info['address']}\n"
-        f"- Infraestructura: {info['infrastructure']}\n"
-        f"- Modelo académico: {info['academic_model']}\n"
-        f"- Cuerpo docente: {info['faculty']}\n"
-        f"- Acompañamiento estudiantil: {info['student_support']}\n"
-        f"- Requisitos de admisión: {info['admission_requirements']}\n"
-        f"- Proyección social: {info['social_projection']}\n"
-        f"- Biblioteca Virtual: {info['virtual_library']}\n"
-        f"- Presencia internacional: {info['international_presence']}\n"
-        f"- Sitio web oficial: {info['website']}\n"
-        f"- Programas conocidos: {programs}.\n"
-        "Si el visitante pregunta por datos no incluidos aquí, no inventes. "
+    lines = [
+        "Información institucional de UNEV (fuente completa; no inventes datos fuera de este bloque):",
+        "Nota: la sigla correcta es UNEV (Instituto Universitario de Educación Virtual), "
+        "nunca UNED ni otras confusiones de voz.",
+    ]
+    for key in TEXT_FIELDS:
+        value = (info.get(key) or "").strip()
+        if not value:
+            continue
+        label = _CONTEXT_FIELD_LABELS.get(key, key)
+        lines.append(f"- {label}: {value}")
+
+    programs = info.get("programs") or {}
+    if programs:
+        lines.append("- Programas (descripción completa de cada uno):")
+        for name, desc in programs.items():
+            lines.append(f"  * {str(name).title()}: {desc}")
+
+    lines.append(
+        "Si el visitante pregunta por un dato no incluido aquí, no inventes. "
         "Recomienda revisar la página oficial o contactar a UNEV."
     )
+    unev_ctx = "\n".join(lines)
     _CONTEXT_CACHE = unev_ctx + "\n\n" + honduras_ctx
     return _CONTEXT_CACHE

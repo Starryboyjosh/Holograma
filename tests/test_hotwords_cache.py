@@ -71,7 +71,18 @@ def test_stt_prompt_includes_context():
     assert "UNEV" in prompt or "unev" in prompt.lower()
     assert "Honduras" in prompt or "honduras" in prompt.lower()
     assert "español" in prompt.lower() or "espanol" in prompt.lower()
+    # Debe desambiguar UNED (España) vs UNEV (Honduras).
+    assert "UNED" in prompt or "uned" in prompt.lower()
     assert len(prompt) > 40
+
+
+def test_correct_kiosk_stt_uned_to_unev():
+    fix = listener._correct_kiosk_stt
+    assert "UNEV" in fix("Quiero info de la UNED")
+    assert "UNEV" in fix("¿La uned es virtual?")
+    assert "UNEV" in fix("U.N.E.D. en Honduras")
+    assert fix("Hola UNEV") == "Hola UNEV"
+    assert "ExpoTech" in fix("Voy a la expotech del Itee")
 
 
 def test_stt_prompt_env_override(monkeypatch):

@@ -10,6 +10,7 @@ const FIELD_LABELS: { key: string; label: string; short?: boolean }[] = [
   { key: 'full_name', label: 'Nombre completo', short: true },
   { key: 'website', label: 'Sitio web oficial', short: true },
   { key: 'values', label: 'Valores institucionales', short: true },
+  { key: 'acronyms', label: 'Siglas y expansión (UNEV, CES, DES, ITEE…)' },
   { key: 'main_claim', label: 'Diferenciador principal' },
   { key: 'description', label: 'Descripción' },
   { key: 'mission', label: 'Misión' },
@@ -25,6 +26,11 @@ const FIELD_LABELS: { key: string; label: string; short?: boolean }[] = [
   { key: 'social_projection', label: 'Proyección social' },
   { key: 'virtual_library', label: 'Biblioteca virtual' },
   { key: 'international_presence', label: 'Presencia internacional' },
+  { key: 'history', label: 'Historia y trayectoria' },
+  { key: 'independence_note', label: 'Independencia (no confundir con UNED u otras)' },
+  { key: 'itee_campus', label: 'Campus ITEE y alianza' },
+  { key: 'expotech', label: 'ExpoTech / feria tecnológica ITEE' },
+  { key: 'common_questions', label: 'Preguntas frecuentes (Q&A)' },
 ];
 
 export function ContentScreen() {

@@ -25,12 +25,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 JSON_PATH = BASE_DIR / "data" / "unev_info.json"
 
 # Tope generoso por campo: acota el tamaño del prompt sin estorbar al operador.
-MAX_FIELD_CHARS = 4000
+MAX_FIELD_CHARS = 8000
 
 # Campos de texto en el orden en que se muestran en el editor.
 TEXT_FIELDS: tuple[str, ...] = (
     "name",
     "full_name",
+    "acronyms",
     "main_claim",
     "description",
     "mission",
@@ -48,11 +49,26 @@ TEXT_FIELDS: tuple[str, ...] = (
     "virtual_library",
     "international_presence",
     "website",
+    "history",
+    "independence_note",
+    "itee_campus",
+    "expotech",
+    "common_questions",
 )
 
 DEFAULT_UNEV_INFO: dict = {
     "name": "UNEV",
     "full_name": "Instituto Universitario de Educación Virtual",
+    "acronyms": (
+        "UNEV = Instituto Universitario de Educación Virtual (Honduras). "
+        "No confundir con UNED (Universidad Nacional de Educación a Distancia de España) "
+        "ni con instituciones homónimas de otros países. Otras siglas del ecosistema: "
+        "CES = Consejo de Educación Superior; DES = Dirección de Educación Superior; "
+        "UNAH = Universidad Nacional Autónoma de Honduras; PRIND = Programa de Inmersión "
+        "y Nivelación Digital; SAT = Sistema de Alerta Temprana; LMS = Learning Management "
+        "System (plataforma de aprendizaje); ITEE = Instituto Tecnológico de Excelencia "
+        "Educativa (campus donde opera la sede de UNEV en San Pedro Sula)."
+    ),
     "description": (
         "El Instituto Universitario de Educación Virtual (UNEV) es una institución "
         "de educación superior hondureña, secular y contemporánea, con un modelo "
@@ -163,6 +179,93 @@ DEFAULT_UNEV_INFO: dict = {
         "certificación de mentores (Red GIEN), lo que posiciona a sus egresados en "
         "una red de contactos global. Tuvo consolidación internacional en eventos "
         "como EDUTECHNIA 2023 en Bogotá."
+    ),
+    "history": (
+        "La trayectoria de UNEV inició en 2017 bajo la denominación 'Universidad "
+        "Práctica'. Tras el proceso de admisión a trámite ante el Consejo de Educación "
+        "Superior (Acuerdo No. 3827-327-2018), obtuvo la aprobación institucional "
+        "mediante el Acuerdo CES No. 4995-381-2023 del 9 de junio de 2023. En 2023 "
+        "consolidó presencia internacional en EDUTECHNIA (Bogotá). El 3 de mayo de 2024 "
+        "su validez fue ratificada con la visita oficial del Rector de la UNAH y "
+        "autoridades de la Dirección de Educación Superior (DES)."
+    ),
+    "independence_note": (
+        "UNEV (Honduras) es una institución hondureña independiente. No es la "
+        "Universidad Nacional de Educación a Distancia (UNED) de España, ni la "
+        "Universidad Nacional Evangélica de la República Dominicana, ni otras "
+        "entidades con siglas parecidas. Cuando el visitante diga o el STT escriba "
+        "'UNED', en este kiosco se refiere a UNEV."
+    ),
+    "itee_campus": (
+        "La sede física de UNEV en San Pedro Sula opera en alianza de co-working con "
+        "el ITEE (Instituto Tecnológico de Excelencia Educativa), campus en Colonia "
+        "Trejo, entre 9 y 10 calle, 21 avenida C, Edificio 1, ala izquierda, segunda "
+        "planta, Cortés, Honduras. El ITEE es un centro de formación técnica y "
+        "tecnológica de larga trayectoria (más de tres décadas), rectorado por el "
+        "Ingeniero Raúl Peña Moreno (también fundador de UNEV). Ofrece formación en "
+        "áreas como Electromecánica, Diseño Gráfico, Mecatrónica y Programación. "
+        "Contactos públicos del campus ITEE: teléfonos 9624-1912, 9557-0304 y "
+        "2558-5272; correo info@iteesa.edu.hn; web https://iteesa.edu.hn/. La alianza "
+        "permite a UNEV redes de conectividad de alta disponibilidad y soporte técnico "
+        "centralizado, optimizando costos (Lean OpEx) e invirtiendo en el campus digital."
+    ),
+    "expotech": (
+        "ExpoTech (también escrita Expo Tech o Feria Tecnológica del ITEE) es la feria "
+        "tecnológica anual del Instituto Tecnológico de Excelencia Educativa (ITEE), "
+        "en el campus de Colonia Trejo, 9-10 calle, 21 avenida C, San Pedro Sula, "
+        "Cortés, Honduras. Es un evento histórico de la institución: en 2025 se "
+        "celebró la 38.ª edición (Expo Tech 2025), del 16 al 18 de octubre, con unos "
+        "60 proyectos estudiantiles y charlas técnicas abiertas al público sin costo. "
+        "Horarios típicos de esa edición: jueves y viernes 10:00 a 19:00; sábado 8:00 "
+        "a 14:00. El Grand Opening se realizó el miércoles 15 de octubre a las 19:00. "
+        "Objetivo: que los estudiantes apliquen conocimientos del año académico en "
+        "soluciones a retos comunitarios, industriales y de TIC, y se vinculen con "
+        "empresas y la comunidad. Coordinación referida en prensa 2025: Fredy Estrada "
+        "(coordinador Expo Tech); declaraciones del Ing. Icker Peña (director "
+        "financiero ITEE). Actividades asociadas: expo de proyectos, charlas "
+        "(seguridad informática, microcontroladores, etc.), Glam & Star Nite, "
+        "Olimpiadas de Matemáticas y Tech Party. Patrocinadores mencionados en "
+        "cobertura 2025: Cervecería Hondureña, Sycom, Aceyco, Servi Rey, Unitec y "
+        "Emsula. UNEV comparte campus con el ITEE; visitantes de ExpoTech pueden "
+        "conocer también la oferta 100% virtual de UNEV en el mismo predio. Para "
+        "fechas de ediciones futuras conviene confirmar en https://iteesa.edu.hn/ o "
+        "redes del ITEE (@iteesa_hn)."
+    ),
+    "common_questions": (
+        "P: ¿Qué significan las siglas UNEV?\n"
+        "R: Instituto Universitario de Educación Virtual (Honduras).\n\n"
+        "P: ¿UNEV es lo mismo que UNED?\n"
+        "R: No. UNED suele referirse a la universidad española de educación a "
+        "distancia. Aquí la institución correcta es UNEV.\n\n"
+        "P: ¿Es 100% virtual?\n"
+        "R: Sí. El modelo académico es 100% virtual; la sede en ITEE Colonia Trejo "
+        "es de apoyo operativo y atención, no un campus presencial tradicional.\n\n"
+        "P: ¿Dónde está ubicada?\n"
+        "R: Colonia Trejo, entre 9 y 10 calle, 21 avenida C, instalaciones del ITEE, "
+        "Edificio 1, ala izquierda, segunda planta, San Pedro Sula, Cortés, Honduras.\n\n"
+        "P: ¿Quién la fundó / dirige?\n"
+        "R: Ingeniero Raúl Peña Moreno (fundador) y Consejo Administrativo / Consejo "
+        "Académico.\n\n"
+        "P: ¿Está aprobada oficialmente?\n"
+        "R: Sí, por el CES (Acuerdo No. 4995-381-2023, 9 de junio de 2023). Títulos "
+        "integrados en el registro de la DES.\n\n"
+        "P: ¿Qué carreras ofrece?\n"
+        "R: Técnicos Universitarios en Diseño Gráfico, Administración de Empresas y "
+        "Programación Web (ciclos de 11 semanas, ~2 años).\n\n"
+        "P: ¿Cómo es la admisión?\n"
+        "R: Título de educación media (PDF), DNI, certificación de nacimiento; "
+        "evaluación diagnóstica de tecnología y ofimática (30 min, mínimo 70%). Si no "
+        "alcanza el puntaje, cursa PRIND.\n\n"
+        "P: ¿Cuál es el sitio web?\n"
+        "R: https://unev.edu.hn/\n\n"
+        "P: ¿Qué es ExpoTech / la feria tecnológica del ITEE?\n"
+        "R: Feria tecnológica anual del ITEE en el mismo campus (Colonia Trejo, SPS). "
+        "En 2025 fue la 38.ª edición (16–18 oct.), con ~60 proyectos y charlas abiertas.\n\n"
+        "P: ¿UNEV y el ITEE son lo mismo?\n"
+        "R: No. ITEE es el instituto tecnológico de excelencia educativa (formación "
+        "técnica media/superior tecnológica). UNEV es la universidad 100% virtual de "
+        "educación superior. Comparten campus y liderazgo fundacional, con misiones "
+        "distintas y complementarias."
     ),
     "programs": {
         "diseño gráfico": (
