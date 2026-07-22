@@ -236,7 +236,29 @@ _HALLUCINATION_PHRASES = {
     "¡suscríbete!",
     "suscríbete",
     "más información en www.alimmenta.com",
+    "más información www.mimicad.com.br",
+    "mas informacion www.mimicad.com.br",
+    "www.mimicad.com.br",
+    "mimicad.com.br",
+    "subtitles by the amara.org community",
+    "thanks for watching",
+    "thank you for watching",
+    "like and subscribe",
 }
+
+# Patrones (subcadena) típicos de alucinación por silencio/ruido en kiosco.
+_HALLUCINATION_SUBSTRINGS = (
+    "mimicad.com",
+    "amara.org",
+    "alimmenta.com",
+    "subtítulos realizados",
+    "subtitulos realizados",
+    "gracias por ver el video",
+    "thanks for watching",
+    "www.youtube",
+    "http://",
+    "https://",
+)
 
 
 def _looks_like_hallucination(text):
@@ -248,7 +270,41 @@ def _looks_like_hallucination(text):
     stripped = cleaned.strip(".,!¡¿? ")
     if len(stripped) <= 1:
         return True
-    return cleaned in _HALLUCINATION_PHRASES
+    if cleaned in _HALLUCINATION_PHRASES:
+        return True
+    for frag in _HALLUCINATION_SUBSTRINGS:
+        if frag in cleaned:
+            return True
+    # Nombre suelto de 1–2 tokens sin verbo/pregunta (ruido en modo presentación).
+    tokens = [t for t in stripped.replace(",", " ").split() if t]
+    if len(tokens) <= 2 and not any(
+        t in stripped
+        for t in (
+            "?",
+            "¿",
+            "hola",
+            "qué",
+            "que",
+            "cómo",
+            "como",
+            "dónde",
+            "donde",
+            "uniforme",
+            "unev",
+            "carrera",
+            "ayuda",
+            "gracias",
+            "buenas",
+            "buenos",
+            "puedes",
+            "ves",
+            "ver",
+        )
+    ):
+        # "Cesar Guarante", "ok", etc. sueltos en silencio
+        if len(stripped) <= 24:
+            return True
+    return False
 
 
 def _correct_kiosk_stt(text: str) -> str:

@@ -76,10 +76,12 @@ export function useConfig() {
   const save = useCallback(
     async (overrides: Record<string, string> = {}): Promise<boolean> => {
       try {
+        // No forzar YOLO_MODEL aquí: el backend / config.json mandan
+        // (yolo26n personas + open-vocab/world o yoloe). Sobrescribir a
+        // yolo26n.pt rompía la detección de clases entrenadas.
         const payload: Record<string, string> = {
           HOLOGRAM_CAMERA: yoloEnabled ? '1' : '0',
           YOLO_INTERVAL_SECONDS: yoloInterval,
-          YOLO_MODEL: 'yolo26n.pt',
           WHISPER_MODEL: whisperSize,
           PIPER_VOICE: piperVoice,
           ...overrides,

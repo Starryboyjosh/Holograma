@@ -10,10 +10,10 @@ importan `call` para obtener contexto de cámara.
 
 from collections.abc import Callable
 
-from camera_context import build_camera_context
+from camera_context import build_camera_context, is_visual_object_question
 
-# builder: análisis (dict) -> string de contexto para el prompt (o None).
-ContextBuilder = Callable[[dict], str | None]
+# builder: (análisis, include_objects) -> string | None
+ContextBuilder = Callable[[dict, bool], str | None]
 
 
 class CameraContextProvider:
@@ -29,12 +29,13 @@ class CameraContextProvider:
         """Registra el último análisis de la cámara (lo llamará VisionService)."""
         self._analysis = analysis
 
-    def build_context(self) -> str | None:
+    def build_context(self, prompt: str | None = None) -> str | None:
         if not self._analysis:
             return None
+        include_objects = is_visual_object_question(prompt)
         builder = self._builder or self._default_builder
-        return builder(self._analysis)
+        return builder(self._analysis, include_objects)
 
     @staticmethod
-    def _default_builder(analysis: dict) -> str | None:
-        return build_camera_context(analysis)
+    def _default_builder(analysis: dict, include_objects: bool = False) -> str | None:
+        return build_camera_context(analysis, include_objects=include_objects)

@@ -843,26 +843,112 @@ def _postprocess_reply(text):
     return text
 
 
-def generate_reply(user_input, system_prompt, university_context, camera_context=None):
+def _iter_openai_compatible_tokens(provider, messages):
+    """Stream síncrono de deltas de texto (OpenAI-compatible / Ollama v1)."""
+    from openai import OpenAI
+
+    if provider == "ollama":
+        model = _ollama_model_name()
+        base_url = f"{_ollama_base_url()}/v1"
+        api_key = "ollama"
+        timeout = _env_float("OLLAMA_TIMEOUT_SECONDS", 60.0)
+    else:
+        api_key, model, base_url = _require(provider)
+        timeout = _request_timeout()
+
+    if _cot_log_enabled():
+        print(
+            f"[LLM/CoT] request provider={provider} model={model} "
+            f"timeout={timeout:.0f}s mode=stream-tokens",
+            flush=True,
+        )
+    client = OpenAI(
+        api_key=api_key or "none",
+        base_url=base_url or None,
+        timeout=timeout,
+    )
+    mirror = _CotStreamMirror(provider, model)
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=0.6,
+            max_tokens=_max_tokens(),
+            stream=True,
+        )
+        for chunk in response:
+            if not chunk.choices:
+                continue
+            delta = chunk.choices[0].delta
+            reasoning = _delta_reasoning(delta)
+            if reasoning:
+                mirror.feed_reasoning(reasoning)
+            content = delta.content if delta is not None else None
+            if content:
+                mirror.feed(content)
+                yield content
+        mirror.finish()
+    except Exception as error:
+        mirror.finish(error=str(error))
+        raise LLMBackendError(
+            f"{provider}/{model} falló o agotó timeout ({timeout:.0f}s): {error}"
+        ) from error
+
+
+def iter_reply_tokens(user_input, system_prompt, university_context, camera_context=None):
+    """Genera deltas de texto del LLM en cuanto llegan (síncrono).
+
+    Usado por el bucle de voz para arrancar el TTS en la primera cláusula
+    sin esperar a que termine toda la respuesta.
+    """
     messages = _build_messages(user_input, system_prompt, university_context, camera_context)
 
     for backend in _candidate_backends(get_selected_backend()):
         if backend == "local_only":
-            return _local_only_reply(user_input)
+            text = _local_only_reply(user_input)
+            if text:
+                yield text
+            return
 
         try:
             if _cot_log_enabled():
                 print(
-                    f"[LLM/CoT] intento voice/blocking backend={backend} "
-                    f"(tokens en vivo vía stream interno)",
+                    f"[LLM/CoT] intento voice/streaming backend={backend} "
+                    f"(TTS puede arrancar antes del final)",
                     flush=True,
                 )
+            if backend == "ollama" or (
+                backend in PROVIDERS and PROVIDERS[backend].openai_compatible
+            ):
+                produced = False
+                for token in _iter_openai_compatible_tokens(backend, messages):
+                    produced = True
+                    yield token
+                if produced:
+                    return
+                # Stream vacío: probar siguiente backend.
+                continue
+            # Claude u otros: respuesta completa de una vez.
             reply = _chat_with_backend(backend, messages)
-            return _postprocess_reply(reply)
+            if reply:
+                yield reply
+                return
         except Exception as error:
             print(f"[LLM] Error usando backend '{backend}', probando fallback: {error}")
 
-    return _local_only_reply(user_input)
+    text = _local_only_reply(user_input)
+    if text:
+        yield text
+
+
+def generate_reply(user_input, system_prompt, university_context, camera_context=None):
+    """Respuesta completa (bloqueante). Internamente reutiliza el stream de tokens."""
+    parts: list[str] = []
+    for token in iter_reply_tokens(
+        user_input, system_prompt, university_context, camera_context
+    ):
+        parts.append(token)
+    return _postprocess_reply("".join(parts))
 
 
 def _delta_reasoning(delta) -> str:

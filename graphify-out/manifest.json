@@ -10,8 +10,13 @@
     "semantic_hash": ""
   },
   "main.py": {
+<<<<<<< HEAD
+    "mtime": 1784689927.5335543,
+    "ast_hash": "4fa6df825bfb7e309a4eb7a9fd009eb2",
+=======
     "mtime": 1784691397.2974608,
     "ast_hash": "31797e50e7806ca081a3cf2b8455b867",
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
     "semantic_hash": ""
   },
   "skills/__init__.py": {
@@ -75,9 +80,15 @@
     "semantic_hash": "7dc30226a6813a07dad940b5efb7f2fa"
   },
   "vision/person_detector.py": {
+<<<<<<< HEAD
+    "mtime": 1784689892.224364,
+    "ast_hash": "6e832400714ee514e148a2aa7b0acf66",
+    "semantic_hash": ""
+=======
     "mtime": 1784348439.2746356,
     "ast_hash": "2d9c6e755c2488a84eae2c8a69a2ac67",
     "semantic_hash": "2d9c6e755c2488a84eae2c8a69a2ac67"
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
   },
   "data/honduras_info.json": {
     "mtime": 1782858337.5413208,
@@ -180,8 +191,13 @@
     "semantic_hash": "e55e84abfc1a2ee7fdde9da07fb13126"
   },
   "README.md": {
+<<<<<<< HEAD
+    "mtime": 1784689927.5325541,
+    "ast_hash": "837864825a7b9e20556a71e38b0180a0",
+=======
     "mtime": 1784348439.2546353,
     "ast_hash": "355c00d187fe902829d38a721e73f5de",
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
     "semantic_hash": ""
   },
   "frontend/README.md": {
@@ -230,8 +246,13 @@
     "semantic_hash": "2a8602323e13cef21ea1bab245a0d690"
   },
   "config.example.json": {
+<<<<<<< HEAD
+    "mtime": 1784689927.5251088,
+    "ast_hash": "75d70753f68b371a0d2431c1b0f9e521",
+=======
     "mtime": 1784348439.2546353,
     "ast_hash": "64a3f3ea5a7ce1cb3556c64f7b6a67ec",
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
     "semantic_hash": ""
   },
   "frontend/src-tauri/build.rs": {
@@ -810,9 +831,15 @@
     "semantic_hash": "f2dcc59a03741674df5dfd4f71a2d79f"
   },
   "tests/test_custom_object_interval.py": {
+<<<<<<< HEAD
+    "mtime": 1784689927.5251088,
+    "ast_hash": "404d63dffea347f4ddabc31692c5664c",
+    "semantic_hash": ""
+=======
     "mtime": 1783735766.2348974,
     "ast_hash": "f713378e96df0b49b4e6db8317ec136d",
     "semantic_hash": "f713378e96df0b49b4e6db8317ec136d"
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
   },
   "pyproject.toml": {
     "mtime": 1782270374.6466587,
@@ -820,9 +847,15 @@
     "semantic_hash": "54929534656e5b622e69791be1639585"
   },
   "tests/test_yolo_predict_opts.py": {
+<<<<<<< HEAD
+    "mtime": 1784689927.5325541,
+    "ast_hash": "4cccfdcb8f844a848ad619237cecf43a",
+    "semantic_hash": ""
+=======
     "mtime": 1783735766.2348974,
     "ast_hash": "c5bb7150532450c88fd1c794af28aa21",
     "semantic_hash": "c5bb7150532450c88fd1c794af28aa21"
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
   },
   "tests/test_hotwords_cache.py": {
     "mtime": 1784691397.3007934,

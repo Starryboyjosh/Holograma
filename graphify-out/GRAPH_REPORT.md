@@ -1,6 +1,18 @@
 # Graph Report - Holograma  (2026-07-21)
 
 ## Corpus Check
+<<<<<<< HEAD
+- 111 files · ~118,050 words
+- Verdict: corpus is large enough that graph structure adds value.
+
+## Summary
+- 1467 nodes · 2499 edges · 117 communities (95 shown, 22 thin omitted)
+- Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 166 edges (avg confidence: 0.7)
+- Token cost: 0 input · 0 output
+
+## Graph Freshness
+- Built from commit: `3ac07f8c`
+=======
 - 114 files · ~121,556 words
 - Verdict: corpus is large enough that graph structure adds value.
 
@@ -11,10 +23,124 @@
 
 ## Graph Freshness
 - Built from commit: `1df2a447`
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
+<<<<<<< HEAD
+- [[_COMMUNITY_UNEV Skills Content|UNEV Skills Content]]
+- [[_COMMUNITY_Hologram Fan Controller|Hologram Fan Controller]]
+- [[_COMMUNITY_Frontend Dependencies|Frontend Dependencies]]
+- [[_COMMUNITY_Provider Config Tests|Provider Config Tests]]
+- [[_COMMUNITY_Call Pipeline Core|Call Pipeline Core]]
+- [[_COMMUNITY_FastAPI Main Server|FastAPI Main Server]]
+- [[_COMMUNITY_WebSocket Connections|WebSocket Connections]]
+- [[_COMMUNITY_STT Listener Utils|STT Listener Utils]]
+- [[_COMMUNITY_Session Toast Context|Session Toast Context]]
+- [[_COMMUNITY_LLM Backend Selection|LLM Backend Selection]]
+- [[_COMMUNITY_LLM Chat Backends|LLM Chat Backends]]
+- [[_COMMUNITY_Whisper Transcription|Whisper Transcription]]
+- [[_COMMUNITY_Android Launcher Icons|Android Launcher Icons]]
+- [[_COMMUNITY_iOS App Icon Brand|iOS App Icon Brand]]
+- [[_COMMUNITY_LLM Unify Tests|LLM Unify Tests]]
+- [[_COMMUNITY_Person Detector Core|Person Detector Core]]
+- [[_COMMUNITY_Hologram UI Content|Hologram UI Content]]
+- [[_COMMUNITY_Hologram Controller Tests|Hologram Controller Tests]]
+- [[_COMMUNITY_Provider Config UI|Provider Config UI]]
+- [[_COMMUNITY_Camera Feed Hooks|Camera Feed Hooks]]
+- [[_COMMUNITY_TS App Compiler Config|TS App Compiler Config]]
+- [[_COMMUNITY_Setup Scripts Config|Setup Scripts Config]]
+- [[_COMMUNITY_YOLO Custom Objects|YOLO Custom Objects]]
+- [[_COMMUNITY_Piper TTS Voice|Piper TTS Voice]]
+- [[_COMMUNITY_Hologram Playlist Clips|Hologram Playlist Clips]]
+- [[_COMMUNITY_Provider Config Contract|Provider Config Contract]]
+- [[_COMMUNITY_Custom Object Tests|Custom Object Tests]]
+- [[_COMMUNITY_TS Node Compiler Config|TS Node Compiler Config]]
+- [[_COMMUNITY_Tauri Desktop Icons|Tauri Desktop Icons]]
+- [[_COMMUNITY_Tauri App Config|Tauri App Config]]
+- [[_COMMUNITY_Presence State Tests|Presence State Tests]]
+- [[_COMMUNITY_Tauri Rust Backend|Tauri Rust Backend]]
+- [[_COMMUNITY_AppShell Theme Nav|AppShell Theme Nav]]
+- [[_COMMUNITY_LLM Backend Tests|LLM Backend Tests]]
+- [[_COMMUNITY_Camera Capture API|Camera Capture API]]
+- [[_COMMUNITY_API Models Security|API Models Security]]
+- [[_COMMUNITY_LLM Provider Docs|LLM Provider Docs]]
+- [[_COMMUNITY_Conversation Service|Conversation Service]]
+- [[_COMMUNITY_Hotwords Cache Tests|Hotwords Cache Tests]]
+- [[_COMMUNITY_YOLO Predict Tests|YOLO Predict Tests]]
+- [[_COMMUNITY_React Vite Logos|React Vite Logos]]
+- [[_COMMUNITY_Assistant Orb UI|Assistant Orb UI]]
+- [[_COMMUNITY_PyInstaller Sidecar|PyInstaller Sidecar]]
+- [[_COMMUNITY_Config Security Docs|Config Security Docs]]
+- [[_COMMUNITY_Web Services Architecture|Web Services Architecture]]
+- [[_COMMUNITY_Hologram State Manager|Hologram State Manager]]
+- [[_COMMUNITY_Diagnose Script|Diagnose Script]]
+- [[_COMMUNITY_Conversation Stream Tests|Conversation Stream Tests]]
+- [[_COMMUNITY_WSL PowerShell Bridge|WSL PowerShell Bridge]]
+- [[_COMMUNITY_LLM Reply Pipeline Docs|LLM Reply Pipeline Docs]]
+- [[_COMMUNITY_Provider Selection Docs|Provider Selection Docs]]
+- [[_COMMUNITY_UNEV Brand Mission|UNEV Brand Mission]]
+- [[_COMMUNITY_Three Panel Preview|Three Panel Preview]]
+- [[_COMMUNITY_Ollama Ready Cache Tests|Ollama Ready Cache Tests]]
+- [[_COMMUNITY_Security Utils Tests|Security Utils Tests]]
+- [[_COMMUNITY_WAV Playback Utils|WAV Playback Utils]]
+- [[_COMMUNITY_Detach Widget Windows|Detach Widget Windows]]
+- [[_COMMUNITY_LLM Service Test API|LLM Service Test API]]
+- [[_COMMUNITY_Camera Stop Tests|Camera Stop Tests]]
+- [[_COMMUNITY_Graphify Agent Workflow|Graphify Agent Workflow]]
+- [[_COMMUNITY_Marketing Hero Asset|Marketing Hero Asset]]
+- [[_COMMUNITY_Camera Context Builder|Camera Context Builder]]
+- [[_COMMUNITY_Reply Postprocess CoT|Reply Postprocess CoT]]
+- [[_COMMUNITY_MJPEG Feed Gate Tests|MJPEG Feed Gate Tests]]
+- [[_COMMUNITY_Face Analyzer|Face Analyzer]]
+- [[_COMMUNITY_Camera Context Module|Camera Context Module]]
+- [[_COMMUNITY_Presence Manager Skill|Presence Manager Skill]]
+- [[_COMMUNITY_Voice Trigger WebSocket|Voice Trigger WebSocket]]
+- [[_COMMUNITY_Tauri Capabilities|Tauri Capabilities]]
+- [[_COMMUNITY_iOS Icon 20pt Brand|iOS Icon 20pt Brand]]
+- [[_COMMUNITY_iOS Icon 20pt@3x|iOS Icon 20pt@3x]]
+- [[_COMMUNITY_iOS Icon Crystal Motif|iOS Icon Crystal Motif]]
+- [[_COMMUNITY_iOS Icon 20pt@2x|iOS Icon 20pt@2x]]
+- [[_COMMUNITY_iOS Icon Hexagon Style|iOS Icon Hexagon Style]]
+- [[_COMMUNITY_iOS Icon Triangle Mark|iOS Icon Triangle Mark]]
+- [[_COMMUNITY_iOS Icon 29pt@3x|iOS Icon 29pt@3x]]
+- [[_COMMUNITY_iOS Icon 40pt@2x|iOS Icon 40pt@2x]]
+- [[_COMMUNITY_iOS Home Screen Icon|iOS Home Screen Icon]]
+- [[_COMMUNITY_Camera Feed Subscribe|Camera Feed Subscribe]]
+- [[_COMMUNITY_TTS Text Chunking|TTS Text Chunking]]
+- [[_COMMUNITY_Hologram Pause Stop|Hologram Pause Stop]]
+- [[_COMMUNITY_iOS Icon Lightning 20|iOS Icon Lightning 20]]
+- [[_COMMUNITY_iOS Blank Icon 40|iOS Blank Icon 40]]
+- [[_COMMUNITY_iOS Icon 40pt Lightning|iOS Icon 40pt Lightning]]
+- [[_COMMUNITY_iPad Icon 76pt|iPad Icon 76pt]]
+- [[_COMMUNITY_Person Count API|Person Count API]]
+- [[_COMMUNITY_TSConfig Root|TSConfig Root]]
+- [[_COMMUNITY_Holograma Shell Script|Holograma Shell Script]]
+- [[_COMMUNITY_Piper Wrapper Script|Piper Wrapper Script]]
+- [[_COMMUNITY_App Package Root|App Package Root]]
+- [[_COMMUNITY_Trigger Mode Switch|Trigger Mode Switch]]
+- [[_COMMUNITY_Run Web Script|Run Web Script]]
+- [[_COMMUNITY_App Services Package|App Services Package]]
+- [[_COMMUNITY_Skills Package Root|Skills Package Root]]
+- [[_COMMUNITY_STT Package Root|STT Package Root]]
+- [[_COMMUNITY_Vision Package Root|Vision Package Root]]
+- [[_COMMUNITY_Python Package Meta|Python Package Meta]]
+- [[_COMMUNITY_Community 103|Community 103]]
+- [[_COMMUNITY_Community 104|Community 104]]
+- [[_COMMUNITY_Community 105|Community 105]]
+- [[_COMMUNITY_Community 106|Community 106]]
+- [[_COMMUNITY_Community 107|Community 107]]
+- [[_COMMUNITY_Community 108|Community 108]]
+- [[_COMMUNITY_Community 109|Community 109]]
+- [[_COMMUNITY_Community 110|Community 110]]
+- [[_COMMUNITY_Community 111|Community 111]]
+- [[_COMMUNITY_Community 112|Community 112]]
+- [[_COMMUNITY_Community 113|Community 113]]
+- [[_COMMUNITY_Community 114|Community 114]]
+- [[_COMMUNITY_Community 115|Community 115]]
+- [[_COMMUNITY_Community 116|Community 116]]
+=======
 - UNEV Skills Content
 - Frontend NPM Dependencies
 - Provider Config Tests
@@ -132,9 +258,10 @@
 - graphify update
 - README.md
 - eslint
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 
 ## God Nodes (most connected - your core abstractions)
-1. `YoloPersonDetector` - 32 edges
+1. `YoloPersonDetector` - 39 edges
 2. `ConnectionManager` - 30 edges
 3. `HologramStateManager` - 30 edges
 4. `WhisperListener` - 29 edges
@@ -173,11 +300,19 @@
 - **Full iOS AppIcon density catalog (large + small packaging set)** — frontend_src_tauri_icons_ios_appicon_512_2x_ios_appicon_asset_catalog, ios_appicon_small_density_set_packaging, ios_appicon_20x20_notification_slot, ios_appicon_29x29_settings_slot, ios_appicon_40x40_spotlight_slot, ios_appicon_60x60_2x_iphone_retina_slot, ios_appicon_76x76_1x_ipad_baseline_slot, frontend_src_tauri_icons_ios_appicon_512_2x_retina_scale_factor [EXTRACTED 1.00]
 - **Holograma iOS Small Brand Mark System** — frontend_src_tauri_icons_ios_appicon_20x20_1x_app_icon, frontend_src_tauri_icons_ios_appicon_20x20_1x_lightning_bolt_mark, frontend_src_tauri_icons_ios_appicon_20x20_1x_purple_blue_gradient, frontend_src_tauri_icons_ios_appicon_20x20_1x_minimal_flat_style [INFERRED 0.85]
 
+<<<<<<< HEAD
+## Communities (117 total, 22 thin omitted)
+
+### Community 0 - "UNEV Skills Content"
+Cohesion: 0.22
+Nodes (5): ContextBuilder, CameraContextProvider, Registra el último análisis de la cámara (lo llamará VisionService)., test_camera_context_builds_with_injected_builder(), test_camera_context_is_none_without_analysis()
+=======
 ## Communities (123 total, 33 thin omitted)
 
 ### Community 0 - "UNEV Skills Content"
 Cohesion: 0.14
 Nodes (21): Hologram, HologramConnection(), Card(), CardProps, SectionTitle(), Field(), Select(), Textarea() (+13 more)
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 
 ### Community 1 - "Frontend NPM Dependencies"
 Cohesion: 0.12
@@ -187,7 +322,15 @@ Nodes (17): @eslint/js, eslint-plugin-react-hooks, devDependencies, @eslint/js, 
 Cohesion: 0.05
 Nodes (15): Tests del contrato de proveedor/modelo (provider_config).  Cubren la lógica que, Ollama no debe usar un modelo de la nube si solo está LLM_MODEL., Regresión: proveedor explícito 'ollama' nunca cae a la nube por una key vieja., El proveedor 'custom_openai' lee key/modelo de las variables OPENAI_COMPAT_*., Con varias keys, el orden es determinista (AUTODETECT_ORDER), no el del dict., custom_openai necesita key, modelo y base-url; sin base-url no se encola., Si el operador elige openai, no se cambia en silencio a otro proveedor., El modelo de la interfaz (LLM_MODEL) aplica también a OpenAI/NVIDIA. (+7 more)
 
+<<<<<<< HEAD
+### Community 4 - "Call Pipeline Core"
+Cohesion: 0.19
+Nodes (11): _camera_detection_callback(), get_help_text(), handle_command(), UNEV Hologram — Main entry point.  Regla de Oro A: Todas las rutas usan pathlib., Bloquea hasta que toque escuchar, según el modo dinámico actual.      Devuelve `, Handle YOLO detection events from the background camera thread., set_mode(), _wait_for_trigger() (+3 more)
+
+### Community 5 - "FastAPI Main Server"
+=======
 ### Community 3 - "Call Voice Camera Core"
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 Cohesion: 0.09
 Nodes (33): ask_ai(), _camera_detection_callback(), camera_feed_unsubscribe(), chat_to_voice(), get_help_text(), get_latest_camera_jpeg(), handle_command(), main() (+25 more)
 
@@ -195,7 +338,15 @@ Nodes (33): ask_ai(), _camera_detection_callback(), camera_feed_unsubscribe(), c
 Cohesion: 0.11
 Nodes (11): Solicita que run_continuous termine y libere la cámara., Duerme hasta *seconds* o hasta ``stop()`` (no bloquea el apagado)., Draw person and custom-object boxes on a copy of *frame*., Encode *frame* (with overlay) to JPEG and cache it for streaming., Return the most recent annotated frame as JPEG bytes (or None)., Registra un cliente del feed MJPEG (activa la codificación JPEG)., Da de baja un cliente del feed MJPEG (el contador nunca baja de 0).          Al, ¿Hay al menos un cliente viendo el feed anotado? (+3 more)
 
+<<<<<<< HEAD
+### Community 7 - "STT Listener Utils"
+Cohesion: 0.13
+Nodes (18): _hotword_priority(), _normalize_hotword(), Speech-to-text listener using Faster-Whisper and sounddevice.  Regla de Oro A: T, Limpia un término de hotword (paréntesis rotos, puntuación, basura)., Orden: siglas y nombres cortos primero; frases largas al final., Idioma efectivo para STT. Por defecto y en duda: español (``es``).      ``WHISPE, _resolve_stt_language(), Detector de palabra clave (wake word) con openWakeWord.  Regla de Oro A: Todas l (+10 more)
+
+### Community 8 - "Session Toast Context"
+=======
 ### Community 5 - "Frontend Orb Chat UI"
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 Cohesion: 0.16
 Nodes (19): Orb(), OrbProps, useToast(), ChatSocket, useChatSocket(), UseChatSocketOptions, AssistantScreen(), highlighted() (+11 more)
 
@@ -203,7 +354,19 @@ Nodes (19): Orb(), OrbProps, useToast(), ChatSocket, useChatSocket(), UseChatSoc
 Cohesion: 0.09
 Nodes (17): AbstractEventLoop, ConnectionManager, Protocol, Emisor único de eventos hacia los clientes WebSocket.  El `main.py` actual mezcl, Lo único que el manager necesita de un WebSocket (FastAPI lo cumple)., Registro de conexiones + difusión async, seguro ante sockets caídos., Envía *message* a todas las conexiones; descarta las que fallen.          Se tom, Captura el event loop del servidor para emitir desde hilos no-async.          Se (+9 more)
 
+<<<<<<< HEAD
+### Community 10 - "LLM Chat Backends"
+Cohesion: 0.05
+Nodes (82): ask_ai(), chat_to_voice(), Text input loop: keyboard → LLM → TTS., _build_messages(), _candidate_backends(), _chat_with_backend(), _chat_with_claude_native(), _chat_with_ollama() (+74 more)
+
+### Community 11 - "Whisper Transcription"
+Cohesion: 0.14
+Nodes (17): _correct_kiosk_stt(), _hotwords_sources_signature(), Corrige confusiones frecuentes del STT en el dominio del kiosco UNEV.      Whisp, Record from the microphone and transcribe with Faster-Whisper.      Parameters, Load the Faster-Whisper model on first use., Record audio from the default microphone until silence is detected.          Usa, Write a float32 numpy array to a temporary WAV file.          Returns a ``pathli, Hotwords según el contexto del kiosco (cacheadas por mtime de data/).          F (+9 more)
+
+### Community 12 - "Android Launcher Icons"
+=======
 ### Community 7 - "Android Launcher Icons"
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 Cohesion: 0.11
 Nodes (27): mipmap-hdpi density, ic_launcher_foreground.png (hdpi), ic_launcher.png (hdpi), ic_launcher_round.png (hdpi), mipmap-mdpi density, Adaptive icon foreground role, ic_launcher_foreground.png (mdpi), ic_launcher.png (mdpi) (+19 more)
 
@@ -231,14 +394,29 @@ Nodes (22): app, security, windows, build, beforeBuildCommand, beforeDevCommand,
 Cohesion: 0.09
 Nodes (12): _inject_fake_call(), Unificación de la ruta de LLM (Fases 1 y 2 del plan de mejora).  Cubre tres arre, Evita el import perezoso real de ``call`` (efectos globales: chdir, Qt…)., `_candidate_backends` debe ejecutarse en un hilo distinto al del loop.      El l, primario -> otros proveedores con key -> ollama (si responde) -> local_only., Un primario explícito sin key (p. ej. claude_native) sigue siendo el primer inte, Una respuesta en inglés debe entregarse, no convertirse en un error., test_backend_selection_runs_off_event_loop() (+4 more)
 
+<<<<<<< HEAD
+### Community 15 - "Person Detector Core"
+Cohesion: 0.10
+Nodes (13): Solicita que run_continuous termine y libere la cámara., Duerme hasta *seconds* o hasta ``stop()`` (no bloquea el apagado)., Normaliza nombre de clase (sinónimos → etiqueta del operador)., Draw person and custom-object boxes on a copy of *frame*., Encode *frame* (with overlay) to JPEG and cache it for streaming., Return the most recent annotated frame as JPEG bytes (or None)., Registra un cliente del feed MJPEG (activa la codificación JPEG)., Da de baja un cliente del feed MJPEG (el contador nunca baja de 0).          Al (+5 more)
+=======
 ### Community 14 - "Provider Config Resolution"
 Cohesion: 0.22
 Nodes (10): generate_token(), is_path_privileged(), Token de capacidad (opt-in) para proteger los endpoints privilegiados.  El backe, Genera un token de capacidad aleatorio y url-safe., Compara tokens en tiempo constante. Sin ``expected``, la auth está apagada., ¿La petición modifica estado en una ruta protegida?, Decisión final de autorización para una petición.      Pasa si: la auth está apa, request_authorized() (+2 more)
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 
 ### Community 15 - "Setup Wizard Scripts"
 Cohesion: 0.16
 Nodes (19): ConfigUpdate, update_config(), configure_vision(), print_header(), Flujo interactivo para configurar el Cerebro (LLM local o Cloud)., Flujo interactivo para configurar los Oídos (Whisper)., Flujo interactivo para la Visión (YOLOv26 + OpenCV)., Ejecuta el asistente interactivo de configuración completo. (+11 more)
 
+<<<<<<< HEAD
+### Community 22 - "YOLO Custom Objects"
+Cohesion: 0.22
+Nodes (5): Path, Resuelve ``models/<name>`` o ruta absoluta/relativa al proyecto., Load YOLOE (open-vocab). Downloads weights on first run if needed., Configura prompts open-vocab en el modelo único. True si ok., Load custom classes from training_metadata.json and open_vocabulary.txt.
+
+### Community 23 - "Piper TTS Voice"
+Cohesion: 0.28
+Nodes (5): Resuelve un nombre corto a la ruta de un .onnx incluido (0.4.x).          Ej.: `, Bloquea hasta detectar la palabra clave.          Parameters         ----------, Return True if openwakeword and sounddevice are importable., Detecta una palabra clave en streaming con openWakeWord., WakeWordDetector
+=======
 ### Community 17 - "TS App Compiler Options"
 Cohesion: 0.07
 Nodes (26): compilerOptions, allowImportingTsExtensions, erasableSyntaxOnly, jsx, lib, module, moduleDetection, moduleResolution (+18 more)
@@ -246,6 +424,7 @@ Nodes (26): compilerOptions, allowImportingTsExtensions, erasableSyntaxOnly, jsx
 ### Community 18 - "Ollama Backend Probes"
 Cohesion: 0.11
 Nodes (19): _normalize_hotword(), Speech-to-text listener using Faster-Whisper and sounddevice.  Regla de Oro A: T, Limpia un término de hotword (paréntesis rotos, puntuación, basura)., Idioma efectivo para STT. Por defecto y en duda: español (``es``).      ``WHISPE, _resolve_stt_language(), Detector de palabra clave (wake word) con openWakeWord.  Regla de Oro A: Todas l, configure_utf8_stdio(), _env() (+11 more)
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 
 ### Community 19 - "Provider Config Card UI"
 Cohesion: 0.31
@@ -255,6 +434,11 @@ Nodes (12): OLLAMA_FALLBACK_SUGGESTIONS, Props, ProviderConfigCard(), Harness(),
 Cohesion: 0.19
 Nodes (9): _Camera, _Connection, _LLM, _pop_ready_speech(), Protocol, Orquestador de un turno de conversación (el corazón de la Fase 3).  Recibe un pr, Procesa un turno completo y devuelve el texto generado ("" si falló)., Extrae cláusulas/oraciones listas para TTS desde un buffer de stream.      Misma (+1 more)
 
+<<<<<<< HEAD
+### Community 26 - "Custom Object Tests"
+Cohesion: 0.14
+Nodes (11): _FakeBox, _FakeModel, _FakeResult, _FakeXY, _make_detector(), Inferencia única YOLOE: personas + custom en el mismo predict.  Antes había un m, Modelo open-vocab falso: set_classes + un predict con person + custom., test_analyze_frame_single_predict_splits_person_and_custom() (+3 more)
+=======
 ### Community 21 - "STT Hotwords Cache"
 Cohesion: 0.18
 Nodes (15): _fresh_listener(), Hotwords STT: caché por mtime, acotado y alineado al contexto UNEV/Honduras., Groq exige prompt ≤896; tildes no deben empujar el conteo del API., faster-whisper debe recibir language=es, task=transcribe y hotwords., La ruta Groq (config actual) debe inyectar prompt de contexto + español., Vocabulario del kiosco + UNEV + Honduras siempre presente., test_groq_receives_language_and_prompt(), test_hotwords_bounded() (+7 more)
@@ -262,6 +446,7 @@ Nodes (15): _fresh_listener(), Hotwords STT: caché por mtime, acotado y alinead
 ### Community 22 - "Custom Object Interval Tests"
 Cohesion: 0.16
 Nodes (12): _FakeBox, _FakeModel, _FakeResult, _FakeXY, _make_detector(), La inferencia de objetos personalizados (YOLOE) corre en su propio intervalo.  `, Modelo falso: cuenta cuántas veces se le pide inferencia., test_first_call_runs_inference() (+4 more)
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 
 ### Community 23 - "LLM ask_ai Pipeline"
 Cohesion: 0.06
@@ -299,6 +484,43 @@ Nodes (13): dependencies, react, react-dom, react-router-dom, tailwindcss, @tail
 Cohesion: 0.23
 Nodes (7): AppShell(), NAV_ITEMS, useSession(), useTheme(), TeachingScreen(), BoundingBox, CameraWidget()
 
+<<<<<<< HEAD
+### Community 34 - "Camera Capture API"
+Cohesion: 0.13
+Nodes (8): Camera, Release the camera resource., Return True if the camera is currently open., Capture one frame and save it to *output_path*.          Parameters         ----, Return True if OpenCV is importable., Cross-platform wrapper around OpenCV VideoCapture.      Supports both live camer, Open the camera or video source., Read a single frame.  Returns the frame or None on failure.
+
+### Community 35 - "API Models Security"
+Cohesion: 0.15
+Nodes (17): BaseModel, HologramStateManager, Puente thread-safe entre los estados de la IA y los clips del holograma.      La, True cuando el gestor automático tiene un socket TCP activo., BoundingBoxModel, play_speak(), Valida y guarda el contenido de UNEV; recarga la fuente en caliente.      Devuel, SpeakPayload (+9 more)
+
+### Community 36 - "LLM Provider Docs"
+Cohesion: 0.13
+Nodes (16): claude_native (Anthropic) provider, custom_openai provider, groq provider, GROQ_API_KEY shared STT + LLM, Supported LLM providers, local_only (skills only), nvidia provider, ollama local provider (+8 more)
+
+### Community 37 - "Conversation Service"
+Cohesion: 0.19
+Nodes (9): Protocol, _Camera, _Connection, _LLM, _pop_ready_speech(), Orquestador de un turno de conversación (el corazón de la Fase 3).  Recibe un pr, Procesa un turno completo y devuelve el texto generado ("" si falló)., Extrae cláusulas/oraciones listas para TTS desde un buffer de stream.      Misma (+1 more)
+
+### Community 38 - "Hotwords Cache Tests"
+Cohesion: 0.18
+Nodes (14): _fresh_listener(), Hotwords STT: caché por mtime, acotado y alineado al contexto UNEV/Honduras., Groq exige prompt ≤896; tildes no deben empujar el conteo del API., faster-whisper debe recibir language=es, task=transcribe y hotwords., La ruta Groq (config actual) debe inyectar prompt de contexto + español., Vocabulario del kiosco + UNEV + Honduras siempre presente., test_groq_receives_language_and_prompt(), test_hotwords_bounded() (+6 more)
+
+### Community 39 - "YOLO Predict Tests"
+Cohesion: 0.15
+Nodes (8): _FakeBox, _FakeBoxes, _FakeModel, _FakeResult, Opciones de inferencia YOLO local (imgsz / device / prepare_frame).  No cargan u, La sala vacía no debe saltarse la inferencia local., test_detect_persons_passes_imgsz_and_conf(), test_empty_room_still_runs_predict()
+
+### Community 40 - "React Vite Logos"
+Cohesion: 0.14
+Nodes (12): React cyan #00D8FF, React framework identity, Iconify logos React asset, React logo, Vite purple #9135ff, Dark-mode adaptive parentheses, Vite logo, Vite build-tool identity (+4 more)
+
+### Community 41 - "Assistant Orb UI"
+Cohesion: 0.21
+Nodes (11): DetachButton(), Orb(), OrbProps, AssistantScreen(), highlighted(), SUGGESTIONS, requestServerListen, AssistantState (+3 more)
+
+### Community 42 - "PyInstaller Sidecar"
+Cohesion: 0.18
+Nodes (12): Tauri externalBin holograma-backend, packaging/holograma.spec, Kill process tree on shutdown, PyInstaller backend sidecar, Pin Python 3.11 or 3.12, spawn_backend production sidecar path, Windows-first packaging Phase C, Tauri v2 desktop shell (+4 more)
+=======
 ### Community 32 - "Frontend Session Context"
 Cohesion: 0.17
 Nodes (8): _FakeBox, _FakeBoxes, _FakeModel, _FakeResult, Opciones de inferencia YOLO local (imgsz / device / prepare_frame).  No cargan u, La sala vacía no debe saltarse la inferencia local., test_detect_persons_passes_imgsz_and_conf(), test_empty_room_still_runs_predict()
@@ -306,11 +528,25 @@ Nodes (8): _FakeBox, _FakeBoxes, _FakeModel, _FakeResult, Opciones de inferencia
 ### Community 33 - "Config and Utils"
 Cohesion: 0.13
 Nodes (8): Camera, Release the camera resource., Return True if the camera is currently open., Capture one frame and save it to *output_path*.          Parameters         ----, Return True if OpenCV is importable., Cross-platform wrapper around OpenCV VideoCapture.      Supports both live camer, Open the camera or video source., Read a single frame.  Returns the frame or None on failure.
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 
 ### Community 34 - "Camera Feed Component"
 Cohesion: 0.14
 Nodes (12): Holograma / Vite-style purple brand mark, Brand purple #863bff, SVG vector favicon, Shared angular mark geometry with Vite, React cyan #00D8FF, React framework identity, Iconify logos React asset, React logo (+4 more)
 
+<<<<<<< HEAD
+### Community 44 - "Web Services Architecture"
+Cohesion: 0.17
+Nodes (12): Hologram REST endpoints, camera_context.build_camera_context, camera_context (neutral camera context), CameraContextProvider, main.py FastAPI + WebSocket (async web path), requirements.txt dependency stack, FastAPI + uvicorn API stack, faster-whisper STT (+4 more)
+
+### Community 45 - "Hologram State Manager"
+Cohesion: 0.29
+Nodes (7): create_hologram_manager(), discover_devices(), =============================================================  Controlador Pytho, Escanea la red local buscando hologramas MISSYOU en el puerto 50200.      Útil c, Construye el mapeo estado→índice respetando el orden real de la playlist.      L, Construye un HologramStateManager a partir de variables de entorno.      Variabl, resolve_state_clips()
+
+### Community 46 - "Diagnose Script"
+Cohesion: 0.23
+Nodes (17): clean_for_tts(), Remove characters that can sound awkward when read by a TTS engine., Divide el texto en fragmentos listos para TTS.     El primero usa cláusulas para, Speak text using Piper when possible, with OS-native fallbacks.     Utiliza segm, speak(), _split_into_chunks(), check_audio_devices(), check_dependencies() (+9 more)
+=======
 ### Community 35 - "Appearance Skill"
 Cohesion: 0.41
 Nodes (11): check_audio_devices(), check_dependencies(), check_environment(), check_import(), fail(), main(), ok(), test_camera() (+3 more)
@@ -322,22 +558,35 @@ Nodes (12): description, identifier, permissions, $schema, windows, core:default
 ### Community 37 - "Event Mode Skill"
 Cohesion: 0.16
 Nodes (11): _compute_scale_back(), Argumentos comunes de inferencia local (latencia / recursos)., Opcional: reduce el frame grande antes de YOLO (sin apagar la cámara)., Combine custom classes and vocabulary into a single YOLOE text prompt., Detect custom objects using YOLOE text prompts from training data., Normaliza `box.xyxy[0]` de Ultralytics (tensor) o de fakes de test (list)., Return a list of person detections in *frame*.          Each detection is a dict, Factor para reescalar cajas del frame reducido al frame original. (+3 more)
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 
 ### Community 38 - "Whisper STT Models"
 Cohesion: 0.12
 Nodes (4): Exception, Tests de la integración de llm_backend con el contrato de proveedor.  No hacen l, test_humanize_probe_error_maps_common_cases(), test_humanize_probe_error_redacts_leaked_key_in_generic_branch()
 
+<<<<<<< HEAD
+### Community 48 - "WSL PowerShell Bridge"
+Cohesion: 0.20
+Nodes (10): get_piper_install_hint(), play_wav_file(), play_wav_with_windows(), Return a short installation hint for the current platform., Play a WAV file with Windows' built-in SoundPlayer., Play a WAV file on Windows, Linux, or macOS using available system tools., Use Piper TTS and play the generated WAV file on the current OS., Sintetiza y reproduce los fragmentos de voz.      Con Piper usa un *pipeline*: u (+2 more)
+=======
 ### Community 39 - "Honduras Skill Data"
 Cohesion: 0.26
 Nodes (9): CameraState, SessionCtx, SessionProvider(), SessionValue, useConfig(), useHologram(), UseHologramOptions, provider() (+1 more)
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 
 ### Community 40 - "Security Auth Token"
 Cohesion: 0.23
 Nodes (9): AppearanceTheme, initialAppearance(), resolveDark(), ThemeCtx, ThemeProvider(), ThemeValue, ShowToast, ToastCtx (+1 more)
 
+<<<<<<< HEAD
+### Community 50 - "Provider Selection Docs"
+Cohesion: 0.22
+Nodes (10): POST /api/llm/test, GET /api/providers, provider_config.py (single selection locus), AI provider and model contract, providerForm.ts (form→contract mapping), Settings UI (SettingsScreen + ProviderConfigCard), frontend SPA root index.html, React TypeScript Vite template (+2 more)
+=======
 ### Community 41 - "Frontend Theme Toast"
 Cohesion: 0.15
 Nodes (15): get_piper_command_args(), get_piper_model_path(), _piper_available(), _piper_synth_to_wav(), Return the command used to run Piper if it is available., Return the Piper voice model to use, preferring Spanish voices., True si Piper y su modelo de voz están listos para usarse., Sintetiza *text* a un WAV temporal con Piper. Devuelve la ruta (Path) o     ``No (+7 more)
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 
 ### Community 42 - "Detached Windows UI"
 Cohesion: 0.12
@@ -383,9 +632,15 @@ Nodes (22): _correct_kiosk_stt(), _hotword_priority(), _hotwords_sources_signatu
 Cohesion: 0.33
 Nodes (10): _make_tags_counter(), Caché con TTL de `_ollama_ready()`.  Antes, cada mensaje sondeaba /api/tags 2–4, Sustituye `_ollama_tags` por uno que cuenta llamadas y reporta el modelo listo., El servidor responde, pero el modelo configurado no está instalado., _reset_cache(), test_force_bypasses_cache(), test_model_absent_returns_false(), test_probe_failure_returns_false() (+2 more)
 
+<<<<<<< HEAD
+### Community 55 - "WAV Playback Utils"
+Cohesion: 0.29
+Nodes (8): get_piper_command_args(), get_piper_model_path(), _piper_available(), _piper_synth_to_wav(), Return the command used to run Piper if it is available., Return the Piper voice model to use, preferring Spanish voices., True si Piper y su modelo de voz están listos para usarse., Sintetiza *text* a un WAV temporal con Piper. Devuelve la ruta (Path) o     ``No
+=======
 ### Community 55 - "Config Env Loading"
 Cohesion: 0.13
 Nodes (20): Valida y guarda el contenido de UNEV; recarga la fuente en caliente.      Devuel, train_image(), train_vocabulary(), TrainImagePayload, update_unev_content(), VocabularyPayload, clamp_text(), Utilidades de seguridad para Holograma UNEV.  Funciones puras (sin red, sin esta (+12 more)
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 
 ### Community 56 - "Voice Loop Status"
 Cohesion: 0.18
@@ -395,9 +650,15 @@ Nodes (18): get_providers(), Lista de proveedores de IA con metadata segura (sin
 Cohesion: 0.50
 Nodes (4): pause_hologram(), Attempt to terminate any running TTS or audio players on Linux., Pause hologram activity: stop speaking, listening and seeing., stop_all_tts_processes()
 
+<<<<<<< HEAD
+### Community 58 - "Camera Stop Tests"
+Cohesion: 0.17
+Nodes (13): _compute_scale_back(), Argumentos comunes de inferencia local (latencia / recursos)., Opcional: reduce el frame grande antes de YOLO (sin apagar la cámara)., Load the model if it hasn't been loaded yet., Una sola inferencia YOLOE → (personas, objetos custom)., Return a list of person detections in *frame*.          Each detection is a dict, Objetos de clases entrenadas / vocabulario (misma inferencia YOLOE).          Pr, Personas + custom en **una** inferencia YOLOE (+ rostros opcional).          Sól (+5 more)
+=======
 ### Community 58 - "Piper Playback Paths"
 Cohesion: 0.50
 Nodes (4): get_piper_install_hint(), Return a short installation hint for the current platform., Use Piper TTS and play the generated WAV file on the current OS., speak_with_piper()
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 
 ### Community 60 - "Detector Overlay Feed"
 Cohesion: 0.18
@@ -411,9 +672,15 @@ Nodes (4): Build stage (Opus implementation), Model pipeline division of labor, 
 Cohesion: 0.33
 Nodes (8): Black background, Holographic aesthetic, Isometric projection, Lower purple platform, Marketing hero asset, Purple brand accent, Stacked dual-layer composition, Upper silver platform
 
+<<<<<<< HEAD
+### Community 61 - "Camera Context Builder"
+Cohesion: 0.06
+Nodes (38): get_unev_content(), get_voices(), Contenido institucional de UNEV (fuente única editable)., _build_search_index(), get_program_info(), get_university_context(), Pre-calcula índices de texto normalizados en el arranque del servidor/script., route_local_skill() (+30 more)
+=======
 ### Community 63 - "Camera Context Builder"
 Cohesion: 0.18
 Nodes (11): _emit_voice_event(), get_trigger_mode(), Difunde un evento de voz a la WebApp si hay puente WS (main.py)., Solicita una escucha puntual (push-to-talk remoto, p. ej. la WebApp)., Cambia en caliente el modo de activación de voz. Devuelve el modo final., Devuelve el modo de activación de voz actual., Lee ENTER de la terminal y solicita una escucha (push-to-talk en CLI)., request_listen() (+3 more)
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 
 ### Community 65 - "LLM Test Service"
 Cohesion: 0.15
@@ -437,6 +704,35 @@ Nodes (3): build_camera_context(), Construcción del contexto de cámara para el
 
 ### Community 71 - "LLM Provider Selection"
 Cohesion: 0.25
+<<<<<<< HEAD
+Nodes (8): get_trigger_mode(), Solicita una escucha puntual (push-to-talk remoto, p. ej. la WebApp)., Cambia en caliente el modo de activación de voz. Devuelve el modo final., Devuelve el modo de activación de voz actual., request_listen(), set_trigger_mode(), websocket_chat_endpoint(), WebSocket
+
+### Community 63 - "MJPEG Feed Gate Tests"
+Cohesion: 0.24
+Nodes (6): _count_stores(), Gating del feed MJPEG: el detector solo codifica JPEG si alguien mira.  Codifica, Corre run_continuous unos cuadros y cuenta cuántas veces guardó un JPEG., test_run_continuous_encodes_with_subscriber(), test_run_continuous_skips_encode_without_subscribers(), Cross-platform OpenCV camera wrapper.  Regla de Oro A: Todas las rutas usan path
+
+### Community 64 - "Face Analyzer"
+Cohesion: 0.36
+Nodes (3): FaceAnalyzer, Count visible frontal faces using OpenCV's bundled Haar cascade., Return a safe visual summary for a frame.
+
+### Community 65 - "Camera Context Module"
+Cohesion: 0.33
+Nodes (4): build_camera_context(), Construcción del contexto de cámara para el prompt del LLM.  Módulo neutro (sin, Convierte un análisis de cámara en texto para el prompt del LLM.      Si no hay, Proveedor del contexto de cámara para el LLM.  `llm_backend.stream_llm_response`
+
+### Community 66 - "Presence Manager Skill"
+Cohesion: 0.25
+Nodes (7): Cómo funciona, Desarrollo, Empaquetado del backend (PENDIENTE — paso posterior), Holograma UNEV — Shell de escritorio (Tauri v2), Requisitos, Variables de entorno útiles, Widgets desprendibles
+
+### Community 67 - "Voice Trigger WebSocket"
+Cohesion: 0.33
+Nodes (6): _emit_voice_event(), Difunde un evento de voz a la WebApp si hay puente WS (main.py)., Voice input loop: microphone → Whisper → LLM → TTS (Regla B: sounddevice)., voice_loop(), get_stt_status(), Return a human-readable status string for the STT subsystem.
+
+### Community 68 - "Tauri Capabilities"
+Cohesion: 0.33
+Nodes (5): description, identifier, permissions, $schema, windows
+
+### Community 69 - "iOS Icon 20pt Brand"
+=======
 Nodes (8): _dump_raw_reply(), _is_mostly_english(), _postprocess_reply(), Remove reasoning/thinking blocks so they are not spoken by TTS.      Cubre vario, Vuelca la respuesta cruda (CoT incluido) al terminar un turno no-streaming., Heuristic: return True only when the text is clearly English.      Se exige evid, Clean up LLM response: strip thinking blocks and handle language issues., _strip_qwen_thinking()
 
 ### Community 72 - "README.md"
@@ -444,6 +740,7 @@ Cohesion: 0.32
 Nodes (5): _count_stores(), Gating del feed MJPEG: el detector solo codifica JPEG si alguien mira.  Codifica, Corre run_continuous unos cuadros y cuenta cuántas veces guardó un JPEG., test_run_continuous_encodes_with_subscriber(), test_run_continuous_skips_encode_without_subscribers()
 
 ### Community 74 - "iOS Icon 20@1x Brand"
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 Cohesion: 0.53
 Nodes (6): iOS App Icon 20x20@1x, Energy and Power Brand Identity, Lightning Bolt Brand Mark, Minimal Flat Icon Style, iOS 20pt Notification Icon Size, Purple-to-Blue Brand Gradient
 
@@ -487,9 +784,15 @@ Nodes (4): iOS home-screen app icon, Lightning bolt symbol, Purple-to-blue gradi
 Cohesion: 0.50
 Nodes (4): POST /api/llm/test, GET /api/providers, providerForm.ts form mapping, Settings ProviderConfigCard UI
 
+<<<<<<< HEAD
+### Community 80 - "Hologram Pause Stop"
+Cohesion: 0.20
+Nodes (6): camera_feed_subscribe(), camera_feed_unsubscribe(), get_latest_camera_jpeg(), Return the latest annotated camera frame (JPEG bytes) or None., Registra un cliente del feed de video (activa la codificación JPEG).      El det, Da de baja un cliente del feed de video.
+=======
 ### Community 85 - "LLM Token Limit Contract"
 Cohesion: 0.67
 Nodes (4): LLM_MAX_TOKENS centralized limit, AI provider and model contract, llm_backend.py, provider_config.py
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 
 ### Community 86 - "iOS Icon 20@2x Brand"
 Cohesion: 0.83
@@ -507,24 +810,59 @@ Nodes (3): Purple-to-blue gradient, iOS AppIcon 40pt@2x, Lightning bolt glyph
 Cohesion: 0.50
 Nodes (3): Purple-blue gradient fill, 76x76@1x iPad AppIcon size, Lightning bolt icon glyph
 
+<<<<<<< HEAD
+### Community 105 - "Community 105"
+Cohesion: 0.33
+Nodes (6): get_powershell_command(), Return a PowerShell executable path on Windows or WSL if available., Run a PowerShell script and return True when it succeeds., Use Windows built-in speech synthesis when Piper is unavailable., run_powershell(), speak_with_windows_voice()
+
+### Community 106 - "Community 106"
+Cohesion: 0.33
+Nodes (6): is_wsl(), Return True when running inside Windows Subsystem for Linux., Use lightweight Linux TTS fallbacks when Piper is unavailable., Reproduce un fragmento con el TTS nativo del SO (fallback sin Piper)., _speak_chunk_os(), speak_with_linux_tts()
+
+### Community 108 - "Community 108"
+Cohesion: 0.33
+Nodes (6): Backend selection outside event loop, LLM_PROVIDER authoritative selection, OLLAMA_READY_TTL_SECONDS (cached probe), select_backend, stream_llm_response (WebSocket async path), LLM_PROVIDER (authoritative provider choice)
+
+### Community 109 - "Community 109"
+Cohesion: 0.40
+Nodes (3): Etiquetas custom (+ sinónimos) sin mezclar las de persona., Prompts de set_classes: persona(s) + custom/vocabulario., Lista activa de prompts (compat / logging).
+
+### Community 110 - "Community 110"
+Cohesion: 0.50
+Nodes (4): pause_hologram(), Attempt to terminate any running TTS or audio players on Linux., Pause hologram activity: stop speaking, listening and seeing., stop_all_tts_processes()
+=======
 ### Community 90 - "Detect Person Once"
 Cohesion: 0.33
 Nodes (3): Load the YOLO model.  Downloads weights automatically on first run., Load the model if it hasn't been loaded yet., Load custom classes from training_metadata.json and open_vocabulary.txt.
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 
 ## Knowledge Gaps
 - **216 isolated node(s):** `name`, `private`, `version`, `type`, `dev` (+211 more)
   These have ≤1 connection - possible missing edges or undocumented components.
+<<<<<<< HEAD
+- **22 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+=======
 - **33 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
+<<<<<<< HEAD
+- **Why does `YoloPersonDetector` connect `Person Detector Core` to `Face Analyzer`, `Camera Capture API`, `Call Pipeline Core`, `FastAPI Main Server`, `Trigger Mode Switch`, `STT Listener Utils`, `Community 109`, `Diagnose Script`, `Person Count API`, `YOLO Custom Objects`, `Camera Stop Tests`?**
+  _High betweenness centrality (0.037) - this node is a cross-community bridge._
+- **Why does `HologramFanController` connect `Hologram Fan Controller` to `Hologram State Manager`?**
+  _High betweenness centrality (0.032) - this node is a cross-community bridge._
+- **Why does `HologramStateManager` connect `API Models Security` to `Hologram Fan Controller`, `FastAPI Main Server`, `Hologram State Manager`, `Setup Scripts Config`, `LLM Service Test API`, `Reply Postprocess CoT`?**
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+=======
 - **Why does `YoloPersonDetector` connect `YOLO Person Detector` to `Config and Utils`, `Appearance Skill`, `Call Voice Camera Core`, `Face Analyzer OpenCV`, `Event Mode Skill`, `Graphify Agent Pipeline`, `Ollama Backend Probes`, `Detect Person Once`, `.detect_person_once`?**
   _High betweenness centrality (0.039) - this node is a cross-community bridge._
 - **Why does `HologramFanController` connect `Hologram Fan Controller` to `LLM Test Service`, `Hologram Discovery Factory`, `Detector Overlay Feed`?**
   _High betweenness centrality (0.029) - this node is a cross-community bridge._
 - **Why does `WhisperListener` connect `Training Metadata API` to `LLM Test Service`, `Call Voice Camera Core`, `FastAPI Main Routes`, `Setup Wizard Scripts`, `Ollama Backend Probes`, `STT Hotwords Cache`, `Config Env Loading`?**
   _High betweenness centrality (0.023) - this node is a cross-community bridge._
+>>>>>>> b659647059d0e1847f7f9a60e119b4ebca09e02f
 - **Are the 2 inferred relationships involving `YoloPersonDetector` (e.g. with `Camera` and `FaceAnalyzer`) actually correct?**
   _`YoloPersonDetector` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 14 inferred relationships involving `ConnectionManager` (e.g. with `FastAPI` and `BoundingBoxModel`) actually correct?**

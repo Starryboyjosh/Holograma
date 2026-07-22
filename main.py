@@ -324,7 +324,7 @@ def get_config():
         "WHISPER_MODEL": config_data.get("WHISPER_MODEL", "medium"),
         "HOLOGRAM_INPUT": config_data.get("HOLOGRAM_INPUT", "voice"),
         "HOLOGRAM_CAMERA": config_data.get("HOLOGRAM_CAMERA", "1"),
-        "YOLO_MODEL": config_data.get("YOLO_MODEL", "yolo26n.pt"),
+        "YOLO_MODEL": config_data.get("YOLO_MODEL", "yoloe-26n-seg.pt"),
         "YOLO_INTERVAL_SECONDS": config_data.get("YOLO_INTERVAL_SECONDS", "1.0"),
         "LLM_PROVIDER": os.getenv("LLM_PROVIDER")
         or config_data.get("LLM_PROVIDER", "openrouter"),
@@ -423,7 +423,7 @@ def update_config(payload: ConfigUpdate):
         "WHISPER_MODEL": "small",
         "HOLOGRAM_INPUT": "voice",
         "HOLOGRAM_CAMERA": "1",
-        "YOLO_MODEL": "yolo26n.pt",
+        "YOLO_MODEL": "yoloe-26n-seg.pt",
         "YOLO_INTERVAL_SECONDS": "0.6",
         "LLM_PROVIDER": "openrouter",
         "LLM_MODEL": "meta-llama/llama-3.3-70b-instruct",
@@ -571,10 +571,13 @@ class CameraToggle(BaseModel):
 
 @app.post("/api/camera")
 def set_camera(payload: CameraToggle):
-    """Enciende o **apaga** la cámara liberando el dispositivo.
+    """Enciende o apaga la cámara.
 
-    Apagar no solo oculta el video: detiene el hilo de detección para que la
-    cámara quede libre (la luz se apaga, otra app puede usarla).
+    Por defecto, *apagar en la UI* **no** detiene el hilo YOLO: el holograma
+    sigue viendo (uniforme, presencia) para el LLM; solo deja de servir el feed
+    MJPEG cuando no hay suscriptores. Para liberar el dispositivo de verdad
+    (LED apagado, otra app puede usar la cámara) define
+    ``HOLOGRAM_CAMERA_RELEASE_ON_UI_OFF=1``.
     """
     try:
         if payload.enabled:
@@ -582,9 +585,20 @@ def set_camera(payload: CameraToggle):
 
             start_camera_thread()
         else:
-            from call import stop_camera_thread
+            release = os.getenv("HOLOGRAM_CAMERA_RELEASE_ON_UI_OFF", "0").lower() in (
+                "1",
+                "true",
+                "yes",
+            )
+            if release:
+                from call import stop_camera_thread
 
-            stop_camera_thread()
+                stop_camera_thread()
+            else:
+                print(
+                    "[Cámara] UI ocultó/apagó el visor; detección YOLO sigue "
+                    "activa para el LLM (HOLOGRAM_CAMERA_RELEASE_ON_UI_OFF=0)."
+                )
         return {"status": "ok", "enabled": payload.enabled}
     except Exception as e:
         return {"status": "error", "message": redact_secrets(e, os.environ)}

@@ -7,10 +7,34 @@ import json
 # --- Segmentación de texto para TTS (fuente única) ---
 # Compartido por ``call._split_into_chunks`` y ``app.services.conversation``
 # para que la heurística de latencia no diverja entre ambos caminos.
-_CLAUSE_RE = re.compile(r"(?<=[.!?;:—])\s+")
+_CLAUSE_RE = re.compile(r"(?<=[.!?;:—,])\s+")
 _SENTENCE_RE = re.compile(r"(?<=[.!?])\s+")
-_MIN_FIRST_CHUNK_LEN = 23  # Latencia baja inicial (ej. "Hola, buenas tardes.")
-_MIN_SENTENCE_LEN = 30  # Oración promedio
+# Primer fragmento más corto → el TTS arranca antes (latencia a primer audio).
+_MIN_FIRST_CHUNK_LEN = 16
+_MIN_SENTENCE_LEN = 28
+
+
+def pop_ready_speech(buf: str, first_chunk: bool) -> tuple[list[str], str, bool]:
+    """Extrae cláusulas/oraciones listas para TTS desde un buffer de stream.
+
+    El primer fragmento usa cláusulas (coma/punto) con umbral bajo; el resto
+    oraciones. Devuelve ``(piezas, buffer_restante, first_chunk)``.
+    """
+    ready: list[str] = []
+    while buf:
+        sep = _CLAUSE_RE if first_chunk else _SENTENCE_RE
+        min_len = _MIN_FIRST_CHUNK_LEN if first_chunk else _MIN_SENTENCE_LEN
+        matches = list(sep.finditer(buf))
+        if not matches:
+            break
+        match = matches[0]
+        head = buf[: match.end()].strip()
+        if len(head) < min_len:
+            break
+        ready.append(head)
+        buf = buf[match.end() :]
+        first_chunk = False
+    return ready, buf, first_chunk
 
 
 def _env(name: str, default: str = "") -> str:

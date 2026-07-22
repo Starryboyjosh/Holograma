@@ -12,7 +12,7 @@ Asistente multimodal para la Universidad Virtual (UNEV): LLM, visión (presencia
 | `llm_backend.py` | Streaming/fallback de proveedores, CoT en terminal, timeouts unificados |
 | `provider_config.py` | Contrato de proveedores (`LLM_PROVIDER`, keys, modelos) |
 | `camera_context.py` | Contexto de cámara neutro (sin acoplar CLI ↔ LLM) |
-| `vision/` | Cámara OpenCV + YOLO local (`yolo26n` / YOLOE-26) |
+| `vision/` | Cámara OpenCV + YOLOE open-vocab (`yoloe-26n-seg`) |
 | `stt/` | Faster-Whisper + sounddevice |
 | `skills/` + `data/` | Router local, UNEV, Honduras |
 | `hologram_controller.py` | Ventilador holográfico TCP (opcional) |
@@ -77,7 +77,7 @@ Todo el catálogo de variables está en **`.env.example`**. Lo mínimo para un k
 | `LLM_MAX_TOKENS` | Límite de salida unificado (default `450`) para todos los backends |
 | `LLM_REQUEST_TIMEOUT` | Timeout HTTP en la nube (default `90` s); evita colgar la voz |
 | `LLM_LOG_COT` | CoT/razonamiento en terminal (`1` por defecto; `0` para silenciar) |
-| `HOLOGRAM_CAMERA` / `YOLO_MODEL` | Visión (`1` + `models/yolo26n.pt`) |
+| `HOLOGRAM_CAMERA` / `YOLO_MODEL` | Visión (`1` + `yoloe-26n-seg.pt`) |
 | `YOLO_IMGSZ` / `YOLO_INTERVAL_SECONDS` | Coste de detección local |
 | `WHISPER_MODEL` / `WHISPER_BEAM_SIZE` | STT |
 | `TTS_BACKEND` / `HOLOGRAM_TTS_STREAM` | Piper u OS; TTS por cláusulas en web |

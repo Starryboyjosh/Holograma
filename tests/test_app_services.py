@@ -149,13 +149,17 @@ def test_llm_service_passes_camera_context_through():
 # CameraContextProvider
 # --------------------------------------------------------------------------- #
 def test_camera_context_builds_with_injected_builder():
-    provider = CameraContextProvider(builder=lambda a: f"CTX:{a['person_count']}")
+    provider = CameraContextProvider(
+        builder=lambda a, include_objects=False: f"CTX:{a['person_count']}"
+    )
     provider.update({"person_count": 3})
     assert provider.build_context() == "CTX:3"
 
 
 def test_camera_context_is_none_without_analysis():
-    provider = CameraContextProvider(builder=lambda a: "no debería llamarse")
+    provider = CameraContextProvider(
+        builder=lambda a, include_objects=False: "no debería llamarse"
+    )
     assert provider.build_context() is None
 
 
@@ -232,7 +236,9 @@ def test_conversation_tts_streams_clauses_before_llm_finishes(monkeypatch):
 def test_conversation_injects_camera_context_into_llm():
     record: dict = {}
     conn = RecordingConnection()
-    camera = CameraContextProvider(builder=lambda a: f"CTX:{a['person_count']}")
+    camera = CameraContextProvider(
+        builder=lambda a, include_objects=False: f"CTX:{a['person_count']}"
+    )
     camera.update({"person_count": 2})
     service = ConversationService(FakeLLM(["x"], record=record), conn, camera=camera)
 

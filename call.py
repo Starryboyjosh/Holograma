@@ -30,7 +30,12 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from hologram_controller import create_hologram_manager
-from llm_backend import generate_reply, get_backend_status, get_selected_backend
+from llm_backend import (
+    generate_reply,
+    get_backend_status,
+    get_selected_backend,
+    iter_reply_tokens,
+)
 from skills.appearance import get_cordial_observation
 from skills.event_mode import get_greeting, get_system_prompt
 from skills.presence import PresenceManager
@@ -352,22 +357,100 @@ def play_wav_file(wav_path):
     return False
 
 
+# Piper en proceso: cargar el modelo UNA vez evita el cold-start del subprocess
+# en cada frase (principal causa del hueco LLM→voz).
+_piper_voice = None
+_piper_voice_lock = threading.Lock()
+_piper_voice_model_path: str | None = None
+
+
 def _piper_available():
     """True si Piper y su modelo de voz están listos para usarse."""
     try:
-        if not get_piper_command_args():
-            return False
         model_path = get_piper_model_path()
-        return Path(model_path).exists() and Path(f"{model_path}.json").exists()
+        if not Path(model_path).exists() or not Path(f"{model_path}.json").exists():
+            return False
+        # API Python in-process o CLI.
+        if importlib.util.find_spec("piper") is not None:
+            return True
+        return bool(get_piper_command_args())
     except Exception:
         return False
 
 
-def _piper_synth_to_wav(text):
-    """Sintetiza *text* a un WAV temporal con Piper. Devuelve la ruta (Path) o
-    ``None`` si Piper no está disponible o falla. NO reproduce: separar síntesis
-    de reproducción permite ir generando el siguiente fragmento mientras suena el
-    actual (pipeline), evitando la pausa tras cada punto."""
+def _get_piper_voice():
+    """Carga (o reutiliza) ``PiperVoice`` del paquete ``piper`` en este proceso."""
+    global _piper_voice, _piper_voice_model_path
+    model_path = str(Path(get_piper_model_path()).resolve())
+    with _piper_voice_lock:
+        if _piper_voice is not None and _piper_voice_model_path == model_path:
+            return _piper_voice
+        try:
+            from piper import PiperVoice
+        except ImportError:
+            return None
+        t0 = time.monotonic()
+        if not _is_quiet():
+            print(f"[TTS] Cargando Piper in-process: {Path(model_path).name}...")
+        try:
+            # espeak_data del bundle local si existe.
+            espeak = BASE_DIR / "piper" / "piper" / "espeak-ng-data"
+            kwargs = {}
+            if espeak.is_dir():
+                kwargs["espeak_data_dir"] = str(espeak)
+            _piper_voice = PiperVoice.load(model_path, **kwargs)
+            _piper_voice_model_path = model_path
+            if not _is_quiet():
+                print(f"[TTS] Piper listo en {time.monotonic() - t0:.2f}s (reutilizado en cada frase).")
+            return _piper_voice
+        except Exception as error:
+            if not _is_quiet():
+                print(f"[TTS] No se pudo cargar Piper in-process ({error}); usaré CLI.")
+            _piper_voice = None
+            _piper_voice_model_path = None
+            return None
+
+
+def warm_tts():
+    """Precarga Piper al arrancar el bucle de voz (evita el 1.er hueco largo)."""
+    if not _piper_available():
+        return
+    try:
+        _get_piper_voice()
+    except Exception:
+        pass
+
+
+def _piper_synth_to_wav_python(text):
+    """Síntesis in-process con PiperVoice → WAV temporal. None si no aplica."""
+    voice = _get_piper_voice()
+    if voice is None:
+        return None
+    text = (text or "").strip()
+    if not text:
+        return None
+
+    temp_wav = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
+    wav_path = Path(temp_wav.name)
+    temp_wav.close()
+    t0 = time.monotonic()
+    try:
+        import wave
+
+        with wave.open(str(wav_path), "wb") as wav_file:
+            voice.synthesize_wav(text, wav_file)
+        if not _is_quiet():
+            print(f"[TTS] synth in-process {len(text)} chars en {time.monotonic() - t0:.2f}s")
+        return wav_path
+    except Exception as error:
+        if not _is_quiet():
+            print(f"[TTS] Falló síntesis in-process ({error}); probando CLI.")
+        wav_path.unlink(missing_ok=True)
+        return None
+
+
+def _piper_synth_to_wav_cli(text):
+    """Síntesis vía subprocess (fallback si no hay API Python)."""
     piper_command_args = get_piper_command_args()
     if not piper_command_args:
         return None
@@ -395,6 +478,7 @@ def _piper_synth_to_wav(text):
                 paths.append(current_ld_path)
             subprocess_env["LD_LIBRARY_PATH"] = os.pathsep.join(paths)
 
+        t0 = time.monotonic()
         result = subprocess.run(
             [
                 *piper_command_args,
@@ -420,6 +504,8 @@ def _piper_synth_to_wav(text):
             wav_path.unlink(missing_ok=True)
             return None
 
+        if not _is_quiet():
+            print(f"[TTS] synth CLI {len(text)} chars en {time.monotonic() - t0:.2f}s")
         return wav_path
     except subprocess.TimeoutExpired:
         if not _is_quiet():
@@ -431,6 +517,24 @@ def _piper_synth_to_wav(text):
             print(f"Error generando voz con Piper: {error}")
         wav_path.unlink(missing_ok=True)
         return None
+
+
+def _piper_synth_to_wav(text):
+    """Sintetiza *text* a un WAV temporal con Piper. Devuelve la ruta (Path) o
+    ``None`` si Piper no está disponible o falla. NO reproduce: separar síntesis
+    de reproducción permite ir generando el siguiente fragmento mientras suena el
+    actual (pipeline), evitando la pausa tras cada punto.
+
+    Prefiere la API Python in-process (modelo cargado una vez); si no, CLI.
+    """
+    if not (text or "").strip():
+        return None
+    prefer_cli = os.getenv("PIPER_FORCE_CLI", "").lower() in ("1", "true", "yes")
+    if not prefer_cli:
+        wav = _piper_synth_to_wav_python(text)
+        if wav is not None:
+            return wav
+    return _piper_synth_to_wav_cli(text)
 
 
 def speak_with_piper(text):
@@ -524,6 +628,7 @@ from utils import (
     _MIN_FIRST_CHUNK_LEN,
     _MIN_SENTENCE_LEN,
     _SENTENCE_RE,
+    pop_ready_speech,
 )
 
 
@@ -646,9 +751,11 @@ def _render_chunks(chunks):
                 wav_path.unlink(missing_ok=True)
 
 
-def speak(text, blocking=True):
+def speak(text, blocking=True, *, end_idle=True):
     """Speak text using Piper when possible, with OS-native fallbacks.
-    Utiliza segmentación inteligente por cláusulas y oraciones para streaming de audio.
+
+    Utiliza segmentación inteligente por cláusulas y oraciones.
+    ``end_idle=False`` deja el holograma en "speaking" (turno multi-fragmento).
     """
     if _hologram_paused:
         return
@@ -671,13 +778,87 @@ def speak(text, blocking=True):
             _render_chunks(chunks)
         finally:
             speak_lock.release()
-            hologram.set_state("idle")
+            if end_idle:
+                hologram.set_state("idle")
 
     if blocking:
         _run()
     else:
         # No-bloqueante (p. ej. web): reproducir en un hilo; libera el lock al final.
         threading.Thread(target=_run, daemon=True).start()
+
+
+def speak_streaming_from_llm(token_iter) -> str:
+    """Habla cláusulas en cuanto el LLM las produce (sin esperar al final).
+
+    Mantiene el lock/estado de voz durante todo el turno para no parpadear
+    a idle entre frases. Devuelve el texto completo post-procesado.
+    """
+    from llm_backend import _postprocess_reply  # postproceso ligero al final
+
+    if _hologram_paused:
+        return ""
+
+    acquired = speak_lock.acquire(blocking=True)
+    if not acquired:
+        return ""
+
+    hologram.set_state("speaking")
+    speech_buf = ""
+    first = True
+    parts: list[str] = []
+    spoke_any = False
+    t_first_audio = None
+    t0 = time.monotonic()
+
+    try:
+        for token in token_iter:
+            if _hologram_paused:
+                break
+            if not token:
+                continue
+            parts.append(token)
+            speech_buf += token
+            # No limpiar todo el buffer (rompería cláusulas a medias); solo
+            # strip de espacios extremos al cortar.
+            ready, speech_buf, first = pop_ready_speech(speech_buf, first)
+            for piece in ready:
+                piece = clean_for_tts(piece)
+                if not piece:
+                    continue
+                if t_first_audio is None:
+                    t_first_audio = time.monotonic()
+                    if not _is_quiet():
+                        print(
+                            f"[TTS] primer audio a {t_first_audio - t0:.2f}s "
+                            f"desde inicio del stream LLM",
+                            flush=True,
+                        )
+                # _render_chunks ya imprime "Speaking chunk"
+                _render_chunks([piece])
+                spoke_any = True
+
+        remainder = clean_for_tts(speech_buf)
+        if remainder and not _hologram_paused:
+            if t_first_audio is None:
+                t_first_audio = time.monotonic()
+                if not _is_quiet():
+                    print(
+                        f"[TTS] primer audio a {t_first_audio - t0:.2f}s "
+                        f"(resto final)",
+                        flush=True,
+                    )
+            _render_chunks([remainder])
+            spoke_any = True
+    finally:
+        speak_lock.release()
+        hologram.set_state("idle")
+
+    full = _postprocess_reply("".join(parts))
+    if not spoke_any and full.strip() and not _hologram_paused:
+        # Fallback: una sola pasada si no hubo cláusulas.
+        speak(full)
+    return full
 
 
 # ======================================================================
@@ -687,15 +868,21 @@ def speak(text, blocking=True):
 _last_camera_analysis = {}
 _visual_keywords = [
     "ves",
+    "ver ",
+    "verme",
+    "verte",
     "mir",
     "cámar",
+    "camar",
     "frent",
     "describe",
     "descríbeme",
     "qué hay",
+    "que hay",
     "qué ves",
     "que ves",
-    "que hay",
+    "qué llevo",
+    "que llevo",
     "delante",
     "enfrente",
     "visible",
@@ -710,6 +897,14 @@ _visual_keywords = [
     "yolo",
     "persona",
     "gente",
+    "uniforme",
+    "vestiment",
+    "vestido",
+    "ropa",
+    "camis",
+    "puedes ver",
+    "me ves",
+    "nos ves",
 ]
 
 
@@ -743,6 +938,46 @@ def _is_greeting(user_input):
     return False
 
 
+def _camera_context_for_prompt(user_input: str) -> str | None:
+    """Contexto de cámara listo para el LLM (misma lógica en ask_ai y stream)."""
+    visual_q = _is_visual_question(user_input)
+
+    # Pregunta visual + cámara configurada: no dejar el hilo YOLO apagado
+    # (la UI a veces llama /api/camera enabled=false y se pierde el uniforme).
+    if visual_q and os.getenv("HOLOGRAM_CAMERA", "0") == "1":
+        ensure_camera_for_vision(wait_s=2.5)
+
+    camera_context = None
+    if _last_camera_analysis:
+        # Objetos/uniforme solo si el usuario pregunta por ellos (no en saludos).
+        camera_context = _build_camera_context(
+            _last_camera_analysis, include_objects=visual_q
+        )
+    elif os.getenv("HOLOGRAM_CAMERA", "0") == "1":
+        if not is_camera_detection_running():
+            camera_context = (
+                "La cámara/visión está apagada o no entrega frames. "
+                "Di con naturalidad que no puedes ver ahora (pide encender la cámara "
+                "en la interfaz). No inventes uniformes ni personas."
+            )
+        else:
+            camera_context = (
+                "Aún no hay un análisis visual reciente (el detector está arrancando). "
+                "No inventes lo que ves; si preguntan por el uniforme u objetos, "
+                "di con naturalidad que ahora mismo no puedes confirmarlo."
+            )
+
+    if camera_context and visual_q and not _is_quiet():
+        co = (_last_camera_analysis or {}).get("custom_objects") or []
+        labels = [o.get("label") for o in co if isinstance(o, dict)]
+        print(
+            f"[Cámara→LLM] running={is_camera_detection_running()} "
+            f"custom={labels or '[]'} "
+            f"persons={(_last_camera_analysis or {}).get('person_count', 0)}"
+        )
+    return camera_context
+
+
 def ask_ai(user_input, mode=None):
     mode = mode or CURRENT_MODE
 
@@ -751,16 +986,31 @@ def ask_ai(user_input, mode=None):
         if local_response:
             return local_response
 
-    camera_context = None
-    if _last_camera_analysis:
-        camera_context = _build_camera_context(_last_camera_analysis)
-
     return generate_reply(
         user_input=user_input,
         system_prompt=get_system_prompt(mode),
         university_context=get_university_context(),
-        camera_context=camera_context,
+        camera_context=_camera_context_for_prompt(user_input),
     )
+
+
+def ask_ai_and_speak(user_input, mode=None) -> str:
+    """Stream LLM + TTS por cláusulas (menor latencia a primera voz)."""
+    mode = mode or CURRENT_MODE
+
+    if get_selected_backend() == "local_only":
+        local_response = route_local_skill(user_input)
+        if local_response:
+            speak(local_response)
+            return local_response
+
+    tokens = iter_reply_tokens(
+        user_input=user_input,
+        system_prompt=get_system_prompt(mode),
+        university_context=get_university_context(),
+        camera_context=_camera_context_for_prompt(user_input),
+    )
+    return speak_streaming_from_llm(tokens)
 
 
 # ======================================================================
@@ -886,12 +1136,19 @@ def _camera_detection_callback(event, count, analysis=None):
     if _hologram_paused:
         return
     analysis = analysis or {}
+    # Siempre refrescar el análisis para el LLM (también en analysis_update /
+    # person_still_present). Sin esto el contexto se congelaba en el primer frame.
     _last_camera_analysis = analysis
     # Presencia para el modo presentación (se actualiza aunque la IA esté ocupada).
     if event in ("person_entered", "group_detected"):
         _person_present = True
     elif event == "person_left":
         _person_present = False
+    elif event == "analysis_update":
+        if count and count > 0:
+            _person_present = True
+        # Solo actualiza contexto; no saluda ni habla.
+        return
     if ai_busy or speak_lock.locked():
         if event == "person_left":
             presence_manager.force_person_left()
@@ -916,30 +1173,31 @@ def _camera_detection_callback(event, count, analysis=None):
         print("[Cámara] La persona se fue. Vuelvo a modo espera.")
 
     elif event == "custom_object_detected":
+        # Por defecto NO anunciar en voz: el STT se oye a sí mismo y el
+        # visitante no pidió el uniforme. Activa con HOLOGRAM_ANNOUNCE_CUSTOM=1.
+        if os.getenv("HOLOGRAM_ANNOUNCE_CUSTOM", "0").lower() not in (
+            "1",
+            "true",
+            "yes",
+        ):
+            return
         custom_objs = analysis.get("custom_objects", [])
-        labels = list({o["label"] for o in custom_objs})
-
-        # Cooldown per class to avoid repetitive announcements
+        labels = list({o["label"] for o in custom_objs if o.get("label")})
         now = time.time()
         labels_to_speak = [
             lbl for lbl in labels if now - _last_custom_speak_times.get(lbl, 0) > 60.0
         ]
+        if not labels_to_speak:
+            return
+        for lbl in labels_to_speak:
+            _last_custom_speak_times[lbl] = now
+        desc = ", ".join(labels_to_speak[:3])
 
-        if labels_to_speak:
-            for lbl in labels_to_speak:
-                _last_custom_speak_times[lbl] = now
-            desc = ", ".join(labels_to_speak[:3])
+        def _delayed_speak():
+            time.sleep(1.0)
+            speak(f"¡Mira, detecto a {desc}!", blocking=False)
 
-            # Delay slightly to avoid lock collision if person_entered fired simultaneously
-            def _delayed_speak():
-                import time
-
-                time.sleep(1.0)
-                speak(f"¡Mira, detecto a {desc}!", blocking=False)
-
-            import threading
-
-            threading.Thread(target=_delayed_speak, daemon=True).start()
+        threading.Thread(target=_delayed_speak, daemon=True).start()
 
 
 def start_camera_thread():
@@ -987,8 +1245,12 @@ def stop_camera_thread(timeout=5.0):
 
     Señala la parada cooperativa del detector; el bucle sale y el context manager
     de ``Camera`` libera el dispositivo. Idempotente.
+
+    Importante: al parar se resetea presencia y el último análisis. Si no, el modo
+    presentación se queda con ``_person_present=True`` y sigue escuchando ruido
+    (alucinaciones STT), y el LLM cree que hay visión cuando no hay.
     """
-    global _camera_detector, _camera_thread
+    global _camera_detector, _camera_thread, _last_camera_analysis, _person_present
 
     detector = _camera_detector
     thread = _camera_thread
@@ -999,8 +1261,35 @@ def stop_camera_thread(timeout=5.0):
 
     _camera_thread = None
     _camera_detector = None
+    _person_present = False
+    _last_camera_analysis = {}
     print("[Cámara] Detección detenida y cámara liberada.")
     return True
+
+
+def is_camera_detection_running() -> bool:
+    """True si el hilo YOLO está vivo."""
+    t = _camera_thread
+    return t is not None and t.is_alive()
+
+
+def ensure_camera_for_vision(wait_s: float = 2.5) -> bool:
+    """Si ``HOLOGRAM_CAMERA=1`` y el hilo murió, lo relanza (p. ej. tras apagar UI).
+
+    Espera un poco a un primer análisis para preguntas visuales.
+    """
+    if os.getenv("HOLOGRAM_CAMERA", "0") != "1":
+        return False
+    if is_camera_detection_running():
+        return True
+    print("[Cámara] Visión requerida pero el hilo estaba parado; reiniciando…")
+    start_camera_thread()
+    deadline = time.time() + max(0.0, wait_s)
+    while time.time() < deadline:
+        if _last_camera_analysis:
+            return True
+        time.sleep(0.15)
+    return is_camera_detection_running()
 
 
 # ======================================================================
@@ -1221,6 +1510,10 @@ def voice_loop():
     if not _is_quiet():
         print("[STT] Preparando modelo de voz...")
     listener._load_model()
+    # Precargar Piper para no pagar el cold-start en la 1.ª respuesta.
+    if not _is_quiet():
+        print("[TTS] Preparando motor de voz...")
+    warm_tts()
 
     ai_busy = True
     _voice_loop_running = True
@@ -1286,8 +1579,8 @@ def voice_loop():
 
                 print("The AI is thinking...")
                 hologram.set_state("thinking")
-                reply = ask_ai(user_input, CURRENT_MODE)
-                speak(reply)
+                # Stream LLM + habla por cláusulas (no espera a la respuesta completa).
+                ask_ai_and_speak(user_input, CURRENT_MODE)
             finally:
                 pass  # ai_busy se controla al inicio del loop
     finally:

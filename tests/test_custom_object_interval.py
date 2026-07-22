@@ -1,9 +1,7 @@
-"""La inferencia de objetos personalizados (YOLOE) corre en su propio intervalo.
+"""Inferencia única YOLOE: personas + custom en el mismo predict.
 
-`detect_custom_objects` es caro y antes se ejecutaba en cada cuadro desde
-`analyze_frame`. Ahora se limita a `HOLOGRAM_CUSTOM_OBJECT_INTERVAL` segundos y
-reusa el último resultado entre corridas; así el bucle de personas (~30 fps) no
-arrastra el coste de los objetos custom (Fase 4).
+Antes había un modelo COCO + YOLOE aparte con throttle. Ahora un solo
+``yoloe-26n-seg`` hace ambas cosas en ``analyze_frame`` / ``_detect_all``.
 """
 
 import vision.person_detector as pd
@@ -31,68 +29,123 @@ class _FakeResult:
 
 
 class _FakeModel:
-    """Modelo falso: cuenta cuántas veces se le pide inferencia."""
+    """Modelo open-vocab falso: set_classes + un predict con person + custom."""
 
     def __init__(self):
         self.predict_calls = 0
+        self.classes = None
 
-    def predict(self, frame, text=None, verbose=False, **kwargs):
-        # Acepta imgsz/conf/device/half del detector optimizado.
+    def set_classes(self, names, pe=None):  # noqa: ARG002
+        self.classes = list(names)
+
+    def get_text_pe(self, names):  # noqa: ARG002
+        return None
+
+    def predict(self, frame, **kwargs):  # noqa: ARG002
         self.predict_calls += 1
-        return [_FakeResult([_FakeBox(0.9, 0, [1, 2, 3, 4])], {0: "botella"})]
+        # cls 0 = person, cls 1 = botella (según set_classes)
+        return [
+            _FakeResult(
+                [
+                    _FakeBox(0.95, 0, [1, 2, 3, 4]),
+                    _FakeBox(0.9, 1, [10, 20, 30, 40]),
+                ],
+                {0: "person", 1: "botella"},
+            )
+        ]
 
 
-def _make_detector(monkeypatch, clock, interval=2.0):
-    monkeypatch.setattr(pd.time, "time", lambda: clock["t"])
+def _make_detector(monkeypatch):
     det = pd.YoloPersonDetector()
-    # No tocar el disco en el reload de 5 s ni borrar las clases del test.
     monkeypatch.setattr(det, "_load_training_data", lambda: None)
     det._custom_classes = ["botella"]
     det._custom_vocabulary = []
-    det._custom_interval = interval
-    det.model = _FakeModel()  # _ensure_loaded lo ve != None y no carga el real
-    return det
+    det._prompt_key = None
+    det._logo_templates = {}
+    fake = _FakeModel()
+    det.model = fake
+    det._person_model = None
+    return det, fake
 
 
-def test_first_call_runs_inference(monkeypatch):
-    clock = {"t": 1000.0}
-    det = _make_detector(monkeypatch, clock)
-    out = det.detect_custom_objects(frame=None)
-    assert det.model.predict_calls == 1
-    assert out == [{"label": "botella", "confidence": 0.9, "box": (1, 2, 3, 4)}]
+def test_analyze_frame_single_predict_splits_person_and_custom(monkeypatch):
+    det, fake = _make_detector(monkeypatch)
+    out = det.analyze_frame(frame=None)
+    assert fake.predict_calls == 1
+    assert out["person_count"] == 1
+    assert out["custom_count"] == 1
+    assert out["custom_objects"][0]["label"] == "botella"
+    assert "person" in (fake.classes or [])
+    assert "botella" in (fake.classes or [])
 
 
-def test_second_call_within_interval_uses_cache(monkeypatch):
-    clock = {"t": 1000.0}
-    det = _make_detector(monkeypatch, clock, interval=2.0)
-    first = det.detect_custom_objects(frame=None)
-    clock["t"] += 1.5  # < 2.0: aún dentro del intervalo
-    second = det.detect_custom_objects(frame=None)
-    assert det.model.predict_calls == 1  # no se volvió a inferir
-    assert second == first
+def test_detect_all_applies_person_and_custom_prompts(monkeypatch):
+    det, fake = _make_detector(monkeypatch)
+    persons, custom = det._detect_all(frame=None)
+    assert len(persons) == 1
+    assert len(custom) == 1
+    assert fake.classes is not None
+    assert fake.classes[0] in ("person", "persona")
 
 
-def test_inference_reruns_after_interval(monkeypatch):
-    clock = {"t": 1000.0}
-    det = _make_detector(monkeypatch, clock, interval=2.0)
-    det.detect_custom_objects(frame=None)
-    clock["t"] += 2.5  # > 2.0: vence el intervalo
-    det.detect_custom_objects(frame=None)
-    assert det.model.predict_calls == 2
-
-
-def test_zero_interval_runs_every_call(monkeypatch):
-    clock = {"t": 1000.0}
-    det = _make_detector(monkeypatch, clock, interval=0.0)
-    det.detect_custom_objects(frame=None)
-    det.detect_custom_objects(frame=None)
-    assert det.model.predict_calls == 2  # sin throttle: cada cuadro
-
-
-def test_no_custom_classes_skips_inference(monkeypatch):
-    clock = {"t": 1000.0}
-    det = _make_detector(monkeypatch, clock)
+def test_no_custom_still_detects_person(monkeypatch):
+    det, fake = _make_detector(monkeypatch)
     det._custom_classes = []
     det._custom_vocabulary = []
-    assert det.detect_custom_objects(frame=None) == []
-    assert det.model.predict_calls == 0  # prompt vacío -> ni se intenta inferir
+    det._prompt_key = None
+
+    def predict_person_only(frame, **kwargs):
+        fake.predict_calls += 1
+        return [_FakeResult([_FakeBox(0.9, 0, [1, 2, 3, 4])], {0: "person"})]
+
+    fake.predict = predict_person_only
+    persons, custom = det._detect_all(frame=None)
+    assert persons and not custom
+    assert fake.predict_calls == 1
+
+
+def test_uniform_alias_maps_to_operator_label(monkeypatch):
+    det, fake = _make_detector(monkeypatch)
+    det._custom_classes = ["Uniforme ITEE"]
+    det._prompt_key = None
+
+    def predict_alias(frame, **kwargs):
+        fake.predict_calls += 1
+        # Persona [0,0,100,100] + uniforme en pecho-logo (x~12-52%, y~46-64%).
+        return [
+            _FakeResult(
+                [
+                    _FakeBox(0.95, 0, [0, 0, 100, 100]),
+                    _FakeBox(0.88, 1, [20, 48, 45, 62]),
+                ],
+                {0: "person", 1: "school uniform"},
+            )
+        ]
+
+    fake.predict = predict_alias
+    _, custom = det._detect_all(frame=None)
+    assert custom and custom[0]["label"] == "Uniforme ITEE"
+
+
+def test_uniform_open_vocab_outside_chest_is_dropped(monkeypatch):
+    """Open-vocab en cuello/hombro no cuenta como uniforme."""
+    det, fake = _make_detector(monkeypatch)
+    det._custom_classes = ["Uniforme ITEE"]
+    det._prompt_key = None
+
+    def predict_neck(frame, **kwargs):
+        fake.predict_calls += 1
+        return [
+            _FakeResult(
+                [
+                    _FakeBox(0.95, 0, [0, 0, 100, 100]),
+                    # Centro ~ (80, 30) = pecho derecho / cuello (fuera de logo izq.)
+                    _FakeBox(0.90, 1, [70, 20, 90, 40]),
+                ],
+                {0: "person", 1: "school uniform"},
+            )
+        ]
+
+    fake.predict = predict_neck
+    _, custom = det._detect_all(frame=None)
+    assert custom == []

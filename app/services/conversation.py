@@ -29,12 +29,7 @@ import os
 from collections.abc import AsyncIterator, Callable
 from typing import Protocol
 
-from utils import (
-    _CLAUSE_RE,
-    _MIN_FIRST_CHUNK_LEN,
-    _MIN_SENTENCE_LEN,
-    _SENTENCE_RE,
-)
+from utils import pop_ready_speech
 
 
 def _tts_stream_enabled() -> bool:
@@ -44,31 +39,6 @@ def _tts_stream_enabled() -> bool:
         "no",
         "off",
     )
-
-
-def _pop_ready_speech(buf: str, first_chunk: bool) -> tuple[list[str], str, bool]:
-    """Extrae cláusulas/oraciones listas para TTS desde un buffer de stream.
-
-    Misma idea que ``call._split_into_chunks``: el primer fragmento usa cláusulas
-    (latencia baja); el resto oraciones. Devuelve (piezas, buffer_restante, first).
-    """
-    ready: list[str] = []
-    while buf:
-        sep = _CLAUSE_RE if first_chunk else _SENTENCE_RE
-        min_len = _MIN_FIRST_CHUNK_LEN if first_chunk else _MIN_SENTENCE_LEN
-        matches = list(sep.finditer(buf))
-        if not matches:
-            break
-        # Tomar la primera cláusula/oración completa lo bastante larga.
-        match = matches[0]
-        head = buf[: match.end()].strip()
-        if len(head) < min_len:
-            # Aún no hay material suficiente; esperar más tokens.
-            break
-        ready.append(head)
-        buf = buf[match.end() :]
-        first_chunk = False
-    return ready, buf, first_chunk
 
 
 class _LLM(Protocol):
@@ -108,7 +78,9 @@ class ConversationService:
         """Procesa un turno completo y devuelve el texto generado ("" si falló)."""
         await self._conn.broadcast({"type": "status", "status": "streaming_started"})
 
-        camera_context = self._camera.build_context() if self._camera else None
+        camera_context = (
+            self._camera.build_context(prompt) if self._camera else None
+        )
 
         chunks: list[str] = []
         speech_buf = ""
@@ -122,7 +94,7 @@ class ConversationService:
                 await self._conn.broadcast({"type": "text_chunk", "text": chunk})
                 if stream_tts:
                     speech_buf += chunk
-                    ready, speech_buf, first_speech = _pop_ready_speech(
+                    ready, speech_buf, first_speech = pop_ready_speech(
                         speech_buf, first_speech
                     )
                     for piece in ready:

@@ -33,12 +33,16 @@ class _FakeResult:
 class _FakeModel:
     def __init__(self):
         self.calls = []
+        self.classes = None
+
+    def set_classes(self, names, pe=None):  # noqa: ARG002
+        self.classes = list(names)
 
     def predict(self, frame, **kwargs):
         self.calls.append({"frame_shape": getattr(frame, "shape", None), **kwargs})
-        # Una persona COCO class 0
+        # Persona open-vocab (prompt "person")
         box = _FakeBox(0, 0.9, [10.0, 20.0, 30.0, 40.0])
-        return [_FakeResult([box])]
+        return [_FakeResult([box], names={0: "person"})]
 
 
 def test_detect_persons_passes_imgsz_and_conf(monkeypatch):
@@ -46,6 +50,10 @@ def test_detect_persons_passes_imgsz_and_conf(monkeypatch):
     monkeypatch.setenv("YOLO_CONFIDENCE", "0.5")
     monkeypatch.setenv("YOLO_MAX_SIDE", "0")  # no resize software
     det = pd.YoloPersonDetector()
+    monkeypatch.setattr(det, "_load_training_data", lambda: None)
+    det._custom_classes = []
+    det._custom_vocabulary = []
+    det._prompt_key = None
     fake = _FakeModel()
     det.model = fake
     frame = np.zeros((480, 640, 3), dtype=np.uint8)
@@ -58,6 +66,7 @@ def test_detect_persons_passes_imgsz_and_conf(monkeypatch):
     assert call["imgsz"] == 320
     assert call["conf"] == 0.5
     assert call["verbose"] is False
+    assert fake.classes and "person" in fake.classes
 
 
 def test_prepare_frame_downscales_large_input(monkeypatch):
@@ -72,12 +81,15 @@ def test_empty_room_still_runs_predict(monkeypatch):
     """La sala vacía no debe saltarse la inferencia local."""
     monkeypatch.setenv("YOLO_MAX_SIDE", "0")
     det = pd.YoloPersonDetector()
+    monkeypatch.setattr(det, "_load_training_data", lambda: None)
+    det._custom_classes = []
+    det._prompt_key = None
     fake = _FakeModel()
 
     def predict_no_person(frame, **kwargs):
         fake.calls.append(kwargs)
-        # Clase distinta de person (COCO 0) → lista vacía de personas.
-        return [_FakeResult([_FakeBox(2, 0.9, [0.0, 0.0, 1.0, 1.0])])]
+        # Solo un objeto no-persona → lista vacía de personas.
+        return [_FakeResult([_FakeBox(0, 0.9, [0.0, 0.0, 1.0, 1.0])], names={0: "chair"})]
 
     fake.predict = predict_no_person
     det.model = fake

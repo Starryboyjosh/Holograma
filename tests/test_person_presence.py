@@ -77,7 +77,9 @@ def _drive(monkeypatch, counts, absence_seconds=5.0, enter_seconds=0.0, frame_dt
         camera_index=0,
         interval_seconds=0.0,  # analizar cada cuadro
     )
-    return events
+    # analysis_update se emite en cada ciclo para el LLM; no es un evento de
+    # presencia/saludo. Los tests de la máquina de estados lo ignoran.
+    return [e for e in events if e != "analysis_update"]
 
 
 def test_blink_does_not_re_greet(monkeypatch):

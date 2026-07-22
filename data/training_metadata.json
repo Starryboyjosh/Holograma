@@ -1,1 +1,24 @@
-[]
+[
+    {
+        "id": 1784688875659,
+        "label": "Uniforme ITEE",
+        "desc": "Uniforme ITEE",
+        "x": 4.171875,
+        "y": 4.0,
+        "w": 91.0,
+        "h": 76.0,
+        "thumbnail": "/data/images/image_1784688875.jpg",
+        "timestamp": 1784688875.6598856
+    },
+    {
+        "id": 1784689059948,
+        "label": "Uniforme ITEE",
+        "desc": "Uniforme ITEE",
+        "x": 32.421875,
+        "y": 80.0,
+        "w": 222.0,
+        "h": 168.0,
+        "thumbnail": "/data/images/image_1784689059.jpg",
+        "timestamp": 1784689059.9482393
+    }
+]

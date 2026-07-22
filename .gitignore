@@ -34,14 +34,21 @@ frontend/src-tauri/target/
 frontend/src-tauri/gen/
 frontend/src-tauri/WixTools/
 
-# Models and native TTS binaries (download locally)
+# Models and native TTS binaries (download locally; never commit weights)
 models/
 *.pt
+*.pth
 *.onnx
 *.onnx.json
+*.engine
+# TorchScript / MobileCLIP descargados en la raíz del repo (no confundir con frontend/*.ts)
+/mobileclip*.ts
+/*.torchscript
 piper/
 piper_amd64.tar.gz
 whisper_cache/
+runs/
+weights/
 
 # Generated frontend static bundle (if present at repo root)
 static/
@@ -73,12 +80,15 @@ Thumbs.db
 .grok/
 
 # Graphify: keep main graph outputs tracked (graph.json, GRAPH_REPORT.md,
-# graph.html, manifest, cost). Ignore machine-local markers, caches and temps.
+# graph.html, manifest.json, cost.json). Ignore machine-local markers,
+# caches, locks, vocab and dated backups from `graphify update`.
 graphify-out/.graphify_python
 graphify-out/.graphify_root
 graphify-out/.needs_update
+graphify-out/.rebuild.lock
+graphify-out/.vocab.txt
 graphify-out/cache/
 graphify-out/.graphify_*.json
 graphify-out/.graphify_*.txt
-# Dated backups written by `graphify update` (e.g. 2026-07-13/)
+# Dated backups (e.g. graphify-out/2026-07-13/)
 graphify-out/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
