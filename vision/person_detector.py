@@ -76,20 +76,20 @@ _OPEN_VOCAB_ALIASES: dict[str, tuple[str, ...]] = {
     "uniforme itee": (
         # Específicos del logo (preferidos por YOLOE / menos FP).
         "ITEE yellow logo embroidery",
-        "yellow embroidered logo on blue polo",
+        "yellow embroidered logo badge",
         "ITEE school logo on chest",
-        "blue polo with yellow ITEE badge",
+        "ITEE school emblem",
         "yellow logo badge on blue uniform",
         "ITEE uniform",
         "uniforme ITEE",
         # Solo para mapear salidas del modelo → etiqueta operador.
-        # El post-filtro de estructura (amarillo+azul) evita FP de camisas genéricas.
         "school uniform",
         "student uniform",
     ),
     "uniforme": (
-        "school uniform with logo badge",
+        "school uniform logo badge",
         "student uniform embroidered logo",
+        "school emblem badge",
         "school uniform",
     ),
 }
@@ -101,23 +101,18 @@ _LOGO_OPEN_VOCAB_MIN_CONF = 0.45
 # --- Logos de Entrenar (cualquier colegio / etiqueta) ---
 #
 # Fuente de verdad: fotos de ``data/training_metadata.json`` (+ crop x,y,w,h).
-# Matching: template multi-escala (TM_CCOEFF_NORMED) + ORB.
-# NO se usa color (amarillo/azul): ITEE es un caso; luego habrá otros colegios.
+# Matching: firma de color HSV + pirámide multi-escala (TM_CCOEFF_NORMED) + ORB.
 #
 # Open-vocab YOLOE solo sugiere; sin match a la plantilla de Entrenar no cuenta
 # como esa etiqueta. El cuello/placket se evita con geometría de ROI pecho.
 _ORB_MIN_GOOD_MATCHES = 14
 _ORB_RATIO = 0.75
 _TMPL_MATCH_MIN = 0.62
-#
+
 # Geometría del logo relativa a la caja persona (YOLO), fracciones 0=arriba/izq:
-#
 #   y ∈ [0.36, 0.58]  → pecho (bajo cuello; el placket suele estar en y<0.34)
 #   x ∈ [0.08, 0.48]  → pecho izquierdo en imagen del kiosco
 #   YOLO_LOGO_MIRROR=1 si el logo sale al otro lado (cámara espejo).
-#
-# Cualquier detección con centro en y < COLLAR_Y_MAX se considera cuello y se
-# descarta (aunque diga «Uniforme ITEE» al 90 %).
 _LOGO_Y0 = 0.36
 _LOGO_Y1 = 0.58
 _LOGO_X0, _LOGO_X1 = 0.08, 0.48
@@ -235,6 +230,8 @@ class YoloPersonDetector:
         self._logo_images: dict[str, list] = {}
         # label -> list of ORB descriptors (np.ndarray)
         self._logo_templates: dict[str, list] = {}
+        # label -> list of HSV color histograms (np.ndarray)
+        self._logo_hsv_hists: dict[str, list] = {}
         self._last_reload_time = 0
         # Último cuadro anotado (JPEG) para transmitir al frontend vía MJPEG.
         self._latest_jpeg: bytes | None = None
@@ -722,6 +719,7 @@ class YoloPersonDetector:
 
         by_des: dict[str, list] = {}
         by_img: dict[str, list] = {}
+        by_hsv: dict[str, list] = {}
         for entry in data:
             if not isinstance(entry, dict):
                 continue
@@ -740,7 +738,12 @@ class YoloPersonDetector:
             if h < 8 or w < 8:
                 continue
 
-            # --- 1 plantilla gris compacta (no pirámide de 7 tamaños) ---
+            # --- Firma cromática HSV ---
+            hsv_hist = self._compute_hsv_hist(img)
+            if hsv_hist is not None:
+                by_hsv.setdefault(label, []).append(hsv_hist)
+
+            # --- 1 plantilla gris compacta ---
             scale = tmpl_max / float(max(h, w)) if max(h, w) > tmpl_max else 1.0
             tw, th = max(12, int(w * scale)), max(12, int(h * scale))
             small = cv2.resize(img, (tw, th), interpolation=cv2.INTER_AREA)
@@ -770,6 +773,7 @@ class YoloPersonDetector:
 
         self._logo_templates = by_des
         self._logo_images = by_img
+        self._logo_hsv_hists = by_hsv
         if by_img or by_des:
             n_img = sum(len(v) for v in by_img.values())
             n_orb = sum(len(v) for v in by_des.values())
@@ -867,7 +871,7 @@ class YoloPersonDetector:
     def _snap_box_to_logo_zone(
         self, box: tuple, person_box: tuple
     ) -> tuple[float, float, float, float]:
-        """Recorta/mueve la caja open-vocab al ROI pecho-logo (evita dibujar en el cuello)."""
+        """Recorta/mueve la caja open-vocab al ROI pecho-logo y ajusta su tamaño proporcional a la persona."""
         px1, py1, px2, py2 = [float(v) for v in person_box]
         p_h = max(1.0, py2 - py1)
         p_w = max(1.0, px2 - px1)
@@ -876,18 +880,33 @@ class YoloPersonDetector:
         zx2 = px1 + x1r * p_w
         zy1 = py1 + y0r * p_h
         zy2 = py1 + y1r * p_h
-        # Intersección box ∩ zona logo; si no hay solape, caja centrada en la zona.
+        zw = max(10.0, zx2 - zx1)
+        zh = max(10.0, zy2 - zy1)
+
+        # Ancho y alto proporcionales al pecho de la persona (mínimo 55% del ancho del pecho, 65% del alto del pecho)
+        target_w = max(50.0, 0.55 * zw)
+        target_h = max(50.0, 0.65 * zh)
+
         bx1, by1, bx2, by2 = [float(v) for v in box]
-        ix1, iy1 = max(bx1, zx1), max(by1, zy1)
-        ix2, iy2 = min(bx2, zx2), min(by2, zy2)
-        if ix2 - ix1 >= 12 and iy2 - iy1 >= 12:
-            return (ix1, iy1, ix2, iy2)
-        # Sin solape útil: ancla al centro de la zona logo (~tamaño del logo).
-        cw = max(28.0, 0.35 * (zx2 - zx1))
-        ch = max(28.0, 0.45 * (zy2 - zy1))
-        cx = 0.5 * (zx1 + zx2)
-        cy = 0.5 * (zy1 + zy2)
-        return (cx - cw * 0.5, cy - ch * 0.5, cx + cw * 0.5, cy + ch * 0.5)
+        bw = max(1.0, bx2 - bx1)
+        bh = max(1.0, by2 - by1)
+
+        cx = 0.5 * (bx1 + bx2)
+        cy = 0.5 * (by1 + by2)
+
+        # Garantizar que el centro caiga dentro de la zona del pecho
+        cx = max(zx1 + 0.10 * zw, min(zx2 - 0.10 * zw, cx))
+        cy = max(zy1 + 0.10 * zh, min(zy2 - 0.10 * zh, cy))
+
+        use_w = max(bw, target_w)
+        use_h = max(bh, target_h)
+
+        fx1 = max(px1, cx - use_w * 0.5)
+        fy1 = max(py1, cy - use_h * 0.5)
+        fx2 = min(px2, cx + use_w * 0.5)
+        fy2 = min(py2, cy + use_h * 0.5)
+
+        return (fx1, fy1, fx2, fy2)
 
     def _best_person_for_box(
         self, box: tuple, persons: list[dict]
@@ -935,10 +954,10 @@ class YoloPersonDetector:
         """True si hay imágenes de Entrenar (plantilla/ORB) para esta etiqueta."""
         if not label:
             return False
-        if label in self._logo_images or label in self._logo_templates:
+        if label in self._logo_images or label in self._logo_templates or label in self._logo_hsv_hists:
             return True
         key = label.strip().lower()
-        for k in list(self._logo_images.keys()) + list(self._logo_templates.keys()):
+        for k in list(self._logo_images.keys()) + list(self._logo_templates.keys()) + list(self._logo_hsv_hists.keys()):
             if str(k).strip().lower() == key:
                 return True
         return False
@@ -961,10 +980,91 @@ class YoloPersonDetector:
                 return v
         return []
 
+    def _logo_hsv_hists_for(self, label: str) -> list:
+        if label in self._logo_hsv_hists:
+            return self._logo_hsv_hists[label]
+        key = label.strip().lower()
+        for k, v in self._logo_hsv_hists.items():
+            if str(k).strip().lower() == key:
+                return v
+        return []
+
+    @staticmethod
+    def _compute_hsv_hist(bgr_img):
+        """Calcula histograma 2D normalizado en espacio HSV (Hue 18 bins, Sat 16 bins)."""
+        if bgr_img is None or getattr(bgr_img, "size", 0) == 0:
+            return None
+        if len(bgr_img.shape) != 3 or bgr_img.shape[2] != 3:
+            return None
+        try:
+            import cv2
+
+            hsv = cv2.cvtColor(bgr_img, cv2.COLOR_BGR2HSV)
+            hist = cv2.calcHist([hsv], [0, 1], None, [18, 16], [0, 180, 0, 256])
+            cv2.normalize(hist, hist, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX)
+            return hist
+        except Exception:
+            return None
+
+    @staticmethod
+    def _is_white_light_or_glare(bgr_crop) -> bool:
+        """Devuelve True si el recorte es principalmente luz blanca / ventana / destello (alta val, baja sat)."""
+        if bgr_crop is None or getattr(bgr_crop, "size", 0) == 0:
+            return False
+        if len(bgr_crop.shape) != 3 or bgr_crop.shape[2] != 3:
+            return False
+        try:
+            import cv2
+            import numpy as np
+
+            hsv = cv2.cvtColor(bgr_crop, cv2.COLOR_BGR2HSV)
+            sat = hsv[:, :, 1]
+            val = hsv[:, :, 2]
+            # Luz blanca / ventana: Saturation baja (< 40/255) y Value alto (> 180/255)
+            white_pixels = np.logical_and(sat < 40, val > 180)
+            white_ratio = np.mean(white_pixels)
+            mean_sat = float(np.mean(sat))
+            mean_val = float(np.mean(val))
+
+            # Si más del 40% del parche es luz blanca o la saturación media es muy baja (< 32) con brillo alto (> 175)
+            if white_ratio > 0.40 or (mean_sat < 32.0 and mean_val > 175.0):
+                return True
+            return False
+        except Exception:
+            return False
+
+    def _match_hsv_color_signature(self, crop, label: str) -> float:
+        """Calcula correlación de firma de color HSV (0.0 a 1.0) contra referencias del logo."""
+        if crop is None or getattr(crop, "size", 0) == 0:
+            return 1.0
+        if len(crop.shape) != 3 or crop.shape[2] != 3:
+            return 1.0  # Si es escala de grises / 1 canal, omitir gating de color.
+        if self._is_white_light_or_glare(crop):
+            if os.getenv("HOLOGRAM_YOLO_DEBUG", "0").lower() in ("1", "true", "yes"):
+                print(f"[YOLO] Descartado «{label}» por detección de luz blanca / ventana")
+            return 0.0  # Rechazar automáticamente destellos / luz de ventana
+        hists = self._logo_hsv_hists_for(label)
+        if not hists:
+            return 1.0  # Sin histogramas de referencia -> no descartar por color.
+        try:
+            import cv2
+
+            crop_hist = self._compute_hsv_hist(crop)
+            if crop_hist is None:
+                return 1.0
+            best_score = 0.0
+            for ref_hist in hists:
+                score = cv2.compareHist(ref_hist, crop_hist, cv2.HISTCMP_CORREL)
+                if score > best_score:
+                    best_score = float(score)
+            return max(0.0, best_score)
+        except Exception:
+            return 1.0
+
     def _match_template_multiscale(
         self, gray_roi, templates: list
     ) -> tuple[float, tuple | None]:
-        """Mejor score TM_CCOEFF_NORMED vs plantillas de Entrenar (multi-escala)."""
+        """Mejor score TM_CCOEFF_NORMED vs plantillas de Entrenar (pirámide multi-escala de 7 niveles)."""
         try:
             import cv2
         except ImportError:
@@ -986,9 +1086,8 @@ class YoloPersonDetector:
         rh, rw = gray_roi.shape[:2]
         best_score = 0.0
         best_box = None
-        # Escalas relativas al ancho del ROI pecho (menos pasos = más rápido;
-        # una sola plantilla uint8 se reescala aquí, no se guardan 7 copias).
-        rels = (0.14, 0.20, 0.28, 0.38, 0.50)
+        # Pirámide de 7 niveles de escala relativas al ancho del ROI pecho (0.14 a 0.80)
+        rels = (0.14, 0.20, 0.28, 0.38, 0.50, 0.65, 0.80)
         for tmpl in templates:
             th0, tw0 = tmpl.shape[:2]
             if tw0 < 8 or th0 < 8:
@@ -1062,9 +1161,23 @@ class YoloPersonDetector:
         return min(1.0, best_good / float(max(8, _ORB_MIN_GOOD_MATCHES)))
 
     def _match_logo_in_gray(
-        self, gray_roi, label: str
+        self, crop, label: str
     ) -> tuple[float, tuple | None, str]:
-        """Match plantilla+ORB de ``label`` en un ROI gris. → (score, box_rel, method)."""
+        """Match firma HSV + plantilla multiescala + ORB de ``label`` en un ROI. → (score, box_rel, method)."""
+        hsv_min = _env_float("YOLO_LOGO_HSV_MIN", 0.35)
+        color_score = self._match_hsv_color_signature(crop, label)
+        if color_score < hsv_min:
+            return 0.0, None, "hsv_mismatch"
+
+        try:
+            import cv2
+            if len(crop.shape) == 3 and crop.shape[2] == 3:
+                gray_roi = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+            else:
+                gray_roi = crop
+        except Exception:
+            gray_roi = crop
+
         imgs = self._logo_templates_for(label)
         des_list = self._logo_orb_for(label)
         tmpl_score, tmpl_box = self._match_template_multiscale(gray_roi, imgs)
@@ -1123,8 +1236,7 @@ class YoloPersonDetector:
         crop = frame[y1:y2, x1:x2]
         if crop.size == 0:
             return False, None, 0.0
-        gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-        score, rel_box, _method = self._match_logo_in_gray(gray, label)
+        score, rel_box, _method = self._match_logo_in_gray(crop, label)
         tmpl_min = _env_float("YOLO_LOGO_TMPL_MIN", _TMPL_MATCH_MIN)
         if score < tmpl_min * 0.92 or rel_box is None:
             return False, None, score
@@ -1154,18 +1266,7 @@ class YoloPersonDetector:
 
         persons = persons or []
         if not persons:
-            try:
-                h, w = frame.shape[:2]
-            except Exception:
-                return []
-            if h < 32 or w < 32:
-                return []
-            persons = [
-                {
-                    "box": (w * 0.18, h * 0.08, w * 0.82, h * 0.98),
-                    "confidence": 0.0,
-                }
-            ]
+            return []  # No personas en escena: los logos de uniformes solo existen sobre personas.
 
         rois = self._person_chest_rois(frame, persons)
         if not rois:
@@ -1182,8 +1283,7 @@ class YoloPersonDetector:
             best_detail = ""
 
             for crop, (ox1, oy1, ox2, oy2), person_box in rois:
-                gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-                score, rel_box, method = self._match_logo_in_gray(gray, label)
+                score, rel_box, method = self._match_logo_in_gray(crop, label)
                 if rel_box is None or score < tmpl_min * 0.90:
                     continue
                 ix1, iy1, ix2, iy2 = rel_box
@@ -1200,7 +1300,7 @@ class YoloPersonDetector:
                 if conf <= best_conf:
                     continue
                 best_conf = conf
-                best_box_frame = (fx1, fy1, fx2, fy2)
+                best_box_frame = self._snap_box_to_logo_zone((fx1, fy1, fx2, fy2), person_box)
                 best_detail = f"{method} score={score:.2f}"
 
             accept = best_conf >= tmpl_min * 0.92 and best_box_frame is not None

@@ -310,8 +310,8 @@
     "semantic_hash": "17711b8499ade0dc823a9ae03bd3e605"
   },
   "main.py": {
-    "mtime": 1784781983.4824042,
-    "ast_hash": "bcc09fc5d0ef042d3395ab3e4a2418de",
+    "mtime": 1784786879.8126266,
+    "ast_hash": "cb69e80b0d4868c9b42a5023a5414558",
     "semantic_hash": ""
   },
   "provider_config.py": {
@@ -510,8 +510,8 @@
     "semantic_hash": "7dc30226a6813a07dad940b5efb7f2fa"
   },
   "vision/person_detector.py": {
-    "mtime": 1784786373.3139818,
-    "ast_hash": "92c2a4e2137abc02e108b04b6ad9c4b2",
+    "mtime": 1784810380.4315143,
+    "ast_hash": "9d4860083c766007e9a982edd57a0331",
     "semantic_hash": ""
   },
   "AGENTS.md": {
