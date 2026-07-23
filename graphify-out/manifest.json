@@ -510,8 +510,8 @@
     "semantic_hash": "7dc30226a6813a07dad940b5efb7f2fa"
   },
   "vision/person_detector.py": {
-    "mtime": 1784810380.4315143,
-    "ast_hash": "9d4860083c766007e9a982edd57a0331",
+    "mtime": 1784839839.0553925,
+    "ast_hash": "d5f54e6af19d3974f421ec85b2a439b3",
     "semantic_hash": ""
   },
   "AGENTS.md": {
@@ -850,8 +850,8 @@
     "semantic_hash": ""
   },
   "yolo_instructions.md": {
-    "mtime": 1784786392.9211173,
-    "ast_hash": "3a5c2721ec797f076edea518028d3e75",
+    "mtime": 1784840167.7950037,
+    "ast_hash": "331df3b86eba03fd10bcfac688d57aac",
     "semantic_hash": ""
   }
 }

@@ -1444,6 +1444,24 @@ class YoloPersonDetector:
                             )
                         continue
                     box = obj.get("box")
+                    # ── Filtro de luz blanca / ventana ──
+                    if frame is not None and box and len(box) >= 4:
+                        try:
+                            fh, fw = frame.shape[:2]
+                            bx1 = int(max(0, min(fw - 1, float(box[0]))))
+                            by1 = int(max(0, min(fh - 1, float(box[1]))))
+                            bx2 = int(max(bx1 + 1, min(fw, float(box[2]))))
+                            by2 = int(max(by1 + 1, min(fh, float(box[3]))))
+                            det_crop = frame[by1:by2, bx1:bx2]
+                            if det_crop.size > 0 and self._is_white_light_or_glare(det_crop):
+                                if debug:
+                                    print(
+                                        f"[YOLO] Descartado «{lab}» open-vocab: "
+                                        f"caja es luz blanca / ventana (sin Entrenar)"
+                                    )
+                                continue
+                        except Exception:
+                            pass
                     person_box = self._best_person_for_box(box, persons) if box else None
                     if person_box is not None and box:
                         rel = self._rel_center_on_person(box, person_box)
@@ -1488,6 +1506,29 @@ class YoloPersonDetector:
                     )
                 continue
 
+            # ── Filtro de luz blanca / ventana sobre la caja YOLOE original ──
+            # El YOLOE puede detectar ventanas con luz blanca como "school uniform".
+            # Rechazar ANTES de intentar verificar con la imagen de referencia,
+            # porque _verify_logo_reference con person_box encontraría el logo
+            # real del uniforme en el pecho (nada que ver con la ventana).
+            if frame is not None:
+                try:
+                    fh, fw = frame.shape[:2]
+                    bx1 = int(max(0, min(fw - 1, float(box[0]))))
+                    by1 = int(max(0, min(fh - 1, float(box[1]))))
+                    bx2 = int(max(bx1 + 1, min(fw, float(box[2]))))
+                    by2 = int(max(by1 + 1, min(fh, float(box[3]))))
+                    det_crop = frame[by1:by2, bx1:bx2]
+                    if det_crop.size > 0 and self._is_white_light_or_glare(det_crop):
+                        if debug:
+                            print(
+                                f"[YOLO] Descartado «{lab}» open-vocab: "
+                                f"caja YOLOE es luz blanca / ventana"
+                            )
+                        continue
+                except Exception:
+                    pass
+
             person_box = self._best_person_for_box(box, persons)
             search_box = box
             if person_box is not None:
@@ -1524,10 +1565,18 @@ class YoloPersonDetector:
                         f"foto Entrenar (score={score:.2f})"
                     )
                 continue
+
+            # ── Snap final: el refined de _verify_logo_reference es el
+            # rect del template match (puede ser 20×20 px). Siempre
+            # escalar al tamaño proporcional del pecho de la persona. ──
+            final_box = refined or search_box
+            if person_box is not None:
+                final_box = self._snap_box_to_logo_zone(final_box, person_box)
+
             filtered.append(
                 {
                     **obj,
-                    "box": refined or search_box,
+                    "box": final_box,
                     "confidence": max(conf, float(score)),
                     "source": "logo_ref_verified",
                 }

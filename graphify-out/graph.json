@@ -743,7 +743,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "services_vision_cameracontextprovider",
-      "community": 40,
+      "community": 54,
       "norm_label": "cameracontextprovider"
     },
     {
@@ -753,7 +753,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "services_vision_cameracontextprovider_init",
-      "community": 40,
+      "community": 54,
       "norm_label": ".__init__()"
     },
     {
@@ -763,7 +763,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "contextbuilder",
-      "community": 40,
+      "community": 54,
       "norm_label": "contextbuilder"
     },
     {
@@ -773,7 +773,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "services_vision_cameracontextprovider_analysis",
-      "community": 40,
+      "community": 54,
       "norm_label": ".analysis()"
     },
     {
@@ -783,7 +783,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "services_vision_cameracontextprovider_update",
-      "community": 40,
+      "community": 54,
       "norm_label": ".update()"
     },
     {
@@ -823,7 +823,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "services_vision_rationale_29",
-      "community": 40,
+      "community": 54,
       "norm_label": "registra el ultimo analisis de la camara (lo llamara visionservice)."
     },
     {
@@ -843,7 +843,7 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "call_stop_all_tts_processes",
-      "community": 21,
+      "community": 78,
       "norm_label": "stop_all_tts_processes()"
     },
     {
@@ -853,7 +853,7 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "call_pause_hologram",
-      "community": 21,
+      "community": 78,
       "norm_label": "pause_hologram()"
     },
     {
@@ -1143,7 +1143,7 @@
       "source_location": "L970",
       "_origin": "ast",
       "id": "call_ask_ai",
-      "community": 116,
+      "community": 21,
       "norm_label": "ask_ai()"
     },
     {
@@ -1153,7 +1153,7 @@
       "source_location": "L986",
       "_origin": "ast",
       "id": "call_ask_ai_and_speak",
-      "community": 116,
+      "community": 60,
       "norm_label": "ask_ai_and_speak()"
     },
     {
@@ -1203,7 +1203,7 @@
       "source_location": "L1104",
       "_origin": "ast",
       "id": "call_camera_feed_subscribe",
-      "community": 21,
+      "community": 75,
       "norm_label": "camera_feed_subscribe()"
     },
     {
@@ -1213,7 +1213,7 @@
       "source_location": "L1115",
       "_origin": "ast",
       "id": "call_camera_feed_unsubscribe",
-      "community": 21,
+      "community": 75,
       "norm_label": "camera_feed_unsubscribe()"
     },
     {
@@ -1233,7 +1233,7 @@
       "source_location": "L1192",
       "_origin": "ast",
       "id": "call_start_camera_thread",
-      "community": 11,
+      "community": 32,
       "norm_label": "start_camera_thread()"
     },
     {
@@ -1243,7 +1243,7 @@
       "source_location": "L1235",
       "_origin": "ast",
       "id": "call_stop_camera_thread",
-      "community": 11,
+      "community": 70,
       "norm_label": "stop_camera_thread()"
     },
     {
@@ -1373,7 +1373,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "call_rationale_79",
-      "community": 21,
+      "community": 78,
       "norm_label": "attempt to terminate any running tts or audio players on linux."
     },
     {
@@ -1383,7 +1383,7 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "call_rationale_92",
-      "community": 21,
+      "community": 78,
       "norm_label": "pause hologram activity: stop speaking, listening and seeing."
     },
     {
@@ -1653,7 +1653,7 @@
       "source_location": "L987",
       "_origin": "ast",
       "id": "call_rationale_987",
-      "community": 116,
+      "community": 60,
       "norm_label": "stream llm + tts por clausulas (menor latencia a primera voz)."
     },
     {
@@ -1673,7 +1673,7 @@
       "source_location": "L1105",
       "_origin": "ast",
       "id": "call_rationale_1105",
-      "community": 21,
+      "community": 75,
       "norm_label": "registra un cliente del feed de video (activa la codificacion jpeg).      el det"
     },
     {
@@ -1683,7 +1683,7 @@
       "source_location": "L1116",
       "_origin": "ast",
       "id": "call_rationale_1116",
-      "community": 21,
+      "community": 75,
       "norm_label": "da de baja un cliente del feed de video."
     },
     {
@@ -1703,7 +1703,7 @@
       "source_location": "L1193",
       "_origin": "ast",
       "id": "call_rationale_1193",
-      "community": 11,
+      "community": 32,
       "norm_label": "start yolo person detection in a background daemon thread."
     },
     {
@@ -1713,7 +1713,7 @@
       "source_location": "L1236",
       "_origin": "ast",
       "id": "call_rationale_1236",
-      "community": 11,
+      "community": 70,
       "norm_label": "deten la deteccion y libera la camara (apagar la camara = liberarla).      senal"
     },
     {
@@ -4533,7 +4533,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hologram_controller",
-      "community": 54,
+      "community": 41,
       "norm_label": "hologram_controller.py"
     },
     {
@@ -4723,7 +4723,7 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "hologram_controller_discover_devices",
-      "community": 54,
+      "community": 41,
       "norm_label": "discover_devices()"
     },
     {
@@ -4733,7 +4733,7 @@
       "source_location": "L256",
       "_origin": "ast",
       "id": "hologram_controller_resolve_state_clips",
-      "community": 54,
+      "community": 41,
       "norm_label": "resolve_state_clips()"
     },
     {
@@ -4743,7 +4743,7 @@
       "source_location": "L292",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager",
-      "community": 40,
+      "community": 41,
       "norm_label": "hologramstatemanager"
     },
     {
@@ -4753,7 +4753,7 @@
       "source_location": "L314",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_init",
-      "community": 40,
+      "community": 41,
       "norm_label": ".__init__()"
     },
     {
@@ -4763,7 +4763,7 @@
       "source_location": "L343",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_is_connected",
-      "community": 40,
+      "community": 41,
       "norm_label": ".is_connected()"
     },
     {
@@ -4873,7 +4873,7 @@
       "source_location": "L534",
       "_origin": "ast",
       "id": "hologram_controller_create_hologram_manager",
-      "community": 54,
+      "community": 41,
       "norm_label": "create_hologram_manager()"
     },
     {
@@ -4883,7 +4883,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hologram_controller_rationale_1",
-      "community": 54,
+      "community": 41,
       "norm_label": "=============================================================  controlador pytho"
     },
     {
@@ -5053,7 +5053,7 @@
       "source_location": "L191",
       "_origin": "ast",
       "id": "hologram_controller_rationale_191",
-      "community": 54,
+      "community": 41,
       "norm_label": "escanea la red local buscando hologramas missyou en el puerto 50200.      util c"
     },
     {
@@ -5063,7 +5063,7 @@
       "source_location": "L257",
       "_origin": "ast",
       "id": "hologram_controller_rationale_257",
-      "community": 54,
+      "community": 41,
       "norm_label": "construye el mapeo estado\u2192indice respetando el orden real de la playlist.      l"
     },
     {
@@ -5073,7 +5073,7 @@
       "source_location": "L293",
       "_origin": "ast",
       "id": "hologram_controller_rationale_293",
-      "community": 40,
+      "community": 41,
       "norm_label": "puente thread-safe entre los estados de la ia y los clips del holograma.      la"
     },
     {
@@ -5083,7 +5083,7 @@
       "source_location": "L344",
       "_origin": "ast",
       "id": "hologram_controller_rationale_344",
-      "community": 40,
+      "community": 41,
       "norm_label": "true cuando el gestor automatico tiene un socket tcp activo."
     },
     {
@@ -5153,7 +5153,7 @@
       "source_location": "L535",
       "_origin": "ast",
       "id": "hologram_controller_rationale_535",
-      "community": 54,
+      "community": 41,
       "norm_label": "construye un hologramstatemanager a partir de variables de entorno.      variabl"
     },
     {
@@ -5293,7 +5293,7 @@
       "source_location": "L221",
       "_origin": "ast",
       "id": "llm_backend_get_selected_backend",
-      "community": 116,
+      "community": 0,
       "norm_label": "get_selected_backend()"
     },
     {
@@ -5533,7 +5533,7 @@
       "source_location": "L830",
       "_origin": "ast",
       "id": "llm_backend_postprocess_reply",
-      "community": 64,
+      "community": 21,
       "norm_label": "_postprocess_reply()"
     },
     {
@@ -5563,7 +5563,7 @@
       "source_location": "L944",
       "_origin": "ast",
       "id": "llm_backend_generate_reply",
-      "community": 116,
+      "community": 21,
       "norm_label": "generate_reply()"
     },
     {
@@ -5643,7 +5643,7 @@
       "source_location": "L222",
       "_origin": "ast",
       "id": "llm_backend_rationale_222",
-      "community": 116,
+      "community": 0,
       "norm_label": "backend efectivo segun la configuracion actual.      delega en :func:`provider_c"
     },
     {
@@ -5783,7 +5783,7 @@
       "source_location": "L831",
       "_origin": "ast",
       "id": "llm_backend_rationale_831",
-      "community": 64,
+      "community": 21,
       "norm_label": "clean up llm response: strip thinking blocks and handle language issues."
     },
     {
@@ -5813,7 +5813,7 @@
       "source_location": "L945",
       "_origin": "ast",
       "id": "llm_backend_rationale_945",
-      "community": 116,
+      "community": 21,
       "norm_label": "respuesta completa (bloqueante). internamente reutiliza el stream de tokens."
     },
     {
@@ -5853,7 +5853,7 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "main_lifespan",
-      "community": 11,
+      "community": 40,
       "norm_label": "lifespan()"
     },
     {
@@ -5903,7 +5903,7 @@
       "source_location": "L270",
       "_origin": "ast",
       "id": "main_configupdate",
-      "community": 40,
+      "community": 11,
       "norm_label": "configupdate"
     },
     {
@@ -5913,7 +5913,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "basemodel",
-      "community": 40,
+      "community": 11,
       "norm_label": "basemodel"
     },
     {
@@ -5923,7 +5923,7 @@
       "source_location": "L294",
       "_origin": "ast",
       "id": "main_boundingboxmodel",
-      "community": 40,
+      "community": 11,
       "norm_label": "boundingboxmodel"
     },
     {
@@ -5933,7 +5933,7 @@
       "source_location": "L303",
       "_origin": "ast",
       "id": "main_trainimagepayload",
-      "community": 40,
+      "community": 29,
       "norm_label": "trainimagepayload"
     },
     {
@@ -5943,7 +5943,7 @@
       "source_location": "L308",
       "_origin": "ast",
       "id": "main_vocabularypayload",
-      "community": 40,
+      "community": 29,
       "norm_label": "vocabularypayload"
     },
     {
@@ -5973,7 +5973,7 @@
       "source_location": "L505",
       "_origin": "ast",
       "id": "main_llmtestpayload",
-      "community": 40,
+      "community": 11,
       "norm_label": "llmtestpayload"
     },
     {
@@ -6003,7 +6003,7 @@
       "source_location": "L539",
       "_origin": "ast",
       "id": "main_test_llm",
-      "community": 40,
+      "community": 11,
       "norm_label": "test_llm()"
     },
     {
@@ -6023,7 +6023,7 @@
       "source_location": "L561",
       "_origin": "ast",
       "id": "main_update_unev_content",
-      "community": 11,
+      "community": 29,
       "norm_label": "update_unev_content()"
     },
     {
@@ -6033,7 +6033,7 @@
       "source_location": "L576",
       "_origin": "ast",
       "id": "main_cameratoggle",
-      "community": 40,
+      "community": 70,
       "norm_label": "cameratoggle"
     },
     {
@@ -6043,7 +6043,7 @@
       "source_location": "L581",
       "_origin": "ast",
       "id": "main_set_camera",
-      "community": 11,
+      "community": 70,
       "norm_label": "set_camera()"
     },
     {
@@ -6053,7 +6053,7 @@
       "source_location": "L615",
       "_origin": "ast",
       "id": "main_speakpayload",
-      "community": 40,
+      "community": 29,
       "norm_label": "speakpayload"
     },
     {
@@ -6073,7 +6073,7 @@
       "source_location": "L633",
       "_origin": "ast",
       "id": "main_play_speak",
-      "community": 11,
+      "community": 29,
       "norm_label": "play_speak()"
     },
     {
@@ -6083,7 +6083,7 @@
       "source_location": "L659",
       "_origin": "ast",
       "id": "main_train_image",
-      "community": 11,
+      "community": 29,
       "norm_label": "train_image()"
     },
     {
@@ -6103,7 +6103,7 @@
       "source_location": "L772",
       "_origin": "ast",
       "id": "main_train_vocabulary",
-      "community": 11,
+      "community": 29,
       "norm_label": "train_vocabulary()"
     },
     {
@@ -6113,7 +6113,7 @@
       "source_location": "L783",
       "_origin": "ast",
       "id": "main_hologramconnect",
-      "community": 40,
+      "community": 11,
       "norm_label": "hologramconnect"
     },
     {
@@ -6123,7 +6123,7 @@
       "source_location": "L788",
       "_origin": "ast",
       "id": "main_hologramcommand",
-      "community": 40,
+      "community": 11,
       "norm_label": "hologramcommand"
     },
     {
@@ -6253,7 +6253,7 @@
       "source_location": "L977",
       "_origin": "ast",
       "id": "websocket",
-      "community": 40,
+      "community": 112,
       "norm_label": "websocket"
     },
     {
@@ -6263,7 +6263,7 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "main_rationale_66",
-      "community": 11,
+      "community": 40,
       "norm_label": "ciclo de vida de la aplicacion (reemplaza @app.on_event, deprecado).      arranc"
     },
     {
@@ -6313,7 +6313,7 @@
       "source_location": "L540",
       "_origin": "ast",
       "id": "main_rationale_540",
-      "community": 40,
+      "community": 11,
       "norm_label": "prueba real de proveedor/modelo/key/url sin guardar nada.      devuelve un mensa"
     },
     {
@@ -6333,7 +6333,7 @@
       "source_location": "L562",
       "_origin": "ast",
       "id": "main_rationale_562",
-      "community": 11,
+      "community": 29,
       "norm_label": "valida y guarda el contenido de unev; recarga la fuente en caliente.      devuel"
     },
     {
@@ -6343,7 +6343,7 @@
       "source_location": "L582",
       "_origin": "ast",
       "id": "main_rationale_582",
-      "community": 11,
+      "community": 70,
       "norm_label": "enciende o apaga la camara.      por defecto, *apagar en la ui* **no** detiene e"
     },
     {
@@ -6918,7 +6918,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "security",
-      "community": 11,
+      "community": 29,
       "norm_label": "security.py"
     },
     {
@@ -6928,7 +6928,7 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "security_redact_secrets",
-      "community": 11,
+      "community": 29,
       "norm_label": "redact_secrets()"
     },
     {
@@ -6938,7 +6938,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "security_clamp_text",
-      "community": 11,
+      "community": 29,
       "norm_label": "clamp_text()"
     },
     {
@@ -6948,7 +6948,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "security_rationale_1",
-      "community": 11,
+      "community": 29,
       "norm_label": "utilidades de seguridad para holograma unev.  funciones puras (sin red, sin esta"
     },
     {
@@ -6958,7 +6958,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "security_rationale_62",
-      "community": 11,
+      "community": 29,
       "norm_label": "devuelve ``text`` con cualquier secreto enmascarado.      enmascara (1) los valo"
     },
     {
@@ -6968,7 +6968,7 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "security_rationale_85",
-      "community": 11,
+      "community": 29,
       "norm_label": "sanea texto no confiable: elimina caracteres de control y trunca a ``max_len``."
     },
     {
@@ -7018,7 +7018,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_event_mode",
-      "community": 116,
+      "community": 21,
       "norm_label": "event_mode.py"
     },
     {
@@ -7028,7 +7028,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "skills_event_mode_has_camera",
-      "community": 116,
+      "community": 21,
       "norm_label": "_has_camera()"
     },
     {
@@ -7038,7 +7038,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "skills_event_mode_get_system_prompt",
-      "community": 116,
+      "community": 21,
       "norm_label": "get_system_prompt()"
     },
     {
@@ -7198,7 +7198,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_presence",
-      "community": 29,
+      "community": 107,
       "norm_label": "presence.py"
     },
     {
@@ -7208,7 +7208,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "skills_presence_presencemanager",
-      "community": 29,
+      "community": 107,
       "norm_label": "presencemanager"
     },
     {
@@ -7218,7 +7218,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "skills_presence_presencemanager_init",
-      "community": 29,
+      "community": 107,
       "norm_label": ".__init__()"
     },
     {
@@ -7228,7 +7228,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "skills_presence_presencemanager_update",
-      "community": 29,
+      "community": 107,
       "norm_label": ".update()"
     },
     {
@@ -7238,7 +7238,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "skills_presence_presencemanager_should_greet",
-      "community": 29,
+      "community": 107,
       "norm_label": ".should_greet()"
     },
     {
@@ -7248,7 +7248,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "skills_presence_presencemanager_should_greet_group",
-      "community": 29,
+      "community": 107,
       "norm_label": ".should_greet_group()"
     },
     {
@@ -7258,7 +7258,7 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "skills_presence_presencemanager_force_person_left",
-      "community": 29,
+      "community": 107,
       "norm_label": ".force_person_left()"
     },
     {
@@ -7548,7 +7548,7 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "skills_university_get_university_context",
-      "community": 116,
+      "community": 21,
       "norm_label": "get_university_context()"
     },
     {
@@ -7588,7 +7588,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "skills_university_rationale_139",
-      "community": 116,
+      "community": 21,
       "norm_label": "contexto de sistema unev + honduras (cacheado entre turnos del llm).      entreg"
     },
     {
@@ -7608,7 +7608,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "skills_utils_normalize_text",
-      "community": 60,
+      "community": 1,
       "norm_label": "normalize_text()"
     },
     {
@@ -7618,7 +7618,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "skills_utils_rationale_5",
-      "community": 60,
+      "community": 1,
       "norm_label": "normalizes text by removing accents, lowercasing, and stripping whitespace."
     },
     {
@@ -7648,7 +7648,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "stt_listener",
-      "community": 5,
+      "community": 47,
       "norm_label": "listener.py"
     },
     {
@@ -7678,7 +7678,7 @@
       "source_location": "L185",
       "_origin": "ast",
       "id": "stt_listener_hotwords_sources_signature",
-      "community": 5,
+      "community": 47,
       "norm_label": "_hotwords_sources_signature()"
     },
     {
@@ -7688,7 +7688,7 @@
       "source_location": "L196",
       "_origin": "ast",
       "id": "stt_listener_normalize_hotword",
-      "community": 5,
+      "community": 47,
       "norm_label": "_normalize_hotword()"
     },
     {
@@ -7698,7 +7698,7 @@
       "source_location": "L209",
       "_origin": "ast",
       "id": "stt_listener_hotword_priority",
-      "community": 5,
+      "community": 47,
       "norm_label": "_hotword_priority()"
     },
     {
@@ -7708,7 +7708,7 @@
       "source_location": "L263",
       "_origin": "ast",
       "id": "stt_listener_looks_like_hallucination",
-      "community": 15,
+      "community": 47,
       "norm_label": "_looks_like_hallucination()"
     },
     {
@@ -7898,7 +7898,7 @@
       "source_location": "L1216",
       "_origin": "ast",
       "id": "stt_listener_get_stt_status",
-      "community": 5,
+      "community": 60,
       "norm_label": "get_stt_status()"
     },
     {
@@ -7908,7 +7908,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "stt_listener_rationale_1",
-      "community": 5,
+      "community": 47,
       "norm_label": "speech-to-text listener using faster-whisper and sounddevice.  regla de oro a: t"
     },
     {
@@ -7938,7 +7938,7 @@
       "source_location": "L197",
       "_origin": "ast",
       "id": "stt_listener_rationale_197",
-      "community": 5,
+      "community": 47,
       "norm_label": "limpia un termino de hotword (parentesis rotos, puntuacion, basura)."
     },
     {
@@ -7948,7 +7948,7 @@
       "source_location": "L210",
       "_origin": "ast",
       "id": "stt_listener_rationale_210",
-      "community": 5,
+      "community": 47,
       "norm_label": "orden: siglas y nombres cortos primero; frases largas al final."
     },
     {
@@ -7958,7 +7958,7 @@
       "source_location": "L264",
       "_origin": "ast",
       "id": "stt_listener_rationale_264",
-      "community": 15,
+      "community": 47,
       "norm_label": "return true if *text* is empty or a known whisper silence-hallucination."
     },
     {
@@ -8108,7 +8108,7 @@
       "source_location": "L1217",
       "_origin": "ast",
       "id": "stt_listener_rationale_1217",
-      "community": 5,
+      "community": 60,
       "norm_label": "return a human-readable status string for the stt subsystem."
     },
     {
@@ -8138,7 +8138,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_init",
-      "community": 107,
+      "community": 62,
       "norm_label": ".__init__()"
     },
     {
@@ -8238,7 +8238,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_app_services",
-      "community": 48,
+      "community": 8,
       "norm_label": "test_app_services.py"
     },
     {
@@ -8248,7 +8248,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_test_app_services_fakews",
-      "community": 48,
+      "community": 8,
       "norm_label": "fakews"
     },
     {
@@ -8258,7 +8258,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "tests_test_app_services_fakews_init",
-      "community": 48,
+      "community": 8,
       "norm_label": ".__init__()"
     },
     {
@@ -8268,7 +8268,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "tests_test_app_services_fakews_send_json",
-      "community": 48,
+      "community": 8,
       "norm_label": ".send_json()"
     },
     {
@@ -8338,7 +8338,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "tests_test_app_services_test_connection_manager_broadcasts_to_all",
-      "community": 48,
+      "community": 8,
       "norm_label": "test_connection_manager_broadcasts_to_all()"
     },
     {
@@ -8348,7 +8348,7 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "tests_test_app_services_test_connection_manager_drops_dead_socket",
-      "community": 48,
+      "community": 8,
       "norm_label": "test_connection_manager_drops_dead_socket()"
     },
     {
@@ -8358,7 +8358,7 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "tests_test_app_services_test_broadcast_threadsafe_bridges_thread_to_loop",
-      "community": 48,
+      "community": 8,
       "norm_label": "test_broadcast_threadsafe_bridges_thread_to_loop()"
     },
     {
@@ -8378,7 +8378,7 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "tests_test_app_services_test_llm_service_passes_camera_context_through",
-      "community": 48,
+      "community": 40,
       "norm_label": "test_llm_service_passes_camera_context_through()"
     },
     {
@@ -8388,7 +8388,7 @@
       "source_location": "L151",
       "_origin": "ast",
       "id": "tests_test_app_services_test_camera_context_builds_with_injected_builder",
-      "community": 48,
+      "community": 54,
       "norm_label": "test_camera_context_builds_with_injected_builder()"
     },
     {
@@ -8398,7 +8398,7 @@
       "source_location": "L159",
       "_origin": "ast",
       "id": "tests_test_app_services_test_camera_context_is_none_without_analysis",
-      "community": 48,
+      "community": 54,
       "norm_label": "test_camera_context_is_none_without_analysis()"
     },
     {
@@ -8458,7 +8458,7 @@
       "source_location": "L268",
       "_origin": "ast",
       "id": "tests_test_app_services_test_stream_skips_call_import_when_context_injected",
-      "community": 48,
+      "community": 8,
       "norm_label": "test_stream_skips_call_import_when_context_injected()"
     },
     {
@@ -8468,7 +8468,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_app_services_rationale_1",
-      "community": 48,
+      "community": 8,
       "norm_label": "capa de servicios de fase 3 (`app/`).  blinda los contratos del refactor sin nec"
     },
     {
@@ -8478,7 +8478,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "tests_test_app_services_rationale_93",
-      "community": 48,
+      "community": 8,
       "norm_label": "puente hilo\u2192loop: un hilo no-async difunde encolando en el loop ligado.      es"
     },
     {
@@ -8508,7 +8508,7 @@
       "source_location": "L269",
       "_origin": "ast",
       "id": "tests_test_app_services_rationale_269",
-      "community": 48,
+      "community": 8,
       "norm_label": "con `camera_context` inyectado, no se construye contexto desde `call`."
     },
     {
@@ -8518,7 +8518,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_camera_feed_gate",
-      "community": 110,
+      "community": 67,
       "norm_label": "test_camera_feed_gate.py"
     },
     {
@@ -8528,7 +8528,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "tests_test_camera_feed_gate_test_subscriber_counter_floors_at_zero",
-      "community": 110,
+      "community": 67,
       "norm_label": "test_subscriber_counter_floors_at_zero()"
     },
     {
@@ -8538,7 +8538,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "tests_test_camera_feed_gate_test_last_jpeg_cleared_when_no_subscribers",
-      "community": 110,
+      "community": 67,
       "norm_label": "test_last_jpeg_cleared_when_no_subscribers()"
     },
     {
@@ -8548,7 +8548,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "tests_test_camera_feed_gate_count_stores",
-      "community": 110,
+      "community": 67,
       "norm_label": "_count_stores()"
     },
     {
@@ -8558,7 +8558,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "tests_test_camera_feed_gate_test_run_continuous_skips_encode_without_subscribers",
-      "community": 110,
+      "community": 67,
       "norm_label": "test_run_continuous_skips_encode_without_subscribers()"
     },
     {
@@ -8568,7 +8568,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "tests_test_camera_feed_gate_test_run_continuous_encodes_with_subscriber",
-      "community": 110,
+      "community": 67,
       "norm_label": "test_run_continuous_encodes_with_subscriber()"
     },
     {
@@ -8578,7 +8578,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_camera_feed_gate_rationale_1",
-      "community": 110,
+      "community": 67,
       "norm_label": "gating del feed mjpeg: el detector solo codifica jpeg si alguien mira.  codifica"
     },
     {
@@ -8588,7 +8588,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "tests_test_camera_feed_gate_rationale_40",
-      "community": 110,
+      "community": 67,
       "norm_label": "corre run_continuous unos cuadros y cuenta cuantas veces guardo un jpeg."
     },
     {
@@ -10988,7 +10988,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "utils_atomic_write_text",
-      "community": 11,
+      "community": 25,
       "norm_label": "_atomic_write_text()"
     },
     {
@@ -11018,7 +11018,7 @@
       "source_location": "L131",
       "_origin": "ast",
       "id": "utils_write_dotenv",
-      "community": 11,
+      "community": 25,
       "norm_label": "write_dotenv()"
     },
     {
@@ -11098,7 +11098,7 @@
       "source_location": "L94",
       "_origin": "ast",
       "id": "utils_rationale_94",
-      "community": 11,
+      "community": 25,
       "norm_label": "escritura atomica: archivo temporal + ``os.replace``.      evita ``config.json``"
     },
     {
@@ -11128,7 +11128,7 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "utils_rationale_132",
-      "community": 11,
+      "community": 25,
       "norm_label": "escribe el ``.env`` de forma atomica desde un mapping (conserva orden)."
     },
     {
@@ -11368,7 +11368,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "vision_face_analyzer_faceanalyzer",
-      "community": 47,
+      "community": 16,
       "norm_label": "faceanalyzer"
     },
     {
@@ -11378,7 +11378,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "vision_face_analyzer_faceanalyzer_init",
-      "community": 47,
+      "community": 107,
       "norm_label": ".__init__()"
     },
     {
@@ -11388,7 +11388,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "vision_face_analyzer_faceanalyzer_load",
-      "community": 47,
+      "community": 16,
       "norm_label": ".load()"
     },
     {
@@ -11398,7 +11398,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "vision_face_analyzer_faceanalyzer_ensure_loaded",
-      "community": 47,
+      "community": 16,
       "norm_label": "._ensure_loaded()"
     },
     {
@@ -11408,7 +11408,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "vision_face_analyzer_faceanalyzer_analyze_frame",
-      "community": 47,
+      "community": 16,
       "norm_label": ".analyze_frame()"
     },
     {
@@ -11418,7 +11418,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "vision_face_analyzer_faceanalyzer_describe_count",
-      "community": 47,
+      "community": 16,
       "norm_label": ".describe_count()"
     },
     {
@@ -11428,7 +11428,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "vision_face_analyzer_faceanalyzer_is_available",
-      "community": 47,
+      "community": 16,
       "norm_label": ".is_available()"
     },
     {
@@ -11448,7 +11448,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "vision_face_analyzer_rationale_14",
-      "community": 47,
+      "community": 16,
       "norm_label": "count visible frontal faces using opencv's bundled haar cascade."
     },
     {
@@ -11458,7 +11458,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "vision_face_analyzer_rationale_44",
-      "community": 47,
+      "community": 16,
       "norm_label": "return a safe visual summary for a frame."
     },
     {
@@ -11538,7 +11538,7 @@
       "source_location": "L191",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_init",
-      "community": 107,
+      "community": 5,
       "norm_label": ".__init__()"
     },
     {
@@ -11578,7 +11578,7 @@
       "source_location": "L287",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_predict_kwargs",
-      "community": 42,
+      "community": 69,
       "norm_label": "._predict_kwargs()"
     },
     {
@@ -11588,7 +11588,7 @@
       "source_location": "L304",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_prepare_frame",
-      "community": 100,
+      "community": 69,
       "norm_label": "._prepare_frame()"
     },
     {
@@ -11648,7 +11648,7 @@
       "source_location": "L376",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_warmup",
-      "community": 42,
+      "community": 69,
       "norm_label": ".warmup()"
     },
     {
@@ -11688,7 +11688,7 @@
       "source_location": "L454",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_reload_vocabulary",
-      "community": 100,
+      "community": 120,
       "norm_label": ".reload_vocabulary()"
     },
     {
@@ -11808,7 +11808,7 @@
       "source_location": "L858",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_rel_center_on_person",
-      "community": 114,
+      "community": 57,
       "norm_label": "._rel_center_on_person()"
     },
     {
@@ -11828,7 +11828,7 @@
       "source_location": "L911",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_best_person_for_box",
-      "community": 114,
+      "community": 57,
       "norm_label": "._best_person_for_box()"
     },
     {
@@ -11838,7 +11838,7 @@
       "source_location": "L948",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_is_uniform_label",
-      "community": 114,
+      "community": 57,
       "norm_label": "._is_uniform_label()"
     },
     {
@@ -11965,17 +11965,17 @@
       "label": "._predict_boxes()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1335",
+      "source_location": "L1324",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_predict_boxes",
-      "community": 100,
+      "community": 69,
       "norm_label": "._predict_boxes()"
     },
     {
       "label": "._is_person_label()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1393",
+      "source_location": "L1382",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_is_person_label",
       "community": 100,
@@ -11985,7 +11985,7 @@
       "label": "._split_detections()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1401",
+      "source_location": "L1390",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_split_detections",
       "community": 100,
@@ -11995,17 +11995,17 @@
       "label": "._filter_uniform_objects()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1416",
+      "source_location": "L1405",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_filter_uniform_objects",
-      "community": 114,
+      "community": 57,
       "norm_label": "._filter_uniform_objects()"
     },
     {
       "label": "._dedupe_custom()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1554",
+      "source_location": "L1592",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_dedupe_custom",
       "community": 100,
@@ -12015,7 +12015,7 @@
       "label": "._predict_floor_conf()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1564",
+      "source_location": "L1602",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_predict_floor_conf",
       "community": 100,
@@ -12025,7 +12025,7 @@
       "label": "._detect_all()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1575",
+      "source_location": "L1613",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_detect_all",
       "community": 100,
@@ -12035,7 +12035,7 @@
       "label": ".detect_persons_in_frame()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1651",
+      "source_location": "L1689",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_detect_persons_in_frame",
       "community": 10,
@@ -12045,7 +12045,7 @@
       "label": ".detect_custom_objects()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1659",
+      "source_location": "L1697",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_detect_custom_objects",
       "community": 100,
@@ -12055,7 +12055,7 @@
       "label": ".detect_labels()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1667",
+      "source_location": "L1705",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_detect_labels",
       "community": 100,
@@ -12065,7 +12065,7 @@
       "label": ".analyze_frame()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1723",
+      "source_location": "L1761",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_analyze_frame",
       "community": 120,
@@ -12075,7 +12075,7 @@
       "label": ".detect_person_in_frame()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1751",
+      "source_location": "L1789",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_detect_person_in_frame",
       "community": 10,
@@ -12085,7 +12085,7 @@
       "label": ".count_persons_in_frame()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1755",
+      "source_location": "L1793",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_count_persons_in_frame",
       "community": 10,
@@ -12095,7 +12095,7 @@
       "label": "._grab_frame()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1763",
+      "source_location": "L1801",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_grab_frame",
       "community": 10,
@@ -12105,7 +12105,7 @@
       "label": ".detect_person_once()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1772",
+      "source_location": "L1810",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_detect_person_once",
       "community": 10,
@@ -12115,7 +12115,7 @@
       "label": ".count_persons_once()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1779",
+      "source_location": "L1817",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_count_persons_once",
       "community": 10,
@@ -12125,7 +12125,7 @@
       "label": ".analyze_once()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1786",
+      "source_location": "L1824",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_analyze_once",
       "community": 120,
@@ -12135,7 +12135,7 @@
       "label": "._draw_overlay()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1806",
+      "source_location": "L1844",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_draw_overlay",
       "community": 51,
@@ -12145,7 +12145,7 @@
       "label": "._store_annotated_frame()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1861",
+      "source_location": "L1899",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_store_annotated_frame",
       "community": 51,
@@ -12155,7 +12155,7 @@
       "label": ".get_latest_jpeg()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1875",
+      "source_location": "L1913",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_get_latest_jpeg",
       "community": 114,
@@ -12165,7 +12165,7 @@
       "label": ".feed_subscribe()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1880",
+      "source_location": "L1918",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_feed_subscribe",
       "community": 114,
@@ -12175,7 +12175,7 @@
       "label": ".feed_unsubscribe()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1885",
+      "source_location": "L1923",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_feed_unsubscribe",
       "community": 114,
@@ -12185,7 +12185,7 @@
       "label": ".has_feed_subscribers()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1900",
+      "source_location": "L1938",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_has_feed_subscribers",
       "community": 51,
@@ -12195,7 +12195,7 @@
       "label": ".run_continuous()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1909",
+      "source_location": "L1947",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_run_continuous",
       "community": 51,
@@ -12205,7 +12205,7 @@
       "label": ".is_available()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L2059",
+      "source_location": "L2097",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_is_available",
       "community": 114,
@@ -12215,7 +12215,7 @@
       "label": ".default_weights()",
       "file_type": "code",
       "source_file": "vision/person_detector.py",
-      "source_location": "L2070",
+      "source_location": "L2108",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_default_weights",
       "community": 114,
@@ -12318,7 +12318,7 @@
       "source_location": "L288",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_288",
-      "community": 42,
+      "community": 69,
       "norm_label": "argumentos comunes de inferencia local (latencia / recursos)."
     },
     {
@@ -12328,7 +12328,7 @@
       "source_location": "L305",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_305",
-      "community": 100,
+      "community": 69,
       "norm_label": "opcional: reduce el frame grande antes de yolo (sin apagar la camara)."
     },
     {
@@ -12378,7 +12378,7 @@
       "source_location": "L377",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_377",
-      "community": 42,
+      "community": 69,
       "norm_label": "una inferencia dummy para jit/cuda/clip tras el load.          evita el primer f"
     },
     {
@@ -12418,7 +12418,7 @@
       "source_location": "L455",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_455",
-      "community": 100,
+      "community": 120,
       "norm_label": "relee training_metadata + open_vocabulary y re-aplica set_classes."
     },
     {
@@ -12528,7 +12528,7 @@
       "source_location": "L861",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_861",
-      "community": 114,
+      "community": 57,
       "norm_label": "centro de ``box`` en fracciones 0\u20131 respecto a la caja persona."
     },
     {
@@ -12548,7 +12548,7 @@
       "source_location": "L914",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_914",
-      "community": 114,
+      "community": 57,
       "norm_label": "caja persona que contiene el centro de ``box``, o la de mayor solape."
     },
     {
@@ -12558,7 +12558,7 @@
       "source_location": "L949",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_949",
-      "community": 114,
+      "community": 57,
       "norm_label": "compat: true si el nombre sugiere uniforme (ui/tests)."
     },
     {
@@ -12655,19 +12655,19 @@
       "label": "Ejecuta ``model.predict`` (YOLOE) y devuelve (label, conf, box) en coords origin",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1338",
+      "source_location": "L1327",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1338",
-      "community": 100,
+      "id": "vision_person_detector_rationale_1327",
+      "community": 69,
       "norm_label": "ejecuta ``model.predict`` (yoloe) y devuelve (label, conf, box) en coords origin"
     },
     {
       "label": "Parte (raw, conf, box) en personas vs custom seg\u00fan umbrales.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1404",
+      "source_location": "L1393",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1404",
+      "id": "vision_person_detector_rationale_1393",
       "community": 100,
       "norm_label": "parte (raw, conf, box) en personas vs custom segun umbrales."
     },
@@ -12675,19 +12675,19 @@
       "label": "Filtra custom: logos de Entrenar = match a imagen de referencia.          - ``lo",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1422",
+      "source_location": "L1411",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1422",
-      "community": 114,
+      "id": "vision_person_detector_rationale_1411",
+      "community": 57,
       "norm_label": "filtra custom: logos de entrenar = match a imagen de referencia.          - ``lo"
     },
     {
       "label": "Una entrada por label (mejor confianza).",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1555",
+      "source_location": "L1593",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1555",
+      "id": "vision_person_detector_rationale_1593",
       "community": 100,
       "norm_label": "una entrada por label (mejor confianza)."
     },
@@ -12695,9 +12695,9 @@
       "label": "Conf m\u00ednima de ``predict``: la m\u00e1s baja entre persona y custom.          Ultraly",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1565",
+      "source_location": "L1603",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1565",
+      "id": "vision_person_detector_rationale_1603",
       "community": 100,
       "norm_label": "conf minima de ``predict``: la mas baja entre persona y custom.          ultraly"
     },
@@ -12705,9 +12705,9 @@
       "label": "Personas + custom en un solo predict YOLOE (+ logos ORB).",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1576",
+      "source_location": "L1614",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1576",
+      "id": "vision_person_detector_rationale_1614",
       "community": 100,
       "norm_label": "personas + custom en un solo predict yoloe (+ logos orb)."
     },
@@ -12715,9 +12715,9 @@
       "label": "Lista de personas en *frame* (``confidence``, ``box``).          Corre siempre:",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1652",
+      "source_location": "L1690",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1652",
+      "id": "vision_person_detector_rationale_1690",
       "community": 10,
       "norm_label": "lista de personas en *frame* (``confidence``, ``box``).          corre siempre:"
     },
@@ -12725,9 +12725,9 @@
       "label": "Objetos de clases entrenadas / vocabulario + logos ORB.          Preferir ``anal",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1660",
+      "source_location": "L1698",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1660",
+      "id": "vision_person_detector_rationale_1698",
       "community": 100,
       "norm_label": "objetos de clases entrenadas / vocabulario + logos orb.          preferir ``anal"
     },
@@ -12735,9 +12735,9 @@
       "label": "Inferencia ad-hoc con prompts temporales (YOLOE ``set_classes``).          Resta",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1668",
+      "source_location": "L1706",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1668",
+      "id": "vision_person_detector_rationale_1706",
       "community": 100,
       "norm_label": "inferencia ad-hoc con prompts temporales (yoloe ``set_classes``).          resta"
     },
@@ -12745,9 +12745,9 @@
       "label": "Personas + custom YOLOE (+ rostros opcional). Un solo predict.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1724",
+      "source_location": "L1762",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1724",
+      "id": "vision_person_detector_rationale_1762",
       "community": 120,
       "norm_label": "personas + custom yoloe (+ rostros opcional). un solo predict."
     },
@@ -12755,9 +12755,9 @@
       "label": "True si hay al menos una persona en *frame*.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1752",
+      "source_location": "L1790",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1752",
+      "id": "vision_person_detector_rationale_1790",
       "community": 10,
       "norm_label": "true si hay al menos una persona en *frame*."
     },
@@ -12765,9 +12765,9 @@
       "label": "N\u00famero de personas en *frame*.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1756",
+      "source_location": "L1794",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1756",
+      "id": "vision_person_detector_rationale_1794",
       "community": 10,
       "norm_label": "numero de personas en *frame*."
     },
@@ -12775,9 +12775,9 @@
       "label": "Abre la c\u00e1mara un instante y devuelve un frame (o None).",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1764",
+      "source_location": "L1802",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1764",
+      "id": "vision_person_detector_rationale_1802",
       "community": 10,
       "norm_label": "abre la camara un instante y devuelve un frame (o none)."
     },
@@ -12785,9 +12785,9 @@
       "label": "Abre la c\u00e1mara, lee un frame y devuelve True si hay persona.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1773",
+      "source_location": "L1811",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1773",
+      "id": "vision_person_detector_rationale_1811",
       "community": 10,
       "norm_label": "abre la camara, lee un frame y devuelve true si hay persona."
     },
@@ -12795,9 +12795,9 @@
       "label": "Abre la c\u00e1mara, lee un frame y devuelve el conteo de personas.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1780",
+      "source_location": "L1818",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1780",
+      "id": "vision_person_detector_rationale_1818",
       "community": 10,
       "norm_label": "abre la camara, lee un frame y devuelve el conteo de personas."
     },
@@ -12805,9 +12805,9 @@
       "label": "Un frame de c\u00e1mara \u2192 ``analyze_frame`` completo (personas + custom).",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1787",
+      "source_location": "L1825",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1787",
+      "id": "vision_person_detector_rationale_1825",
       "community": 120,
       "norm_label": "un frame de camara \u2192 ``analyze_frame`` completo (personas + custom)."
     },
@@ -12815,9 +12815,9 @@
       "label": "Draw person and custom-object boxes on a copy of *frame*.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1807",
+      "source_location": "L1845",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1807",
+      "id": "vision_person_detector_rationale_1845",
       "community": 51,
       "norm_label": "draw person and custom-object boxes on a copy of *frame*."
     },
@@ -12825,9 +12825,9 @@
       "label": "Encode *frame* (with overlay) to JPEG and cache it for streaming.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1862",
+      "source_location": "L1900",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1862",
+      "id": "vision_person_detector_rationale_1900",
       "community": 51,
       "norm_label": "encode *frame* (with overlay) to jpeg and cache it for streaming."
     },
@@ -12835,9 +12835,9 @@
       "label": "Return the most recent annotated frame as JPEG bytes (or None).",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1876",
+      "source_location": "L1914",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1876",
+      "id": "vision_person_detector_rationale_1914",
       "community": 114,
       "norm_label": "return the most recent annotated frame as jpeg bytes (or none)."
     },
@@ -12845,9 +12845,9 @@
       "label": "Registra un cliente del feed MJPEG (activa la codificaci\u00f3n JPEG).",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1881",
+      "source_location": "L1919",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1881",
+      "id": "vision_person_detector_rationale_1919",
       "community": 114,
       "norm_label": "registra un cliente del feed mjpeg (activa la codificacion jpeg)."
     },
@@ -12855,9 +12855,9 @@
       "label": "Da de baja un cliente del feed MJPEG (el contador nunca baja de 0).          Al",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1886",
+      "source_location": "L1924",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1886",
+      "id": "vision_person_detector_rationale_1924",
       "community": 114,
       "norm_label": "da de baja un cliente del feed mjpeg (el contador nunca baja de 0).          al"
     },
@@ -12865,9 +12865,9 @@
       "label": "\u00bfHay al menos un cliente viendo el feed anotado?",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1901",
+      "source_location": "L1939",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1901",
+      "id": "vision_person_detector_rationale_1939",
       "community": 51,
       "norm_label": "\u00bfhay al menos un cliente viendo el feed anotado?"
     },
@@ -12875,9 +12875,9 @@
       "label": "Run a detection loop calling *callback(event, count)* on changes.          Param",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1910",
+      "source_location": "L1948",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_1910",
+      "id": "vision_person_detector_rationale_1948",
       "community": 51,
       "norm_label": "run a detection loop calling *callback(event, count)* on changes.          param"
     },
@@ -12885,9 +12885,9 @@
       "label": "True si OpenCV y Ultralytics YOLOE est\u00e1n instalados.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L2060",
+      "source_location": "L2098",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_2060",
+      "id": "vision_person_detector_rationale_2098",
       "community": 114,
       "norm_label": "true si opencv y ultralytics yoloe estan instalados."
     },
@@ -12895,9 +12895,9 @@
       "label": "Nombre can\u00f3nico del checkpoint del kiosco.",
       "file_type": "rationale",
       "source_file": "vision/person_detector.py",
-      "source_location": "L2071",
+      "source_location": "L2109",
       "_origin": "ast",
-      "id": "vision_person_detector_rationale_2071",
+      "id": "vision_person_detector_rationale_2109",
       "community": 114,
       "norm_label": "nombre canonico del checkpoint del kiosco."
     },
@@ -13585,7 +13585,7 @@
       "label": "4.4 Geometr\u00eda del ROI pecho (fracciones de la caja persona)",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L156",
+      "source_location": "L173",
       "_origin": "ast",
       "id": "yolo_instructions_4_4_geometr\u00eda_del_roi_pecho_fracciones_de_la_caja_persona",
       "community": 19,
@@ -13595,7 +13595,7 @@
       "label": "4.5 Prompts `set_classes`",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L167",
+      "source_location": "L184",
       "_origin": "ast",
       "id": "yolo_instructions_4_5_prompts_set_classes",
       "community": 19,
@@ -13605,17 +13605,37 @@
       "label": "4.6 C\u00e1mara y feed",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L174",
+      "source_location": "L191",
       "_origin": "ast",
       "id": "yolo_instructions_4_6_c\u00e1mara_y_feed",
       "community": 19,
       "norm_label": "4.6 camara y feed"
     },
     {
+      "label": "4.7 Tama\u00f1o proporcional de la caja del logo (`_snap_box_to_logo_zone`)",
+      "file_type": "document",
+      "source_file": "yolo_instructions.md",
+      "source_location": "L197",
+      "_origin": "ast",
+      "id": "yolo_instructions_4_7_tama\u00f1o_proporcional_de_la_caja_del_logo_snap_box_to_logo_zone",
+      "community": 19,
+      "norm_label": "4.7 tamano proporcional de la caja del logo (`_snap_box_to_logo_zone`)"
+    },
+    {
+      "label": "4.8 Rechazo de ventanas / luz blanca / destellos (`_is_white_light_or_glare`)",
+      "file_type": "document",
+      "source_file": "yolo_instructions.md",
+      "source_location": "L227",
+      "_origin": "ast",
+      "id": "yolo_instructions_4_8_rechazo_de_ventanas_luz_blanca_destellos_is_white_light_or_glare",
+      "community": 19,
+      "norm_label": "4.8 rechazo de ventanas / luz blanca / destellos (`_is_white_light_or_glare`)"
+    },
+    {
       "label": "5. Variables de entorno / config",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L182",
+      "source_location": "L270",
       "_origin": "ast",
       "id": "yolo_instructions_5_variables_de_entorno_config",
       "community": 19,
@@ -13625,7 +13645,7 @@
       "label": "Esenciales",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L184",
+      "source_location": "L272",
       "_origin": "ast",
       "id": "yolo_instructions_esenciales",
       "community": 19,
@@ -13635,7 +13655,7 @@
       "label": "Geometr\u00eda / uniforme",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L201",
+      "source_location": "L289",
       "_origin": "ast",
       "id": "yolo_instructions_geometr\u00eda_uniforme",
       "community": 19,
@@ -13645,7 +13665,7 @@
       "label": "C\u00e1mara",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L214",
+      "source_location": "L301",
       "_origin": "ast",
       "id": "yolo_instructions_c\u00e1mara",
       "community": 19,
@@ -13655,7 +13675,7 @@
       "label": "6. C\u00f3mo modificar (recetas)",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L226",
+      "source_location": "L313",
       "_origin": "ast",
       "id": "yolo_instructions_6_c\u00f3mo_modificar_recetas",
       "community": 19,
@@ -13665,7 +13685,7 @@
       "label": "6.1 Cambiar solo umbrales / ROI (sin c\u00f3digo)",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L228",
+      "source_location": "L315",
       "_origin": "ast",
       "id": "yolo_instructions_6_1_cambiar_solo_umbrales_roi_sin_c\u00f3digo",
       "community": 19,
@@ -13675,7 +13695,7 @@
       "label": "6.2 A\u00f1adir una clase Entrenar (UI o datos)",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L248",
+      "source_location": "L335",
       "_origin": "ast",
       "id": "yolo_instructions_6_2_a\u00f1adir_una_clase_entrenar_ui_o_datos",
       "community": 19,
@@ -13685,7 +13705,7 @@
       "label": "6.3 Ajustar aliases open-vocab",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L259",
+      "source_location": "L346",
       "_origin": "ast",
       "id": "yolo_instructions_6_3_ajustar_aliases_open_vocab",
       "community": 19,
@@ -13695,7 +13715,7 @@
       "label": "6.4 Rehacer el detector desde cero (checklist)",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L267",
+      "source_location": "L354",
       "_origin": "ast",
       "id": "yolo_instructions_6_4_rehacer_el_detector_desde_cero_checklist",
       "community": 19,
@@ -13705,7 +13725,7 @@
       "label": "6.5 Diagn\u00f3stico r\u00e1pido",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L278",
+      "source_location": "L365",
       "_origin": "ast",
       "id": "yolo_instructions_6_5_diagn\u00f3stico_r\u00e1pido",
       "community": 19,
@@ -13715,7 +13735,7 @@
       "label": "6.6 Problemas frecuentes",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L303",
+      "source_location": "L390",
       "_origin": "ast",
       "id": "yolo_instructions_6_6_problemas_frecuentes",
       "community": 19,
@@ -13725,7 +13745,7 @@
       "label": "7. Tests que no deben romperse al tocar YOLO",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L317",
+      "source_location": "L406",
       "_origin": "ast",
       "id": "yolo_instructions_7_tests_que_no_deben_romperse_al_tocar_yolo",
       "community": 19,
@@ -13735,7 +13755,7 @@
       "label": "8. Fuentes consultadas (para esta y otras sesiones)",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L332",
+      "source_location": "L421",
       "_origin": "ast",
       "id": "yolo_instructions_8_fuentes_consultadas_para_esta_y_otras_sesiones",
       "community": 19,
@@ -13745,7 +13765,7 @@
       "label": "Documentaci\u00f3n y producto Ultralytics",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L334",
+      "source_location": "L423",
       "_origin": "ast",
       "id": "yolo_instructions_documentaci\u00f3n_y_producto_ultralytics",
       "community": 19,
@@ -13755,7 +13775,7 @@
       "label": "C\u00f3digo y comportamiento local del proyecto",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L366",
+      "source_location": "L455",
       "_origin": "ast",
       "id": "yolo_instructions_c\u00f3digo_y_comportamiento_local_del_proyecto",
       "community": 19,
@@ -13765,7 +13785,7 @@
       "label": "Principios de ingenier\u00eda aplicados (no paper-specific)",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L375",
+      "source_location": "L464",
       "_origin": "ast",
       "id": "yolo_instructions_principios_de_ingenier\u00eda_aplicados_no_paper_specific",
       "community": 19,
@@ -13775,7 +13795,7 @@
       "label": "9. Prompt sugerido para otra conversaci\u00f3n",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L386",
+      "source_location": "L475",
       "_origin": "ast",
       "id": "yolo_instructions_9_prompt_sugerido_para_otra_conversaci\u00f3n",
       "community": 19,
@@ -13785,7 +13805,7 @@
       "label": "10. Inventario de constantes clave (c\u00f3digo)",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L408",
+      "source_location": "L497",
       "_origin": "ast",
       "id": "yolo_instructions_10_inventario_de_constantes_clave_c\u00f3digo",
       "community": 19,
@@ -13795,11 +13815,31 @@
       "label": "11. Changelog breve (sesi\u00f3n de origen de este doc)",
       "file_type": "document",
       "source_file": "yolo_instructions.md",
-      "source_location": "L424",
+      "source_location": "L513",
       "_origin": "ast",
       "id": "yolo_instructions_11_changelog_breve_sesi\u00f3n_de_origen_de_este_doc",
       "community": 19,
       "norm_label": "11. changelog breve (sesion de origen de este doc)"
+    },
+    {
+      "label": "Sesi\u00f3n 2: HSV + Multi-escala + Limpieza aliases",
+      "file_type": "document",
+      "source_file": "yolo_instructions.md",
+      "source_location": "L521",
+      "_origin": "ast",
+      "id": "yolo_instructions_sesi\u00f3n_2_hsv_multi_escala_limpieza_aliases",
+      "community": 19,
+      "norm_label": "sesion 2: hsv + multi-escala + limpieza aliases"
+    },
+    {
+      "label": "Sesi\u00f3n 3: Tama\u00f1o proporcional + Rechazo de ventanas",
+      "file_type": "document",
+      "source_file": "yolo_instructions.md",
+      "source_location": "L531",
+      "_origin": "ast",
+      "id": "yolo_instructions_sesi\u00f3n_3_tama\u00f1o_proporcional_rechazo_de_ventanas",
+      "community": 19,
+      "norm_label": "sesion 3: tamano proporcional + rechazo de ventanas"
     },
     {
       "label": "graphify query",
@@ -40510,9 +40550,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L1010",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_yolopersondetector",
-      "target": "vision_person_detector_yolopersondetector_is_white_light_or_glare",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_is_white_light_or_glare"
     },
     {
       "relation": "method",
@@ -41694,9 +41734,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L1314",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_yolopersondetector_detect_logo_templates",
-      "target": "vision_person_detector_yolopersondetector_snap_box_to_logo_zone",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_snap_box_to_logo_zone"
     },
     {
       "relation": "calls",
@@ -41715,9 +41755,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L914",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_914",
-      "target": "vision_person_detector_yolopersondetector_best_person_for_box",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_best_person_for_box"
     },
     {
       "relation": "calls",
@@ -41747,9 +41787,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L949",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_949",
-      "target": "vision_person_detector_yolopersondetector_is_uniform_label",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_is_uniform_label"
     },
     {
       "relation": "calls",
@@ -41779,9 +41819,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L954",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_954",
-      "target": "vision_person_detector_yolopersondetector_is_logo_trained_label",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_is_logo_trained_label"
     },
     {
       "relation": "calls",
@@ -41844,9 +41884,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L994",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_994",
-      "target": "vision_person_detector_yolopersondetector_compute_hsv_hist",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_compute_hsv_hist"
     },
     {
       "relation": "calls",
@@ -41865,7 +41905,18 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L1011",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_1011",
+      "target": "vision_person_detector_yolopersondetector_is_white_light_or_glare"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "vision/person_detector.py",
+      "source_location": "L1456",
+      "weight": 1.0,
+      "source": "vision_person_detector_yolopersondetector_filter_uniform_objects",
       "target": "vision_person_detector_yolopersondetector_is_white_light_or_glare",
       "confidence_score": 1.0
     },
@@ -41876,9 +41927,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L1042",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_yolopersondetector_match_hsv_color_signature",
-      "target": "vision_person_detector_yolopersondetector_is_white_light_or_glare",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_is_white_light_or_glare"
     },
     {
       "relation": "rationale_for",
@@ -41886,9 +41937,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L1037",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_1037",
-      "target": "vision_person_detector_yolopersondetector_match_hsv_color_signature",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_match_hsv_color_signature"
     },
     {
       "relation": "calls",
@@ -41907,9 +41958,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L1067",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_1067",
-      "target": "vision_person_detector_yolopersondetector_match_template_multiscale",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_match_template_multiscale"
     },
     {
       "relation": "calls",
@@ -41939,9 +41990,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L1122",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_1122",
-      "target": "vision_person_detector_yolopersondetector_match_orb_in_roi",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_match_orb_in_roi"
     },
     {
       "relation": "calls",
@@ -41960,9 +42011,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L1166",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_1166",
-      "target": "vision_person_detector_yolopersondetector_match_logo_in_gray",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_match_logo_in_gray"
     },
     {
       "relation": "calls",
@@ -41992,9 +42043,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L1206",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_1206",
-      "target": "vision_person_detector_yolopersondetector_verify_logo_reference",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_verify_logo_reference"
     },
     {
       "relation": "calls",
@@ -42013,9 +42064,9 @@
       "source_file": "vision/person_detector.py",
       "source_location": "L1253",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vision_person_detector_rationale_1253",
-      "target": "vision_person_detector_yolopersondetector_detect_logo_templates",
-      "confidence_score": 1.0
+      "target": "vision_person_detector_yolopersondetector_detect_logo_templates"
     },
     {
       "relation": "calls",
@@ -42032,9 +42083,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1338",
+      "source_location": "L1327",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1338",
+      "source": "vision_person_detector_rationale_1327",
       "target": "vision_person_detector_yolopersondetector_predict_boxes",
       "confidence_score": 1.0
     },
@@ -42086,9 +42137,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1404",
+      "source_location": "L1393",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1404",
+      "source": "vision_person_detector_rationale_1393",
       "target": "vision_person_detector_yolopersondetector_split_detections",
       "confidence_score": 1.0
     },
@@ -42107,9 +42158,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1422",
+      "source_location": "L1411",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1422",
+      "source": "vision_person_detector_rationale_1411",
       "target": "vision_person_detector_yolopersondetector_filter_uniform_objects",
       "confidence_score": 1.0
     },
@@ -42128,9 +42179,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1555",
+      "source_location": "L1593",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1555",
+      "source": "vision_person_detector_rationale_1593",
       "target": "vision_person_detector_yolopersondetector_dedupe_custom",
       "confidence_score": 1.0
     },
@@ -42160,9 +42211,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1565",
+      "source_location": "L1603",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1565",
+      "source": "vision_person_detector_rationale_1603",
       "target": "vision_person_detector_yolopersondetector_predict_floor_conf",
       "confidence_score": 1.0
     },
@@ -42181,9 +42232,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1576",
+      "source_location": "L1614",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1576",
+      "source": "vision_person_detector_rationale_1614",
       "target": "vision_person_detector_yolopersondetector_detect_all",
       "confidence_score": 1.0
     },
@@ -42224,9 +42275,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1652",
+      "source_location": "L1690",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1652",
+      "source": "vision_person_detector_rationale_1690",
       "target": "vision_person_detector_yolopersondetector_detect_persons_in_frame",
       "confidence_score": 1.0
     },
@@ -42256,9 +42307,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1660",
+      "source_location": "L1698",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1660",
+      "source": "vision_person_detector_rationale_1698",
       "target": "vision_person_detector_yolopersondetector_detect_custom_objects",
       "confidence_score": 1.0
     },
@@ -42266,9 +42317,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1668",
+      "source_location": "L1706",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1668",
+      "source": "vision_person_detector_rationale_1706",
       "target": "vision_person_detector_yolopersondetector_detect_labels",
       "confidence_score": 1.0
     },
@@ -42276,9 +42327,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1724",
+      "source_location": "L1762",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1724",
+      "source": "vision_person_detector_rationale_1762",
       "target": "vision_person_detector_yolopersondetector_analyze_frame",
       "confidence_score": 1.0
     },
@@ -42308,9 +42359,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1752",
+      "source_location": "L1790",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1752",
+      "source": "vision_person_detector_rationale_1790",
       "target": "vision_person_detector_yolopersondetector_detect_person_in_frame",
       "confidence_score": 1.0
     },
@@ -42329,9 +42380,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1756",
+      "source_location": "L1794",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1756",
+      "source": "vision_person_detector_rationale_1794",
       "target": "vision_person_detector_yolopersondetector_count_persons_in_frame",
       "confidence_score": 1.0
     },
@@ -42350,9 +42401,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1764",
+      "source_location": "L1802",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1764",
+      "source": "vision_person_detector_rationale_1802",
       "target": "vision_person_detector_yolopersondetector_grab_frame",
       "confidence_score": 1.0
     },
@@ -42393,9 +42444,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1773",
+      "source_location": "L1811",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1773",
+      "source": "vision_person_detector_rationale_1811",
       "target": "vision_person_detector_yolopersondetector_detect_person_once",
       "confidence_score": 1.0
     },
@@ -42403,9 +42454,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1780",
+      "source_location": "L1818",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1780",
+      "source": "vision_person_detector_rationale_1818",
       "target": "vision_person_detector_yolopersondetector_count_persons_once",
       "confidence_score": 1.0
     },
@@ -42413,9 +42464,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1787",
+      "source_location": "L1825",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1787",
+      "source": "vision_person_detector_rationale_1825",
       "target": "vision_person_detector_yolopersondetector_analyze_once",
       "confidence_score": 1.0
     },
@@ -42423,9 +42474,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1807",
+      "source_location": "L1845",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1807",
+      "source": "vision_person_detector_rationale_1845",
       "target": "vision_person_detector_yolopersondetector_draw_overlay",
       "confidence_score": 1.0
     },
@@ -42444,9 +42495,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1862",
+      "source_location": "L1900",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1862",
+      "source": "vision_person_detector_rationale_1900",
       "target": "vision_person_detector_yolopersondetector_store_annotated_frame",
       "confidence_score": 1.0
     },
@@ -42465,9 +42516,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1876",
+      "source_location": "L1914",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1876",
+      "source": "vision_person_detector_rationale_1914",
       "target": "vision_person_detector_yolopersondetector_get_latest_jpeg",
       "confidence_score": 1.0
     },
@@ -42475,9 +42526,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1881",
+      "source_location": "L1919",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1881",
+      "source": "vision_person_detector_rationale_1919",
       "target": "vision_person_detector_yolopersondetector_feed_subscribe",
       "confidence_score": 1.0
     },
@@ -42485,9 +42536,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1886",
+      "source_location": "L1924",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1886",
+      "source": "vision_person_detector_rationale_1924",
       "target": "vision_person_detector_yolopersondetector_feed_unsubscribe",
       "confidence_score": 1.0
     },
@@ -42495,9 +42546,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1901",
+      "source_location": "L1939",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1901",
+      "source": "vision_person_detector_rationale_1939",
       "target": "vision_person_detector_yolopersondetector_has_feed_subscribers",
       "confidence_score": 1.0
     },
@@ -42516,9 +42567,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L1910",
+      "source_location": "L1948",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_1910",
+      "source": "vision_person_detector_rationale_1948",
       "target": "vision_person_detector_yolopersondetector_run_continuous",
       "confidence_score": 1.0
     },
@@ -42526,9 +42577,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L2060",
+      "source_location": "L2098",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_2060",
+      "source": "vision_person_detector_rationale_2098",
       "target": "vision_person_detector_yolopersondetector_is_available",
       "confidence_score": 1.0
     },
@@ -42536,9 +42587,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "vision/person_detector.py",
-      "source_location": "L2071",
+      "source_location": "L2109",
       "weight": 1.0,
-      "source": "vision_person_detector_rationale_2071",
+      "source": "vision_person_detector_rationale_2109",
       "target": "vision_person_detector_yolopersondetector_default_weights",
       "confidence_score": 1.0
     },
@@ -43386,6 +43437,26 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "yolo_instructions.md",
+      "source_location": "L197",
+      "weight": 1.0,
+      "source": "yolo_instructions_4_decisiones_de_dise\u00f1o_y_por_qu\u00e9",
+      "target": "yolo_instructions_4_7_tama\u00f1o_proporcional_de_la_caja_del_logo_snap_box_to_logo_zone",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "yolo_instructions.md",
+      "source_location": "L227",
+      "weight": 1.0,
+      "source": "yolo_instructions_4_decisiones_de_dise\u00f1o_y_por_qu\u00e9",
+      "target": "yolo_instructions_4_8_rechazo_de_ventanas_luz_blanca_destellos_is_white_light_or_glare",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "yolo_instructions.md",
       "source_location": "L214",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -43501,6 +43572,26 @@
       "confidence_score": 1.0,
       "source": "yolo_instructions_8_fuentes_consultadas_para_esta_y_otras_sesiones",
       "target": "yolo_instructions_principios_de_ingenier\u00eda_aplicados_no_paper_specific"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "yolo_instructions.md",
+      "source_location": "L521",
+      "weight": 1.0,
+      "source": "yolo_instructions_11_changelog_breve_sesi\u00f3n_de_origen_de_este_doc",
+      "target": "yolo_instructions_sesi\u00f3n_2_hsv_multi_escala_limpieza_aliases",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "yolo_instructions.md",
+      "source_location": "L531",
+      "weight": 1.0,
+      "source": "yolo_instructions_11_changelog_breve_sesi\u00f3n_de_origen_de_este_doc",
+      "target": "yolo_instructions_sesi\u00f3n_3_tama\u00f1o_proporcional_rechazo_de_ventanas",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -47508,5 +47599,5 @@
       "source_file": "docs/User_Manual/index.html"
     }
   ],
-  "built_at_commit": "0c06e097decda98462548af76f93a99bd0e39167"
+  "built_at_commit": "bc9e6c83811c36895d95a6ed478b74cef5769892"
 }

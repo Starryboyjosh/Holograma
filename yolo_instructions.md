@@ -129,23 +129,40 @@ Implementado en `_predict_floor_conf()` + `_split_detections()`.
 ### 4.3 Logos de Entrenar (ITEE y futuros colegios): imagen de referencia
 
 **Fuente de verdad:** fotos en `data/training_metadata.json` + crop `x,y,w,h`
-del bbox dibujado en la UI de Entrenar. Matching:
+del bbox dibujado en la UI de Entrenar. Pipeline de matching (3 etapas):
 
-1. **Template multi-escala** (`TM_CCOEFF_NORMED`) sobre ROI pecho (gris + equalizeHist).
-2. **ORB** como refuerzo de confianza.
-3. **No** se usa color (amarillo/azul): eso era específico de ITEE y rompe
-   otros colegios.
+1. **Firma de color HSV** (`_match_hsv_color_signature`): histograma 2D
+   HSV (18 bins Hue × 16 bins Saturation) del recorte se compara con los
+   histogramas de las fotos de Entrenar vía `cv2.HISTCMP_CORREL`.
+   - Umbral: `YOLO_LOGO_HSV_MIN` (default `0.35`). Correlación menor → descartado
+     antes de gastar CPU en template/ORB.
+   - **Razón:** detectar si el parche tiene los colores del logo (amarillo+azul para
+     ITEE, rojo+blanco para otro colegio, etc.) sin hardcodear colores ITEE.
+     Funciona genérico con cualquier colegio.
+2. **Template multi-escala** (`TM_CCOEFF_NORMED`, pirámide de 7 niveles)
+   sobre ROI pecho (gris + equalizeHist). Escalas relativas al ROI:
+   `0.14, 0.20, 0.28, 0.38, 0.50, 0.65, 0.80`.
+   - **Razón de 7 escalas:** el logo cambia mucho de tamaño dependiendo de la
+     distancia persona-cámara. Con pocas escalas (3–4) el template matching fallaba
+     cuando la persona estaba lejos o muy cerca. 7 niveles cubren desde logos
+     pequeños (14% del ROI) hasta ocupar casi todo el pecho (80%).
+3. **ORB** como refuerzo de confianza (700 keypoints, ratio Lowe 0.75).
+
+**No** se usa color amarillo/azul hardcodeado como criterio: eso era específico
+de ITEE y rompe otros colegios. El HSV histogram es genérico.
 
 | Problema | Mitigación |
 |----------|------------|
 | Open-vocab «blue shirt» / camisa genérica = Uniforme ITEE | Sin match a la **foto Entrenar** no se acepta la etiqueta |
 | Cuadro en el **placket del cuello** | Zona `y < YOLO_COLLAR_Y_MAX`; ROI pecho; snap bbox |
-| Solo color azul+amarillo | Eliminado como criterio de aceptación |
-| Varios colegios en Entrenar | Cada `label` tiene sus propias plantillas; misma pipeline |
+| Solo color azul+amarillo hardcodeado | Reemplazado por **histograma HSV genérico** (funciona con cualquier colegio) |
+| Varios colegios en Entrenar | Cada `label` tiene sus propios histogramas y plantillas |
+| Cuadro muy pequeño (20×20 px) sobre el video | `_snap_box_to_logo_zone` escala al tamaño proporcional del pecho (ver §4.7) |
+| Ventana con luz blanca detectada como uniforme | `_is_white_light_or_glare` + check directo en la caja YOLOE (ver §4.8) |
 
 **Señales de aceptación (prioridad):**
 
-1. `source=logo_ref` — match template/ORB de Entrenar en ROI pecho (**preferido**).
+1. `source=logo_ref` — match HSV+template+ORB de Entrenar en ROI pecho (**preferido**).
 2. Open-vocab de etiqueta **con** fotos Entrenar → solo si
    `_verify_logo_reference` confirma la plantilla (`logo_ref_verified`).
 3. Open-vocab de etiqueta **sin** fotos (p. ej. «botella») → umbral custom normal.
@@ -177,6 +194,77 @@ YOLO_LOGO_MIRROR=1                 si el logo sale al otro lado
 - Solo el **encode JPEG** es opcional (cero suscriptores del feed).
 - Intervalo `YOLO_INTERVAL_SECONDS` (default config ~0.6).
 
+### 4.7 Tamaño proporcional de la caja del logo (`_snap_box_to_logo_zone`)
+
+**Problema original:** El template matching encontraba el logo correctamente pero
+devolvía un rectángulo del tamaño exacto del template redimensionado (ej. 20×18 px).
+En el video en vivo se dibujaba un cuadrado minúsculo invisible. También, en
+`_filter_uniform_objects`, la caja `refined` de `_verify_logo_reference` era la
+coordenada del match crudo y **nunca pasaba por `_snap_box_to_logo_zone`**.
+
+**Solución:** `_snap_box_to_logo_zone(box, person_box)` ahora:
+
+1. Calcula la zona del pecho (`zw`, `zh`) según las fracciones `_logo_roi_fractions()`.
+2. Define dimensiones mínimas proporcionales:
+   - `target_w = max(50px, 55% del ancho del pecho)`
+   - `target_h = max(50px, 65% del alto del pecho)`
+3. Si la caja original es más pequeña que estos mínimos, la agranda.
+4. Clampea el centro dentro de la zona del pecho (margen 10%).
+5. Clampea los bordes dentro de la caja de la persona.
+
+**Razón de las proporciones 55% / 65%:** los logos de uniformes ocupan visualmente
+un área considerable del pecho. 30% / 38% (intentado antes) seguía produciendo
+cajas demasiado pequeñas en resoluciones de cámara típicas (640×480, 1280×720).
+55/65% produce un cuadro que envuelve cómodamente la zona del logo visible.
+
+**Aplicación en ambos caminos de código:**
+
+- `_detect_logo_templates` (línea ~1306): `best_box_frame = self._snap_box_to_logo_zone(...)` ✓
+- `_filter_uniform_objects` (`logo_ref_verified`, línea ~1557): ahora aplica
+  `final_box = self._snap_box_to_logo_zone(refined, person_box)` **siempre** antes
+  de emitir el resultado. Antes, el `refined` crudo iba directo al overlay. ✓
+
+### 4.8 Rechazo de ventanas / luz blanca / destellos (`_is_white_light_or_glare`)
+
+**Problema original:** El YOLOE detectaba ventanas con luz solar blanca como
+"school uniform" o "ITEE uniform". La verificación con `_verify_logo_reference`
+no ayudaba porque:
+
+1. El primer intento (sobre `search_box`) fallaba correctamente.
+2. Pero el **segundo intento** usaba `person_box` (la persona entera), que SÍ
+   contiene el logo real del uniforme → match exitoso.
+3. Resultado: la ventana era aceptada como "Uniforme ITEE" porque la verificación
+   se hizo sobre el pecho de la persona, no sobre la ventana.
+
+**Solución (3 capas):**
+
+1. **`_is_white_light_or_glare(bgr_crop)`**: Analiza el espacio HSV del recorte.
+   - Píxeles blancos: Saturation < 40 AND Value > 180.
+   - Rechaza si: ratio de píxeles blancos > 40% **O** (Sat media < 32 AND Val media > 175).
+   - **Razón de umbrales más agresivos:** la versión anterior (Sat < 35, Val > 195,
+     ratio > 55%) era demasiado permisiva — ventanas con luz difusa tenían Sat ~38
+     y Val ~185, pasando los filtros.
+
+2. **Filtro ANTES de `_verify_logo_reference`** en `_filter_uniform_objects`:
+   Se recorta la caja YOLOE original del frame y se ejecuta
+   `_is_white_light_or_glare(det_crop)` **antes** de intentar verificar con
+   la plantilla. Si la caja YOLOE es luz blanca → descartada inmediatamente,
+   sin importar que `_verify_logo_reference` con `person_box` encontraría el logo.
+   - **Razón crítica:** la verificación con `person_box` busca el logo en el
+     pecho de la persona. Si la persona lleva uniforme, siempre encontrará el logo.
+     Pero eso no significa que la detección YOLOE original (la ventana) sea el logo.
+     El filtro de glare en la caja YOLOE original resuelve esta ambigüedad.
+
+3. **Filtro en `_match_hsv_color_signature`**: Si el crop del ROI pecho tiene
+   glare, `_match_hsv_color_signature` devuelve `0.0` → `_match_logo_in_gray`
+   devuelve `(0.0, None, "hsv_mismatch")`.
+
+4. **`_detect_logo_templates` sin personas = vacío**: Si no hay personas detectadas
+   por YOLO, `_detect_logo_templates` retorna `[]` inmediatamente. Antes, creaba
+   una "persona falsa" que cubría casi todo el frame (incluyendo ventanas), lo que
+   causaba falsos positivos en ventanas sin persona. Los logos de uniforme solo
+   existen sobre personas.
+
 ---
 
 ## 5. Variables de entorno / config
@@ -206,9 +294,8 @@ YOLO_LOGO_MIRROR=1                 si el logo sale al otro lado
 | `YOLO_LOGO_X0` / `X1` | `0.08` / `0.48` | Banda horizontal logo |
 | `YOLO_COLLAR_Y_MAX` | `0.34` | Por encima = cuello (descartar) |
 | `YOLO_LOGO_MIRROR` | `0` | Invierte X del ROI |
-| `YOLO_UNIFORM_YELLOW_MIN` | `0.015` | Fracción amarillo en parche |
-| `YOLO_UNIFORM_BLUE_MIN` | `0.12` | Fracción azul |
-| `YOLO_LOGO_TMPL_MIN` | `0.68` | Score template |
+| `YOLO_LOGO_TMPL_MIN` | `0.62` | Score template mínimo |
+| `YOLO_LOGO_HSV_MIN` | `0.35` | Correlación HSV mínima |
 | `HOLOGRAM_YOLO_DEBUG` | `0` | Logs `[YOLO] Descartado…` / ciclo |
 
 ### Cámara
@@ -308,6 +395,8 @@ Si `set_classes` falla o el tipo no es YOLOE → revisar `YOLO_MODEL` y pesos en
 | `persons=0 custom=[]` con gente | conf alto, cámara mal, modelo no carga | bajar conf floor, debug, feed UI |
 | Cualquier camisa = Uniforme ITEE | prompts genéricos / sin filtro estructura | no reabrir aliases genéricos; subir `YOLO_UNIFORM_CONFIDENCE` |
 | Cuadro en el **cuello** | open-vocab en placket amarillo | `YOLO_COLLAR_Y_MAX`, snap pecho, preferir `logo_chest` |
+| **Cuadro muy pequeño** (20×20 px) | `refined` de `_verify_logo_reference` sin snap | El bug: `_filter_uniform_objects` no aplicaba `_snap_box_to_logo_zone` al `refined`. Ahora siempre se aplica. |
+| **Ventana = Uniforme ITEE** | YOLOE detecta ventana blanca como "school uniform"; segundo intento busca en `person_box` y encuentra logo real | Filtro de glare en la caja YOLOE original **antes** de `_verify_logo_reference`. Ver §4.8. |
 | Logo al otro lado | espejo de cámara | `YOLO_LOGO_MIRROR=1` |
 | LLM dice que no ve | análisis vacío o pregunta no “visual” | ver log `[Cámara→LLM]`; keywords en `camera_context.py` |
 | Feed negro / sin frames | índice cámara, permisos, otro proceso | `HOLOGRAM_CAMERA_INDEX`, diagnose |
@@ -428,6 +517,34 @@ Archivo: `vision/person_detector.py`
 3. Precisión **Uniforme ITEE**: aliases, estructura color, conf uniforme, veto de camisas genéricas.
 4. Bbox: **cuello vs pecho** (collar ban, snap ROI, prefer logo_chest).
 5. Este documento de handoff.
+
+### Sesión 2: HSV + Multi-escala + Limpieza aliases
+
+6. **Firma de color HSV** (`_compute_hsv_hist`, `_match_hsv_color_signature`): histograma 2D
+   HSV compara candidatos contra fotos de Entrenar. Reemplaza el color hardcodeado ITEE.
+7. **Pirámide multi-escala de 7 niveles** (`_match_template_multiscale`): escalas
+   `0.14, 0.20, 0.28, 0.38, 0.50, 0.65, 0.80` relativas al ROI pecho.
+8. **Limpieza `_OPEN_VOCAB_ALIASES`**: eliminados prompts genéricos (`blue shirt`,
+   `polo shirt`, `school uniform` como prompts directos — solo se mantienen como
+   mapeos de salida).
+
+### Sesión 3: Tamaño proporcional + Rechazo de ventanas
+
+9. **`_snap_box_to_logo_zone` proporcional** (§4.7):
+   - `target_w = max(50px, 55% ancho pecho)`, `target_h = max(50px, 65% alto pecho)`.
+   - **Bug corregido:** `_filter_uniform_objects` NO aplicaba snap al `refined` de
+     `_verify_logo_reference` → cuadro de 20×20 px en el overlay.
+10. **Rechazo de luz blanca / ventana** (§4.8):
+    - `_is_white_light_or_glare`: Sat < 40 + Val > 180, ratio > 40% o Sat media < 32.
+    - **Bug corregido:** el filtro de glare solo estaba en `_match_hsv_color_signature`
+      (ROI pecho), pero NO en la caja YOLOE original. El YOLOE detectaba la ventana,
+      la verificación fallaba en la ventana pero triunfaba en `person_box` (donde
+      el logo sí existe) → falso positivo. Ahora se verifica glare en la caja
+      YOLOE original ANTES de `_verify_logo_reference`.
+11. **`_detect_logo_templates` sin personas → vacío**: eliminada la "persona falsa"
+    que cubría todo el frame y causaba FP en ventanas.
+12. Umbrales de glare ajustados (más agresivos): la versión anterior
+    (Sat < 35, Val > 195, ratio > 55%) dejaba pasar ventanas con luz difusa.
 
 ---
 
