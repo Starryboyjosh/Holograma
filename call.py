@@ -46,6 +46,7 @@ from utils import (
     apply_config_to_env,
     configure_utf8_stdio,
     load_config,
+    pop_ready_speech,
 )
 
 # Contexto de cámara: lógica neutra compartida (rompe el ciclo call↔llm_backend).
@@ -622,52 +623,27 @@ def speak_with_linux_tts(text):
     return False
 
 
-# Configuración del pipeline de streaming TTS (heurística compartida en utils)
-from utils import (
-    _CLAUSE_RE,
-    _MIN_FIRST_CHUNK_LEN,
-    _MIN_SENTENCE_LEN,
-    _SENTENCE_RE,
-    pop_ready_speech,
-)
-
-
 def _split_into_chunks(text):
-    """
-    Divide el texto en fragmentos listos para TTS.
-    El primero usa cláusulas para salir rápido; el resto oraciones completas.
-    """
-    chunks = []
-    buf = ""
-    first_chunk_sent = False
+    """Divide texto limpio en fragmentos TTS (misma heurística que el stream).
 
-    # Limpieza previa de bloques problemáticos
+    Usa ``pop_ready_speech`` (fuente única en ``utils``) para no divergir del
+    camino streaming de ``ConversationService`` / ``speak_streaming_from_llm``.
+    """
     text = clean_for_tts(text)
     if not text:
         return []
-
-    # Procesamos el texto de forma secuencial simulando la llegada de tokens
-    words = text.split(" ")
-    for word in words:
-        buf += word + " "
-        sep = _SENTENCE_RE if first_chunk_sent else _CLAUSE_RE
-        min_len = _MIN_SENTENCE_LEN if first_chunk_sent else _MIN_FIRST_CHUNK_LEN
-
-        # Buscar límites
-        matches = list(sep.finditer(buf))
-        if matches:
-            last_match = matches[-1]
-            head = buf[: last_match.end()].strip()
-            if len(head) >= min_len:
-                chunks.append(head)
-                buf = buf[last_match.end() :]
-                first_chunk_sent = True
-
-    # El sobrante final
+    # El regex de cláusulas exige whitespace tras la puntuación.
+    buf = text if text[-1:].isspace() else text + " "
+    chunks: list[str] = []
+    first = True
+    while True:
+        ready, buf, first = pop_ready_speech(buf, first)
+        if not ready:
+            break
+        chunks.extend(ready)
     remainder = buf.strip()
     if remainder:
         chunks.append(remainder)
-
     return chunks
 
 
@@ -676,10 +652,10 @@ def _speak_chunk_os(chunk):
     tts_backend = os.getenv("TTS_BACKEND", "auto").lower().strip()
     system_name = platform.system()
     try:
-        if system_name == "Windows" and tts_backend in ("auto", "windows", "native"):
-            if speak_with_windows_voice(chunk):
-                return True
-        if is_wsl() and tts_backend in ("auto", "windows", "native"):
+        # Windows nativo o WSL → System.Speech (una sola ruta).
+        if (
+            system_name == "Windows" or is_wsl()
+        ) and tts_backend in ("auto", "windows", "native"):
             if speak_with_windows_voice(chunk):
                 return True
         if system_name == "Linux" and tts_backend in (
@@ -688,6 +664,7 @@ def _speak_chunk_os(chunk):
             "native",
             "espeak",
         ):
+            # En WSL, si Windows TTS falló, aún se puede intentar espeak.
             if speak_with_linux_tts(chunk):
                 return True
         if not _is_quiet():
@@ -698,27 +675,40 @@ def _speak_chunk_os(chunk):
     return False
 
 
+def _speak_one_chunk(chunk: str) -> None:
+    """Sintetiza y reproduce un solo fragmento (sin hilo de pipeline)."""
+    if _hologram_paused or not (chunk or "").strip():
+        return
+    if not _is_quiet():
+        print(f"\nSpeaking chunk: {chunk}")
+    tts_backend = os.getenv("TTS_BACKEND", "auto").lower().strip()
+    use_piper = tts_backend in ("auto", "piper") and _piper_available()
+    if use_piper:
+        if speak_with_piper(chunk):
+            return
+        # Piper falló al generar/reproducir → nativo.
+    _speak_chunk_os(chunk)
+
+
 def _render_chunks(chunks):
     """Sintetiza y reproduce los fragmentos de voz.
 
-    Con Piper usa un *pipeline*: un hilo sintetiza el siguiente fragmento
-    mientras el actual se está reproduciendo, de modo que NO hay pausa tras cada
-    punto/oración (antes se sintetizaba y reproducía en serie). Si Piper no está
-    disponible, cae al TTS nativo del sistema fragmento por fragmento.
+    Un solo fragmento: camino directo (sin cola/hilo). Varios + Piper: pipeline
+    (sintetiza el siguiente mientras suena el actual). Sin Piper: TTS nativo.
     """
+    if not chunks:
+        return
     tts_backend = os.getenv("TTS_BACKEND", "auto").lower().strip()
     use_piper = tts_backend in ("auto", "piper") and _piper_available()
 
-    if not use_piper:
+    if not use_piper or len(chunks) == 1:
         for chunk in chunks:
             if _hologram_paused:
                 return
-            if not _is_quiet():
-                print(f"\nSpeaking chunk: {chunk}")
-            _speak_chunk_os(chunk)
+            _speak_one_chunk(chunk)
         return
 
-    # --- Pipeline Piper: síntesis adelantada + reproducción ordenada ---
+    # --- Pipeline Piper multi-fragmento: síntesis adelantada ---
     wav_q = queue.Queue(maxsize=2)
     _SENTINEL = object()
 
@@ -743,7 +733,7 @@ def _render_chunks(chunks):
         if not _is_quiet():
             print(f"\nSpeaking chunk: {chunk}")
         if wav_path is None:
-            _speak_chunk_os(chunk)  # fallback para ese fragmento
+            _speak_chunk_os(chunk)
         else:
             try:
                 play_wav_file(str(wav_path))
@@ -834,8 +824,7 @@ def speak_streaming_from_llm(token_iter) -> str:
                             f"desde inicio del stream LLM",
                             flush=True,
                         )
-                # _render_chunks ya imprime "Speaking chunk"
-                _render_chunks([piece])
+                _speak_one_chunk(piece)
                 spoke_any = True
 
         remainder = clean_for_tts(speech_buf)
@@ -848,7 +837,7 @@ def speak_streaming_from_llm(token_iter) -> str:
                         f"(resto final)",
                         flush=True,
                     )
-            _render_chunks([remainder])
+            _speak_one_chunk(remainder)
             spoke_any = True
     finally:
         speak_lock.release()
@@ -1213,7 +1202,7 @@ def start_camera_thread():
 
     if not YoloPersonDetector.is_available():
         print(
-            "AVISO: ultralytics u opencv-python no están instalados. "
+            "AVISO: ultralytics (YOLOE) u opencv-python no están instalados. "
             "La detección por cámara no estará activa."
         )
         return None
@@ -1236,7 +1225,10 @@ def start_camera_thread():
     )
     thread.start()
     _camera_thread = thread
-    print("[Cámara] Detección de personas con YOLO iniciada en segundo plano.")
+    print(
+        f"[Cámara] Detección YOLOE iniciada "
+        f"({getattr(detector, 'model_name', 'yoloe-26n-seg.pt')})."
+    )
     return thread
 
 

@@ -163,18 +163,32 @@ def test_camera(index):
 
 
 def test_yolo(frame):
-    print("\n== YOLO personas ==")
+    print("\n== YOLOE (personas + open-vocab) ==")
     try:
-        from vision.person_detector import YoloPersonDetector
+        from vision.person_detector import DEFAULT_YOLOE_WEIGHTS, YoloPersonDetector
+
         detector = YoloPersonDetector().load()
-        persons = detector.detect_persons_in_frame(frame)
+        info = detector.model_info()
+        analysis = detector.analyze_frame(frame)
     except Exception as error:
-        fail(f"YOLO falló: {error}")
+        fail(f"YOLOE falló: {error}")
         return False
 
-    ok(f"Personas detectadas: {len(persons)}")
-    for idx, person in enumerate(persons, start=1):
-        print(f"  {idx}: confianza={person['confidence']:.2f}, box={person['box']}")
+    ok(
+        f"Modelo {info.get('weights')} (canónico={DEFAULT_YOLOE_WEIGHTS}) "
+        f"backend={info.get('backend')} set_classes={info.get('has_set_classes')}"
+    )
+    ok(f"Prompts: {info.get('active_prompts')}")
+    ok(f"Personas: {analysis.get('person_count', 0)}")
+    for idx, person in enumerate(analysis.get("persons") or [], start=1):
+        print(f"  P{idx}: conf={person['confidence']:.2f}, box={person['box']}")
+    customs = analysis.get("custom_objects") or []
+    ok(f"Custom open-vocab: {len(customs)}")
+    for idx, obj in enumerate(customs, start=1):
+        print(
+            f"  C{idx}: {obj.get('label')} conf={obj['confidence']:.2f} "
+            f"src={obj.get('source', 'yoloe')}"
+        )
     return True
 
 
@@ -194,7 +208,11 @@ def test_faces(frame):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--camera", action="store_true", help="captura un frame")
-    parser.add_argument("--yolo", action="store_true", help="detecta personas en un frame")
+    parser.add_argument(
+        "--yolo",
+        action="store_true",
+        help="detecta personas + custom con YOLOE (yoloe-26n-seg)",
+    )
     parser.add_argument("--faces", action="store_true", help="cuenta rostros visibles")
     parser.add_argument("--camera-index", type=int, default=int(os.getenv("HOLOGRAM_CAMERA_INDEX", "0")))
     parser.add_argument("--speak", nargs="?", const="Hola, esta es una prueba de audio del holograma.")

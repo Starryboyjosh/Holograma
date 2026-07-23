@@ -10,6 +10,7 @@ Uso básico:
     text = listener.listen_once()
 """
 
+import re
 import tempfile
 import wave
 from pathlib import Path
@@ -194,8 +195,6 @@ def _hotwords_sources_signature(paths) -> str:
 
 def _normalize_hotword(term: str) -> str:
     """Limpia un término de hotword (paréntesis rotos, puntuación, basura)."""
-    import re
-
     hw = (term or "").strip()
     if not hw:
         return ""
@@ -313,8 +312,6 @@ def _correct_kiosk_stt(text: str) -> str:
     Whisper a menudo oye «UNED» (España) en lugar de «UNEV» (Honduras). No
     inventa contenido: solo normaliza siglas y nombres del campus.
     """
-    import re
-
     if not text:
         return text
     out = text
@@ -376,7 +373,7 @@ class WhisperListener:
         self.language = _resolve_stt_language(language)
         self.sample_rate = sample_rate or _env_int("WHISPER_SAMPLE_RATE", 16000)
         self.silence_threshold = silence_threshold or _env_float(
-            "WHISPER_SILENCE_THRESHOLD", 0.02
+            "WHISPER_SILENCE_THRESHOLD", 0.015
         )
         self.silence_duration = silence_duration or _env_float(
             "WHISPER_SILENCE_DURATION", 1.2
@@ -392,15 +389,29 @@ class WhisperListener:
         # descartar el intento (evita transcribir silencio puro en bucle).
         self.max_wait_seconds = _env_float("WHISPER_MAX_WAIT_SECONDS", 6.0)
         # Duración mínima de habla útil; por debajo se considera ruido y se ignora.
-        self.min_speech_seconds = _env_float("WHISPER_MIN_SPEECH_SECONDS", 0.4)
+        self.min_speech_seconds = _env_float("WHISPER_MIN_SPEECH_SECONDS", 0.35)
         # Calibración del ruido ambiente al inicio de cada captura: se mide el RMS
         # del entorno durante unos instantes y el umbral de silencio se eleva por
         # encima de ese piso (umbral adaptativo). Imprescindible en lugares
         # ruidosos, donde un umbral fijo nunca detecta el fin del habla.
-        self.calibration_seconds = _env_float("WHISPER_CALIBRATION_SECONDS", 0.4)
+        self.calibration_seconds = _env_float("WHISPER_CALIBRATION_SECONDS", 0.5)
         # Factor multiplicativo sobre el ruido ambiente medido. El umbral final es
         # max(silence_threshold, ruido * noise_factor).
-        self.noise_factor = _env_float("WHISPER_NOISE_FACTOR", 2.5)
+        self.noise_factor = _env_float("WHISPER_NOISE_FACTOR", 2.8)
+        # Pre-roll / post-pad en segundos (bordes de sílabas + contexto Whisper).
+        self.preroll_seconds = _env_float("WHISPER_PREROLL_SECONDS", 0.45)
+        self.pad_seconds = _env_float("WHISPER_PAD_SECONDS", 0.18)
+        # Bloques consecutivos sobre umbral para confirmar inicio de habla.
+        self.speech_onset_blocks = max(1, _env_int("WHISPER_SPEECH_ONSET_BLOCKS", 2))
+        # Pico objetivo al normalizar (0–1). Evita WAV “bajito” en mics débiles.
+        self.normalize_peak = _env_float("WHISPER_NORMALIZE_PEAK", 0.85)
+        self.max_boost = _env_float("WHISPER_MAX_BOOST", 10.0)
+        # High-pass (Hz) para quitar rumble/DC de ventiladores y mesa.
+        self.highpass_hz = _env_float("WHISPER_HIGHPASS_HZ", 80.0)
+        # Dispositivo de entrada sounddevice (índice o nombre). Vacío = default.
+        self.input_device = (_env("WHISPER_INPUT_DEVICE") or "").strip() or None
+        # Ruido de la última calibración (para soft-gate en preprocess).
+        self._last_noise_floor = 0.0
 
         self._model = None
 
@@ -462,15 +473,111 @@ class WhisperListener:
     # Audio recording with sounddevice (Regla B)
     # ------------------------------------------------------------------
 
+    def _resolve_input_device(self):
+        """Índice/nombre de micrófono o ``None`` (default del sistema)."""
+        if not self.input_device:
+            return None
+        raw = str(self.input_device).strip()
+        if not raw:
+            return None
+        try:
+            return int(raw)
+        except ValueError:
+            return raw
+
+    @staticmethod
+    def _block_rms(block: np.ndarray) -> float:
+        if block is None or block.size == 0:
+            return 0.0
+        return float(np.sqrt(np.mean(np.square(block, dtype=np.float64))))
+
+    def _highpass(self, audio: np.ndarray, cutoff_hz: float) -> np.ndarray:
+        """Filtro paso-alto de un polo (DC + rumble). Sin SciPy."""
+        if audio.size < 4 or cutoff_hz <= 0:
+            return audio
+        # y[n] = α (y[n-1] + x[n] - x[n-1]); α ≈ exp(-2π fc/fs)
+        rc = 1.0 / (2.0 * np.pi * cutoff_hz)
+        dt = 1.0 / float(self.sample_rate)
+        alpha = rc / (rc + dt)
+        x = audio.astype(np.float64, copy=False)
+        y = np.empty_like(x)
+        y[0] = x[0]
+        for i in range(1, x.size):
+            y[i] = alpha * (y[i - 1] + x[i] - x[i - 1])
+        return y.astype(np.float32)
+
+    def _preprocess_for_stt(self, audio: np.ndarray) -> np.ndarray:
+        """Limpia y normaliza el audio antes de WAV → Whisper (local o Groq).
+
+        Pasos (deterministas, sin deps extra):
+        1. mono float32
+        2. quitar offset DC
+        3. high-pass (rumble de mesa/ventilador)
+        4. soft-gate del piso de ruido medido en calibración (solo niveles muy bajos)
+        5. normalizar pico hacia ``normalize_peak`` con techo de ganancia
+        6. padding silencioso al inicio/fin (mejor borde para Whisper)
+        """
+        if audio is None:
+            return np.array([], dtype=np.float32)
+        audio = np.asarray(audio, dtype=np.float32).reshape(-1)
+        if audio.size == 0:
+            return audio
+
+        # 1–2. DC
+        audio = audio - float(np.mean(audio))
+
+        # 3. High-pass
+        hp = self.highpass_hz
+        if hp and hp > 0:
+            audio = self._highpass(audio, float(hp))
+
+        # 4. Soft-gate: atenúa tramos muy por debajo del ruido (no corta sílabas).
+        noise = float(self._last_noise_floor or 0.0)
+        if noise > 1e-6:
+            gate = noise * 1.15
+            rms = self._block_rms(audio)
+            # Solo gate global suave si la señal entera es ruidosa/baja; el pico
+            # de habla se preserva con la normalización.
+            if rms < gate * 0.5:
+                # Casi solo ruido: no forzar (listen_once filtrará).
+                pass
+            else:
+                # Atenuar muestras |x| << gate (mantiene transientes de voz).
+                mag = np.abs(audio)
+                soft = np.clip(mag / max(gate, 1e-6), 0.0, 1.0)
+                # Curva suave: por debajo del gate reduce, por encima ≈1.
+                soft = soft * soft  # más agresivo en el piso
+                audio = audio * np.maximum(soft, 0.15).astype(np.float32)
+
+        # 5. Peak normalize (boost mics flojos; no saturar)
+        peak = float(np.max(np.abs(audio))) if audio.size else 0.0
+        target = float(self.normalize_peak or 0.85)
+        target = min(0.95, max(0.3, target))
+        max_boost = max(1.0, float(self.max_boost or 10.0))
+        if peak > 1e-6:
+            if peak < target:
+                gain = min(target / peak, max_boost)
+                audio = audio * gain
+            elif peak > 0.98:
+                audio = audio * (0.95 / peak)
+
+        audio = np.clip(audio, -1.0, 1.0).astype(np.float32)
+
+        # 6. Padding (Whisper mejora con un poco de silencio en bordes)
+        pad_n = int(self.sample_rate * max(0.0, float(self.pad_seconds or 0.0)))
+        if pad_n > 0:
+            audio = np.pad(audio, (pad_n, pad_n), mode="constant")
+
+        return audio
+
     def _record_until_silence(self):
-        """Record audio from the default microphone until silence is detected.
+        """Record audio from the microphone until silence is detected.
 
         Usa un único ``sd.InputStream`` continuo con callback + cola en vez de
         abrir/cerrar el stream por trozos (``sd.rec``/``sd.wait``). Esto elimina
         los huecos muertos entre trozos (que cortaban sílabas) y los *stalls* del
-        driver de audio que hacían "trabar" la app. Además calibra el ruido
-        ambiente para un umbral adaptativo y conserva un pre-roll para no perder
-        la primera sílaba.
+        driver de audio. Calibra ruido ambiente, pre-roll largo, histéresis de
+        inicio de habla y umbral adaptativo.
 
         Returns a numpy array of shape ``(samples,)`` with float32 values.
         """
@@ -485,40 +592,55 @@ class WhisperListener:
         import queue as _queue
         from collections import deque
 
-        block_seconds = 0.05  # bloques de 50 ms: buena resolución sin sobrecarga
+        block_seconds = 0.04  # 40 ms: mejor resolución de onset/offset
         block_samples = int(self.sample_rate * block_seconds)
         silence_blocks_needed = max(1, int(self.silence_duration / block_seconds))
         wait_blocks = max(1, int(self.max_wait_seconds / block_seconds))
         max_blocks = max(1, int(self.max_record_seconds / block_seconds))
-        # Pre-roll: ~300 ms previos al inicio del habla que se anteponen a la
-        # grabación para no cortar el arranque de la primera palabra.
-        preroll_blocks = max(1, int(0.3 / block_seconds))
+        preroll_blocks = max(1, int(self.preroll_seconds / block_seconds))
+        onset_needed = max(1, int(self.speech_onset_blocks))
 
         audio_q = _queue.Queue()
 
         def _callback(indata, frames, time_info, status):  # noqa: ARG001
-            # El callback corre en el hilo de PortAudio: copiar y encolar es todo
-            # lo que se hace aquí para no perder bloques.
-            audio_q.put(indata[:, 0].copy())
+            # Mono: primer canal (o media si el driver entrega multi-canal).
+            if indata.ndim == 1:
+                audio_q.put(indata.copy())
+            elif indata.shape[1] == 1:
+                audio_q.put(indata[:, 0].copy())
+            else:
+                audio_q.put(np.mean(indata, axis=1).astype(np.float32))
 
         recorded = []
         preroll = deque(maxlen=preroll_blocks)
         silent_blocks = 0
         waited_blocks = 0
         speech_started = False
+        onset_count = 0
         threshold = self.silence_threshold
+        self._last_noise_floor = 0.0
+
+        stream_kwargs = {
+            "samplerate": self.sample_rate,
+            "channels": 1,
+            "dtype": "float32",
+            "blocksize": block_samples,
+            "callback": _callback,
+            "latency": "low",
+        }
+        device = self._resolve_input_device()
+        if device is not None:
+            stream_kwargs["device"] = device
 
         if not _is_quiet():
-            print("[STT] Escuchando... (habla y haré una pausa cuando termines)")
+            dev_label = device if device is not None else "default"
+            print(
+                f"[STT] Escuchando (device={dev_label}, {self.sample_rate} Hz)... "
+                "habla y haré una pausa cuando termines"
+            )
 
         try:
-            with sd.InputStream(
-                samplerate=self.sample_rate,
-                channels=1,
-                dtype="float32",
-                blocksize=block_samples,
-                callback=_callback,
-            ):
+            with sd.InputStream(**stream_kwargs):
                 # --- Calibración del ruido ambiente (umbral adaptativo) ---
                 calib_blocks = max(1, int(self.calibration_seconds / block_seconds))
                 noise_levels = []
@@ -527,9 +649,12 @@ class WhisperListener:
                         block = audio_q.get(timeout=1.0)
                     except _queue.Empty:
                         break
-                    noise_levels.append(float(np.sqrt(np.mean(block ** 2))))
+                    # También acumular en pre-roll (contexto justo antes del habla).
+                    preroll.append(block)
+                    noise_levels.append(self._block_rms(block))
                 if noise_levels:
                     noise_floor = float(np.median(noise_levels))
+                    self._last_noise_floor = noise_floor
                     threshold = max(
                         self.silence_threshold, noise_floor * self.noise_factor
                     )
@@ -538,7 +663,8 @@ class WhisperListener:
                     if not _is_quiet():
                         print(
                             f"[STT] Ruido ambiente={noise_floor:.4f} "
-                            f"-> umbral adaptativo={threshold:.4f} (límite={self.max_threshold})"
+                            f"-> umbral adaptativo={threshold:.4f} "
+                            f"(límite={self.max_threshold})"
                         )
 
                 # --- Captura continua ---
@@ -549,24 +675,26 @@ class WhisperListener:
                     except _queue.Empty:
                         break
                     processed += 1
-                    rms = float(np.sqrt(np.mean(block ** 2)))
+                    rms = self._block_rms(block)
 
-                    # Fase 1: esperar a que la persona empiece a hablar. Mientras
-                    # no haya voz no acumulamos silencio (así no se transcribe
-                    # silencio en bucle).
+                    # Fase 1: esperar habla real (histéresis de onset).
                     if not speech_started:
                         preroll.append(block)
                         if rms >= threshold:
-                            speech_started = True
-                            recorded.extend(preroll)  # incluir pre-roll
-                            preroll.clear()
+                            onset_count += 1
+                            if onset_count >= onset_needed:
+                                speech_started = True
+                                recorded.extend(preroll)
+                                preroll.clear()
+                                silent_blocks = 0
                         else:
+                            onset_count = 0
                             waited_blocks += 1
                             if waited_blocks >= wait_blocks:
                                 return np.array([], dtype=np.float32)
                         continue
 
-                    # Fase 2: ya hay habla; grabar hasta una pausa sostenida.
+                    # Fase 2: ya hay habla; grabar hasta pausa sostenida.
                     recorded.append(block)
                     if rms < threshold:
                         silent_blocks += 1
@@ -583,33 +711,46 @@ class WhisperListener:
         if not recorded:
             return np.array([], dtype=np.float32)
 
-        audio = np.concatenate(recorded)
-        # Descartar capturas demasiado cortas (golpes, ruido, eco) que el modelo
-        # tiende a "alucinar" como frases falsas.
+        audio = np.concatenate(recorded).astype(np.float32, copy=False)
+        # Descartar capturas demasiado cortas (golpes, ruido, eco).
         if audio.size < int(self.sample_rate * self.min_speech_seconds):
             return np.array([], dtype=np.float32)
 
         return audio
 
     def _audio_to_wav_path(self, audio):
-        """Write a float32 numpy array to a temporary WAV file.
+        """Escribe float32 [-1,1] preprocesado a WAV PCM 16-bit mono.
 
         Returns a ``pathlib.Path`` pointing to the WAV file (Regla A).
         """
+        audio = self._preprocess_for_stt(audio)
+        if audio.size == 0:
+            # WAV mínimo vacío (no debería llegar aquí desde listen_once).
+            audio = np.zeros(int(self.sample_rate * 0.1), dtype=np.float32)
+
         tmp = tempfile.NamedTemporaryFile(
             suffix=".wav", delete=False, dir=None
         )
         wav_path = Path(tmp.name)  # Regla A: pathlib
         tmp.close()
 
-        # Convert float32 [-1, 1] to int16
-        int16_audio = np.clip(audio * 32767, -32768, 32767).astype(np.int16)
+        # float32 → int16 con redondeo (menos quantize noise que truncar).
+        scaled = np.clip(audio.astype(np.float64) * 32767.0, -32768.0, 32767.0)
+        int16_audio = np.rint(scaled).astype(np.int16)
 
         with wave.open(str(wav_path), "wb") as wf:
             wf.setnchannels(1)
-            wf.setsampwidth(2)  # 16-bit
-            wf.setframerate(self.sample_rate)
+            wf.setsampwidth(2)  # 16-bit PCM (ideal Whisper local + Groq)
+            wf.setframerate(int(self.sample_rate))
             wf.writeframes(int16_audio.tobytes())
+
+        if not _is_quiet():
+            peak = float(np.max(np.abs(audio))) if audio.size else 0.0
+            dur = audio.size / float(self.sample_rate)
+            print(
+                f"[STT] WAV listo: {dur:.2f}s peak={peak:.3f} "
+                f"sr={self.sample_rate} (preprocesado para Whisper)"
+            )
 
         return wav_path
 
@@ -639,7 +780,6 @@ class WhisperListener:
             y reutilizable como base del ``prompt`` de Groq).
         """
         import json
-        import re
 
         global _HOTWORDS_CACHE
 
@@ -897,9 +1037,8 @@ class WhisperListener:
         audio_path = Path(audio_path)
         # Re-resolver idioma por si cambió el env en caliente desde Ajustes.
         self.language = _resolve_stt_language(self.language)
-        # Techo duro de Groq (896). Margen por UTF-8 de tildes/ñ.
+        # Techo duro de Groq (896); `_build_stt_prompt` ya trunca chars + UTF-8.
         prompt = self._build_stt_prompt(max_chars=_GROQ_STT_PROMPT_MAX)
-        prompt = _truncate_stt_prompt(prompt, _GROQ_STT_PROMPT_MAX)
         hotwords = self._load_db_hotwords()
         self._log_stt_decode_config(backend="groq", prompt=prompt, hotwords=hotwords)
 
@@ -907,19 +1046,21 @@ class WhisperListener:
             print(f"[STT] Transcribiendo '{audio_path.name}' con Groq (whisper-large-v3-turbo)...")
 
         try:
-            with open(audio_path, "rb") as file:
-                create_kwargs = {
-                    "file": (audio_path.name, file.read()),
-                    "model": "whisper-large-v3-turbo",
-                    "temperature": 0.0,
-                    "response_format": "verbose_json",
-                    # Fijo a español del kiosco (no auto-detect).
-                    "language": self.language or "es",
-                }
-                if prompt:
-                    create_kwargs["prompt"] = prompt
-                transcription = client.audio.transcriptions.create(**create_kwargs)
-                return _correct_kiosk_stt(transcription.text.strip())
+            # WAV PCM 16-bit mono 16 kHz ya preprocesado en `_audio_to_wav_path`.
+            # Enviar el fichero tal cual (mejor que re-encode): Groq acepta wav.
+            raw = audio_path.read_bytes()
+            create_kwargs = {
+                "file": (audio_path.name, raw),
+                "model": "whisper-large-v3-turbo",
+                "temperature": 0.0,
+                "response_format": "verbose_json",
+                # Fijo a español del kiosco (no auto-detect).
+                "language": self.language or "es",
+            }
+            if prompt:
+                create_kwargs["prompt"] = prompt
+            transcription = client.audio.transcriptions.create(**create_kwargs)
+            return _correct_kiosk_stt((transcription.text or "").strip())
         except Exception as error:
             if not _is_quiet():
                 print(f"[STT] Error en la transcripción con Groq: {error}")
@@ -951,21 +1092,32 @@ class WhisperListener:
         )
 
         # beam_size=5 era el default de faster-whisper (más lento en CPU).
-        # WHISPER_BEAM_SIZE=1–2 recorta latencia con poca pérdida en español kiosco.
-        beam_size = max(1, _env_int("WHISPER_BEAM_SIZE", 2))
+        # Default 3: mejor precisión en kiosco sin el coste de 5.
+        beam_size = max(1, _env_int("WHISPER_BEAM_SIZE", 3))
+        vad_min_silence = max(200, _env_int("WHISPER_VAD_MIN_SILENCE_MS", 400))
+        vad_speech_pad = max(0, _env_int("WHISPER_VAD_SPEECH_PAD_MS", 200))
         transcribe_kwargs = {
             "language": self.language or "es",
             "task": "transcribe",  # nunca "translate" a inglés
             "beam_size": beam_size,
             "vad_filter": True,
-            "vad_parameters": dict(min_silence_duration_ms=500),
+            "vad_parameters": dict(
+                min_silence_duration_ms=vad_min_silence,
+                speech_pad_ms=vad_speech_pad,
+                threshold=_env_float("WHISPER_VAD_THRESHOLD", 0.45),
+            ),
             "initial_prompt": prompt,
             # Determinista y sin arrastrar contexto previo: evita que el modelo
             # repita/alucine frases de turnos anteriores.
             "temperature": 0.0,
             "condition_on_previous_text": False,
-            "no_speech_threshold": 0.6,
+            "no_speech_threshold": _env_float("WHISPER_NO_SPEECH_THRESHOLD", 0.55),
+            "compression_ratio_threshold": _env_float(
+                "WHISPER_COMPRESSION_RATIO_THRESHOLD", 2.4
+            ),
+            "log_prob_threshold": _env_float("WHISPER_LOG_PROB_THRESHOLD", -1.0),
             "multilingual": False,
+            "word_timestamps": False,
         }
 
         if db_hotwords:
@@ -1020,6 +1172,7 @@ class WhisperListener:
         wav_path = self._audio_to_wav_path(audio)
 
         try:
+            # `transcribe_file` / Groq ya aplican `_correct_kiosk_stt`.
             text = self.transcribe_file(wav_path)
         except Exception as error:
             if not _is_quiet():
@@ -1030,8 +1183,6 @@ class WhisperListener:
                 wav_path.unlink()  # Regla A: pathlib for deletion too
             except OSError:
                 pass
-
-        text = _correct_kiosk_stt(text)
 
         if _looks_like_hallucination(text):
             if not _is_quiet():

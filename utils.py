@@ -5,8 +5,8 @@ import sys
 import json
 
 # --- Segmentación de texto para TTS (fuente única) ---
-# Compartido por ``call._split_into_chunks`` y ``app.services.conversation``
-# para que la heurística de latencia no diverja entre ambos caminos.
+# Fuente única de segmentación TTS: ``call._split_into_chunks``,
+# ``call.speak_streaming_from_llm`` y ``app.services.conversation``.
 _CLAUSE_RE = re.compile(r"(?<=[.!?;:—,])\s+")
 _SENTENCE_RE = re.compile(r"(?<=[.!?])\s+")
 # Primer fragmento más corto → el TTS arranca antes (latencia a primer audio).
@@ -19,6 +19,10 @@ def pop_ready_speech(buf: str, first_chunk: bool) -> tuple[list[str], str, bool]
 
     El primer fragmento usa cláusulas (coma/punto) con umbral bajo; el resto
     oraciones. Devuelve ``(piezas, buffer_restante, first_chunk)``.
+
+    Si el *primer* separador deja un trozo corto (p. ej. «Hola,»), se prueba el
+    siguiente (p. ej. el punto de la oración) en lugar de bloquear el stream
+    hasta el final del turno.
     """
     ready: list[str] = []
     while buf:
@@ -27,12 +31,18 @@ def pop_ready_speech(buf: str, first_chunk: bool) -> tuple[list[str], str, bool]
         matches = list(sep.finditer(buf))
         if not matches:
             break
-        match = matches[0]
-        head = buf[: match.end()].strip()
-        if len(head) < min_len:
+        chosen = None
+        for match in matches:
+            head = buf[: match.end()].strip()
+            if len(head) >= min_len:
+                chosen = match
+                break
+        if chosen is None:
+            # Hay puntuación pero aún no hay suficiente texto; esperar más tokens.
             break
+        head = buf[: chosen.end()].strip()
         ready.append(head)
-        buf = buf[match.end() :]
+        buf = buf[chosen.end() :]
         first_chunk = False
     return ready, buf, first_chunk
 

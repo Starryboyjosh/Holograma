@@ -62,17 +62,28 @@ class ConversationService:
         connection: _Connection,
         camera: _Camera | None = None,
         speak: Callable[[str], None] | None = None,
+        tts_done: Callable[[], None] | None = None,
     ) -> None:
         self._llm = llm
         self._conn = connection
         self._camera = camera
         # `speak` es un callable SÍNCRONO (Piper bloquea); se delega a un hilo.
         self._speak = speak
+        # Cierre de turno TTS (p. ej. holograma → idle). Opcional.
+        self._tts_done = tts_done
 
     async def _speak_piece(self, text: str) -> None:
         if not self._speak or not text.strip():
             return
         await asyncio.to_thread(self._speak, text)
+
+    async def _finish_tts(self) -> None:
+        if self._tts_done is None:
+            return
+        try:
+            await asyncio.to_thread(self._tts_done)
+        except Exception:
+            pass
 
     async def handle_prompt(self, prompt: str) -> str:
         """Procesa un turno completo y devuelve el texto generado ("" si falló)."""
@@ -142,10 +153,12 @@ class ConversationService:
                 await self._conn.broadcast(
                     {"type": "error", "message": f"TTS: {error}"}
                 )
+                await self._finish_tts()
                 return full_text
             if audio_started:
                 await self._conn.broadcast(
                     {"type": "audio_status", "status": "completed"}
                 )
+                await self._finish_tts()
 
         return full_text

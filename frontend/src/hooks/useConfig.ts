@@ -77,8 +77,7 @@ export function useConfig() {
     async (overrides: Record<string, string> = {}): Promise<boolean> => {
       try {
         // No forzar YOLO_MODEL aquí: el backend / config.json mandan
-        // (yolo26n personas + open-vocab/world o yoloe). Sobrescribir a
-        // yolo26n.pt rompía la detección de clases entrenadas.
+        // (default yoloe-26n-seg: personas + custom en un solo modelo).
         const payload: Record<string, string> = {
           HOLOGRAM_CAMERA: yoloEnabled ? '1' : '0',
           YOLO_INTERVAL_SECONDS: yoloInterval,

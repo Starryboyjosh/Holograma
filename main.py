@@ -237,15 +237,22 @@ camera_provider = CameraContextProvider()
 
 
 def _host_speak(text: str) -> None:
-    """TTS en el host del holograma.
+    """TTS en el host del holograma (un fragmento del turno).
 
-    Import perezoso de `call` (evita cargar la CLI al importar main) y usa el
-    `call.speak` vigente. El ConversationService lo ejecuta con asyncio.to_thread,
-    así que Piper (bloqueante) nunca corre sobre el event loop.
+    Import perezoso de `call`. ``end_idle=False``: el holograma no vuelve a
+    idle entre cláusulas del mismo turno (antes parpadeaba speaking→idle→speaking).
+    ``ConversationService`` llama a ``_host_tts_done`` al terminar el audio.
     """
     import call
 
-    call.speak(text)
+    call.speak(text, end_idle=False)
+
+
+def _host_tts_done() -> None:
+    """Vuelve el holograma a idle al cerrar el turno de TTS del web."""
+    import call
+
+    call.hologram.set_state("idle")
 
 
 # Orquestador de un turno: emite por `manager`, inyecta contexto de cámara desde
@@ -255,6 +262,7 @@ conversation = ConversationService(
     connection=manager,
     camera=camera_provider,
     speak=_host_speak,
+    tts_done=_host_tts_done,
 )
 
 
@@ -670,13 +678,57 @@ def train_image(payload: TrainImagePayload):
 
         if image_data and "base64," in image_data:
             header, encoded = image_data.split("base64,", 1)
+            raw_bytes = base64.b64decode(encoded)
+            # Comprimir/normalizar: JPEG calidad ~85, lado máx. 1280 (ahorra disco
+            # y acelera el índice de logos). Si OpenCV no está, se guarda tal cual.
+            try:
+                import cv2
+                import numpy as np
+
+                arr = np.frombuffer(raw_bytes, dtype=np.uint8)
+                img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
+                if img is not None:
+                    h, w = img.shape[:2]
+                    max_side = 1280
+                    if max(h, w) > max_side:
+                        scale = max_side / float(max(h, w))
+                        img = cv2.resize(
+                            img,
+                            (max(1, int(w * scale)), max(1, int(h * scale))),
+                            interpolation=cv2.INTER_AREA,
+                        )
+                        # Ajustar cajas si reescalamos la imagen completa.
+                        scale_boxes = scale
+                    else:
+                        scale_boxes = 1.0
+                    ok, enc = cv2.imencode(
+                        ".jpg", img, [int(cv2.IMWRITE_JPEG_QUALITY), 85]
+                    )
+                    if ok:
+                        raw_bytes = enc.tobytes()
+                    else:
+                        scale_boxes = 1.0
+                else:
+                    scale_boxes = 1.0
+            except Exception:
+                scale_boxes = 1.0
             with open(image_path, "wb") as f:
-                f.write(base64.b64decode(encoded))
+                f.write(raw_bytes)
+        else:
+            scale_boxes = 1.0
 
         thumbnail_url = f"/data/images/{image_filename}" if image_data else ""
 
         for box in payload.boundingBoxes:
             new_id = int(time.time() * 1000)
+            bx, by, bw, bh = box.x, box.y, box.w, box.h
+            if scale_boxes != 1.0:
+                bx, by, bw, bh = (
+                    bx * scale_boxes,
+                    by * scale_boxes,
+                    bw * scale_boxes,
+                    bh * scale_boxes,
+                )
             existing.append(
                 {
                     "id": new_id,
@@ -684,16 +736,23 @@ def train_image(payload: TrainImagePayload):
                     # del LLM, así que se limita la superficie de inyección/abuso.
                     "label": clamp_text(box.label, MAX_LABEL_CHARS),
                     "desc": clamp_text(box.desc, MAX_LABEL_CHARS),
-                    "x": box.x,
-                    "y": box.y,
-                    "w": box.w,
-                    "h": box.h,
+                    "x": bx,
+                    "y": by,
+                    "w": bw,
+                    "h": bh,
                     "thumbnail": thumbnail_url,
                     "timestamp": time.time(),
                 }
             )
 
         _atomic_write_text(meta_path, json.dumps(existing, indent=4))
+        # Invalidar caché de plantillas (se regenera en el próximo reload YOLO).
+        try:
+            cache = os.path.join(DATA_DIR, "logo_index.npz")
+            if os.path.isfile(cache):
+                os.remove(cache)
+        except OSError:
+            pass
 
         return {"status": "ok", "items": existing}
     except Exception as e:

@@ -221,8 +221,8 @@ def select_ears():
 
 
 def configure_vision():
-    """Flujo interactivo para la Visión (YOLOv26 + OpenCV)."""
-    console.print("\n[accent]3. PARÁMETROS DE VISIÓN (YOLOv26 Nano + Cámara)[/accent]")
+    """Flujo interactivo para la Visión (YOLOE-26n open-vocab + OpenCV)."""
+    console.print("\n[accent]3. PARÁMETROS DE VISIÓN (YOLOE-26n + Cámara)[/accent]")
 
     activate = Confirm.ask(
         "¿Deseas activar el sentido de la visión en tiempo real (cámara)?", default=True
@@ -233,7 +233,8 @@ def configure_vision():
         return False, None, 0, 0
 
     console.print(
-        "[success]Visión activada con modelo predeterminado: yolo26n.pt (~80 MB VRAM)[/success]"
+        "[success]Visión activada con modelo único: yoloe-26n-seg.pt "
+        "(personas + custom open-vocab)[/success]"
     )
 
     # Preguntar por el ratio de Frame Skipping para optimizar rendimiento
@@ -241,7 +242,7 @@ def configure_vision():
         "Ratio de 'Frame Skipping' (procesar 1 de cada X fotogramas)", default=5
     )
 
-    return True, "yolo26n.pt", frame_skipping, VISION_VRAM
+    return True, "yoloe-26n-seg.pt", frame_skipping, VISION_VRAM
 
 
 def run_setup():
@@ -331,7 +332,7 @@ def run_setup():
             "WHISPER_MODEL": ear_model,
             "HOLOGRAM_INPUT": "voice",
             "HOLOGRAM_CAMERA": "1" if vision_active else "0",
-            "YOLO_MODEL": yolo_model if vision_active else "yolo26n.pt",
+            "YOLO_MODEL": yolo_model if vision_active else "yoloe-26n-seg.pt",
             "YOLO_INTERVAL_SECONDS": str(frame_skip / 30.0) if vision_active else "1.0",
         }
 

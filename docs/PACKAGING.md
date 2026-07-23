@@ -57,7 +57,7 @@ backend ni PyInstaller funcionarán.
    y logs a `%APPDATA%`/XDG (no junto al `.exe`, que es de solo lectura tras
    instalar). Exponerlos vía `tauri::api::path`.
 
-7. **Activos de modelos con checksum**: descargar/verificar `yolo26n.pt` y las
+7. **Activos de modelos con checksum**: descargar/verificar `yoloe-26n-seg.pt` y las
    voces Piper en el primer arranque si no vienen en el bundle (tamaño del
    instalador vs descarga diferida).
 
