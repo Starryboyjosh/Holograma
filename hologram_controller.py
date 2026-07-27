@@ -231,6 +231,56 @@ def discover_devices(subnet: str = "192.168.1", port: int = 50200, timeout: floa
     return found
 
 
+class HologramArrayTester:
+    """Envía un clip independiente a cada holograma de un arreglo.
+
+    Este flujo es deliberadamente manual: cada unidad tiene su propia conexión
+    TCP y su propio índice de playlist. Sirve para validar el cableado y el
+    orden de videos antes de conectar el cambio de estado de la IA.
+    """
+
+    def __init__(
+        self,
+        assignments: list[tuple[str, int]],
+        port: int = 50200,
+        command_gap: float = 0.25,
+        verbose: bool = True,
+    ):
+        if not assignments:
+            raise ValueError("Se requiere al menos una asignación IP:índice.")
+        self.assignments = assignments
+        self.port = port
+        self.command_gap = command_gap
+        self.verbose = verbose
+        self._fans: list[tuple[HologramFanController, int]] = []
+
+    def run(self) -> list[dict[str, object]]:
+        """Conecta cada unidad, reproduce su índice y devuelve el resultado."""
+        results: list[dict[str, object]] = []
+        try:
+            for ip, index in self.assignments:
+                fan = HologramFanController(ip=ip, port=self.port, verbose=self.verbose)
+                try:
+                    fan.connect()
+                    fan.start()
+                    time.sleep(self.command_gap)
+                    fan.play_file(index)
+                    self._fans.append((fan, index))
+                    results.append({"ip": ip, "index": index, "status": "ok"})
+                except (ConnectionError, OSError, ValueError) as error:
+                    fan.disconnect()
+                    results.append({"ip": ip, "index": index, "status": "error", "message": str(error)})
+        finally:
+            self.close()
+        return results
+
+    def close(self):
+        """Cierra las conexiones abiertas sin apagar unidades ya probadas."""
+        for fan, _index in self._fans:
+            fan.disconnect()
+        self._fans.clear()
+
+
 # ══════════════════════════════════════════════════════════════════════════
 #  INTEGRACIÓN CON LA IA — Manager de estados (thread-safe, fail-soft)
 # ══════════════════════════════════════════════════════════════════════════

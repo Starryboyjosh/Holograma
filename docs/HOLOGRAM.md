@@ -6,6 +6,13 @@ MSPJ70S4, 3 unidades en *splicing*). Referencia del protocolo:
 
 ## TL;DR — "cambiar el video por índice" YA es el mecanismo
 
+> **Estado validado — 23 de julio de 2026:** la comunicación TCP con tres
+> unidades independientes funciona correctamente. Se probaron las IPs
+> `10.10.2.211`, `10.10.2.212` y `10.10.2.213`, enviando clips distintos por
+> índice (`0`, `1` y `2`). Esta implementación queda como base funcional del
+> proyecto. El siguiente paso es conectar asignaciones por unidad al estado
+> automático de la IA.
+
 El dispositivo **no renderiza 3D en vivo: es un reproductor de archivos**. Lo que
 parece volumétrico son MP4 pre-renderizados con fondo negro. La única forma de
 cambiar lo que se ve es saltar a otro clip de la playlist por su índice, con el
@@ -27,6 +34,47 @@ Esto **ya está implementado** en `hologram_controller.py` y se usa de dos forma
 No existe una integración TCP "más rica": el protocolo son 10 comandos de 3 bytes
 (ver tabla abajo). Por eso **cambiar el clip por índice no es una alternativa a
 evaluar, es *el* diseño correcto y ya está hecho.**
+
+## Prueba de tres unidades con clips distintos
+
+Para validar primero la red y el orden de las playlists, ejecuta el probador
+manual. Cada opción representa una unidad independiente en formato `IP:índice`:
+
+```bash
+python scripts/test_three_holograms.py \
+  --hologram 192.168.1.101:0 \
+  --hologram 192.168.1.102:1 \
+  --hologram 192.168.1.103:2
+```
+
+El script conecta cada IP al puerto `50200`, envía `RUN` y luego
+`play_file(index)`. Debes haber cargado previamente los tres videos en cada
+playlist; el índice `0`, `1` o `2` siempre significa la posición dentro de la
+playlist de esa unidad. Si una unidad falla, el resultado se reporta por IP y
+las demás continúan la prueba.
+
+## Control manual desde la terminal
+
+Para cambiar clips uno por uno y confirmar qué archivos existen en cada
+unidad:
+
+```bash
+python scripts/hologram_terminal.py --ip 10.10.2.212
+```
+
+Dentro del programa usa `v 0`, `v 1`, `v 2`, etc. También puedes usar `s`
+para iniciar, `p` para pausar, `r` para reanudar, `n` para avanzar, `b` para
+retroceder y `q` para salir. Puedes repetir `--ip` para enviar el mismo comando
+a varias unidades.
+
+## Base funcional y siguientes mejoras
+
+La base actual ya cubre la comunicación independiente con cada unidad y el
+cambio manual de videos por índice. Aún queda pendiente:
+
+- Mapear estados de la IA a un índice distinto por holograma.
+- Cambiar esos índices durante escucha, pensamiento y respuesta hablada.
+- Manejar reconexiones, errores de playlist y configuración persistente por unidad.
 
 ## Reparto de responsabilidades: app HoloMissYou ↔ este controlador
 

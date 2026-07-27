@@ -128,3 +128,25 @@ def test_configured_manager_uses_custom_clip_map(monkeypatch):
         wait_for_event(("play_file", 9))  # idle remapeado al clip 9
     finally:
         manager.disable()
+
+
+def test_array_tester_sends_a_different_clip_to_each_hologram(monkeypatch):
+    FakeFan.events = []
+    monkeypatch.setattr(hologram_controller, "HologramFanController", FakeFan)
+    tester = hologram_controller.HologramArrayTester(
+        [("10.10.10.1", 0), ("10.10.10.2", 1), ("10.10.10.3", 2)],
+        command_gap=0,
+    )
+
+    results = tester.run()
+
+    assert results == [
+        {"ip": "10.10.10.1", "index": 0, "status": "ok"},
+        {"ip": "10.10.10.2", "index": 1, "status": "ok"},
+        {"ip": "10.10.10.3", "index": 2, "status": "ok"},
+    ]
+    assert [event for event in FakeFan.events if event[0] == "play_file"] == [
+        ("play_file", 0),
+        ("play_file", 1),
+        ("play_file", 2),
+    ]
