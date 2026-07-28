@@ -854,6 +854,10 @@ class HologramUnitUpdate(BaseModel):
     identify_index: int = 255
 
 
+class HologramTestPayload(BaseModel):
+    index: int | None = None
+
+
 class IdentityPayload(BaseModel):
     id: str
     title: str
@@ -1042,8 +1046,22 @@ def identify_hologram_unit(role: str):
 
 
 @app.post("/api/hologram/units/{role}/test")
-def test_hologram_unit(role: str):
-    return identify_hologram_unit(role)
+def test_hologram_unit(role: str, payload: HologramTestPayload | None = None):
+    if role not in ("top", "center", "bottom"):
+        return _holo_error("HOLOGRAM_INVALID_ROLE", "El rol debe ser top, center o bottom.", field="role")
+    if payload is None or payload.index is None:
+        return identify_hologram_unit(role)
+    if not 0 <= payload.index <= 255:
+        return _holo_error("HOLOGRAM_INVALID_INDEX", "El índice debe estar entre 0 y 255.", field="index")
+    unit = _get_holo_director().units[role]
+    try:
+        status = unit.status()
+        if not status.connected:
+            return _holo_error("HOLOGRAM_UNIT_OFFLINE", "La unidad no está conectada.", 409)
+        unit.execute_legacy("play_file", payload.index)
+        return {"status": "ok", "role": role, "ip": unit.config.ip, "index": payload.index}
+    except Exception as error:
+        return _holo_error("HOLOGRAM_TEST_FAILED", redact_secrets(error, os.environ), 409)
 
 
 @app.get("/api/hologram/identities")

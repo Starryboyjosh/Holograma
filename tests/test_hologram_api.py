@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import main
@@ -5,6 +6,7 @@ from app.hologram.config_store import HologramConfigStore
 from app.hologram.director import HologramDirector
 from app.hologram.models import HologramConfig
 from main import (
+    HologramTestPayload,
     HologramUnitUpdate,
     IdentityPayload,
     PromotionPayload,
@@ -18,6 +20,9 @@ from main import (
     start_hologram_rotation,
     stop_hologram_rotation,
     update_hologram_unit,
+)
+from main import (
+    test_hologram_unit as api_test_hologram_unit,
 )
 
 
@@ -52,3 +57,15 @@ def test_admin_rejects_bad_role_and_default_deletion(tmp_path, monkeypatch):
     assert bad.status_code == 400
     result = delete_hologram_identity("holomind")
     assert result.status_code == 409
+
+
+def test_unit_test_validates_optional_index(tmp_path, monkeypatch):
+    setup_runtime(tmp_path, monkeypatch)
+    result = api_test_hologram_unit("top", HologramTestPayload(index=256))
+    assert result.status_code == 400
+    assert json.loads(result.body) == {
+        "status": "error",
+        "code": "HOLOGRAM_INVALID_INDEX",
+        "message": "El índice debe estar entre 0 y 255.",
+        "field": "index",
+    }

@@ -8,7 +8,7 @@ import { Card, SectionTitle } from "../components/ui/Card";
 import { ToggleGroup } from "../components/ui/ToggleGroup";
 import { Field, Select, TextInput } from "../components/ui/Field";
 import { ProviderConfigCard } from "../components/ProviderConfigCard";
-import { HologramConnection } from "../components/HologramConnection";
+import { HologramControlPanel } from "../components/hologram/HologramControlPanel";
 import { buildLlmConfigPayload } from "../lib/providerForm";
 import { useProviders } from "../hooks/useProviders";
 import type { AppearanceTheme } from "../context/ThemeContext";
@@ -86,7 +86,7 @@ export function SettingsScreen() {
         </div>
       </div>
 
-      <HologramConnection holo={hologram} />
+      <HologramControlPanel />
 
       {/* AI brain (headline) — full width and driven by the live provider catalogue. */}
       <ProviderConfigCard
