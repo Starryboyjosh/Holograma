@@ -3,6 +3,7 @@ import json
 import os
 import time
 from contextlib import asynccontextmanager
+from dataclasses import replace
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -21,6 +22,9 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from app.connection import ConnectionManager
+from app.hologram.config_store import HologramConfigStore
+from app.hologram.director import HologramDirector
+from app.hologram.models import FanUnitConfig, HologramConfig, IdentityMedia, PromotionMedia
 from app.services.conversation import ConversationService
 from app.services.llm import LLMService
 from app.services.vision import CameraContextProvider
@@ -77,6 +81,7 @@ async def lifespan(app: FastAPI):
     # Parchear/monkey-patch las funciones de call.py para que transmitan al frontend
     try:
         import call
+        from app.hologram.compatibility import LegacyHologramAdapter
         from stt.listener import WhisperListener
 
         # El audio se procesa en el servidor: marcar modo web para que
@@ -120,9 +125,12 @@ async def lifespan(app: FastAPI):
 
         call._camera_detection_callback = custom_callback
 
-        # En modo web call.main() no se ejecuta, por lo que el gestor físico debe
-        # arrancarse explícitamente dentro del ciclo de vida de FastAPI.
-        call.hologram.start()
+        # En modo web el director único es el dueño de los tres managers; el
+        # adaptador conserva las llamadas heredadas de call.py sobre top.
+        runtime_director = _get_holo_director()
+        call.hologram = LegacyHologramAdapter(runtime_director)
+        runtime_director.start()
+        runtime_director.start_rotation()
 
         print("[Startup] Monkey-patching de call.py y WhisperListener completado.")
     except Exception as e:
@@ -228,6 +236,40 @@ async def _api_token_gate(request, call_next):
 # Reemplaza la antigua lista global `active_connections` y centraliza el envío:
 # tanto el endpoint async como los hilos de voz/cámara emiten por este manager.
 manager = ConnectionManager()
+
+# Director único del proceso para la administración y la rotación. Se crea de
+# forma perezosa para que importar ``main`` siga siendo barato en los tests.
+_hologram_director: HologramDirector | None = None
+_hologram_store: HologramConfigStore | None = None
+
+
+def _get_holo_director() -> HologramDirector:
+    global _hologram_director, _hologram_store
+    if _hologram_director is not None:
+        return _hologram_director
+    _hologram_store = HologramConfigStore(os.path.join(DATA_DIR, "hologram_media.json"))
+    config = _hologram_store.load()
+    # Si aún no existe el catálogo, el modo heredado conserva su top desde env.
+    if not _hologram_store.path.exists():
+        ip = os.getenv("HOLOGRAM_TCP_IP", "").strip()
+        if ip:
+            try:
+                legacy_port = int(os.getenv("HOLOGRAM_TCP_PORT", "50200"))
+            except ValueError:
+                legacy_port = 50200
+            units = dict(config.units)
+            units["top"] = FanUnitConfig(enabled=True, ip=ip, port=legacy_port)
+            config = replace(config, units=units)
+    _hologram_director = HologramDirector(config)
+    return _hologram_director
+
+
+def _save_holo_config(config: HologramConfig) -> HologramDirector:
+    director = _get_holo_director()
+    assert _hologram_store is not None
+    _hologram_store.save(config)
+    director.reconfigure(config)
+    return director
 
 # --- Capa de servicios de la Fase 3 (estado inyectado, sin globals mutables) ---
 # Singletons a nivel de módulo. El proveedor de cámara DEBE ser único: el callback
@@ -790,6 +832,76 @@ class HologramCommand(BaseModel):
     index: int | None = None
 
 
+class HologramUnitUpdate(BaseModel):
+    enabled: bool = True
+    ip: str = ""
+    port: int = 50200
+    identify_index: int = 255
+
+
+class IdentityPayload(BaseModel):
+    id: str
+    title: str
+    index: int
+    enabled: bool = True
+    default: bool = False
+    keywords: list[str] = []
+
+
+class PromotionPayload(BaseModel):
+    id: str
+    title: str
+    index: int
+    enabled: bool = True
+    categories: list[str] = []
+    category: str | None = None
+    keywords: list[str] = []
+    topics: list[str] = []
+    duration_seconds: float = 10
+    duration: float | None = None
+    priority: int = 0
+    rotation_enabled: bool = True
+
+
+def _holo_error(code: str, message: str, status_code: int = 400, field: str | None = None):
+    body = {"status": "error", "code": code, "message": message}
+    if field:
+        body["field"] = field
+    return JSONResponse(body, status_code=status_code)
+
+
+def _config_error(error: Exception):
+    message = redact_secrets(error, os.environ)
+    lowered = message.lower()
+    code = "HOLOGRAM_INVALID_CONFIG"
+    field = None
+    if "index" in lowered:
+        code, field = "HOLOGRAM_INVALID_INDEX", "index"
+    elif "port" in lowered:
+        code, field = "HOLOGRAM_INVALID_PORT", "port"
+    elif "id" in lowered and "unique" in lowered:
+        code = "HOLOGRAM_DUPLICATE_ID"
+    return _holo_error(code, message, field=field)
+
+
+def _unit_status_payload(director: HologramDirector) -> list[dict]:
+    return [
+        {"role": role, **status.__dict__}
+        for role, status in director.get_status().units.items()
+    ]
+
+
+def _identity_from_payload(payload: IdentityPayload) -> IdentityMedia:
+    return IdentityMedia(payload.id.strip(), payload.title.strip(), payload.index, payload.enabled, payload.default, tuple(payload.keywords))
+
+
+def _promotion_from_payload(payload: PromotionPayload) -> PromotionMedia:
+    categories = tuple(payload.categories or ([payload.category] if payload.category else []))
+    keywords = tuple(payload.keywords or payload.topics)
+    duration = payload.duration if payload.duration is not None else payload.duration_seconds
+    return PromotionMedia(payload.id.strip(), payload.title.strip(), payload.index, payload.enabled, categories, keywords, duration, payload.priority, payload.rotation_enabled)
+
+
 # --- Conexión del holograma y compatibilidad de comandos TCP ---
 
 
@@ -840,12 +952,238 @@ def holo_status():
     import call
 
     manager = call.hologram
+    director = _get_holo_director()
+    detailed = director.get_status()
+    top = detailed.units["top"]
     return {
         "connected": manager.is_connected,
         "ip": manager.ip or "",
         "port": manager.port,
         "ai_paused": getattr(call, "_hologram_paused", False),
+        "units": _unit_status_payload(director),
+        "rotation": detailed.rotation,
+        "rotation_active": detailed.rotation.get("active", False),
+        "current": detailed.rotation.get("current"),
+        "next": detailed.rotation.get("next"),
+        "context_id": detailed.rotation.get("context_id"),
+        "mode": "context" if detailed.rotation.get("context_id") else ("rotation" if detailed.rotation.get("active") else "idle"),
+        "top_status": top.__dict__,
     }
+
+
+# --- Administración WAVE-002 (las rutas heredadas anteriores no cambian) ---
+
+@app.get("/api/hologram/units")
+def hologram_units():
+    return {"status": "ok", "units": _unit_status_payload(_get_holo_director())}
+
+
+@app.put("/api/hologram/units/{role}")
+def update_hologram_unit(role: str, payload: HologramUnitUpdate):
+    if role not in ("top", "center", "bottom"):
+        return _holo_error("HOLOGRAM_INVALID_ROLE", "El rol debe ser top, center o bottom.", field="role")
+    try:
+        config = _get_holo_director().config
+        units = dict(config.units)
+        units[role] = FanUnitConfig(payload.enabled, payload.ip.strip(), payload.port, payload.identify_index)
+        _save_holo_config(replace(config, units=units))
+        return {"status": "ok", "unit": next(item for item in _unit_status_payload(_get_holo_director()) if item["role"] == role)}
+    except Exception as error:
+        return _config_error(error)
+
+
+@app.post("/api/hologram/units/{role}/connect")
+def connect_hologram_unit(role: str):
+    if role not in ("top", "center", "bottom"):
+        return _holo_error("HOLOGRAM_INVALID_ROLE", "El rol debe ser top, center o bottom.", field="role")
+    unit = _get_holo_director().units[role]
+    unit.start()
+    return {"status": "ok", "unit": next(item for item in _unit_status_payload(_get_holo_director()) if item["role"] == role)}
+
+
+@app.post("/api/hologram/units/{role}/disconnect")
+def disconnect_hologram_unit(role: str):
+    if role not in ("top", "center", "bottom"):
+        return _holo_error("HOLOGRAM_INVALID_ROLE", "El rol debe ser top, center o bottom.", field="role")
+    _get_holo_director().units[role].close()
+    return {"status": "ok"}
+
+
+@app.post("/api/hologram/units/{role}/identify")
+def identify_hologram_unit(role: str):
+    if role not in ("top", "center", "bottom"):
+        return _holo_error("HOLOGRAM_INVALID_ROLE", "El rol debe ser top, center o bottom.", field="role")
+    unit = _get_holo_director().units[role]
+    try:
+        status = unit.status()
+        if not status.connected:
+            return _holo_error("HOLOGRAM_UNIT_OFFLINE", "La unidad no está conectada.", 409)
+        unit.execute_legacy("play_file", unit.config.identify_index)
+        if status.current_index is not None:
+            unit.request(status.current_index, status.current_media_id or f"restore:{role}")
+        return {"status": "ok", "role": role, "ip": unit.config.ip, "index": unit.config.identify_index}
+    except Exception as error:
+        return _holo_error("HOLOGRAM_IDENTIFY_FAILED", redact_secrets(error, os.environ), 409)
+
+
+@app.post("/api/hologram/units/{role}/test")
+def test_hologram_unit(role: str):
+    return identify_hologram_unit(role)
+
+
+@app.get("/api/hologram/identities")
+def list_hologram_identities():
+    return {"status": "ok", "identities": [item.__dict__ for item in _get_holo_director().config.identities]}
+
+
+@app.post("/api/hologram/identities")
+def create_hologram_identity(payload: IdentityPayload):
+    try:
+        config = _get_holo_director().config
+        if any(item.id == payload.id for item in config.identities + config.promotions):
+            return _holo_error("HOLOGRAM_DUPLICATE_ID", "El ID ya existe.", field="id")
+        identity = _identity_from_payload(payload)
+        identities = config.identities + (identity,)
+        _save_holo_config(replace(config, identities=identities))
+        return {"status": "ok", "identity": identity.__dict__}
+    except Exception as error:
+        return _config_error(error)
+
+
+@app.put("/api/hologram/identities/{identity_id}")
+def update_hologram_identity(identity_id: str, payload: IdentityPayload):
+    try:
+        config = _get_holo_director().config
+        if identity_id != payload.id and any(item.id == payload.id for item in config.identities + config.promotions):
+            return _holo_error("HOLOGRAM_DUPLICATE_ID", "El ID ya existe.", field="id")
+        if not any(item.id == identity_id for item in config.identities):
+            return _holo_error("HOLOGRAM_NOT_FOUND", "Identidad no encontrada.", 404)
+        identities = tuple(_identity_from_payload(payload) if item.id == identity_id else item for item in config.identities)
+        _save_holo_config(replace(config, identities=identities))
+        return {"status": "ok", "identity": next(item.__dict__ for item in identities if item.id == payload.id)}
+    except Exception as error:
+        return _config_error(error)
+
+
+@app.delete("/api/hologram/identities/{identity_id}")
+def delete_hologram_identity(identity_id: str):
+    config = _get_holo_director().config
+    identity = next((item for item in config.identities if item.id == identity_id), None)
+    if identity is None:
+        return _holo_error("HOLOGRAM_NOT_FOUND", "Identidad no encontrada.", 404)
+    if identity.default or identity.id == "holomind":
+        return _holo_error("HOLOGRAM_DEFAULT_IDENTITY", "No se puede eliminar la identidad predeterminada.", 409)
+    _save_holo_config(replace(config, identities=tuple(item for item in config.identities if item.id != identity_id)))
+    return {"status": "ok"}
+
+
+@app.post("/api/hologram/identities/{identity_id}/test")
+def test_hologram_identity(identity_id: str):
+    try:
+        _get_holo_director().set_identity(identity_id)
+        return {"status": "ok", "identity_id": identity_id}
+    except Exception as error:
+        return _config_error(error)
+
+
+@app.get("/api/hologram/promotions")
+def list_hologram_promotions():
+    return {"status": "ok", "promotions": [item.__dict__ for item in _get_holo_director().config.promotions]}
+
+
+@app.post("/api/hologram/promotions")
+def create_hologram_promotion(payload: PromotionPayload):
+    try:
+        config = _get_holo_director().config
+        if any(item.id == payload.id for item in config.identities + config.promotions):
+            return _holo_error("HOLOGRAM_DUPLICATE_ID", "El ID ya existe.", field="id")
+        promotion = _promotion_from_payload(payload)
+        _save_holo_config(replace(config, promotions=config.promotions + (promotion,)))
+        return {"status": "ok", "promotion": promotion.__dict__}
+    except Exception as error:
+        return _config_error(error)
+
+
+@app.put("/api/hologram/promotions/{promotion_id}")
+def update_hologram_promotion(promotion_id: str, payload: PromotionPayload):
+    try:
+        config = _get_holo_director().config
+        if not any(item.id == promotion_id for item in config.promotions):
+            return _holo_error("HOLOGRAM_NOT_FOUND", "Promoción no encontrada.", 404)
+        if promotion_id != payload.id and any(item.id == payload.id for item in config.identities + config.promotions):
+            return _holo_error("HOLOGRAM_DUPLICATE_ID", "El ID ya existe.", field="id")
+        promotion = _promotion_from_payload(payload)
+        promotions = tuple(promotion if item.id == promotion_id else item for item in config.promotions)
+        _save_holo_config(replace(config, promotions=promotions))
+        return {"status": "ok", "promotion": promotion.__dict__}
+    except Exception as error:
+        return _config_error(error)
+
+
+@app.delete("/api/hologram/promotions/{promotion_id}")
+def delete_hologram_promotion(promotion_id: str):
+    config = _get_holo_director().config
+    if not any(item.id == promotion_id for item in config.promotions):
+        return _holo_error("HOLOGRAM_NOT_FOUND", "Promoción no encontrada.", 404)
+    _save_holo_config(replace(config, promotions=tuple(item for item in config.promotions if item.id != promotion_id)))
+    return {"status": "ok"}
+
+
+@app.post("/api/hologram/promotions/{promotion_id}/test")
+def test_hologram_promotion(promotion_id: str):
+    try:
+        _get_holo_director().play_promotion(promotion_id)
+        return {"status": "ok", "promotion_id": promotion_id}
+    except Exception as error:
+        return _config_error(error)
+
+
+class PromotionCategoryPayload(BaseModel):
+    category: str
+    context_id: str | None = None
+
+
+@app.post("/api/hologram/promotions/test-category")
+def test_hologram_promotion_category(payload: PromotionCategoryPayload):
+    try:
+        _get_holo_director().focus_promotion_category(payload.category, payload.context_id)
+        return {"status": "ok", "category": payload.category}
+    except Exception as error:
+        return _config_error(error)
+
+
+@app.post("/api/hologram/rotation/start")
+def start_hologram_rotation():
+    director = _get_holo_director()
+    director.start()
+    director.start_rotation()
+    return {"status": "ok", "rotation": director.rotation.get_status()}
+
+
+@app.post("/api/hologram/rotation/pause")
+def pause_hologram_rotation():
+    director = _get_holo_director()
+    director.pause_rotation()
+    return {"status": "ok", "rotation": director.rotation.get_status()}
+
+
+@app.post("/api/hologram/rotation/resume")
+def resume_hologram_rotation():
+    director = _get_holo_director()
+    director.resume_rotation()
+    return {"status": "ok", "rotation": director.rotation.get_status()}
+
+
+@app.post("/api/hologram/rotation/stop")
+def stop_hologram_rotation():
+    director = _get_holo_director()
+    director.stop_rotation()
+    return {"status": "ok", "rotation": director.rotation.get_status()}
+
+
+@app.get("/api/hologram/rotation/status")
+def hologram_rotation_status():
+    return {"status": "ok", "rotation": _get_holo_director().rotation.get_status()}
 
 
 @app.post("/api/hologram/pause_ai")

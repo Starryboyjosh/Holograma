@@ -38,7 +38,7 @@ class HologramUnitManager:
             self._thread = threading.Thread(target=self._run, name=f"hologram-{self.role}", daemon=True)
             self._thread.start()
 
-    def request(self, index: int, media_id: str) -> None:
+    def request(self, index: int, media_id: str, context_id: str | None = None) -> None:
         if not 0 <= index <= 255:
             raise ValueError("index debe estar entre 0 y 255.")
         if not self.config.enabled:

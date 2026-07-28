@@ -10,6 +10,8 @@ from .models import (
     PromotionAction,
     ScenePlan,
 )
+from .rotation import PromotionRotationManager, RealClock, VirtualClock
+from .simulator import HologramSimulator, SimulatorEvent
 from .unit_manager import HologramUnitManager
 
 __all__ = [
@@ -18,8 +20,13 @@ __all__ = [
     "HologramConfigStore",
     "HologramDirector",
     "HologramUnitManager",
+    "HologramSimulator",
     "MascotState",
     "PromotionAction",
+    "PromotionRotationManager",
+    "RealClock",
     "ScenePlan",
+    "SimulatorEvent",
+    "VirtualClock",
     "create_legacy_hologram_manager",
 ]

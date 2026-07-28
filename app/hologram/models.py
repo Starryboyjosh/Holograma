@@ -24,6 +24,7 @@ class FanUnitConfig:
     enabled: bool = True
     ip: str = ""
     port: int = 50200
+    identify_index: int = 255
 
     def __post_init__(self) -> None:
         if not isinstance(self.enabled, bool):
@@ -34,6 +35,7 @@ class FanUnitConfig:
             raise ValueError("Una unidad habilitada requiere IP.")
         if not isinstance(self.port, int) or isinstance(self.port, bool) or not 1 <= self.port <= 65535:
             raise ValueError("port debe estar entre 1 y 65535.")
+        _index(self.identify_index, "identify_index")
 
 
 @dataclass(frozen=True)
@@ -49,6 +51,8 @@ class IdentityMedia:
         if not self.id.strip() or not self.title.strip():
             raise ValueError("La identidad requiere id y título.")
         _index(self.index)
+        if any(not isinstance(keyword, str) or not keyword.strip() for keyword in self.keywords):
+            raise ValueError("Las keywords deben ser textos no vacíos.")
 
 
 @dataclass(frozen=True)
@@ -59,11 +63,22 @@ class PromotionMedia:
     enabled: bool = True
     categories: tuple[str, ...] = ()
     keywords: tuple[str, ...] = ()
+    duration_seconds: float = 10
+    priority: int = 0
+    rotation_enabled: bool = True
 
     def __post_init__(self) -> None:
         if not self.id.strip() or not self.title.strip():
             raise ValueError("La promoción requiere id y título.")
         _index(self.index)
+        if self.duration_seconds <= 0:
+            raise ValueError("duration_seconds debe ser mayor que cero.")
+        if not isinstance(self.priority, int) or isinstance(self.priority, bool):
+            raise ValueError("priority debe ser entero.")
+        if not isinstance(self.rotation_enabled, bool):
+            raise ValueError("rotation_enabled debe ser booleano.")
+        if any(not isinstance(category, str) or not category.strip() for category in self.categories):
+            raise ValueError("Las categorías deben ser textos no vacíos.")
 
 
 @dataclass(frozen=True)
@@ -141,6 +156,7 @@ class FanUnitStatus:
 class HologramStatus:
     units: dict[FanRole, FanUnitStatus]
     default_identity_id: str
+    rotation: dict = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -197,8 +213,8 @@ class HologramConfig:
             PromotionMedia(
                 **{
                     **item,
-                    "categories": tuple(item.get("categories", ())),
-                    "keywords": tuple(item.get("keywords", ())),
+                    "categories": tuple(item.get("categories", (item.get("category"),)) if item.get("category") and "categories" not in item else item.get("categories", ())),
+                    "keywords": tuple(item.get("keywords", item.get("topics", ()))),
                 }
             )
             for item in raw.get("promotions", [])
