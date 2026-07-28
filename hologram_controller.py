@@ -581,7 +581,7 @@ class HologramStateManager:
         self._reconnect_delay = min(self._reconnect_delay * 2, 30.0)
 
 
-def create_hologram_manager(verbose: bool = False) -> HologramStateManager:
+def create_hologram_manager(verbose: bool = False):
     """
     Construye un HologramStateManager a partir de variables de entorno.
 
@@ -595,11 +595,13 @@ def create_hologram_manager(verbose: bool = False) -> HologramStateManager:
     Returns:
         HologramStateManager (posiblemente deshabilitado / no-op).
     """
-    ip = os.getenv("HOLOGRAM_TCP_IP", "").strip() or None
-    port = int(os.getenv("HOLOGRAM_TCP_PORT", "50200"))
-    verbose = verbose or os.getenv("HOLOGRAM_TCP_VERBOSE", "").strip() == "1"
-    manager = HologramStateManager(
-        ip=ip, port=port, state_clips=resolve_state_clips(), verbose=verbose
+    # WAVE-001 mantiene esta fábrica como punto de compatibilidad, pero ahora
+    # devuelve un adaptador cuyo "top" es gestionado por el director único.
+    # HologramStateManager permanece público para scripts/consumidores antiguos.
+    from app.hologram.compatibility import create_legacy_hologram_manager
+
+    manager = create_legacy_hologram_manager(
+        verbose=verbose or os.getenv("HOLOGRAM_TCP_VERBOSE", "").strip() == "1"
     )
     if not manager.enabled:
         print(

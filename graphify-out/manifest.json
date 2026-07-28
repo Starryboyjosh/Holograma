@@ -1,17 +1,17 @@
 {
   "call.py": {
-    "mtime": 1784691397.2855864,
-    "ast_hash": "073bf2b56be04863d785f1fd28a29ce7",
+    "mtime": 1785113574.9259133,
+    "ast_hash": "6f351b0646d4437ffd0a3639c9389c10",
     "semantic_hash": ""
   },
   "llm_backend.py": {
-    "mtime": 1784348439.2646353,
-    "ast_hash": "818eeb95ca8d18bcd9f7594b951845c9",
+    "mtime": 1785113574.94258,
+    "ast_hash": "17711b8499ade0dc823a9ae03bd3e605",
     "semantic_hash": ""
   },
   "main.py": {
-    "mtime": 1784691397.2974608,
-    "ast_hash": "31797e50e7806ca081a3cf2b8455b867",
+    "mtime": 1785113574.94258,
+    "ast_hash": "cb69e80b0d4868c9b42a5023a5414558",
     "semantic_hash": ""
   },
   "skills/__init__.py": {
@@ -25,9 +25,9 @@
     "semantic_hash": "9357032374bbf808f1fb7f55dbec0be2"
   },
   "skills/event_mode.py": {
-    "mtime": 1782310365.6572437,
-    "ast_hash": "06212b15215316e4a23667cf785c16af",
-    "semantic_hash": "06212b15215316e4a23667cf785c16af"
+    "mtime": 1785113574.94258,
+    "ast_hash": "4b930d83fd10a0633b8a164ee638e5bd",
+    "semantic_hash": ""
   },
   "skills/honduras.py": {
     "mtime": 1782858337.5513208,
@@ -55,14 +55,14 @@
     "semantic_hash": "b0436582c4a8505d00db6acfde9d06c9"
   },
   "stt/listener.py": {
-    "mtime": 1784691397.3007934,
-    "ast_hash": "300fd84cbb93dfebcd0f0253d8e98aad",
+    "mtime": 1785113574.9459133,
+    "ast_hash": "461b041c6c487bc322c7aab93e81c39c",
     "semantic_hash": ""
   },
   "vision/__init__.py": {
-    "mtime": 1780194880.977873,
-    "ast_hash": "c3bc0db18424f006e8b162c48bcc4356",
-    "semantic_hash": "c3bc0db18424f006e8b162c48bcc4356"
+    "mtime": 1785113574.9459133,
+    "ast_hash": "d06303d56e4dc333b426e63cf45e8420",
+    "semantic_hash": ""
   },
   "vision/camera.py": {
     "mtime": 1783735766.2348974,
@@ -75,9 +75,9 @@
     "semantic_hash": "7dc30226a6813a07dad940b5efb7f2fa"
   },
   "vision/person_detector.py": {
-    "mtime": 1784348439.2746356,
-    "ast_hash": "2d9c6e755c2488a84eae2c8a69a2ac67",
-    "semantic_hash": "2d9c6e755c2488a84eae2c8a69a2ac67"
+    "mtime": 1785113574.9459133,
+    "ast_hash": "d5f54e6af19d3974f421ec85b2a439b3",
+    "semantic_hash": ""
   },
   "data/honduras_info.json": {
     "mtime": 1782858337.5413208,
@@ -130,8 +130,8 @@
     "semantic_hash": "a9d6e78681d815c21ce10453bccf93d6"
   },
   "hologram_controller.py": {
-    "mtime": 1784840998.1393971,
-    "ast_hash": "c07b9b16ebdb1964f5d83be5f9ae754d",
+    "mtime": 1785200257.1097426,
+    "ast_hash": "79fbe9a327f78aed88d16a97cc9885c9",
     "semantic_hash": ""
   },
   "pyrightconfig.json": {
@@ -145,9 +145,9 @@
     "semantic_hash": "ae62fe2154e578d504adb0943e9ac8b6"
   },
   "scripts/diagnose_hologram.py": {
-    "mtime": 1782310365.660577,
-    "ast_hash": "ca26fc99b7aa62c7edfa76d8eb665356",
-    "semantic_hash": "ca26fc99b7aa62c7edfa76d8eb665356"
+    "mtime": 1785113574.94258,
+    "ast_hash": "00187a9e1cc15ab956d5328d5419907f",
+    "semantic_hash": ""
   },
   "scripts/run_web.sh": {
     "mtime": 1782002137.107017,
@@ -155,8 +155,8 @@
     "semantic_hash": "0278016830889773f9905a36072b1f95"
   },
   "scripts/setup_hologram.py": {
-    "mtime": 1784348439.2646353,
-    "ast_hash": "980e7c368fcaa20c7c183a5695eca389",
+    "mtime": 1785113574.94258,
+    "ast_hash": "768b23e8ec21122a074cf2ae7446ccf8",
     "semantic_hash": ""
   },
   "skills/utils.py": {
@@ -165,9 +165,9 @@
     "semantic_hash": "5426fc8248f4978c7770d2bfeeb61be6"
   },
   "utils.py": {
-    "mtime": 1784348439.2746356,
-    "ast_hash": "713afe9698d9456282ea70c1ae5caf17",
-    "semantic_hash": "713afe9698d9456282ea70c1ae5caf17"
+    "mtime": 1785113574.9459133,
+    "ast_hash": "97a6711e28d50ca8b4173eb4d742aa01",
+    "semantic_hash": ""
   },
   "AGENTS.md": {
     "mtime": 1781578673.0986757,
@@ -180,8 +180,8 @@
     "semantic_hash": "e55e84abfc1a2ee7fdde9da07fb13126"
   },
   "README.md": {
-    "mtime": 1784348439.2546353,
-    "ast_hash": "355c00d187fe902829d38a721e73f5de",
+    "mtime": 1785178368.0422595,
+    "ast_hash": "e2a1fd8094aa73c718ee0562c5359cec",
     "semantic_hash": ""
   },
   "frontend/README.md": {
@@ -230,8 +230,8 @@
     "semantic_hash": "2a8602323e13cef21ea1bab245a0d690"
   },
   "config.example.json": {
-    "mtime": 1784348439.2546353,
-    "ast_hash": "64a3f3ea5a7ce1cb3556c64f7b6a67ec",
+    "mtime": 1785113574.9259133,
+    "ast_hash": "729c5993dbc962d30475df71a99abcd1",
     "semantic_hash": ""
   },
   "frontend/src-tauri/build.rs": {
@@ -320,9 +320,9 @@
     "semantic_hash": ""
   },
   "frontend/src/hooks/useConfig.ts": {
-    "mtime": 1783396321.007884,
-    "ast_hash": "b8e74252a6c62e0d95570949578c7b80",
-    "semantic_hash": "b8e74252a6c62e0d95570949578c7b80"
+    "mtime": 1785113574.9292467,
+    "ast_hash": "78f22cf671fd055fca839c3a19b0fe37",
+    "semantic_hash": ""
   },
   "frontend/src/hooks/useHologram.ts": {
     "mtime": 1782313332.2489812,
@@ -725,9 +725,9 @@
     "semantic_hash": "9c0c859430837793e338c899bbe8c8ae"
   },
   "docs/PACKAGING.md": {
-    "mtime": 1782311193.431813,
-    "ast_hash": "8e66e0b3df5d3002a5ec72178c42e5cf",
-    "semantic_hash": "8e66e0b3df5d3002a5ec72178c42e5cf"
+    "mtime": 1785113574.9259133,
+    "ast_hash": "b4858642ea4bfe5b68fc4a89fbff6f07",
+    "semantic_hash": ""
   },
   "frontend/src/components/HologramConnection.tsx": {
     "mtime": 1782313332.2489812,
@@ -740,19 +740,14 @@
     "semantic_hash": "45e1735395af7e3f561d0ce13164ce44"
   },
   "tests/test_hologram_controller.py": {
-    "mtime": 1784840998.14273,
+    "mtime": 1785113577.8659232,
     "ast_hash": "7ed95227bbfe424dcbecaaf294a09509",
     "semantic_hash": ""
   },
   "docs/HOLOGRAM.md": {
-    "mtime": 1784841621.7008421,
+    "mtime": 1785113577.845923,
     "ast_hash": "4f68292510f2d1b3bfe754211105bbea",
     "semantic_hash": ""
-  },
-  "media/UNEV_prueba_3_paneles_preview.png": {
-    "mtime": 1782338954.9877803,
-    "ast_hash": "977bd05323f49cbd43818ed6b83fdb5d",
-    "semantic_hash": "977bd05323f49cbd43818ed6b83fdb5d"
   },
   "tests/test_llm_unify.py": {
     "mtime": 1783955847.3936508,
@@ -765,9 +760,9 @@
     "semantic_hash": "6cb4e8af1942e6efa8825df296fe7197"
   },
   "tests/test_person_presence.py": {
-    "mtime": 1782674842.787523,
-    "ast_hash": "0db18be6ed3ec24e4908192d0e612f35",
-    "semantic_hash": "0db18be6ed3ec24e4908192d0e612f35"
+    "mtime": 1785113574.9459133,
+    "ast_hash": "ae7ff040fb3e242ba04919286566fbfb",
+    "semantic_hash": ""
   },
   "app/__init__.py": {
     "mtime": 1782676738.6160479,
@@ -785,8 +780,8 @@
     "semantic_hash": "a1359cfd12937be1a1e2322ddb1274e0"
   },
   "app/services/conversation.py": {
-    "mtime": 1784348439.2546353,
-    "ast_hash": "870a0f0cb1cd3b502bd588c0a356ab4f",
+    "mtime": 1785113574.92258,
+    "ast_hash": "45d01ae468d56a7636376f64de6778f6",
     "semantic_hash": ""
   },
   "app/services/llm.py": {
@@ -795,14 +790,14 @@
     "semantic_hash": "e3dfca270811fe8ccc92cba399b820b5"
   },
   "app/services/vision.py": {
-    "mtime": 1784348439.2546353,
-    "ast_hash": "4e2d33fa77af4ff256555668360d4115",
-    "semantic_hash": "4e2d33fa77af4ff256555668360d4115"
+    "mtime": 1785113574.9259133,
+    "ast_hash": "7046422c778a0eb0f30d0a1b13abaaac",
+    "semantic_hash": ""
   },
   "tests/test_app_services.py": {
-    "mtime": 1783735766.2348974,
-    "ast_hash": "0336314c5091788d2f86c71cb7fbf3cf",
-    "semantic_hash": "0336314c5091788d2f86c71cb7fbf3cf"
+    "mtime": 1785113574.9459133,
+    "ast_hash": "ff863a9a98a85a7aef7ae6296ea47b3f",
+    "semantic_hash": ""
   },
   "tests/test_camera_feed_gate.py": {
     "mtime": 1782674992.1807067,
@@ -810,9 +805,9 @@
     "semantic_hash": "f2dcc59a03741674df5dfd4f71a2d79f"
   },
   "tests/test_custom_object_interval.py": {
-    "mtime": 1783735766.2348974,
-    "ast_hash": "f713378e96df0b49b4e6db8317ec136d",
-    "semantic_hash": "f713378e96df0b49b4e6db8317ec136d"
+    "mtime": 1785113574.9459133,
+    "ast_hash": "589cbc47d4a8af0caf1aaa6e606522e2",
+    "semantic_hash": ""
   },
   "pyproject.toml": {
     "mtime": 1782270374.6466587,
@@ -820,9 +815,9 @@
     "semantic_hash": "54929534656e5b622e69791be1639585"
   },
   "tests/test_yolo_predict_opts.py": {
-    "mtime": 1783735766.2348974,
-    "ast_hash": "c5bb7150532450c88fd1c794af28aa21",
-    "semantic_hash": "c5bb7150532450c88fd1c794af28aa21"
+    "mtime": 1785113574.9459133,
+    "ast_hash": "78b50172f8ee996d38398aa244074f3c",
+    "semantic_hash": ""
   },
   "tests/test_hotwords_cache.py": {
     "mtime": 1784691397.3007934,
@@ -835,9 +830,9 @@
     "semantic_hash": "8972b804da0fe05338d46e4c737de47b"
   },
   "camera_context.py": {
-    "mtime": 1784348439.2546353,
-    "ast_hash": "08cf449360ff7d82bb2e59e47c8e1c56",
-    "semantic_hash": "08cf449360ff7d82bb2e59e47c8e1c56"
+    "mtime": 1785113574.9259133,
+    "ast_hash": "30d3fcbf36f34d2e8f98a272a6449e9c",
+    "semantic_hash": ""
   },
   "auth_token.py": {
     "mtime": 1782311095.6431127,
@@ -867,6 +862,286 @@
   "scripts/hologram_terminal.py": {
     "mtime": 1784840604.1042097,
     "ast_hash": "77151295e872458316045d05bf1828ed",
+    "semantic_hash": ""
+  },
+  "tests/test_stt_audio_preprocess.py": {
+    "mtime": 1785113574.9459133,
+    "ast_hash": "221a709417cdad0ece3453bcf81acf14",
+    "semantic_hash": ""
+  },
+  "yolo_instructions.md": {
+    "mtime": 1785113574.9492466,
+    "ast_hash": "331df3b86eba03fd10bcfac688d57aac",
+    "semantic_hash": ""
+  },
+  "app/hologram/__init__.py": {
+    "mtime": 1785200246.9231381,
+    "ast_hash": "ff560c9ff5d3022606ec1f2943d1d3e2",
+    "semantic_hash": ""
+  },
+  "app/hologram/compatibility.py": {
+    "mtime": 1785200273.019659,
+    "ast_hash": "b8db8efe2a0763c47b0b6b5fd8d65f94",
+    "semantic_hash": ""
+  },
+  "app/hologram/config_store.py": {
+    "mtime": 1785200246.9231381,
+    "ast_hash": "62b6b319ab19aaad9bd8d7e55b8cd9ef",
+    "semantic_hash": ""
+  },
+  "app/hologram/director.py": {
+    "mtime": 1785200246.9231381,
+    "ast_hash": "93db4474e6ba7a77bb288235b230b5d0",
+    "semantic_hash": ""
+  },
+  "app/hologram/models.py": {
+    "mtime": 1785200342.5494475,
+    "ast_hash": "86f57c29170cde6686756b49c491d82d",
+    "semantic_hash": ""
+  },
+  "app/hologram/unit_manager.py": {
+    "mtime": 1785200273.019659,
+    "ast_hash": "395a4306283c1ed31c61f016cf6e6386",
+    "semantic_hash": ""
+  },
+  "tests/test_hologram_config_store.py": {
+    "mtime": 1785200312.8995113,
+    "ast_hash": "2c86853026e426384221b7095d53db2c",
+    "semantic_hash": ""
+  },
+  "tests/test_hologram_director.py": {
+    "mtime": 1785200342.5494475,
+    "ast_hash": "53c2e4258fe488bb86e6da48586f71d7",
+    "semantic_hash": ""
+  },
+  "tests/test_hologram_unit_manager.py": {
+    "mtime": 1785200342.5494475,
+    "ast_hash": "eba196af48ecf1e4993f2435d3f97ef8",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/INDEX.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "21fb81d5873482420b4ee43762b15382",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/QUICK_START.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "ad4d9a58a6c7248aef166895831b71ff",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/REPOSITORY_INTEGRATION.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "60c65a94a65d43bbaa37f30647e4e0c8",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/architecture/SYSTEM_ARCHITECTURE.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "d18939abb1c41f9e120e008fee3014d7",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/architecture/adrs/ADR-001-REUSE-TCP-CONTROLLER.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "0ca9044bebf4c5075275e026ad0db0a6",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/architecture/adrs/ADR-002-SEMANTIC-SCENE-PLAN.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "a53987682a50f2d8b9e70ebddb3ac9b7",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/architecture/adrs/ADR-003-JSON-CATALOG.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "8b7f2d37472993c28092a0885ee86d3b",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/architecture/adrs/ADR-004-HYBRID-ROUTER.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "2b473ef609e4cf0137e764972d6911ee",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/architecture/adrs/ADR-005-SINGLE-DIRECTOR.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "b48c64d766729ef9a54948b5bfbfbf6b",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/architecture/adrs/README.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "b2c2a2ae137018f5323f233bb947de52",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/contracts/API.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "d8fcd291e9a371aa27d2023086bdb1e6",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/contracts/CONFIG_SCHEMA.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "7cea613c6910b9bd614d5467acb1aaaa",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/contracts/DOMAIN_MODELS.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "f836d575a319b3f450eccc114ea3716f",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/contracts/FRONTEND.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "f2e85dc41503e28272f33e1d3b9ad2eb",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/contracts/SCENE_PLAN.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "01e59bce12fb4bd50585831e3ff4d744",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/governance/AGENT_RULES.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "2d6e5b69174aa099974ac18219249313",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/governance/CHANGELOG.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "e274b4447000631a55ab04086d3dc091",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/governance/DECISIONS.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "c64a77ce33fabf61c7104d916ea61153",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/governance/RISKS.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "8a436191cc2e884a52cb15c69c64222b",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/governance/SOURCE_OF_TRUTH.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "c7cd36bfae0bd2fadd6b8fdbb4b27c80",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/handoffs/README.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "e1ab5261a993927dbb4f94d6e472934c",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/handoffs/WAVE-001-HANDOFF.md": {
+    "mtime": 1785200373.5794127,
+    "ast_hash": "404d1702a8942459f305f5db375d64ad",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/implementation/IMPLEMENTATION_PROMPT.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "1516a773b647c3b8eddd57f60d041fe3",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/implementation/MODEL_ASSIGNMENT.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "28536a20e60ce07764072bf49df5c245",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/implementation/ROADMAP.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "cbce476e8701b7e87905b936dde5fb17",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/implementation/STATUS.md": {
+    "mtime": 1785200373.5794127,
+    "ast_hash": "9c338fcd51126a0711eb7e39da958a6b",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/implementation/TASK_TEMPLATE.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "1b74cf8bebd22e2e97c0a1026c42ca34",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/implementation/waves/README.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "e32bb80ef5bccac1f76ed7163cc7b6f1",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/implementation/waves/WAVE-001.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "0b11184cb2ba9aa0707327aa05e4eac9",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/implementation/waves/WAVE-002.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "4a073a5e486b9abb42d6719d0bad413a",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/implementation/waves/WAVE-003.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "b33d6c658140444bcecd972683945c3e",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/implementation/waves/WAVE-004.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "e85ddd7e2fe76e26aad2039deaea0cd5",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/implementation/waves/WAVE-005.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "255cb73c6bf8178ca942aa8333bba922",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/implementation/waves/WAVE-006.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "435557b110d64e0b31e78e3acc021a92",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/operations/HARDWARE_VALIDATION.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "1d0505470a9c0a628bef2c2bbeca2c20",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/operations/MIGRATION_COMPATIBILITY.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "4842fe6731788accf50d85b9d2a1bb4e",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/operations/SIMULATOR.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "7ab611488f4864f0e8d380dfa7cc73ff",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/operations/TROUBLESHOOTING.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "e00591677be3cb69aa8b5b598bb875f2",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/product/BACKLOG.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "3f997c8a65ed5836947d4fe2827648c6",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/product/CURRENT_STATE.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "eb2e9376fe08644647effc473aef83d8",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/product/REQUIREMENTS.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "6c844c7bed9e39d6636382efab5a69f4",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/product/VISION_AND_SCOPE.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "142f612991aacfbf784f2bfe73c93e20",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/quality/ACCEPTANCE_MATRIX.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "e4da7886eb05c11d10e2cbb244d18d97",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/quality/REVIEW_CHECKLIST.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "b92682f5ba57c01c18fbc0e76e084206",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/quality/TEST_STRATEGY.md": {
+    "mtime": 1785203594.0,
+    "ast_hash": "206b1625f24010ba3e4d9d269f738a11",
     "semantic_hash": ""
   }
 }
