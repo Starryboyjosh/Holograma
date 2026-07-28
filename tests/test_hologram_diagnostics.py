@@ -47,9 +47,9 @@ def test_real_diagnostic_waits_for_connection_and_sends_zero_after_connect(tmp_p
         def __init__(self, role, unit):
             self.connected = False
 
-        def start(self):
+        def connect(self):
             self.connected = True
-            events.append("start")
+            events.append("connect")
 
         def status(self):
             return type("Status", (), {"connected": self.connected})()
@@ -59,7 +59,7 @@ def test_real_diagnostic_waits_for_connection_and_sends_zero_after_connect(tmp_p
         def close(self): events.append("close")
 
     assert diagnose_hologram.diagnose_hologram(False, False, "center", 0, True, Manager) == 0
-    assert events == ["start", ("play_file", 0), "close"]
+    assert events == ["connect", ("play_file", 0), "close"]
     assert "Conexión establecida" in capsys.readouterr().out
 
 
@@ -69,7 +69,7 @@ def test_real_diagnostic_returns_failure_when_connection_times_out(tmp_path, mon
 
     class Manager:
         def __init__(self, role, unit): pass
-        def start(self): pass
+        def connect(self): return False
         def status(self): return type("Status", (), {"connected": False})()
         def close(self): pass
 

@@ -69,3 +69,24 @@ def test_category_and_invalid_or_empty_catalog():
     empty.start()
     assert empty.get_status()["current"] is None
     empty.close()
+
+
+def test_restore_paused_state_preserves_current_and_never_dispatches_next_item():
+    clock, first_sink = VirtualClock(), Sink()
+    first = PromotionRotationManager(promotions(), first_sink, clock=clock)
+    first.start()
+    first.pause()
+    snapshot = first.get_status()
+    assert snapshot["current"]["id"] == "a"
+    assert snapshot["next"]["id"] == "b"
+    first.stop()
+
+    restored_sink = Sink()
+    restored = PromotionRotationManager(promotions(), restored_sink, clock=clock)
+    restored.restore_status(snapshot)
+    status = restored.get_status()
+    assert (status["active"], status["paused"]) == (True, True)
+    assert status["current"]["id"] == "a"
+    assert status["next"]["id"] == "b"
+    assert restored_sink.commands == [(1, "promotion:a", None)]
+    restored.close()

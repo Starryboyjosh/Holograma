@@ -11,7 +11,7 @@ function response(body: unknown, ok = true) { return Promise.resolve({ ok, statu
 describe('HologramControlPanel', () => {
   beforeEach(() => {
     fetchMock.mockImplementation((path: string) => {
-      if (path === '/api/hologram/status') return response({ connected: false, ip: '', port: 50200, units: [{ role: 'top', enabled: true, ip: '10.0.0.1', port: 50200, connected: true, current_index: 1, current_media_id: 'idle', last_error: null, worker_alive: true }, { role: 'center', enabled: true, ip: '10.0.0.2', port: 50200, connected: false, current_index: null, current_media_id: null, last_error: 'offline', worker_alive: false }, { role: 'bottom', enabled: true, ip: '10.0.0.3', port: 50200, connected: true, current_index: 8, current_media_id: 'careers', last_error: null, worker_alive: true }], rotation: { active: true, paused: false, current: 'careers', next: 'admissions' } });
+      if (path === '/api/hologram/status') return response({ connected: false, ip: '', port: 50200, units: [{ role: 'top', enabled: true, ip: '10.0.0.1', port: 50200, connected: true, current_index: 1, current_media_id: 'idle', last_error: null, worker_alive: true }, { role: 'center', enabled: true, ip: '10.0.0.2', port: 50200, connected: false, current_index: null, current_media_id: null, last_error: 'offline', worker_alive: false }, { role: 'bottom', enabled: true, ip: '10.0.0.3', port: 50200, connected: true, current_index: 8, current_media_id: 'careers', last_error: null, worker_alive: true }], rotation: { active: true, paused: false, current: { id: 'careers', title: 'Carreras', index: 0, duration_seconds: 12 }, next: { id: 'admissions', title: 'Admisiones', index: 1, duration_seconds: 10 } } });
       if (path === '/api/hologram/identities') return response({ identities: [{ id: 'holomind', title: 'Holomind', index: 7, enabled: true, default: true, keywords: ['holomind'] }] });
       if (path === '/api/hologram/promotions') return response({ promotions: [] });
       return response({ status: 'ok' });
@@ -24,6 +24,7 @@ describe('HologramControlPanel', () => {
     expect(screen.getByText('Central — Identidades')).toBeInTheDocument();
     expect(screen.getByText('Inferior — Promociones')).toBeInTheDocument();
     expect(await screen.findByText(/No hay promociones elegibles/i)).toBeInTheDocument();
+    expect(screen.getByText('Carreras (índice 0)')).toBeInTheDocument();
   });
 
   it('uses the administrative connect endpoint and refreshes after an operation', async () => {
@@ -32,5 +33,11 @@ describe('HologramControlPanel', () => {
     const connectButton = screen.getByRole('article', { name: 'Central — Identidades' }).querySelectorAll('button')[2] as HTMLButtonElement;
     connectButton.click();
     await waitFor(() => expect(fetchMock).toHaveBeenCalledWith('/api/hologram/units/center/connect', expect.objectContaining({ method: 'POST' })));
+  });
+
+  it('renders an authorization failure as a normal panel error without exposing credentials', async () => {
+    fetchMock.mockImplementation(() => response({ status: 'error', message: 'No autorizado.' }, false));
+    render(<ToastProvider><HologramControlPanel /></ToastProvider>);
+    expect(await screen.findByRole('alert')).toHaveTextContent('No autorizado.');
   });
 });

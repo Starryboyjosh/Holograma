@@ -268,7 +268,7 @@ def diagnose_hologram(
     print(f"Hardware: role={target_role} ip={unit.ip} port={unit.port} index={index if index is not None else '-'}")
     manager = (manager_factory or HologramUnitManager)(target_role, unit)
     try:
-        manager.start()
+        manager.connect()
         deadline = now_fn() + max(0.0, connect_timeout)
         while not manager.status().connected and now_fn() < deadline:
             sleep_fn(0.02)

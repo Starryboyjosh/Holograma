@@ -15,7 +15,7 @@ export function FanUnitsPanel({ units, onSave, onAction }: { units: FanUnitStatu
 function FanUnitCard({ role, unit, onSave, onAction }: { role: FanRole; unit?: FanUnitStatus; onSave: (role: FanRole, payload: UnitUpdate) => Promise<boolean>; onAction: (role: FanRole, action: 'connect' | 'disconnect' | 'identify' | 'test', index?: number) => Promise<boolean> }) {
   const [ip, setIp] = useState(unit?.ip ?? '');
   const [port, setPort] = useState(unit?.port ?? 50200);
-  const [identifyIndex, setIdentifyIndex] = useState(255);
+  const [identifyIndex, setIdentifyIndex] = useState(unit?.identify_index ?? 255);
   const [enabled, setEnabled] = useState(unit?.enabled ?? true);
   const [index, setIndex] = useState(255);
   const [busy, setBusy] = useState(false);

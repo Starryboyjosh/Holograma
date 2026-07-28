@@ -42,6 +42,8 @@ class HologramConversationOrchestrator:
     def start_turn(self, user_message: str, context: str | None = None, mode: str | None = None, skill: str | None = None) -> str:
         context_id = str(uuid.uuid4())
         with self._lock:
+            if getattr(self._router, "config", self._director.config) is not self._director.config:
+                self._router.replace_config(self._director.config)
             self._active_context_id = context_id
             self._current_identity = "holomind"
             self._observer.begin(context_id)

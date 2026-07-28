@@ -55,6 +55,42 @@ def test_disconnected_unit_reconnects_without_breaking_worker():
     unit.close()
 
 
+def test_explicit_connect_attempts_socket_without_a_play_request_and_is_idempotent():
+    unit = manager()
+    assert unit.connect() is True
+    assert unit.is_connected
+    assert [event for event in FakeFan.events if event[0] == "connect"] == [("connect", "10.0.0.1")]
+    assert unit.connect() is True
+    assert [event for event in FakeFan.events if event[0] == "connect"] == [("connect", "10.0.0.1")]
+    unit.close()
+
+
+def test_explicit_connect_records_socket_failure_without_play_request():
+    unit = manager()
+    FakeFan.failures = 1
+    assert unit.connect() is False
+    status = unit.status()
+    assert status.connected is False
+    assert status.last_send_result == "connect_error"
+    assert status.retry_count == 1
+    unit.close()
+
+
+def test_successful_reconnect_clears_connection_error_without_sending_media():
+    unit = manager()
+    FakeFan.failures = 1
+    assert unit.connect() is False
+    assert unit.status().last_send_result == "connect_error"
+    assert unit.connect() is True
+    status = unit.status()
+    assert status.connected is True
+    assert status.last_error is None
+    assert status.retry_count == 0
+    assert status.last_send_result == "connected"
+    assert status.last_sent_index is None
+    unit.close()
+
+
 def test_concurrent_commands_are_serialized():
     unit = manager()
     unit.start()

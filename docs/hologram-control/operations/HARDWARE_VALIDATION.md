@@ -37,3 +37,8 @@ El software solicita índices base cero `0..255`; `0` es válido. El hardware se
 trata como write-only: un envío sin excepción significa comando enviado, no
 reproducción visual confirmada. La correspondencia IP/rol e índice/playlist está
 pendiente de calibración física.
+
+Para la demostración escolar, cargue tres clips de top, dos de center y tres de
+bottom en playlists independientes mediante HoloMissYou. Pruebe `0`, `1` y `2`
+por rol y registre el contenido observado. Si difiere, corrija
+`data/hologram_media.json`; no agregue offsets globales.

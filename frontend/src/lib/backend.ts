@@ -44,6 +44,19 @@ function withSlash(path: string): string {
   return path.startsWith('/') ? path : `/${path}`;
 }
 
+function hologramApiToken(): string {
+  return (import.meta.env.VITE_HOLOGRAM_API_TOKEN ?? '').trim();
+}
+
+function hologramRequestInit(path: string, init?: RequestInit): RequestInit | undefined {
+  if (!withSlash(path).startsWith('/api/hologram/')) return init;
+  const token = hologramApiToken();
+  if (!token) return init;
+  const headers = new Headers(init?.headers);
+  headers.set('X-API-Token', token);
+  return { ...init, headers };
+}
+
 /** Absolute URL for an API path, e.g. apiUrl('/api/config'). */
 export function apiUrl(path: string): string {
   return `${backendBase()}${withSlash(path)}`;
@@ -52,7 +65,7 @@ export function apiUrl(path: string): string {
 /** fetch() that targets the backend regardless of runtime. */
 export async function apiFetch(path: string, init?: RequestInit): Promise<Response> {
   await resolveBackendUrl();
-  return fetch(apiUrl(path), init);
+  return fetch(apiUrl(path), hologramRequestInit(path, init));
 }
 
 /** URL for media served by the backend (MJPEG feed, /data thumbnails). Leaves

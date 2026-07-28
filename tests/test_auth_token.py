@@ -37,6 +37,12 @@ def test_privileged_prefixes_are_covered():
         assert at.is_path_privileged(prefix, "POST") is True
 
 
+def test_hologram_endpoints_require_token_for_reads_and_writes():
+    assert at.request_authorized("/api/hologram/status", "GET", None, "secret") is False
+    assert at.request_authorized("/api/hologram/units/top/connect", "POST", None, "secret") is False
+    assert at.request_authorized("/api/hologram/status", "GET", "secret", "secret") is True
+
+
 def test_tokens_match_is_constant_time_safe():
     assert at.tokens_match("abc", "abc") is True
     assert at.tokens_match("abc", "abcd") is False

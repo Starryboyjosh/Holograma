@@ -217,9 +217,9 @@ app.add_middleware(
 
 # Token de capacidad opcional para endpoints privilegiados (ajustes, contenido,
 # cámara, entrenamiento). Apagado por defecto (HOLOGRAM_API_TOKEN vacío) para no
-# romper la app actual; al activarlo, las escrituras exigen el header X-API-Token.
-# Pendiente: la shell de Tauri debe entregar el token al frontend en cada llamada
-# privilegiada (trabajo de seguridad diferido, junto al empaquetado del sidecar).
+# romper la app actual. Al activarlo, las rutas privilegiadas exigen el header
+# X-API-Token; todo `/api/hologram/*`, incluso sus lecturas, queda protegido.
+# El frontend puede aportar el token local mediante VITE_HOLOGRAM_API_TOKEN.
 _API_TOKEN = os.getenv("HOLOGRAM_API_TOKEN", "").strip()
 
 
@@ -935,8 +935,10 @@ def holo_connect(payload: HologramConnect):
     try:
         manager = _get_holo_manager()
         manager.configure(payload.ip, payload.port or 50200)
-        # La conexión física ocurre en el worker fail-soft; la interfaz consulta
-        # el estado periódicamente mientras continúan los reintentos.
+        director = manager._director
+        if not director.units["top"].connect():
+            status = director.units["top"].status()
+            return {"status": "error", "message": status.last_error or "No fue posible establecer conexión.", "ip": manager.ip}
         return {
             "status": "ok",
             "connected": manager.is_connected,
@@ -1016,7 +1018,8 @@ def connect_hologram_unit(role: str):
     if role not in ("top", "center", "bottom"):
         return _holo_error("HOLOGRAM_INVALID_ROLE", "El rol debe ser top, center o bottom.", field="role")
     unit = _get_holo_director().units[role]
-    unit.start()
+    if not unit.connect():
+        return _holo_error("HOLOGRAM_CONNECT_FAILED", unit.status().last_error or "No fue posible establecer conexión.", 409)
     return {"status": "ok", "unit": next(item for item in _unit_status_payload(_get_holo_director()) if item["role"] == role)}
 
 
@@ -1113,7 +1116,10 @@ def delete_hologram_identity(identity_id: str):
 @app.post("/api/hologram/identities/{identity_id}/test")
 def test_hologram_identity(identity_id: str):
     try:
-        _get_holo_director().set_identity(identity_id)
+        director = _get_holo_director()
+        if not any(item.id == identity_id and item.enabled for item in director.config.identities):
+            return _holo_error("HOLOGRAM_NOT_FOUND", "Identidad no encontrada o deshabilitada.", 404)
+        director.set_identity(identity_id)
         return {"status": "ok", "identity_id": identity_id}
     except Exception as error:
         return _config_error(error)

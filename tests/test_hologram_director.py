@@ -44,3 +44,49 @@ def test_three_units_keep_distinct_network_configuration():
     director = HologramDirector(config(), RecordingManager)
     status = director.get_status()
     assert [status.units[role].ip for role in ("top", "center", "bottom")] == ["10.0.0.1", "10.0.0.2", "10.0.0.3"]
+
+
+def test_reconfigure_preserves_rotation_active_paused_and_stopped_state():
+    for action, expected_active, expected_paused in (("active", True, False), ("paused", True, True), ("stopped", False, False)):
+        RecordingManager.all = {}
+        director = HologramDirector(config(), RecordingManager)
+        director.start()
+        if action != "stopped":
+            director.start_rotation()
+        if action == "paused":
+            director.pause_rotation()
+        if action == "stopped":
+            director.stop_rotation()
+        director.reconfigure(config())
+        status = director.get_status().rotation
+        assert (status["active"], status["paused"]) == (expected_active, expected_paused)
+        director.close()
+
+
+def test_reconfigure_paused_rotation_keeps_current_without_dispatching_next():
+    class HistoryManager(RecordingManager):
+        history = []
+        def request(self, index, media_id):
+            self.requests.append((index, media_id))
+            HistoryManager.history.append((self.role, index, media_id))
+
+    raw = config().to_dict()
+    raw["promotions"] = list(raw["promotions"])
+    raw["promotions"][0]["priority"] = 1
+    raw["promotions"].append({"id": "admissions", "title": "Admissions", "index": 10})
+    catalog = HologramConfig.from_dict(raw)
+    HistoryManager.all, HistoryManager.history = {}, []
+    director = HologramDirector(catalog, HistoryManager)
+    director.start_rotation()
+    director.pause_rotation()
+    before = list(HistoryManager.history)
+    assert before[-1] == ("bottom", 9, "promotion:careers")
+    director.reconfigure(catalog)
+    status = director.get_status().rotation
+    assert status["current"]["id"] == "careers"
+    assert status["next"]["id"] == "admissions"
+    assert (status["active"], status["paused"]) == (True, True)
+    bottom_history = [event for event in HistoryManager.history if event[0] == "bottom"]
+    assert bottom_history == [event for event in before if event[0] == "bottom"] + [("bottom", 9, "promotion:careers")]
+    assert ("bottom", 10, "promotion:admissions") not in bottom_history
+    director.close()

@@ -6,8 +6,9 @@ cámara). Este módulo aporta la lógica **pura** de autorización por token:
 
 * si no hay token configurado (``HOLOGRAM_API_TOKEN`` vacío) → todo pasa, igual que
   antes (comportamiento histórico, sin romper la app actual);
-* si hay token, las peticiones de **escritura** a rutas privilegiadas deben traer
-  el header ``X-API-Token`` correcto (comparación en tiempo constante).
+* si hay token, las rutas privilegiadas requieren el header ``X-API-Token``
+  correcto (comparación en tiempo constante); el control físico del holograma
+  protege tanto lectura como escritura.
 
 La integración (middleware FastAPI + cómo la shell de Tauri entrega el token al
 frontend) se hace en ``main.py`` / la capa Tauri; aquí va solo lo testeable.
@@ -19,7 +20,8 @@ import hmac
 import secrets
 
 # Rutas que modifican configuración/estado y, por tanto, requieren token cuando
-# la autorización está activada. Las lecturas (GET) quedan abiertas (kiosko).
+# la autorización está activada. El panel de holograma es una capacidad física:
+# tanto lectura como escritura requieren token cuando está activado.
 PRIVILEGED_PREFIXES: tuple[str, ...] = (
     "/api/config",
     "/api/unev-content",
@@ -27,6 +29,7 @@ PRIVILEGED_PREFIXES: tuple[str, ...] = (
     "/api/llm/test",
     "/api/train",
     "/api/speak",
+    "/api/hologram",
 )
 
 _SAFE_METHODS = frozenset({"GET", "HEAD", "OPTIONS"})
@@ -47,7 +50,9 @@ def tokens_match(provided: str | None, expected: str | None) -> bool:
 
 
 def is_path_privileged(path: str, method: str) -> bool:
-    """¿La petición modifica estado en una ruta protegida?"""
+    """¿La petición pertenece a una ruta protegida?"""
+    if path.startswith("/api/hologram"):
+        return True
     if (method or "").upper() in _SAFE_METHODS:
         return False
     return any(path.startswith(prefix) for prefix in PRIVILEGED_PREFIXES)

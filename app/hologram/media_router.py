@@ -49,6 +49,10 @@ class MediaRouter:
     def replace_config(self, config: HologramConfig) -> None:
         self._config = config
 
+    @property
+    def config(self) -> HologramConfig:
+        return self._config
+
     def route(
         self,
         user_message: str,
@@ -176,7 +180,7 @@ class MediaRouter:
     def _should_use_provider(self, local: LocalRouteResult) -> bool:
         routing = self._config.routing
         return bool(
-            self._provider and routing.mode == "hybrid" and routing.small_model_enabled
+            self._provider and routing.mode in ("hybrid", "small_model") and routing.small_model_enabled
             and (local.ambiguous or local.confidence < routing.minimum_confidence)
         )
 

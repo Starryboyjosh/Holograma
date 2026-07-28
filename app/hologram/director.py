@@ -79,12 +79,14 @@ class HologramDirector:
 
     def reconfigure(self, config: HologramConfig) -> None:
         was_started = self._started
+        rotation_status = self.rotation.get_status()
         self.close()
         self.config = config
         self.units = {role: self._manager_factory(role, config.units[role]) for role in ("top", "center", "bottom")}
         self.rotation = PromotionRotationManager(config.promotions, self.units["bottom"], config.rotation, clock=self._clock)
         if was_started:
             self.start()
+        self.rotation.restore_status(rotation_status)
 
     def apply_scene(self, scene_plan: ScenePlan) -> None:
         self.set_identity(scene_plan.center_identity)

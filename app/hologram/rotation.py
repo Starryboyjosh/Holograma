@@ -196,6 +196,73 @@ class PromotionRotationManager:
     def close(self) -> None:
         self.stop()
 
+    def restore_status(self, status: dict) -> None:
+        """Restaura estado operativo tras reemplazar el catálogo.
+
+        Solo conserva referencias que todavía existan y estén habilitadas.
+        La posición siguiente se deriva del snapshot, sin retener objetos del
+        catálogo anterior.
+        """
+        if not status.get("active"):
+            return
+        current = status.get("current") or {}
+        next_item = status.get("next") or {}
+        with self._lock:
+            eligible = self.eligible
+            next_id = next_item.get("id") if isinstance(next_item, dict) else None
+            if next_id:
+                for position, item in enumerate(eligible):
+                    if item.id == next_id:
+                        self._next_position = position
+                        break
+        context_id = status.get("context_id")
+        context_mode = status.get("context_mode")
+        current_id = current.get("id") if isinstance(current, dict) else None
+        if status.get("paused"):
+            self._restore_paused_status(current_id, context_id, context_mode)
+            return
+        try:
+            if context_id and context_mode == "item" and current_id and any(item.id == current_id for item in self._promotions if item.enabled):
+                self.focus_item(current_id, context_id)
+            elif context_id and context_mode == "category" and current_id:
+                item = next((item for item in self._promotions if item.id == current_id and item.enabled), None)
+                category = item.categories[0] if item and item.categories else None
+                if category:
+                    self.focus_category(category, context_id)
+                else:
+                    self.start()
+            else:
+                self.start()
+            if status.get("paused"):
+                self.pause()
+        except ValueError:
+            self.start()
+            if status.get("paused"):
+                self.pause()
+
+    def _restore_paused_status(self, current_id: str | None, context_id: str | None, context_mode: str | None) -> None:
+        """Restituye una pausa sin despachar el siguiente medio."""
+        with self._lock:
+            current = next((item for item in self._promotions if item.id == current_id and item.enabled), None)
+            self._active, self._paused = True, True
+            self._current, self._deadline = current, None
+            self._context_id = context_id if current is not None else None
+            self._context_mode = context_mode if self._context_id else None
+            self._context_item = current.id if self._context_id and current is not None else None
+            if self._context_id and context_mode == "category" and current is not None:
+                self._context_items = tuple(item for item in self.eligible if set(current.categories) & set(item.categories))
+            elif self._context_id and current is not None:
+                self._context_items = (current,)
+            else:
+                self._context_items = ()
+            self._context_position = 0
+            self._start_worker_locked()
+            if current is not None:
+                # El manager anterior pudo haber enviado ``shutdown`` durante
+                # reconfigure(). Restituimos solo el medio visible, sin crear
+                # deadline ni avanzar la cola pausada.
+                self._request(current.index, f"promotion:{current.id}", self._context_id)
+
     def tick(self) -> None:
         """Procesa inmediatamente un vencimiento del reloj inyectado.
 

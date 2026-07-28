@@ -13,6 +13,15 @@ Las IP `10.10.2.211`, `.212` y `.213` son ejemplos históricos: identificar el
 rol físico en cada instalación antes de guardarlo. No se ha realizado validación
 física con este repositorio.
 
+## Operación escolar local
+
+Para la demo use frontend y FastAPI en la misma computadora (`127.0.0.1`) y deje
+`HOLOGRAM_API_TOKEN` / `VITE_HOLOGRAM_API_TOKEN` sin configurar. El backend aún
+puede alcanzar las IP de las unidades. Para acceso desde otros dispositivos use
+una red controlada, `0.0.0.0` y el mismo token en ambas variables; el token Vite
+es una protección básica, no seguridad de Internet público. Consulte
+`HOLOGRAM_SCHOOL_DEMO.md` para carga, catálogo provisional y calibración.
+
 ## Calibración física pendiente
 
 | Rol | IP | Puerto | Índice solicitado | Contenido observado | Resultado |

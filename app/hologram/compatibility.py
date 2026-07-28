@@ -44,20 +44,20 @@ class LegacyHologramAdapter:
     def configure(self, ip: str, port: int = 50200) -> None:
         if not ip.strip() or not 1 <= port <= 65535:
             raise ValueError("La dirección IP y el puerto del holograma son inválidos.")
-        self.close()
         config = self._director.config
         units = dict(config.units)
         units["top"] = FanUnitConfig(enabled=True, ip=ip.strip(), port=port)
-        self._director = HologramDirector(replace(config, units=units))
+        # Conserva la identidad del director compartido por web, conversación y
+        # endpoints administrativos; reemplazarlo aquí creaba una segunda fuente.
+        self._director.reconfigure(replace(config, units=units))
         self.state_clips = self._director.config.mascot_states
-        self.start()
 
     def disable(self) -> None:
-        self.close()
         config = self._director.config
         units = dict(config.units)
         units["top"] = FanUnitConfig(enabled=False, port=config.units["top"].port)
-        self._director = HologramDirector(replace(config, units=units))
+        self._director.reconfigure(replace(config, units=units))
+        self.state_clips = self._director.config.mascot_states
 
     def execute(self, command: str, index: int | None = None) -> None:
         # Endpoint manual heredado: no es una vía de IA y conserva su contrato.

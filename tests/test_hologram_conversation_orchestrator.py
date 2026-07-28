@@ -74,3 +74,22 @@ def test_simulated_e2e_careers_turn_controls_all_three_roles():
         ("center", "identity:holomind"), ("top", "mascot:idle"),
     ]
     simulator.close()
+
+
+def test_new_turn_refreshes_router_config_after_director_reconfiguration():
+    raw = HologramConfig.default().to_dict()
+    raw["identities"] = list(raw["identities"]) + [{"id": "unev", "title": "UNEV", "index": 1, "keywords": ["antigua"]}]
+    director = Director()
+    director.config = HologramConfig.from_dict(raw)
+    router = MediaRouter(director.config)
+    orchestrator = HologramConversationOrchestrator(router, director)
+    first = orchestrator.start_turn("antigua")
+    assert director.events[-1][2] == "unev"
+
+    updated = director.config.to_dict()
+    updated["identities"] = [item for item in updated["identities"] if item["id"] != "unev"] + [{"id": "unev", "title": "UNEV", "index": 2, "keywords": ["nueva"]}]
+    director.config = HologramConfig.from_dict(updated)
+    second = orchestrator.start_turn("nueva")
+    assert first != second
+    assert director.events[-1][2] == "unev"
+    assert router.config is director.config

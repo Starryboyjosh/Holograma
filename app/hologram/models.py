@@ -156,6 +156,7 @@ class FanUnitStatus:
     last_send_at: float | None = None
     semantic_id: str | None = None
     retry_count: int = 0
+    identify_index: int = 255
 
 
 @dataclass(frozen=True)

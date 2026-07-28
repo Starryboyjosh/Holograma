@@ -19,6 +19,14 @@ export interface FanUnitStatus {
   last_send_at?: number | null;
   semantic_id?: string | null;
   retry_count?: number;
+  identify_index?: number;
+}
+
+export interface RotationMediaStatus {
+  id: string;
+  title: string;
+  index: number;
+  duration_seconds: number;
 }
 
 export interface IdentityMedia {
@@ -45,8 +53,8 @@ export interface PromotionMedia {
 export interface RotationStatus {
   active?: boolean;
   paused?: boolean;
-  current?: string | null;
-  next?: string | null;
+  current?: RotationMediaStatus | null;
+  next?: RotationMediaStatus | null;
   context_id?: string | null;
   category?: string | null;
   last_error?: string | null;
@@ -62,8 +70,8 @@ export interface HologramStatus {
   units: FanUnitStatus[];
   rotation: RotationStatus;
   rotation_active?: boolean;
-  current?: string | null;
-  next?: string | null;
+  current?: RotationMediaStatus | null;
+  next?: RotationMediaStatus | null;
   context_id?: string | null;
   mode?: string;
   top_status?: FanUnitStatus;

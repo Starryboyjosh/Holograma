@@ -43,6 +43,21 @@ class HologramUnitManager:
             self._thread = threading.Thread(target=self._run, name=f"hologram-{self.role}", daemon=True)
             self._thread.start()
 
+    def connect(self) -> bool:
+        """Inicia el worker y realiza un intento explícito de socket.
+
+        ``start`` conserva su semántica de lifecycle (no abre sockets por sí
+        solo); esta operación es la que usan las acciones administrativas y
+        el diagnóstico cuando el operador pide conectar.
+        """
+        self.start()
+        with self._lock:
+            if not self.config.enabled or not self.config.ip.strip():
+                self._last_error = "La unidad no está habilitada o no tiene IP."
+                self._last_send_result = "connect_error"
+                return False
+            return self._ensure_connected()
+
     def request(self, index: int, media_id: str, context_id: str | None = None) -> None:
         if not 0 <= index <= 255:
             raise ValueError("index debe estar entre 0 y 255.")
@@ -123,7 +138,7 @@ class HologramUnitManager:
                 self._last_sent[0] if self._last_sent is not None else None,
                 self._last_send_result, self._last_send_at,
                 self._requested[1] if self._requested is not None else None,
-                self._retry_count)
+                self._retry_count, self.config.identify_index)
 
     def _run(self) -> None:
         while not self._stop.is_set():
@@ -174,6 +189,7 @@ class HologramUnitManager:
             fan.connect()
             fan.start()
             self._fan, self._current, self._last_error = fan, None, None
+            self._last_send_result, self._retry_count = "connected", 0
             return True
         except (ConnectionError, OSError) as error:
             self._last_error = str(error)
