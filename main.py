@@ -23,7 +23,9 @@ from pydantic import BaseModel
 
 from app.connection import ConnectionManager
 from app.hologram.config_store import HologramConfigStore
+from app.hologram.conversation_orchestrator import HologramConversationOrchestrator
 from app.hologram.director import HologramDirector
+from app.hologram.media_router import MediaRouter
 from app.hologram.models import FanUnitConfig, HologramConfig, IdentityMedia, PromotionMedia
 from app.services.conversation import ConversationService
 from app.services.llm import LLMService
@@ -241,6 +243,7 @@ manager = ConnectionManager()
 # forma perezosa para que importar ``main`` siga siendo barato en los tests.
 _hologram_director: HologramDirector | None = None
 _hologram_store: HologramConfigStore | None = None
+_hologram_orchestrator: HologramConversationOrchestrator | None = None
 
 
 def _get_holo_director() -> HologramDirector:
@@ -265,11 +268,22 @@ def _get_holo_director() -> HologramDirector:
 
 
 def _save_holo_config(config: HologramConfig) -> HologramDirector:
+    global _hologram_orchestrator
     director = _get_holo_director()
     assert _hologram_store is not None
     _hologram_store.save(config)
     director.reconfigure(config)
+    if _hologram_orchestrator is not None:
+        _hologram_orchestrator.reconfigure()
     return director
+
+
+def _get_hologram_orchestrator() -> HologramConversationOrchestrator:
+    global _hologram_orchestrator
+    director = _get_holo_director()
+    if _hologram_orchestrator is None:
+        _hologram_orchestrator = HologramConversationOrchestrator(MediaRouter(director.config), director)
+    return _hologram_orchestrator
 
 # --- Capa de servicios de la Fase 3 (estado inyectado, sin globals mutables) ---
 # Singletons a nivel de módulo. El proveedor de cámara DEBE ser único: el callback
@@ -305,6 +319,7 @@ conversation = ConversationService(
     camera=camera_provider,
     speak=_host_speak,
     tts_done=_host_tts_done,
+    hologram_orchestrator=_get_hologram_orchestrator(),
 )
 
 

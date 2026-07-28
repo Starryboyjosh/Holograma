@@ -89,11 +89,9 @@ class HologramDirector:
     def apply_scene(self, scene_plan: ScenePlan) -> None:
         self.set_identity(scene_plan.center_identity)
         if scene_plan.promotion_action == "focus_item" and scene_plan.promotion_id:
-            self.play_promotion(scene_plan.promotion_id)
+            self.focus_promotion(scene_plan.promotion_id, scene_plan.context_id)
         elif scene_plan.promotion_action == "focus_category" and scene_plan.promotion_category:
-            item = next((p for p in self.config.promotions if p.enabled and scene_plan.promotion_category in p.categories), None)
-            if item:
-                self.play_promotion(item.id)
+            self.focus_promotion_category(scene_plan.promotion_category, scene_plan.context_id)
 
     def restore_default_scene(self) -> None:
         self.set_mascot_state("idle")

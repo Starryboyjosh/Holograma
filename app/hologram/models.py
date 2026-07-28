@@ -97,7 +97,7 @@ class RotationConfig:
 
 @dataclass(frozen=True)
 class RoutingConfig:
-    mode: Literal["rules", "hybrid", "small_model"] = "hybrid"
+    mode: Literal["rules", "local", "hybrid", "small_model", "disabled"] = "hybrid"
     minimum_confidence: float = 0.75
     small_model_enabled: bool = True
     small_model_timeout_seconds: float = 1.5
@@ -105,7 +105,7 @@ class RoutingConfig:
     max_identity_changes_per_turn: int = 1
 
     def __post_init__(self) -> None:
-        if self.mode not in ("rules", "hybrid", "small_model"):
+        if self.mode not in ("rules", "local", "hybrid", "small_model", "disabled"):
             raise ValueError("mode de routing inválido.")
         if not 0 <= self.minimum_confidence <= 1:
             raise ValueError("minimum_confidence debe estar entre 0 y 1.")

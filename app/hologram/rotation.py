@@ -248,7 +248,7 @@ class PromotionRotationManager:
         self._next_position = (self._next_position + 1) % len(items)
         context_id = self._context_id
         try:
-            self._sink.request(item.index, f"promotion:{item.id}", context_id)
+            self._request(item.index, f"promotion:{item.id}", context_id)
         except Exception as error:  # fail-soft: bottom no puede detener la app
             self._last_error = str(error)
             if self._on_error:
@@ -269,7 +269,7 @@ class PromotionRotationManager:
         self._context_position = 0
         self._current = item
         try:
-            self._sink.request(item.index, f"promotion:{item.id}", self._context_id)
+            self._request(item.index, f"promotion:{item.id}", self._context_id)
         except Exception as error:
             self._last_error = str(error)
             if self._on_error:
@@ -289,7 +289,7 @@ class PromotionRotationManager:
         self._context_position = (self._context_position + 1) % len(self._context_items)
         self._context_item = item.id
         try:
-            self._sink.request(item.index, f"promotion:{item.id}", self._context_id)
+            self._request(item.index, f"promotion:{item.id}", self._context_id)
         except Exception as error:
             self._last_error = str(error)
             if self._on_error:
@@ -302,3 +302,10 @@ class PromotionRotationManager:
         if item is None:
             return None
         return {"id": item.id, "index": item.index, "title": item.title, "duration_seconds": item.duration_seconds}
+
+    def _request(self, index: int, media_id: str, context_id: str | None) -> None:
+        """Compatibilidad con sinks heredados de dos argumentos usados en tests."""
+        try:
+            self._sink.request(index, media_id, context_id)
+        except TypeError:
+            self._sink.request(index, media_id)

@@ -14,7 +14,6 @@ Usage:
 
 import base64
 import importlib.util
-import json
 import os
 import platform
 import queue
@@ -29,6 +28,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+# Contexto de cámara: lógica neutra compartida (rompe el ciclo call↔llm_backend).
+from camera_context import build_camera_context as _build_camera_context
 from hologram_controller import create_hologram_manager
 from llm_backend import (
     generate_reply,
@@ -48,9 +49,6 @@ from utils import (
     load_config,
     pop_ready_speech,
 )
-
-# Contexto de cámara: lógica neutra compartida (rompe el ciclo call↔llm_backend).
-from camera_context import build_camera_context as _build_camera_context
 
 configure_utf8_stdio()
 
@@ -142,7 +140,7 @@ def get_piper_command_args():
     configured_command = os.getenv("PIPER_COMMAND")
     if configured_command:
         # Si la ruta apunta al wrapper antiguo en la raíz pero está en scripts/
-        if "piper_wrapper.sh" in configured_command and not "scripts/piper_wrapper.sh" in configured_command:
+        if "piper_wrapper.sh" in configured_command and "scripts/piper_wrapper.sh" not in configured_command:
             fallback_wrapper = BASE_DIR / "scripts" / "piper_wrapper.sh"
             if fallback_wrapper.exists():
                 return [str(fallback_wrapper)]
@@ -778,7 +776,7 @@ def speak(text, blocking=True, *, end_idle=True):
         threading.Thread(target=_run, daemon=True).start()
 
 
-def speak_streaming_from_llm(token_iter) -> str:
+def speak_streaming_from_llm(token_iter, *, on_text=None, on_speaking=None) -> str:
     """Habla cláusulas en cuanto el LLM las produce (sin esperar al final).
 
     Mantiene el lock/estado de voz durante todo el turno para no parpadear
@@ -798,6 +796,7 @@ def speak_streaming_from_llm(token_iter) -> str:
     first = True
     parts: list[str] = []
     spoke_any = False
+    marked_speaking = False
     t_first_audio = None
     t0 = time.monotonic()
 
@@ -808,6 +807,11 @@ def speak_streaming_from_llm(token_iter) -> str:
             if not token:
                 continue
             parts.append(token)
+            if on_text is not None:
+                try:
+                    on_text(token)
+                except Exception:
+                    pass
             speech_buf += token
             # No limpiar todo el buffer (rompería cláusulas a medias); solo
             # strip de espacios extremos al cortar.
@@ -824,6 +828,9 @@ def speak_streaming_from_llm(token_iter) -> str:
                             f"desde inicio del stream LLM",
                             flush=True,
                         )
+                if not marked_speaking and on_speaking is not None:
+                    on_speaking()
+                    marked_speaking = True
                 _speak_one_chunk(piece)
                 spoke_any = True
 
@@ -837,6 +844,9 @@ def speak_streaming_from_llm(token_iter) -> str:
                         f"(resto final)",
                         flush=True,
                     )
+            if not marked_speaking and on_speaking is not None:
+                on_speaking()
+                marked_speaking = True
             _speak_one_chunk(remainder)
             spoke_any = True
     finally:
@@ -983,23 +993,59 @@ def ask_ai(user_input, mode=None):
     )
 
 
+_hologram_turn_orchestrator = None
+
+
+def _get_hologram_turn_orchestrator():
+    """Construye una sola capa semántica sobre el adaptador/director actual."""
+    global _hologram_turn_orchestrator
+    director = getattr(hologram, "_director", None)
+    if director is None:
+        return None
+    if _hologram_turn_orchestrator is None or _hologram_turn_orchestrator._director is not director:
+        from app.hologram.conversation_orchestrator import HologramConversationOrchestrator
+        from app.hologram.media_router import MediaRouter
+
+        _hologram_turn_orchestrator = HologramConversationOrchestrator(MediaRouter(director.config), director)
+    return _hologram_turn_orchestrator
+
+
 def ask_ai_and_speak(user_input, mode=None) -> str:
     """Stream LLM + TTS por cláusulas (menor latencia a primera voz)."""
     mode = mode or CURRENT_MODE
 
-    if get_selected_backend() == "local_only":
-        local_response = route_local_skill(user_input)
-        if local_response:
-            speak(local_response)
-            return local_response
+    orchestrator = _get_hologram_turn_orchestrator()
+    context_id = None
+    if orchestrator is not None:
+        context_id = orchestrator.start_turn(user_input, mode=mode)
+    try:
+        if get_selected_backend() == "local_only":
+            local_response = route_local_skill(user_input)
+            if local_response:
+                if orchestrator is not None:
+                    orchestrator.observe_response_text(local_response, context_id)
+                    orchestrator.mark_speaking()
+                speak(local_response)
+                return local_response
 
-    tokens = iter_reply_tokens(
-        user_input=user_input,
-        system_prompt=get_system_prompt(mode),
-        university_context=get_university_context(),
-        camera_context=_camera_context_for_prompt(user_input),
-    )
-    return speak_streaming_from_llm(tokens)
+        tokens = iter_reply_tokens(
+            user_input=user_input,
+            system_prompt=get_system_prompt(mode),
+            university_context=get_university_context(),
+            camera_context=_camera_context_for_prompt(user_input),
+        )
+        return speak_streaming_from_llm(
+            tokens,
+            on_text=(lambda text: orchestrator.observe_response_text(text, context_id)) if orchestrator else None,
+            on_speaking=orchestrator.mark_speaking if orchestrator else None,
+        )
+    except Exception as error:
+        if orchestrator is not None:
+            orchestrator.fail_turn(error, context_id)
+        raise
+    finally:
+        if orchestrator is not None:
+            orchestrator.finish_turn(context_id)
 
 
 # ======================================================================
@@ -1322,8 +1368,21 @@ def chat_to_voice():
 
             print("The AI is thinking...")
             hologram.set_state("thinking")
-            reply = ask_ai(user_input, CURRENT_MODE)
-            speak(reply)
+            orchestrator = _get_hologram_turn_orchestrator()
+            context_id = orchestrator.start_turn(user_input, mode=CURRENT_MODE) if orchestrator else None
+            try:
+                reply = ask_ai(user_input, CURRENT_MODE)
+                if orchestrator is not None:
+                    orchestrator.observe_response_text(reply, context_id)
+                    orchestrator.mark_speaking()
+                speak(reply)
+            except Exception as error:
+                if orchestrator is not None:
+                    orchestrator.fail_turn(error, context_id)
+                raise
+            finally:
+                if orchestrator is not None:
+                    orchestrator.finish_turn(context_id)
         finally:
             ai_busy = False
 
@@ -1541,7 +1600,11 @@ def voice_loop():
             time.sleep(0.5)
 
             ai_busy = False  # El holograma está libre justo cuando empieza a escuchar
-            hologram.set_state("listening")
+            turn_orchestrator = _get_hologram_turn_orchestrator()
+            if turn_orchestrator is not None:
+                turn_orchestrator.mark_listening()
+            else:
+                hologram.set_state("listening")
             # Solo ahora el micrófono está abierto: la UI debe mostrar "listening".
             _emit_voice_event({"type": "status", "status": "listening"})
             user_input = listener.listen_once()
