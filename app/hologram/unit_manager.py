@@ -26,9 +26,14 @@ class HologramUnitManager:
         self._fan: HologramFanController | None = None
         self._desired: tuple[int, str] | None = None
         self._current: tuple[int, str] | None = None
+        self._requested: tuple[int, str] | None = None
+        self._last_sent: tuple[int, str] | None = None
+        self._last_send_result: str | None = None
+        self._retry_count = 0
         self._last_error: str | None = None
         self._next_reconnect = 0.0
-        self._last_send = 0.0
+        self._last_send_monotonic = 0.0
+        self._last_send_at: float | None = None
 
     def start(self) -> None:
         with self._lock:
@@ -45,6 +50,7 @@ class HologramUnitManager:
             return
         request = (index, media_id)
         with self._lock:
+            self._requested = request
             if request == self._current or request == self._desired:
                 return
             self._desired = request
@@ -53,6 +59,26 @@ class HologramUnitManager:
     def execute_legacy(self, command: str, index: int | None = None) -> None:
         """Mantiene los comandos manuales heredados fuera de la ruta de IA."""
         with self._lock:
+            if command == "play_file":
+                if index is None or not 0 <= index <= 255:
+                    raise ValueError("play_file requiere index entre 0 y 255.")
+                request = (index, f"legacy:{index}")
+                self._requested = request
+                if not self.config.enabled or not self._ensure_connected() or self._fan is None:
+                    self._last_send_result = "error"
+                    raise ConnectionError("El holograma no está conectado.")
+                try:
+                    self._fan.play_file(index)
+                except (ConnectionError, OSError) as error:
+                    self._last_error = str(error)
+                    self._last_send_result = "error"
+                    self._retry_count += 1
+                    raise
+                self._last_send_monotonic = time.monotonic()
+                self._last_send_at = time.time()
+                self._current = self._last_sent = request
+                self._last_send_result, self._retry_count, self._last_error = "sent", 0, None
+                return
             if not self.config.enabled or not self._ensure_connected() or self._fan is None:
                 raise ConnectionError("El holograma no está conectado.")
             commands = {
@@ -62,16 +88,10 @@ class HologramUnitManager:
                 "prev_file": self._fan.prev_file, "brightness_up": self._fan.brightness_up,
                 "brightness_down": self._fan.brightness_down,
             }
-            if command == "play_file":
-                if index is None or not 0 <= index <= 255:
-                    raise ValueError("play_file requiere index entre 0 y 255.")
-                self._fan.play_file(index)
-                self._current = (index, f"legacy:{index}")
-            elif command in commands:
-                commands[command]()
-            else:
+            if command not in commands:
                 raise ValueError(f"Comando desconocido: {command}")
-            self._last_send = time.monotonic()
+            commands[command]()
+            self._last_send_monotonic, self._last_send_at = time.monotonic(), time.time()
 
     def close(self) -> None:
         with self._lock:
@@ -98,7 +118,12 @@ class HologramUnitManager:
             return FanUnitStatus(self.role, self.config.enabled, self.config.ip, self.config.port,
                 self.is_connected, self._current[0] if self._current else None,
                 self._current[1] if self._current else None, self._last_error,
-                bool(self._thread and self._thread.is_alive()))
+                bool(self._thread and self._thread.is_alive()),
+                self._requested[0] if self._requested is not None else None,
+                self._last_sent[0] if self._last_sent is not None else None,
+                self._last_send_result, self._last_send_at,
+                self._requested[1] if self._requested is not None else None,
+                self._retry_count)
 
     def _run(self) -> None:
         while not self._stop.is_set():
@@ -123,15 +148,19 @@ class HologramUnitManager:
         with self._lock:
             if request == self._current or not self._ensure_connected():
                 return
-            gap = self._min_send_gap - (time.monotonic() - self._last_send)
+            gap = self._min_send_gap - (time.monotonic() - self._last_send_monotonic)
             if gap > 0 and self._stop.wait(gap):
                 return
             try:
                 assert self._fan is not None
                 self._fan.play_file(request[0])
-                self._last_send, self._current, self._last_error = time.monotonic(), request, None
+                self._last_send_monotonic, self._last_send_at = time.monotonic(), time.time()
+                self._current, self._last_sent, self._last_error = request, request, None
+                self._last_send_result, self._retry_count = "sent", 0
             except (ConnectionError, OSError) as error:
                 self._last_error = str(error)
+                self._last_send_result = "error"
+                self._retry_count += 1
                 self._disconnect()
                 self._next_reconnect = time.monotonic() + self._reconnect_delay
 
@@ -148,6 +177,8 @@ class HologramUnitManager:
             return True
         except (ConnectionError, OSError) as error:
             self._last_error = str(error)
+            self._last_send_result = "connect_error"
+            self._retry_count += 1
             self._fan = None
             self._next_reconnect = time.monotonic() + self._reconnect_delay
             return False

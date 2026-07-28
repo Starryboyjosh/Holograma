@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Card, SectionTitle } from './ui/Card';
 import { Field, Select, TextInput } from './ui/Field';
 import { apiKeyPlaceholder, buildLlmTestInput } from '../lib/providerForm';
@@ -53,6 +53,7 @@ export function ProviderConfigCard({
   const [ollamaModels, setOllamaModels] = useState<string[]>([]);
   const [ollamaStatus, setOllamaStatus] = useState<'idle' | 'loading' | 'ok' | 'error'>('idle');
   const [ollamaMessage, setOllamaMessage] = useState('');
+  const ollamaRequestInFlight = useRef(false);
 
   const selected: ProviderInfo | undefined = providers.find((p) => p.id === llmProvider);
   const cloud = providers.filter((p) => p.kind === 'cloud');
@@ -60,39 +61,51 @@ export function ProviderConfigCard({
   const isOllama = selected?.id === 'ollama';
 
   const refreshOllamaModels = useCallback(async () => {
+    if (ollamaRequestInFlight.current) return;
     if (!listOllamaModels) {
       setOllamaStatus('idle');
       setOllamaModels([]);
       setOllamaMessage('');
       return;
     }
+    ollamaRequestInFlight.current = true;
     setOllamaStatus('loading');
-    const result = await listOllamaModels();
-    setOllamaModels(result.models);
-    setOllamaMessage(result.message);
-    setOllamaStatus(result.status === 'ok' ? 'ok' : 'error');
-    // If the form model is empty and Ollama has installs, pick the first one.
-    if (result.status === 'ok' && result.models.length > 0) {
-      // leave caller's model if already set (possibly to a valid tag)
+    try {
+      const result = await listOllamaModels();
+      setOllamaModels(result.models);
+      setOllamaMessage(result.message);
+      setOllamaStatus(result.status === 'ok' ? 'ok' : 'error');
+    } catch {
+      setOllamaModels([]);
+      setOllamaMessage('No se pudieron consultar los modelos de Ollama.');
+      setOllamaStatus('error');
+    } finally {
+      ollamaRequestInFlight.current = false;
     }
   }, [listOllamaModels]);
 
   useEffect(() => {
-    if (!isOllama) {
-      setOllamaStatus('idle');
-      setOllamaModels([]);
-      setOllamaMessage('');
-      return;
-    }
-    // Fetch installed models whenever Ollama is the selected provider.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    void refreshOllamaModels();
+    const timer = window.setTimeout(() => {
+      if (isOllama) {
+        void refreshOllamaModels();
+      } else {
+        setOllamaModels([]);
+        setOllamaMessage('');
+        setOllamaStatus('idle');
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, [isOllama, refreshOllamaModels]);
 
   const onProviderChange = (id: string) => {
     setLlmProvider(id);
     setTestResult(null);
     setApiKey('');
+    if (id !== 'ollama') {
+      setOllamaModels([]);
+      setOllamaMessage('');
+      setOllamaStatus('idle');
+    }
     const next = providers.find((p) => p.id === id);
     if (next) {
       setModel(next.current_model || next.default_model);
@@ -121,6 +134,7 @@ export function ProviderConfigCard({
     return opts;
   })();
   const showOllamaSelect = isOllama && ollamaStatus === 'ok' && ollamaModels.length > 0;
+  const ollamaLoading = ollamaStatus === 'loading';
 
   return (
     <Card>
@@ -174,7 +188,7 @@ export function ProviderConfigCard({
               <Select
                 aria-label="Modelo Ollama instalado"
                 value={model}
-                disabled={loading || ollamaStatus === 'loading'}
+                disabled={loading || ollamaLoading}
                 onChange={(e) => setModel(e.target.value)}
               >
                 {ollamaSelectOptions.map((m) => (
@@ -191,10 +205,10 @@ export function ProviderConfigCard({
                 <button
                   type="button"
                   onClick={() => void refreshOllamaModels()}
-                  disabled={ollamaStatus === 'loading'}
+                  disabled={loading || ollamaLoading}
                   className="shrink-0 text-[11px] font-semibold uppercase tracking-wider text-[#E25C1D] hover:underline disabled:opacity-50"
                 >
-                  {ollamaStatus === 'loading' ? 'Actualizando…' : 'Actualizar lista'}
+                  {ollamaLoading ? 'Actualizando…' : 'Actualizar lista'}
                 </button>
               </div>
             </div>
@@ -204,6 +218,7 @@ export function ProviderConfigCard({
                 type="text"
                 list={isOllama ? 'ollama-model-suggestions' : undefined}
                 value={model}
+                disabled={loading || ollamaLoading}
                 onChange={(e) => setModel(e.target.value)}
                 placeholder={selected?.default_model || 'nombre-del-modelo'}
               />
@@ -233,10 +248,10 @@ export function ProviderConfigCard({
                       <button
                         type="button"
                         onClick={() => void refreshOllamaModels()}
-                        disabled={ollamaStatus === 'loading'}
+                        disabled={loading || ollamaLoading}
                         className="shrink-0 text-[11px] font-semibold uppercase tracking-wider text-[#E25C1D] hover:underline disabled:opacity-50"
                       >
-                        {ollamaStatus === 'loading' ? 'Actualizando…' : 'Actualizar lista'}
+                        {ollamaLoading ? 'Actualizando…' : 'Actualizar lista'}
                       </button>
                     )}
                   </div>

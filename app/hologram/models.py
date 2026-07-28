@@ -150,6 +150,12 @@ class FanUnitStatus:
     current_media_id: str | None
     last_error: str | None
     worker_alive: bool
+    requested_index: int | None = None
+    last_sent_index: int | None = None
+    last_send_result: str | None = None
+    last_send_at: float | None = None
+    semantic_id: str | None = None
+    retry_count: int = 0
 
 
 @dataclass(frozen=True)

@@ -13,6 +13,12 @@ export interface FanUnitStatus {
   current_media_id: string | null;
   last_error: string | null;
   worker_alive: boolean;
+  requested_index?: number | null;
+  last_sent_index?: number | null;
+  last_send_result?: string | null;
+  last_send_at?: number | null;
+  semantic_id?: string | null;
+  retry_count?: number;
 }
 
 export interface IdentityMedia {

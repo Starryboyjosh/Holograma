@@ -30,3 +30,10 @@ No asumir posición.
 - log;
 - video;
 - limitaciones.
+
+## Contrato vigente
+
+El software solicita índices base cero `0..255`; `0` es válido. El hardware se
+trata como write-only: un envío sin excepción significa comando enviado, no
+reproducción visual confirmada. La correspondencia IP/rol e índice/playlist está
+pendiente de calibración física.

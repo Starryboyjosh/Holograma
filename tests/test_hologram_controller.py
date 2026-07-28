@@ -106,6 +106,11 @@ def test_resolve_state_clips_honors_playlist_order_overrides():
     assert clips == {"idle": 5, "listening": 6, "speaking": 7, "thinking": 8}
 
 
+def test_resolve_state_clips_preserves_explicit_zero():
+    clips = hologram_controller.resolve_state_clips({"HOLOGRAM_CLIP_IDLE": "0"})
+    assert clips["idle"] == 0
+
+
 def test_resolve_state_clips_ignores_invalid_values():
     # No entero y fuera de rango → conserva el default, nunca rompe el arranque.
     clips = hologram_controller.resolve_state_clips(

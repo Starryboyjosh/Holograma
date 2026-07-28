@@ -137,4 +137,24 @@ describe('ProviderConfigCard', () => {
     await user.selectOptions(select, 'gemma3:1b');
     expect(select).toHaveValue('gemma3:1b');
   });
+
+  it('locks Ollama controls while one discovery request is pending and restores them', async () => {
+    let resolveModels: (value: OllamaModelsResult) => void = () => {};
+    const listOllamaModels = vi.fn(
+      () => new Promise<OllamaModelsResult>((resolve) => { resolveModels = resolve; }),
+    );
+    render(<Harness testConnection={vi.fn()} listOllamaModels={listOllamaModels} initialProvider="ollama" />);
+
+    await waitFor(() => expect(listOllamaModels).toHaveBeenCalledTimes(1));
+    const updating = await screen.findByRole('button', { name: 'Actualizando…' });
+    expect(updating).toBeDisabled();
+    expect(screen.getByPlaceholderText('gemma3:1b')).toBeDisabled();
+    await userEvent.setup().click(updating);
+    expect(listOllamaModels).toHaveBeenCalledTimes(1);
+
+    resolveModels({ status: 'ok', models: ['gemma3:1b'], message: '1 modelo.' });
+    const select = await screen.findByLabelText('Modelo Ollama instalado');
+    expect(select).not.toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Actualizar lista' })).not.toBeDisabled();
+  });
 });
