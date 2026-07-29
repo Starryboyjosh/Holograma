@@ -61,10 +61,17 @@ static/
 *.log
 media/*.mp4
 
-# Operator / training scratch (JSON knowledge in data/ stays tracked)
+# Material del operador y artefactos de Entrenar. El conocimiento institucional
+# (unev_info.json, honduras_info.json) SÍ se versiona; las fotos, etiquetas e
+# índices que genera cada kiosko, no: son locales de esa instalación.
 data/open_vocabulary.txt
 data/images/
 data/training_metadata.json
+# app/data/ replica la misma estructura; misma política.
+app/data/open_vocabulary.txt
+app/data/images/
+app/data/training_metadata.json
+app/data/logo_index.npz
 
 # Editors and OS
 .DS_Store
@@ -81,18 +88,12 @@ Thumbs.db
 .codex/
 .grok/
 
-# Graphify: keep main graph outputs tracked (graph.json, GRAPH_REPORT.md,
-# graph.html, manifest.json, cost.json). Ignore machine-local markers,
-# caches, locks, vocab and dated backups from `graphify update`.
-graphify-out/.graphify_python
-graphify-out/.graphify_root
-graphify-out/.needs_update
-graphify-out/.rebuild.lock
-graphify-out/.vocab.txt
-graphify-out/cache/
-graphify-out/.graphify_*.json
-graphify-out/.graphify_*.txt
-# Dated backups (e.g. graphify-out/2026-07-13/)
-graphify-out/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
-Captura de pantalla_20260722_233946.png
+# Graphify: el grafo es un artefacto GENERADO, no se versiona.
+# Son ~7 MB que se reescriben enteros en cada `graphify update` (graph.json y
+# graph.html son de una sola línea, así que cada diff es el archivo completo).
+# Se regenera con `graphify .` en cualquier clon; ver README.
 graphify-out/
+
+# Capturas de pantalla sueltas en la raíz
+Captura de pantalla*.png
+Screenshot*.png
