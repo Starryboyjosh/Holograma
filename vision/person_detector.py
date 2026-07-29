@@ -21,7 +21,53 @@ import threading
 import time
 from pathlib import Path
 
+try:  # OpenCV es obligatorio en runtime, opcional para importar el módulo.
+    import cv2
+except ImportError:  # pragma: no cover - entorno sin OpenCV
+    cv2 = None
+
 from utils import _env, _env_float, _env_int, _is_quiet
+
+# Geometría y señales de imagen viven en módulos propios (funciones puras,
+# testeables sin cargar Ultralytics). Se importan con los nombres privados
+# históricos para no reescribir cada punto de uso.
+from vision.geometry import (
+    best_person_for_box as _best_person_for_box_fn,
+)
+from vision.geometry import (
+    clamp_box_to_frame,
+)
+from vision.geometry import (
+    collar_y_max as _collar_y_max,
+)
+from vision.geometry import (
+    compute_scale_back as _compute_scale_back,
+)
+from vision.geometry import (
+    logo_roi_fractions as _logo_roi_fractions,
+)
+from vision.geometry import (
+    point_in_logo_zone as _point_in_logo_zone_fn,
+)
+from vision.geometry import (
+    rel_center_on_person as _rel_center_on_person_fn,
+)
+from vision.geometry import (
+    scale_box as _scale_box,
+)
+from vision.geometry import (
+    snap_box_to_logo_zone as _snap_box_to_logo_zone_fn,
+)
+from vision.geometry import (
+    xyxy_tuple as _xyxy_tuple,
+)
+from vision.image_signals import (
+    compare_hsv_signature,
+    compute_hsv_hist,
+    is_white_light_or_glare,
+    match_orb,
+    match_template_multiscale,
+)
 
 # Checkpoint canónico del kiosco. Cualquier legacy se redirige aquí.
 DEFAULT_YOLOE_WEIGHTS = "yoloe-26n-seg.pt"
@@ -105,70 +151,28 @@ _LOGO_OPEN_VOCAB_MIN_CONF = 0.45
 #
 # Open-vocab YOLOE solo sugiere; sin match a la plantilla de Entrenar no cuenta
 # como esa etiqueta. El cuello/placket se evita con geometría de ROI pecho.
-_ORB_MIN_GOOD_MATCHES = 14
-_ORB_RATIO = 0.75
 _TMPL_MATCH_MIN = 0.62
 
-# Geometría del logo relativa a la caja persona (YOLO), fracciones 0=arriba/izq:
-#   y ∈ [0.36, 0.58]  → pecho (bajo cuello; el placket suele estar en y<0.34)
-#   x ∈ [0.08, 0.48]  → pecho izquierdo en imagen del kiosco
-#   YOLO_LOGO_MIRROR=1 si el logo sale al otro lado (cámara espejo).
-_LOGO_Y0 = 0.36
-_LOGO_Y1 = 0.58
-_LOGO_X0, _LOGO_X1 = 0.08, 0.48
-_COLLAR_Y_MAX = 0.34  # por encima = cuello / placket / cara
+
+def _yolo_debug() -> bool:
+    """``HOLOGRAM_YOLO_DEBUG`` activo. Estaba copiado en 4 sitios distintos."""
+    return os.getenv("HOLOGRAM_YOLO_DEBUG", "0").lower() in ("1", "true", "yes")
 
 
-def _logo_roi_fractions() -> tuple[float, float, float, float]:
-    """(y0, y1, x0, x1) del ROI logo en fracciones de la caja persona.
-
-    Vertical = pecho bajo el cuello. Horizontal = lado del logo bordado.
-    """
-    y0 = _env_float("YOLO_LOGO_Y0", _LOGO_Y0)
-    y1 = _env_float("YOLO_LOGO_Y1", _LOGO_Y1)
-    x0 = _env_float("YOLO_LOGO_X0", _LOGO_X0)
-    x1 = _env_float("YOLO_LOGO_X1", _LOGO_X1)
-    if os.getenv("YOLO_LOGO_MIRROR", "0").lower() in ("1", "true", "yes"):
-        x0, x1 = 1.0 - x1, 1.0 - x0
-    # Clamp: nunca subir el ROI al cuello (y0 >= collar).
-    collar = _env_float("YOLO_COLLAR_Y_MAX", _COLLAR_Y_MAX)
-    y0 = max(collar + 0.02, min(0.70, y0))
-    y1 = max(y0 + 0.10, min(0.85, y1))
-    x0 = max(0.0, min(0.80, x0))
-    x1 = max(x0 + 0.12, min(1.0, x1))
-    return y0, y1, x0, x1
+# Prioridad de la señal que produjo una detección custom. Un match contra la
+# foto de Entrenar (plantilla + HSV + ORB) es evidencia mucho más fuerte que el
+# texto open-vocab, que es semánticamente amplio: «school uniform» dispara con
+# cualquier camisa. Ver §4.3 de yolo_instructions.md.
+_SOURCE_PRIORITY = {
+    "logo_ref": 3,
+    "logo_ref_verified": 3,
+    "logo_chest": 3,
+    "open_vocab_snapped": 1,
+}
 
 
-def _collar_y_max() -> float:
-    return max(0.20, min(0.45, _env_float("YOLO_COLLAR_Y_MAX", _COLLAR_Y_MAX)))
-
-
-def _xyxy_tuple(xyxy) -> tuple[float, float, float, float]:
-    """Normaliza `box.xyxy[0]` de Ultralytics (tensor) o de fakes de test (list)."""
-    if hasattr(xyxy, "tolist"):
-        vals = xyxy.tolist()
-    else:
-        vals = list(xyxy)
-    return float(vals[0]), float(vals[1]), float(vals[2]), float(vals[3])
-
-
-def _compute_scale_back(frame, prepared) -> float:
-    """Factor para reescalar cajas del frame reducido al frame original."""
-    scale_back = 1.0
-    if prepared is not frame and prepared is not None and frame is not None:
-        try:
-            scale_back = frame.shape[1] / float(prepared.shape[1])
-        except Exception:
-            scale_back = 1.0
-    return scale_back
-
-
-def _scale_box(box, scale_back) -> tuple[float, float, float, float]:
-    """Reescala una caja ``(x1, y1, x2, y2)`` si ``scale_back != 1.0``."""
-    x1, y1, x2, y2 = box
-    if scale_back != 1.0:
-        return (x1 * scale_back, y1 * scale_back, x2 * scale_back, y2 * scale_back)
-    return box
+def _source_rank(obj: dict) -> int:
+    return _SOURCE_PRIORITY.get(obj.get("source") or "", 0)
 
 
 class YoloPersonDetector:
@@ -835,115 +839,33 @@ class YoloPersonDetector:
             rois.append((crop, (tx1, ty1, tx2, ty2), (x1, y1, x2, y2)))
         return rois
 
+    # Geometría: delegada a ``vision.geometry`` (funciones puras). Se mantienen
+    # como métodos porque tests y llamadas internas los usan por ese nombre.
+
     def _point_in_logo_zone(
         self, cx: float, cy: float, person_box: tuple, tol: float = 0.04
     ) -> bool:
         """True si el centro (cx,cy) cae en el pecho-logo de la persona."""
-        px1, py1, px2, py2 = person_box
-        p_h = max(1.0, py2 - py1)
-        p_w = max(1.0, px2 - px1)
-        rel_y = (cy - py1) / p_h
-        rel_x = (cx - px1) / p_w
-        # Cuello / placket amarillo: nunca es el logo ITEE.
-        if rel_y < _collar_y_max() - tol * 0.5:
-            return False
-        y0r, y1r, x0r, x1r = _logo_roi_fractions()
-        if rel_y < y0r - tol or rel_y > y1r + tol:
-            return False
-        if rel_x < x0r - tol or rel_x > x1r + tol:
-            return False
-        return True
+        return _point_in_logo_zone_fn(cx, cy, person_box, tol)
 
     @staticmethod
     def _rel_center_on_person(
         box: tuple, person_box: tuple
     ) -> tuple[float, float] | None:
         """Centro de ``box`` en fracciones 0–1 respecto a la caja persona."""
-        if not box or not person_box or len(box) < 4 or len(person_box) < 4:
-            return None
-        px1, py1, px2, py2 = [float(v) for v in person_box]
-        p_h = max(1.0, py2 - py1)
-        p_w = max(1.0, px2 - px1)
-        cx = 0.5 * (float(box[0]) + float(box[2]))
-        cy = 0.5 * (float(box[1]) + float(box[3]))
-        return (cx - px1) / p_w, (cy - py1) / p_h
+        return _rel_center_on_person_fn(box, person_box)
 
     def _snap_box_to_logo_zone(
         self, box: tuple, person_box: tuple
     ) -> tuple[float, float, float, float]:
-        """Recorta/mueve la caja open-vocab al ROI pecho-logo y ajusta su tamaño proporcional a la persona."""
-        px1, py1, px2, py2 = [float(v) for v in person_box]
-        p_h = max(1.0, py2 - py1)
-        p_w = max(1.0, px2 - px1)
-        y0r, y1r, x0r, x1r = _logo_roi_fractions()
-        zx1 = px1 + x0r * p_w
-        zx2 = px1 + x1r * p_w
-        zy1 = py1 + y0r * p_h
-        zy2 = py1 + y1r * p_h
-        zw = max(10.0, zx2 - zx1)
-        zh = max(10.0, zy2 - zy1)
-
-        # Ancho y alto proporcionales al pecho de la persona (mínimo 55% del ancho del pecho, 65% del alto del pecho)
-        target_w = max(50.0, 0.55 * zw)
-        target_h = max(50.0, 0.65 * zh)
-
-        bx1, by1, bx2, by2 = [float(v) for v in box]
-        bw = max(1.0, bx2 - bx1)
-        bh = max(1.0, by2 - by1)
-
-        cx = 0.5 * (bx1 + bx2)
-        cy = 0.5 * (by1 + by2)
-
-        # Garantizar que el centro caiga dentro de la zona del pecho
-        cx = max(zx1 + 0.10 * zw, min(zx2 - 0.10 * zw, cx))
-        cy = max(zy1 + 0.10 * zh, min(zy2 - 0.10 * zh, cy))
-
-        use_w = max(bw, target_w)
-        use_h = max(bh, target_h)
-
-        fx1 = max(px1, cx - use_w * 0.5)
-        fy1 = max(py1, cy - use_h * 0.5)
-        fx2 = min(px2, cx + use_w * 0.5)
-        fy2 = min(py2, cy + use_h * 0.5)
-
-        return (fx1, fy1, fx2, fy2)
+        """Mueve la caja al ROI pecho-logo con tamaño proporcional a la persona."""
+        return _snap_box_to_logo_zone_fn(box, person_box)
 
     def _best_person_for_box(
         self, box: tuple, persons: list[dict]
     ) -> tuple | None:
-        """Caja persona que contiene el centro de ``box``, o la de mayor solape."""
-        if not box or not persons:
-            return None
-        cx = 0.5 * (float(box[0]) + float(box[2]))
-        cy = 0.5 * (float(box[1]) + float(box[3]))
-        best = None
-        best_area = -1.0
-        for p in persons:
-            pb = p.get("box")
-            if not pb or len(pb) < 4:
-                continue
-            px1, py1, px2, py2 = [float(v) for v in pb]
-            if px1 <= cx <= px2 and py1 <= cy <= py2:
-                area = (px2 - px1) * (py2 - py1)
-                if area > best_area:
-                    best_area = area
-                    best = (px1, py1, px2, py2)
-        if best is not None:
-            return best
-        # Sin contención: la persona más cercana por centro
-        best_d = None
-        for p in persons:
-            pb = p.get("box")
-            if not pb or len(pb) < 4:
-                continue
-            px1, py1, px2, py2 = [float(v) for v in pb]
-            pcx = 0.5 * (px1 + px2)
-            pcy = 0.5 * (py1 + py2)
-            d = (pcx - cx) ** 2 + (pcy - cy) ** 2
-            if best_d is None or d < best_d:
-                best_d = d
-                best = (px1, py1, px2, py2)
-        return best
+        """Caja persona que contiene el centro de ``box``, o la más cercana."""
+        return _best_person_for_box_fn(box, persons)
 
     def _is_uniform_label(self, label: str) -> bool:
         """Compat: true si el nombre sugiere uniforme (UI/tests)."""
@@ -990,175 +912,56 @@ class YoloPersonDetector:
         return []
 
     @staticmethod
-    def _compute_hsv_hist(bgr_img):
-        """Calcula histograma 2D normalizado en espacio HSV (Hue 18 bins, Sat 16 bins)."""
-        if bgr_img is None or getattr(bgr_img, "size", 0) == 0:
-            return None
-        if len(bgr_img.shape) != 3 or bgr_img.shape[2] != 3:
-            return None
-        try:
-            import cv2
+    @staticmethod
+    def _debug_enabled() -> bool:
+        return _yolo_debug()
 
-            hsv = cv2.cvtColor(bgr_img, cv2.COLOR_BGR2HSV)
-            hist = cv2.calcHist([hsv], [0, 1], None, [18, 16], [0, 180, 0, 256])
-            cv2.normalize(hist, hist, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX)
-            return hist
-        except Exception:
-            return None
+    @staticmethod
+    def _box_is_glare(frame, box) -> bool:
+        """True si el recorte del frame en ``box`` es luz blanca / ventana.
+
+        Unifica el recorte + clampeo + chequeo de glare que estaba duplicado
+        literalmente en las dos ramas de ``_filter_uniform_objects``.
+        """
+        if frame is None or box is None:
+            return False
+        bounds = clamp_box_to_frame(box, getattr(frame, "shape", None))
+        if bounds is None:
+            return False
+        x1, y1, x2, y2 = bounds
+        crop = frame[y1:y2, x1:x2]
+        if getattr(crop, "size", 0) == 0:
+            return False
+        return is_white_light_or_glare(crop)
+
+    def _compute_hsv_hist(bgr_img):
+        """Histograma 2D HSV normalizado (delegado a ``vision.image_signals``)."""
+        return compute_hsv_hist(bgr_img)
 
     @staticmethod
     def _is_white_light_or_glare(bgr_crop) -> bool:
-        """Devuelve True si el recorte es principalmente luz blanca / ventana / destello (alta val, baja sat)."""
-        if bgr_crop is None or getattr(bgr_crop, "size", 0) == 0:
-            return False
-        if len(bgr_crop.shape) != 3 or bgr_crop.shape[2] != 3:
-            return False
-        try:
-            import cv2
-            import numpy as np
-
-            hsv = cv2.cvtColor(bgr_crop, cv2.COLOR_BGR2HSV)
-            sat = hsv[:, :, 1]
-            val = hsv[:, :, 2]
-            # Luz blanca / ventana: Saturation baja (< 40/255) y Value alto (> 180/255)
-            white_pixels = np.logical_and(sat < 40, val > 180)
-            white_ratio = np.mean(white_pixels)
-            mean_sat = float(np.mean(sat))
-            mean_val = float(np.mean(val))
-
-            # Si más del 40% del parche es luz blanca o la saturación media es muy baja (< 32) con brillo alto (> 175)
-            if white_ratio > 0.40 or (mean_sat < 32.0 and mean_val > 175.0):
-                return True
-            return False
-        except Exception:
-            return False
+        """True si el recorte es luz blanca / ventana / destello."""
+        return is_white_light_or_glare(bgr_crop)
 
     def _match_hsv_color_signature(self, crop, label: str) -> float:
-        """Calcula correlación de firma de color HSV (0.0 a 1.0) contra referencias del logo."""
-        if crop is None or getattr(crop, "size", 0) == 0:
-            return 1.0
-        if len(crop.shape) != 3 or crop.shape[2] != 3:
-            return 1.0  # Si es escala de grises / 1 canal, omitir gating de color.
+        """Correlación de firma de color HSV (0–1) contra las fotos de Entrenar."""
         if self._is_white_light_or_glare(crop):
-            if os.getenv("HOLOGRAM_YOLO_DEBUG", "0").lower() in ("1", "true", "yes"):
-                print(f"[YOLO] Descartado «{label}» por detección de luz blanca / ventana")
-            return 0.0  # Rechazar automáticamente destellos / luz de ventana
-        hists = self._logo_hsv_hists_for(label)
-        if not hists:
-            return 1.0  # Sin histogramas de referencia -> no descartar por color.
-        try:
-            import cv2
-
-            crop_hist = self._compute_hsv_hist(crop)
-            if crop_hist is None:
-                return 1.0
-            best_score = 0.0
-            for ref_hist in hists:
-                score = cv2.compareHist(ref_hist, crop_hist, cv2.HISTCMP_CORREL)
-                if score > best_score:
-                    best_score = float(score)
-            return max(0.0, best_score)
-        except Exception:
-            return 1.0
+            if self._debug_enabled():
+                print(
+                    f"[YOLO] Descartado «{label}» por detección de luz blanca / ventana"
+                )
+            return 0.0
+        return compare_hsv_signature(crop, self._logo_hsv_hists_for(label))
 
     def _match_template_multiscale(
         self, gray_roi, templates: list
     ) -> tuple[float, tuple | None]:
-        """Mejor score TM_CCOEFF_NORMED vs plantillas de Entrenar (pirámide multi-escala de 7 niveles)."""
-        try:
-            import cv2
-        except ImportError:
-            return 0.0, None
-        if gray_roi is None or gray_roi.size == 0 or not templates:
-            return 0.0, None
-        try:
-            import numpy as np
-
-            if float(np.std(gray_roi)) < 4.0:
-                # ROI plano (negro/blanco): no hay textura que matchear.
-                return 0.0, None
-        except Exception:
-            pass
-        try:
-            gray_roi = cv2.equalizeHist(gray_roi)
-        except Exception:
-            pass
-        rh, rw = gray_roi.shape[:2]
-        best_score = 0.0
-        best_box = None
-        # Pirámide de 7 niveles de escala relativas al ancho del ROI pecho (0.14 a 0.80)
-        rels = (0.14, 0.20, 0.28, 0.38, 0.50, 0.65, 0.80)
-        for tmpl in templates:
-            th0, tw0 = tmpl.shape[:2]
-            if tw0 < 8 or th0 < 8:
-                continue
-            try:
-                import numpy as np
-
-                # Plantilla casi constante (p. ej. tests) → TM_CCOEFF_NORMED inestable.
-                if float(np.std(tmpl)) < 8.0:
-                    continue
-            except Exception:
-                pass
-            aspect = th0 / float(tw0)
-            for rel in rels:
-                sw = max(16, int(rw * rel))
-                sh = max(16, int(sw * aspect))
-                if sw >= rw - 2 or sh >= rh - 2:
-                    continue
-                try:
-                    resized = cv2.resize(tmpl, (sw, sh), interpolation=cv2.INTER_AREA)
-                    res = cv2.matchTemplate(gray_roi, resized, cv2.TM_CCOEFF_NORMED)
-                    _mn, mx, _ml, max_loc = cv2.minMaxLoc(res)
-                except Exception:
-                    continue
-                if mx > best_score:
-                    best_score = float(mx)
-                    x, y = int(max_loc[0]), int(max_loc[1])
-                    best_box = (float(x), float(y), float(x + sw), float(y + sh))
-        return best_score, best_box
+        """Mejor score TM_CCOEFF_NORMED sobre la pirámide multi-escala."""
+        return match_template_multiscale(gray_roi, templates)
 
     def _match_orb_in_roi(self, gray_roi, des_list: list) -> float:
         """Score 0–1 por coincidencias ORB con descriptores de Entrenar."""
-        try:
-            import cv2
-        except ImportError:
-            return 0.0
-        if gray_roi is None or gray_roi.size == 0 or not des_list:
-            return 0.0
-        try:
-            gray_roi = cv2.equalizeHist(gray_roi)
-        except Exception:
-            pass
-        try:
-            orb = cv2.ORB_create(700)
-            _kp, des = orb.detectAndCompute(gray_roi, None)
-        except Exception:
-            return 0.0
-        if des is None or len(des) < 6:
-            return 0.0
-        bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=False)
-        best_good = 0
-        for ref_des in des_list:
-            if ref_des is None or len(ref_des) < 4:
-                continue
-            try:
-                pairs = bf.knnMatch(ref_des, des, k=2)
-            except Exception:
-                continue
-            good = 0
-            for pair in pairs:
-                if len(pair) < 2:
-                    continue
-                m, n = pair
-                if m.distance < _ORB_RATIO * n.distance:
-                    good += 1
-            if good > best_good:
-                best_good = good
-        if best_good <= 0:
-            return 0.0
-        # Normalizar: ~ORB_MIN_GOOD_MATCHES → score ~1.
-        return min(1.0, best_good / float(max(8, _ORB_MIN_GOOD_MATCHES)))
+        return match_orb(gray_roi, des_list)
 
     def _match_logo_in_gray(
         self, crop, label: str
@@ -1214,9 +1017,7 @@ class YoloPersonDetector:
             return False, None, 0.0
         if not self._is_logo_trained_label(label):
             return False, None, 0.0
-        try:
-            import cv2
-        except ImportError:
+        if cv2 is None:
             return False, None, 0.0
         try:
             h, w = frame.shape[:2]
@@ -1259,9 +1060,7 @@ class YoloPersonDetector:
             return []
         if not self._logo_images and not self._logo_templates:
             return []
-        try:
-            import cv2
-        except ImportError:
+        if cv2 is None:
             return []
 
         persons = persons or []
@@ -1282,7 +1081,7 @@ class YoloPersonDetector:
             best_box_frame = None
             best_detail = ""
 
-            for crop, (ox1, oy1, ox2, oy2), person_box in rois:
+            for crop, (ox1, oy1, _ox2, _oy2), person_box in rois:
                 score, rel_box, method = self._match_logo_in_gray(crop, label)
                 if rel_box is None or score < tmpl_min * 0.90:
                     continue
@@ -1417,11 +1216,7 @@ class YoloPersonDetector:
         - Etiqueta **sin** fotos Entrenar: open-vocab genérico (botella, etc.).
         """
         filtered: list[dict] = []
-        debug = os.getenv("HOLOGRAM_YOLO_DEBUG", "0").lower() in (
-            "1",
-            "true",
-            "yes",
-        )
+        debug = _yolo_debug()
         ov_min = float(self.logo_ov_confidence)
         collar_max = _collar_y_max()
         for obj in custom_objects:
@@ -1444,24 +1239,13 @@ class YoloPersonDetector:
                             )
                         continue
                     box = obj.get("box")
-                    # ── Filtro de luz blanca / ventana ──
-                    if frame is not None and box and len(box) >= 4:
-                        try:
-                            fh, fw = frame.shape[:2]
-                            bx1 = int(max(0, min(fw - 1, float(box[0]))))
-                            by1 = int(max(0, min(fh - 1, float(box[1]))))
-                            bx2 = int(max(bx1 + 1, min(fw, float(box[2]))))
-                            by2 = int(max(by1 + 1, min(fh, float(box[3]))))
-                            det_crop = frame[by1:by2, bx1:bx2]
-                            if det_crop.size > 0 and self._is_white_light_or_glare(det_crop):
-                                if debug:
-                                    print(
-                                        f"[YOLO] Descartado «{lab}» open-vocab: "
-                                        f"caja es luz blanca / ventana (sin Entrenar)"
-                                    )
-                                continue
-                        except Exception:
-                            pass
+                    if self._box_is_glare(frame, box):
+                        if debug:
+                            print(
+                                f"[YOLO] Descartado «{lab}» open-vocab: "
+                                f"caja es luz blanca / ventana (sin Entrenar)"
+                            )
+                        continue
                     person_box = self._best_person_for_box(box, persons) if box else None
                     if person_box is not None and box:
                         rel = self._rel_center_on_person(box, person_box)
@@ -1506,28 +1290,18 @@ class YoloPersonDetector:
                     )
                 continue
 
-            # ── Filtro de luz blanca / ventana sobre la caja YOLOE original ──
-            # El YOLOE puede detectar ventanas con luz blanca como "school uniform".
-            # Rechazar ANTES de intentar verificar con la imagen de referencia,
-            # porque _verify_logo_reference con person_box encontraría el logo
-            # real del uniforme en el pecho (nada que ver con la ventana).
-            if frame is not None:
-                try:
-                    fh, fw = frame.shape[:2]
-                    bx1 = int(max(0, min(fw - 1, float(box[0]))))
-                    by1 = int(max(0, min(fh - 1, float(box[1]))))
-                    bx2 = int(max(bx1 + 1, min(fw, float(box[2]))))
-                    by2 = int(max(by1 + 1, min(fh, float(box[3]))))
-                    det_crop = frame[by1:by2, bx1:bx2]
-                    if det_crop.size > 0 and self._is_white_light_or_glare(det_crop):
-                        if debug:
-                            print(
-                                f"[YOLO] Descartado «{lab}» open-vocab: "
-                                f"caja YOLOE es luz blanca / ventana"
-                            )
-                        continue
-                except Exception:
-                    pass
+            # Filtro de luz blanca sobre la caja YOLOE ORIGINAL, antes de
+            # verificar contra la foto de Entrenar. Es deliberado: el segundo
+            # intento de `_verify_logo_reference` busca en `person_box` y ahí
+            # encontraría el logo real del uniforme, aceptando una ventana como
+            # si fuera el logo. Ver §4.8 de yolo_instructions.md.
+            if self._box_is_glare(frame, box):
+                if debug:
+                    print(
+                        f"[YOLO] Descartado «{lab}» open-vocab: "
+                        f"caja YOLOE es luz blanca / ventana"
+                    )
+                continue
 
             person_box = self._best_person_for_box(box, persons)
             search_box = box
@@ -1590,12 +1364,27 @@ class YoloPersonDetector:
 
     @staticmethod
     def _dedupe_custom(custom_objects: list[dict]) -> list[dict]:
-        """Una entrada por label (mejor confianza)."""
+        """Una entrada por label: primero por fuente, luego por confianza.
+
+        Las fuentes verificadas contra la foto de Entrenar (``logo_ref``,
+        ``logo_ref_verified``, ``logo_chest``) ganan SIEMPRE a una detección
+        open-vocab del mismo label, aunque el texto traiga más confianza.
+
+        Antes se ordenaba solo por confianza aquí, y la preferencia por fuente
+        se aplicaba después, en ``_detect_all`` — sobre una lista que ya tenía
+        una sola entrada por label, así que no podía cambiar nada. El resultado
+        era el contrario al documentado: el open-vocab (semánticamente amplio y
+        propenso a falsos positivos) desplazaba al match por plantilla.
+        """
         best: dict[str, dict] = {}
         for obj in custom_objects:
             lab = obj["label"]
             prev = best.get(lab)
-            if prev is None or obj["confidence"] > prev["confidence"]:
+            if prev is None or _source_rank(obj) > _source_rank(prev):
+                best[lab] = obj
+            elif _source_rank(obj) == _source_rank(prev) and float(
+                obj.get("confidence") or 0.0
+            ) > float(prev.get("confidence") or 0.0):
                 best[lab] = obj
         return list(best.values())
 
@@ -1636,36 +1425,14 @@ class YoloPersonDetector:
                 }
             )
 
+        # `_dedupe_custom` ya resuelve label duplicado priorizando la fuente
+        # (logo verificado > open-vocab) y, a igualdad, la confianza.
         custom_objects = self._dedupe_custom(
             self._filter_uniform_objects(custom_objects, persons, frame=frame)
         )
-        # Preferir match por imagen de referencia sobre open-vocab del mismo label.
-        _logo_pref = ("logo_ref", "logo_ref_verified", "logo_chest")
-        by_src: dict[str, dict] = {}
-        for obj in custom_objects:
-            lab = obj.get("label", "")
-            src = obj.get("source") or ""
-            prev = by_src.get(lab)
-            if prev is None:
-                by_src[lab] = obj
-                continue
-            prev_src = prev.get("source") or ""
-            if src in _logo_pref and prev_src not in _logo_pref:
-                by_src[lab] = obj
-            elif prev_src in _logo_pref and src not in _logo_pref:
-                pass
-            elif float(obj.get("confidence") or 0) > float(
-                prev.get("confidence") or 0
-            ):
-                by_src[lab] = obj
-        custom_objects = list(by_src.values())
 
         self._detect_cycles += 1
-        debug = os.getenv("HOLOGRAM_YOLO_DEBUG", "0").lower() in (
-            "1",
-            "true",
-            "yes",
-        )
+        debug = _yolo_debug()
         # Log cada ~10 ciclos o si hay detecciones (o debug forzado).
         if debug or self._detect_cycles <= 2 or self._detect_cycles % 10 == 0:
             labels = [o.get("label") for o in custom_objects]
@@ -1945,14 +1712,17 @@ class YoloPersonDetector:
     # ------------------------------------------------------------------
 
     def run_continuous(self, callback, camera_index=None, interval_seconds=None):
-        """Run a detection loop calling *callback(event, count)* on changes.
+        """Bucle de detección que llama a *callback(event, count, analysis)*.
 
         Parameters
         ----------
         callback : callable
-            Called with ``(event: str, count: int)`` where event is one of
-            ``"person_entered"``, ``"person_still_present"``,
-            ``"group_detected"``, ``"person_left"``, or ``"no_person"``.
+            Se invoca con ``(event: str, count: int, analysis: dict)``. Eventos:
+            ``"analysis_update"`` (en cada ciclo de detección, para refrescar el
+            contexto del LLM), ``"person_entered"``, ``"group_detected"``,
+            ``"person_left"`` y ``"custom_object_detected"``.
+            ``"person_still_present"`` y ``"no_person"`` se calculan pero NO se
+            emiten: solo cambian el estado interno.
         camera_index : int or None
             Camera index (defaults to ``HOLOGRAM_CAMERA_INDEX`` or ``0``).
         interval_seconds : float or None

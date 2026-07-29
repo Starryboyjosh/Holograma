@@ -1,1147 +1,1417 @@
 {
   "call.py": {
-    "mtime": 1785113574.9259133,
-    "ast_hash": "6f351b0646d4437ffd0a3639c9389c10",
+    "mtime": 1785242828.8937826,
+    "ast_hash": "94939195cd8668bbe6685f263db6a791",
     "semantic_hash": ""
   },
   "llm_backend.py": {
-    "mtime": 1785113574.94258,
-    "ast_hash": "17711b8499ade0dc823a9ae03bd3e605",
+    "mtime": 1785326999.4903488,
+    "ast_hash": "d63d9a452439a3253f7291a7f2b3db8b",
     "semantic_hash": ""
   },
   "main.py": {
-    "mtime": 1785113574.94258,
-    "ast_hash": "cb69e80b0d4868c9b42a5023a5414558",
+    "mtime": 1785242828.957783,
+    "ast_hash": "3dfd3737f590a76215b28b31cbe1286d",
     "semantic_hash": ""
   },
   "skills/__init__.py": {
-    "mtime": 1780194828.7078183,
+    "mtime": 1780251402.7910097,
     "ast_hash": "3628971568d6ebf76a10ba13e8c7ef79",
     "semantic_hash": "3628971568d6ebf76a10ba13e8c7ef79"
   },
   "skills/appearance.py": {
-    "mtime": 1781839643.5397632,
+    "mtime": 1781661422.635175,
     "ast_hash": "9357032374bbf808f1fb7f55dbec0be2",
     "semantic_hash": "9357032374bbf808f1fb7f55dbec0be2"
   },
   "skills/event_mode.py": {
-    "mtime": 1785113574.94258,
+    "mtime": 1784778155.0197062,
     "ast_hash": "4b930d83fd10a0633b8a164ee638e5bd",
     "semantic_hash": ""
   },
   "skills/honduras.py": {
-    "mtime": 1782858337.5513208,
+    "mtime": 1782781463.805769,
     "ast_hash": "e944cd28e2b3152915bbd909597d7c5c",
     "semantic_hash": "e944cd28e2b3152915bbd909597d7c5c"
   },
   "skills/presence.py": {
-    "mtime": 1783735766.2348974,
+    "mtime": 1783704598.130962,
     "ast_hash": "2f3dbaa5a7e9516e04377714f5e076ef",
     "semantic_hash": "2f3dbaa5a7e9516e04377714f5e076ef"
   },
   "skills/router.py": {
-    "mtime": 1782310365.6572437,
+    "mtime": 1782773230.974767,
     "ast_hash": "4bbd7d76415451bc3805f473c4f49e6e",
     "semantic_hash": "4bbd7d76415451bc3805f473c4f49e6e"
   },
   "skills/university.py": {
-    "mtime": 1784691397.3007934,
+    "mtime": 1784686966.9673607,
     "ast_hash": "1bd94e114baba63ffb28f8b9daa6912f",
     "semantic_hash": ""
   },
   "stt/__init__.py": {
-    "mtime": 1780706265.9640324,
+    "mtime": 1780648066.1942015,
     "ast_hash": "b0436582c4a8505d00db6acfde9d06c9",
     "semantic_hash": "b0436582c4a8505d00db6acfde9d06c9"
   },
   "stt/listener.py": {
-    "mtime": 1785113574.9459133,
+    "mtime": 1784782467.3459973,
     "ast_hash": "461b041c6c487bc322c7aab93e81c39c",
     "semantic_hash": ""
   },
   "vision/__init__.py": {
-    "mtime": 1785113574.9459133,
+    "mtime": 1784781196.5729628,
     "ast_hash": "d06303d56e4dc333b426e63cf45e8420",
     "semantic_hash": ""
   },
   "vision/camera.py": {
-    "mtime": 1783735766.2348974,
+    "mtime": 1783702702.0367146,
     "ast_hash": "68bebc3202d7fa3f30234a80d559373b",
     "semantic_hash": "68bebc3202d7fa3f30234a80d559373b"
   },
   "vision/face_analyzer.py": {
-    "mtime": 1782310365.660577,
+    "mtime": 1782773230.9777424,
     "ast_hash": "7dc30226a6813a07dad940b5efb7f2fa",
     "semantic_hash": "7dc30226a6813a07dad940b5efb7f2fa"
   },
   "vision/person_detector.py": {
-    "mtime": 1785113574.9459133,
-    "ast_hash": "d5f54e6af19d3974f421ec85b2a439b3",
+    "mtime": 1785326999.4916964,
+    "ast_hash": "6140a0cf1d2b050440d95932c08b57ae",
     "semantic_hash": ""
   },
   "data/honduras_info.json": {
-    "mtime": 1782858337.5413208,
+    "mtime": 1784850468.711948,
     "ast_hash": "1d6f97ef916710a695f083e843733de1",
     "semantic_hash": "1d6f97ef916710a695f083e843733de1"
   },
   "data/unev_info.json": {
-    "mtime": 1784691438.8650844,
+    "mtime": 1785242818.5277948,
     "ast_hash": "79392c61296f3377d8bad7fdb0423262",
     "semantic_hash": ""
   },
   "frontend/eslint.config.js": {
-    "mtime": 1782270872.3896792,
+    "mtime": 1782773230.930741,
     "ast_hash": "9e0809aa26f0cc233f120eabaf37792d",
     "semantic_hash": "9e0809aa26f0cc233f120eabaf37792d"
   },
   "frontend/package.json": {
-    "mtime": 1782307809.006477,
+    "mtime": 1782773230.9330862,
     "ast_hash": "252a41bdaf67e6146dd933f0f0d92f81",
     "semantic_hash": "252a41bdaf67e6146dd933f0f0d92f81"
   },
   "frontend/src/App.tsx": {
-    "mtime": 1782313127.4126716,
+    "mtime": 1782773230.9330862,
     "ast_hash": "99e07db28bab19db14f4618a790a4148",
     "semantic_hash": "99e07db28bab19db14f4618a790a4148"
   },
   "frontend/src/main.tsx": {
-    "mtime": 1782136815.2953231,
+    "mtime": 1782226483.55807,
     "ast_hash": "6955e888e4e553519165bf587e8bbf32",
     "semantic_hash": "6955e888e4e553519165bf587e8bbf32"
   },
   "frontend/tsconfig.app.json": {
-    "mtime": 1782307814.159772,
+    "mtime": 1782773230.9377413,
     "ast_hash": "80ca9497a50f404883b3107fa2e4ea3d",
     "semantic_hash": "80ca9497a50f404883b3107fa2e4ea3d"
   },
   "frontend/tsconfig.json": {
-    "mtime": 1781839643.533596,
+    "mtime": 1781647695.8425848,
     "ast_hash": "a3d39fa780ebff65444de257f291ce6c",
     "semantic_hash": "a3d39fa780ebff65444de257f291ce6c"
   },
   "frontend/tsconfig.node.json": {
-    "mtime": 1781839643.533596,
+    "mtime": 1781647695.8426259,
     "ast_hash": "70bdd0a673bcfc0e828080b306e7c680",
     "semantic_hash": "70bdd0a673bcfc0e828080b306e7c680"
   },
   "frontend/vite.config.ts": {
-    "mtime": 1782137144.7283936,
+    "mtime": 1782226483.5596085,
     "ast_hash": "a9d6e78681d815c21ce10453bccf93d6",
     "semantic_hash": "a9d6e78681d815c21ce10453bccf93d6"
   },
   "hologram_controller.py": {
-    "mtime": 1785200257.1097426,
+    "mtime": 1785242828.956783,
     "ast_hash": "79fbe9a327f78aed88d16a97cc9885c9",
     "semantic_hash": ""
   },
   "pyrightconfig.json": {
-    "mtime": 1780706265.960699,
+    "mtime": 1780693722.284978,
     "ast_hash": "f66ab2bdc7071492ecfb22c9ff0bb366",
     "semantic_hash": "f66ab2bdc7071492ecfb22c9ff0bb366"
   },
   "scripts/Holograma.sh": {
-    "mtime": 1781839643.5348322,
+    "mtime": 1781661440.1234467,
     "ast_hash": "ae62fe2154e578d504adb0943e9ac8b6",
     "semantic_hash": "ae62fe2154e578d504adb0943e9ac8b6"
   },
   "scripts/diagnose_hologram.py": {
-    "mtime": 1785113574.94258,
-    "ast_hash": "00187a9e1cc15ab956d5328d5419907f",
+    "mtime": 1785242828.9590182,
+    "ast_hash": "ae82db7fb153e84dbd70db41ec661575",
     "semantic_hash": ""
   },
   "scripts/run_web.sh": {
-    "mtime": 1782002137.107017,
+    "mtime": 1781928278.7352548,
     "ast_hash": "0278016830889773f9905a36072b1f95",
     "semantic_hash": "0278016830889773f9905a36072b1f95"
   },
   "scripts/setup_hologram.py": {
-    "mtime": 1785113574.94258,
+    "mtime": 1784779964.721356,
     "ast_hash": "768b23e8ec21122a074cf2ae7446ccf8",
     "semantic_hash": ""
   },
   "skills/utils.py": {
-    "mtime": 1782310365.6572437,
+    "mtime": 1782773230.974767,
     "ast_hash": "5426fc8248f4978c7770d2bfeeb61be6",
     "semantic_hash": "5426fc8248f4978c7770d2bfeeb61be6"
   },
   "utils.py": {
-    "mtime": 1785113574.9459133,
+    "mtime": 1784782032.2847893,
     "ast_hash": "97a6711e28d50ca8b4173eb4d742aa01",
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1781578673.0986757,
+    "mtime": 1781630905.3550663,
     "ast_hash": "62c05a2bf20bf036a0b2633478663e64",
     "semantic_hash": "62c05a2bf20bf036a0b2633478663e64"
   },
   "CLAUDE.md": {
-    "mtime": 1782532426.3734436,
+    "mtime": 1782773230.772736,
     "ast_hash": "e55e84abfc1a2ee7fdde9da07fb13126",
     "semantic_hash": "e55e84abfc1a2ee7fdde9da07fb13126"
   },
   "README.md": {
-    "mtime": 1785178368.0422595,
-    "ast_hash": "e2a1fd8094aa73c718ee0562c5359cec",
+    "mtime": 1784689927.5325541,
+    "ast_hash": "837864825a7b9e20556a71e38b0180a0",
     "semantic_hash": ""
   },
   "frontend/README.md": {
-    "mtime": 1781839643.5316274,
+    "mtime": 1781647695.8416543,
     "ast_hash": "f6e3faf55d738cf2affe1b44195f27cf",
     "semantic_hash": "f6e3faf55d738cf2affe1b44195f27cf"
   },
   "frontend/index.html": {
-    "mtime": 1781839643.5316274,
+    "mtime": 1781647695.8417835,
     "ast_hash": "33bd262affcefea92f1509cda449a19c",
     "semantic_hash": "33bd262affcefea92f1509cda449a19c"
   },
   "requirements.txt": {
-    "mtime": 1783396321.0245507,
-    "ast_hash": "159d2aabb04a976ce39c58e98bfa6960",
-    "semantic_hash": "159d2aabb04a976ce39c58e98bfa6960"
+    "mtime": 1785326999.4903488,
+    "ast_hash": "2475edcb3a03260d8c949dbd3ac2f6b9",
+    "semantic_hash": ""
   },
   "docs/Holograma_MISSYOU_Referencia_IA.pdf": {
-    "mtime": 1781842585.0023856,
+    "mtime": 1781914790.3195107,
     "ast_hash": "e813860358cdb4ef993328a3b8924a82",
     "semantic_hash": "e813860358cdb4ef993328a3b8924a82"
   },
   "frontend/public/favicon.svg": {
-    "mtime": 1781839643.5316274,
+    "mtime": 1781647695.8420115,
     "ast_hash": "7e840862161341271697daa99a40d76b",
     "semantic_hash": "7e840862161341271697daa99a40d76b"
   },
   "frontend/src/assets/hero.png": {
-    "mtime": 1781839643.533339,
+    "mtime": 1781647695.8423126,
     "ast_hash": "aead493361b27e7510691c5d7072dfc1",
     "semantic_hash": "aead493361b27e7510691c5d7072dfc1"
   },
   "frontend/src/assets/react.svg": {
-    "mtime": 1781839643.533596,
+    "mtime": 1781647695.842352,
     "ast_hash": "f0402b67b6ce880f65666bb49e841696",
     "semantic_hash": "f0402b67b6ce880f65666bb49e841696"
   },
   "frontend/src/assets/vite.svg": {
-    "mtime": 1781839643.533596,
+    "mtime": 1781647695.8423882,
     "ast_hash": "9960a24288958394ac50e57ff638b036",
     "semantic_hash": "9960a24288958394ac50e57ff638b036"
   },
   "stt/wakeword.py": {
-    "mtime": 1784348439.2746356,
+    "mtime": 1783984121.561835,
     "ast_hash": "2a8602323e13cef21ea1bab245a0d690",
     "semantic_hash": "2a8602323e13cef21ea1bab245a0d690"
   },
   "config.example.json": {
-    "mtime": 1785113574.9259133,
+    "mtime": 1784783313.7086966,
     "ast_hash": "729c5993dbc962d30475df71a99abcd1",
     "semantic_hash": ""
   },
   "frontend/src-tauri/build.rs": {
-    "mtime": 1782137039.745144,
+    "mtime": 1782226483.5326083,
     "ast_hash": "1be34a5c61c2c35365de3dab14298f0b",
     "semantic_hash": "1be34a5c61c2c35365de3dab14298f0b"
   },
   "frontend/src-tauri/capabilities/default.json": {
-    "mtime": 1782137087.738439,
+    "mtime": 1782226483.5326083,
     "ast_hash": "2f95b68862884b84dd8fd7d3270c6b4e",
     "semantic_hash": "2f95b68862884b84dd8fd7d3270c6b4e"
   },
   "frontend/src-tauri/src/lib.rs": {
-    "mtime": 1782137068.6517875,
+    "mtime": 1782226483.5546086,
     "ast_hash": "b925018540f123ef57c059b669e5c88e",
     "semantic_hash": "b925018540f123ef57c059b669e5c88e"
   },
   "frontend/src-tauri/src/main.rs": {
-    "mtime": 1782137043.3084745,
+    "mtime": 1782226483.555204,
     "ast_hash": "7d49a4209d0d5d87ca42fbf7fad6ec3e",
     "semantic_hash": "7d49a4209d0d5d87ca42fbf7fad6ec3e"
   },
   "frontend/src-tauri/tauri.conf.json": {
-    "mtime": 1782137082.2784433,
+    "mtime": 1782226483.555204,
     "ast_hash": "e55051ec43da6d307469478282e1c0f2",
     "semantic_hash": "e55051ec43da6d307469478282e1c0f2"
   },
   "frontend/src/components/AppShell.tsx": {
-    "mtime": 1782313581.0387602,
+    "mtime": 1782773230.9330862,
     "ast_hash": "e7bacf61d49473b1536efded2e7bdf82",
     "semantic_hash": "e7bacf61d49473b1536efded2e7bdf82"
   },
   "frontend/src/components/CameraFeed.tsx": {
-    "mtime": 1782270956.5196228,
+    "mtime": 1782773230.933741,
     "ast_hash": "77bf4bb2795d37e22fe0c6d9c33cc958",
     "semantic_hash": "77bf4bb2795d37e22fe0c6d9c33cc958"
   },
   "frontend/src/components/DetachButton.tsx": {
-    "mtime": 1782313127.4160047,
+    "mtime": 1782773230.933741,
     "ast_hash": "160cd2e856258fc7e366526d5ebb716c",
     "semantic_hash": "160cd2e856258fc7e366526d5ebb716c"
   },
   "frontend/src/components/Orb.tsx": {
-    "mtime": 1782136467.595626,
+    "mtime": 1782226483.5556085,
     "ast_hash": "3494395ab3ad0cb7d0c65d55961a12df",
     "semantic_hash": "3494395ab3ad0cb7d0c65d55961a12df"
   },
   "frontend/src/components/ui/Card.tsx": {
-    "mtime": 1782313332.2489812,
+    "mtime": 1782773230.933741,
     "ast_hash": "1c4ef067c56ce019185f8e5abc9d92e7",
     "semantic_hash": "1c4ef067c56ce019185f8e5abc9d92e7"
   },
   "frontend/src/components/ui/Field.tsx": {
-    "mtime": 1782310157.374298,
+    "mtime": 1782773230.933741,
     "ast_hash": "c51f8112c414c7a4a72ef34ab1bdc360",
     "semantic_hash": "c51f8112c414c7a4a72ef34ab1bdc360"
   },
   "frontend/src/components/ui/ToggleGroup.tsx": {
-    "mtime": 1782136425.6490169,
+    "mtime": 1782226483.5567648,
     "ast_hash": "4ab4d18c02a71d7f1236bdf5171922f5",
     "semantic_hash": "4ab4d18c02a71d7f1236bdf5171922f5"
   },
   "frontend/src/context/SessionContext.tsx": {
-    "mtime": 1782313127.4126716,
+    "mtime": 1782773230.934741,
     "ast_hash": "0f03f3b619bcb215f8421a7b3090ed8c",
     "semantic_hash": "0f03f3b619bcb215f8421a7b3090ed8c"
   },
   "frontend/src/context/ThemeContext.tsx": {
-    "mtime": 1782136388.1557534,
+    "mtime": 1782226483.5570683,
     "ast_hash": "7f1e3b96b98c5f9acf95ce4a5282c1ae",
     "semantic_hash": "7f1e3b96b98c5f9acf95ce4a5282c1ae"
   },
   "frontend/src/context/ToastContext.tsx": {
-    "mtime": 1782094937.6804535,
+    "mtime": 1782226483.5570683,
     "ast_hash": "a6326d8646232287339b9eeb3ecd0c83",
     "semantic_hash": "a6326d8646232287339b9eeb3ecd0c83"
   },
   "frontend/src/hooks/useBackendUrl.ts": {
-    "mtime": 1782094804.6570137,
+    "mtime": 1782226483.5570683,
     "ast_hash": "b0d53625890f762f099f834e81f14cbb",
     "semantic_hash": "b0d53625890f762f099f834e81f14cbb"
   },
   "frontend/src/hooks/useChatSocket.ts": {
-    "mtime": 1784691397.287463,
+    "mtime": 1784686928.5791078,
     "ast_hash": "471a8d3e8a76903961aff86dab295f2c",
     "semantic_hash": ""
   },
   "frontend/src/hooks/useConfig.ts": {
-    "mtime": 1785113574.9292467,
+    "mtime": 1784779964.6823554,
     "ast_hash": "78f22cf671fd055fca839c3a19b0fe37",
     "semantic_hash": ""
   },
   "frontend/src/hooks/useHologram.ts": {
-    "mtime": 1782313332.2489812,
+    "mtime": 1782773230.934741,
     "ast_hash": "25d6516b529a680ac0f224e6cee307c7",
     "semantic_hash": "25d6516b529a680ac0f224e6cee307c7"
   },
   "frontend/src/lib/backend.ts": {
-    "mtime": 1782094771.2636478,
-    "ast_hash": "5b37c37b0285971e1072d28bc70f1537",
-    "semantic_hash": "5b37c37b0285971e1072d28bc70f1537"
+    "mtime": 1785242828.9047825,
+    "ast_hash": "6caf2df96829eaeecdba8e8c398ceb06",
+    "semantic_hash": ""
   },
   "frontend/src/lib/windows.ts": {
-    "mtime": 1782313127.4160047,
+    "mtime": 1782773230.9357412,
     "ast_hash": "9e9c4a0a2cd9cee278b551894acae0fc",
     "semantic_hash": "9e9c4a0a2cd9cee278b551894acae0fc"
   },
   "frontend/src/screens/AssistantScreen.tsx": {
-    "mtime": 1782313540.3787842,
+    "mtime": 1782773230.9357412,
     "ast_hash": "ae3e19fae2452006bb6d2b7c12613c90",
     "semantic_hash": "ae3e19fae2452006bb6d2b7c12613c90"
   },
   "frontend/src/screens/SettingsScreen.tsx": {
-    "mtime": 1784348439.2579687,
-    "ast_hash": "685f71729d452988b73ff180e4d24d7e",
+    "mtime": 1785242828.9047825,
+    "ast_hash": "26168f71cef91b270e579e558c78950c",
     "semantic_hash": ""
   },
   "frontend/src/screens/TeachingScreen.tsx": {
-    "mtime": 1782136724.8020623,
+    "mtime": 1785242818.5286407,
     "ast_hash": "5f2dfcb94ae1dc13b48a0c3681f4a010",
     "semantic_hash": "5f2dfcb94ae1dc13b48a0c3681f4a010"
   },
   "frontend/src/theme.ts": {
-    "mtime": 1782094798.1303408,
+    "mtime": 1782226483.5586085,
     "ast_hash": "a6364d93debcfff2050430fc42409c3f",
     "semantic_hash": "a6364d93debcfff2050430fc42409c3f"
   },
   "frontend/src/types.ts": {
-    "mtime": 1784348439.2579687,
+    "mtime": 1783995667.573827,
     "ast_hash": "dc5d1bd9abde988349de4fd567f91d5f",
     "semantic_hash": ""
   },
   "frontend/src/widgets/CameraWidget.tsx": {
-    "mtime": 1782136749.6420422,
+    "mtime": 1782226483.5586085,
     "ast_hash": "79bb9aa35bed39f7eca25349b3283f5e",
     "semantic_hash": "79bb9aa35bed39f7eca25349b3283f5e"
   },
   "frontend/src/widgets/ChatWidget.tsx": {
-    "mtime": 1782136762.4986987,
+    "mtime": 1782226483.5593286,
     "ast_hash": "4baf352c6117ee444f467b88fffc991d",
     "semantic_hash": "4baf352c6117ee444f467b88fffc991d"
   },
   "frontend/src/widgets/TranscriptWidget.tsx": {
-    "mtime": 1782136770.5986922,
+    "mtime": 1782226483.5593286,
     "ast_hash": "82adbc8ad63f3353a6697653650174fa",
     "semantic_hash": "82adbc8ad63f3353a6697653650174fa"
   },
   "frontend/src/widgets/WidgetFrame.tsx": {
-    "mtime": 1782136744.3120465,
+    "mtime": 1782226483.5596085,
     "ast_hash": "7a4c8f94d05c8e9ce4acecdc4b1f8147",
     "semantic_hash": "7a4c8f94d05c8e9ce4acecdc4b1f8147"
   },
   "frontend/src-tauri/README.md": {
-    "mtime": 1782137248.911644,
+    "mtime": 1782226483.5326083,
     "ast_hash": "76e38fbe2b0cc047730829281ff4d285",
     "semantic_hash": "76e38fbe2b0cc047730829281ff4d285"
   },
   "frontend/src-tauri/icons/128x128.png": {
-    "mtime": 1782137118.5217478,
+    "mtime": 1782226483.5326083,
     "ast_hash": "ef29589275a34259779d63d974ffa4a0",
     "semantic_hash": "ef29589275a34259779d63d974ffa4a0"
   },
   "frontend/src-tauri/icons/128x128@2x.png": {
-    "mtime": 1782137118.805081,
+    "mtime": 1782226483.5336082,
     "ast_hash": "f78ac5f4e331eca96047ad2354ab5654",
     "semantic_hash": "f78ac5f4e331eca96047ad2354ab5654"
   },
   "frontend/src-tauri/icons/32x32.png": {
-    "mtime": 1782137118.2884147,
+    "mtime": 1782226483.5336082,
     "ast_hash": "ef86f4bc74d3c1318917f3577758bce7",
     "semantic_hash": "ef86f4bc74d3c1318917f3577758bce7"
   },
   "frontend/src-tauri/icons/64x64.png": {
-    "mtime": 1782137118.3850813,
+    "mtime": 1782226483.5336082,
     "ast_hash": "c9cd36d6c812969eba05f5469bac2dbe",
     "semantic_hash": "c9cd36d6c812969eba05f5469bac2dbe"
   },
   "frontend/src-tauri/icons/Square107x107Logo.png": {
-    "mtime": 1782137111.5617535,
+    "mtime": 1782226483.5336082,
     "ast_hash": "04aaf5dd0f5f94d9327b501ebb591eb6",
     "semantic_hash": "04aaf5dd0f5f94d9327b501ebb591eb6"
   },
   "frontend/src-tauri/icons/Square142x142Logo.png": {
-    "mtime": 1782137111.7017534,
+    "mtime": 1782226483.5336082,
     "ast_hash": "6215a774c31fbc5dd2673da4c93b2702",
     "semantic_hash": "6215a774c31fbc5dd2673da4c93b2702"
   },
   "frontend/src-tauri/icons/Square150x150Logo.png": {
-    "mtime": 1782137111.84842,
+    "mtime": 1782226483.5336082,
     "ast_hash": "b63ba7a413a21fb9d68bfad6cd6b7c0a",
     "semantic_hash": "b63ba7a413a21fb9d68bfad6cd6b7c0a"
   },
   "frontend/src-tauri/icons/Square284x284Logo.png": {
-    "mtime": 1782137112.191753,
+    "mtime": 1782226483.5336082,
     "ast_hash": "ee50dc7b12d4aa78a3026f1ea0f36b57",
     "semantic_hash": "ee50dc7b12d4aa78a3026f1ea0f36b57"
   },
   "frontend/src-tauri/icons/Square30x30Logo.png": {
-    "mtime": 1782137111.1617537,
+    "mtime": 1782226483.5336082,
     "ast_hash": "d75c723884516a9ab322460516242d88",
     "semantic_hash": "d75c723884516a9ab322460516242d88"
   },
   "frontend/src-tauri/icons/Square310x310Logo.png": {
-    "mtime": 1782137112.565086,
+    "mtime": 1782226483.5336082,
     "ast_hash": "3b8dbe5b94c9c8b636c636b6464db934",
     "semantic_hash": "3b8dbe5b94c9c8b636c636b6464db934"
   },
   "frontend/src-tauri/icons/Square44x44Logo.png": {
-    "mtime": 1782137111.2484202,
+    "mtime": 1782226483.5336082,
     "ast_hash": "c9357f9c04f8e51a33c75bb35db156c1",
     "semantic_hash": "c9357f9c04f8e51a33c75bb35db156c1"
   },
   "frontend/src-tauri/icons/Square71x71Logo.png": {
-    "mtime": 1782137111.3450868,
+    "mtime": 1782226483.5346084,
     "ast_hash": "61f77ba8a3d5c059cd3ba8c4fba28c64",
     "semantic_hash": "61f77ba8a3d5c059cd3ba8c4fba28c64"
   },
   "frontend/src-tauri/icons/Square89x89Logo.png": {
-    "mtime": 1782137111.4484203,
+    "mtime": 1782226483.5346084,
     "ast_hash": "d2725d7634f794ac43340863a0a8d68b",
     "semantic_hash": "d2725d7634f794ac43340863a0a8d68b"
   },
   "frontend/src-tauri/icons/StoreLogo.png": {
-    "mtime": 1782137111.075087,
+    "mtime": 1782226483.5346084,
     "ast_hash": "332bbf0d249a198e86109992625b63ba",
     "semantic_hash": "332bbf0d249a198e86109992625b63ba"
   },
   "frontend/src-tauri/icons/android/mipmap-hdpi/ic_launcher.png": {
-    "mtime": 1782137124.8817427,
+    "mtime": 1782226483.5348876,
     "ast_hash": "eda41e3761492da638e754e7352dc20e",
     "semantic_hash": "eda41e3761492da638e754e7352dc20e"
   },
   "frontend/src-tauri/icons/android/mipmap-hdpi/ic_launcher_foreground.png": {
-    "mtime": 1782137123.4784105,
+    "mtime": 1782226483.5351129,
     "ast_hash": "732d0da2c55157d7dc450175fb136981",
     "semantic_hash": "732d0da2c55157d7dc450175fb136981"
   },
   "frontend/src-tauri/icons/android/mipmap-hdpi/ic_launcher_round.png": {
-    "mtime": 1782137124.8084095,
+    "mtime": 1782226483.5351129,
     "ast_hash": "7e1b9e6ae0d5d9c1187606f526ca3a2f",
     "semantic_hash": "7e1b9e6ae0d5d9c1187606f526ca3a2f"
   },
   "frontend/src-tauri/icons/android/mipmap-mdpi/ic_launcher.png": {
-    "mtime": 1782137125.0517426,
+    "mtime": 1782226483.5351129,
     "ast_hash": "1fd2f37ebfebc6f943619428f00e32c8",
     "semantic_hash": "1fd2f37ebfebc6f943619428f00e32c8"
   },
   "frontend/src-tauri/icons/android/mipmap-mdpi/ic_launcher_foreground.png": {
-    "mtime": 1782137123.595077,
+    "mtime": 1782226483.5353518,
     "ast_hash": "e8eb37e65b6f534bbeeead7f486fcb40",
     "semantic_hash": "e8eb37e65b6f534bbeeead7f486fcb40"
   },
   "frontend/src-tauri/icons/android/mipmap-mdpi/ic_launcher_round.png": {
-    "mtime": 1782137124.965076,
+    "mtime": 1782226483.5353518,
     "ast_hash": "b09db7214cc1a974fe4f678fa6eee7eb",
     "semantic_hash": "b09db7214cc1a974fe4f678fa6eee7eb"
   },
   "frontend/src-tauri/icons/android/mipmap-xhdpi/ic_launcher.png": {
-    "mtime": 1782137125.255076,
+    "mtime": 1782226483.5353518,
     "ast_hash": "31f213323acfcebe44cdd69950205d4f",
     "semantic_hash": "31f213323acfcebe44cdd69950205d4f"
   },
   "frontend/src-tauri/icons/android/mipmap-xhdpi/ic_launcher_foreground.png": {
-    "mtime": 1782137123.8117437,
+    "mtime": 1782226483.5356083,
     "ast_hash": "ec8c340b99ef64eb9a21f8a01dfdd17f",
     "semantic_hash": "ec8c340b99ef64eb9a21f8a01dfdd17f"
   },
   "frontend/src-tauri/icons/android/mipmap-xhdpi/ic_launcher_round.png": {
-    "mtime": 1782137125.1517427,
+    "mtime": 1782226483.5356083,
     "ast_hash": "6824ead8154bc7af01eae6b5dd2e0b1f",
     "semantic_hash": "6824ead8154bc7af01eae6b5dd2e0b1f"
   },
   "frontend/src-tauri/icons/android/mipmap-xxhdpi/ic_launcher.png": {
-    "mtime": 1782137125.5150757,
+    "mtime": 1782226483.5356083,
     "ast_hash": "f806f512032fea6c5330b89efb1ebc82",
     "semantic_hash": "f806f512032fea6c5330b89efb1ebc82"
   },
   "frontend/src-tauri/icons/android/mipmap-xxhdpi/ic_launcher_foreground.png": {
-    "mtime": 1782137124.17841,
+    "mtime": 1782226483.5362828,
     "ast_hash": "ea0f3dcd881f7db92c5edfc4bb2aaed8",
     "semantic_hash": "ea0f3dcd881f7db92c5edfc4bb2aaed8"
   },
   "frontend/src-tauri/icons/android/mipmap-xxhdpi/ic_launcher_round.png": {
-    "mtime": 1782137125.3850758,
+    "mtime": 1782226483.5362828,
     "ast_hash": "a8ac2ad5abe253ebe316f73c91dc994d",
     "semantic_hash": "a8ac2ad5abe253ebe316f73c91dc994d"
   },
   "frontend/src-tauri/icons/android/mipmap-xxxhdpi/ic_launcher.png": {
-    "mtime": 1782137125.8650753,
+    "mtime": 1782226483.5366082,
     "ast_hash": "01be912c73723c79b9bb2e10f2fcc47a",
     "semantic_hash": "01be912c73723c79b9bb2e10f2fcc47a"
   },
   "frontend/src-tauri/icons/android/mipmap-xxxhdpi/ic_launcher_foreground.png": {
-    "mtime": 1782137124.7484095,
+    "mtime": 1782226483.5376084,
     "ast_hash": "92a60759e63e3a753d78d495a3d25914",
     "semantic_hash": "92a60759e63e3a753d78d495a3d25914"
   },
   "frontend/src-tauri/icons/android/mipmap-xxxhdpi/ic_launcher_round.png": {
-    "mtime": 1782137125.6984088,
+    "mtime": 1782226483.5376084,
     "ast_hash": "afbf197e66afa71dbd43e1ca420f2322",
     "semantic_hash": "afbf197e66afa71dbd43e1ca420f2322"
   },
   "frontend/src-tauri/icons/icon.png": {
-    "mtime": 1782137119.6450803,
+    "mtime": 1782226483.5476084,
     "ast_hash": "f2ef3a91d7eb8a16a9135c084ee62ecd",
     "semantic_hash": "f2ef3a91d7eb8a16a9135c084ee62ecd"
   },
   "frontend/src-tauri/icons/ios/AppIcon-20x20@1x.png": {
-    "mtime": 1782137119.8317468,
+    "mtime": 1782226483.5486085,
     "ast_hash": "20a44ae0d04514d3456662b00a109276",
     "semantic_hash": "20a44ae0d04514d3456662b00a109276"
   },
   "frontend/src-tauri/icons/ios/AppIcon-20x20@2x-1.png": {
-    "mtime": 1782137119.741747,
+    "mtime": 1782226483.5487087,
     "ast_hash": "d93d27d361799774983a400c18b53b64",
     "semantic_hash": "d93d27d361799774983a400c18b53b64"
   },
   "frontend/src-tauri/icons/ios/AppIcon-20x20@2x.png": {
-    "mtime": 1782137119.9317467,
+    "mtime": 1782226483.5487087,
     "ast_hash": "d93d27d361799774983a400c18b53b64",
     "semantic_hash": "d93d27d361799774983a400c18b53b64"
   },
   "frontend/src-tauri/icons/ios/AppIcon-20x20@3x.png": {
-    "mtime": 1782137120.02508,
+    "mtime": 1782226483.5487087,
     "ast_hash": "483fdaf7ed60218aaedfaac0e37eebd4",
     "semantic_hash": "483fdaf7ed60218aaedfaac0e37eebd4"
   },
   "frontend/src-tauri/icons/ios/AppIcon-29x29@1x.png": {
-    "mtime": 1782137120.2050798,
+    "mtime": 1782226483.5487087,
     "ast_hash": "d7c0a1dfd8cc9b02f678e20086c67e1e",
     "semantic_hash": "d7c0a1dfd8cc9b02f678e20086c67e1e"
   },
   "frontend/src-tauri/icons/ios/AppIcon-29x29@2x-1.png": {
-    "mtime": 1782137120.1217465,
+    "mtime": 1782226483.5487087,
     "ast_hash": "2f78a8376cb9ac20770f43993ca384a0",
     "semantic_hash": "2f78a8376cb9ac20770f43993ca384a0"
   },
   "frontend/src-tauri/icons/ios/AppIcon-29x29@2x.png": {
-    "mtime": 1782137120.298413,
+    "mtime": 1782226483.5487087,
     "ast_hash": "2f78a8376cb9ac20770f43993ca384a0",
     "semantic_hash": "2f78a8376cb9ac20770f43993ca384a0"
   },
   "frontend/src-tauri/icons/ios/AppIcon-29x29@3x.png": {
-    "mtime": 1782137120.398413,
+    "mtime": 1782226483.5487087,
     "ast_hash": "8ba341b22077eb3e3c02e6a3371786ed",
     "semantic_hash": "8ba341b22077eb3e3c02e6a3371786ed"
   },
   "frontend/src-tauri/icons/ios/AppIcon-40x40@1x.png": {
-    "mtime": 1782137120.5850797,
+    "mtime": 1782226483.5487087,
     "ast_hash": "d93d27d361799774983a400c18b53b64",
     "semantic_hash": "d93d27d361799774983a400c18b53b64"
   },
   "frontend/src-tauri/icons/ios/AppIcon-40x40@2x-1.png": {
-    "mtime": 1782137120.5017462,
+    "mtime": 1782226483.5487087,
     "ast_hash": "915d1ebe75e7ab639da3be56bfe653f8",
     "semantic_hash": "915d1ebe75e7ab639da3be56bfe653f8"
   },
   "frontend/src-tauri/icons/ios/AppIcon-40x40@2x.png": {
-    "mtime": 1782137120.6817462,
+    "mtime": 1782226483.5487087,
     "ast_hash": "915d1ebe75e7ab639da3be56bfe653f8",
     "semantic_hash": "915d1ebe75e7ab639da3be56bfe653f8"
   },
   "frontend/src-tauri/icons/ios/AppIcon-40x40@3x.png": {
-    "mtime": 1782137120.7984128,
+    "mtime": 1782226483.5487087,
     "ast_hash": "a218150a7657578275a811e59621b800",
     "semantic_hash": "a218150a7657578275a811e59621b800"
   },
   "frontend/src-tauri/icons/ios/AppIcon-512@2x.png": {
-    "mtime": 1782137123.3450773,
+    "mtime": 1782226483.5536084,
     "ast_hash": "7f0cfa1cd88a83164b64b449e21d4716",
     "semantic_hash": "7f0cfa1cd88a83164b64b449e21d4716"
   },
   "frontend/src-tauri/icons/ios/AppIcon-60x60@2x.png": {
-    "mtime": 1782137120.9150794,
+    "mtime": 1782226483.5536084,
     "ast_hash": "a218150a7657578275a811e59621b800",
     "semantic_hash": "a218150a7657578275a811e59621b800"
   },
   "frontend/src-tauri/icons/ios/AppIcon-60x60@3x.png": {
-    "mtime": 1782137121.1084125,
+    "mtime": 1782226483.5546086,
     "ast_hash": "144ee654fa5f60ef10c678e8814caab5",
     "semantic_hash": "144ee654fa5f60ef10c678e8814caab5"
   },
   "frontend/src-tauri/icons/ios/AppIcon-76x76@1x.png": {
-    "mtime": 1782137121.2117457,
+    "mtime": 1782226483.5546086,
     "ast_hash": "92669cdd15100ae1d26e8c6a064f8a01",
     "semantic_hash": "92669cdd15100ae1d26e8c6a064f8a01"
   },
   "frontend/src-tauri/icons/ios/AppIcon-76x76@2x.png": {
-    "mtime": 1782137121.3717456,
+    "mtime": 1782226483.5546086,
     "ast_hash": "26a2f9adbaf1da759b48d384361b919e",
     "semantic_hash": "26a2f9adbaf1da759b48d384361b919e"
   },
   "frontend/src-tauri/icons/ios/AppIcon-83.5x83.5@2x.png": {
-    "mtime": 1782137121.528412,
+    "mtime": 1782226483.5546086,
     "ast_hash": "c5fb1b0f726ed68d73e4463e8e8cea1f",
     "semantic_hash": "c5fb1b0f726ed68d73e4463e8e8cea1f"
   },
   "provider_config.py": {
-    "mtime": 1784348439.2646353,
+    "mtime": 1783996856.5003839,
     "ast_hash": "52251297a99cf61fc9d0c5ad0ccf252d",
     "semantic_hash": ""
   },
   "tests/test_llm_backend.py": {
-    "mtime": 1784348439.2746356,
+    "mtime": 1783995688.1808918,
     "ast_hash": "fe3826f9cdf866332639ada54bd3f8a2",
     "semantic_hash": ""
   },
   "tests/test_provider_config.py": {
-    "mtime": 1784348439.2746356,
+    "mtime": 1783996487.4677057,
     "ast_hash": "47525edeabeb88f1b6ed72ad1cf90036",
     "semantic_hash": ""
   },
   "docs/CONFIG.md": {
-    "mtime": 1784348439.2546353,
+    "mtime": 1783996483.0056891,
     "ast_hash": "504651e12193604ceb25a1211e9edadf",
     "semantic_hash": ""
   },
   "docs/Manual de Marca - UNEV 1920x1080 - 2025.pdf": {
-    "mtime": 1782267510.6023407,
+    "mtime": 1782773230.9304473,
     "ast_hash": "895b1e3b702045ba2f0f7231132894f7",
     "semantic_hash": "895b1e3b702045ba2f0f7231132894f7"
   },
   "frontend/src/components/ProviderConfigCard.test.tsx": {
-    "mtime": 1784348439.2546353,
-    "ast_hash": "a656acbbeb87da2919281aa1df5ebfe4",
+    "mtime": 1785242828.9023087,
+    "ast_hash": "c0b1c9d990cd38df17069b36c2193730",
     "semantic_hash": ""
   },
   "frontend/src/components/ProviderConfigCard.tsx": {
-    "mtime": 1784348439.2546353,
-    "ast_hash": "921061df47d4fd4e445adc42ec200783",
+    "mtime": 1785242828.903558,
+    "ast_hash": "fb68d770b19bc55e084afd931d4c2b52",
     "semantic_hash": ""
   },
   "frontend/src/hooks/useProviders.ts": {
-    "mtime": 1784348439.2546353,
+    "mtime": 1783995667.573827,
     "ast_hash": "831c38923a8c5c54c958f9cf1cb00476",
     "semantic_hash": ""
   },
   "frontend/src/lib/providerForm.test.ts": {
-    "mtime": 1782307835.336277,
+    "mtime": 1782773230.9357412,
     "ast_hash": "536a8b60ab8363ca24af761a4a62f50c",
     "semantic_hash": "536a8b60ab8363ca24af761a4a62f50c"
   },
   "frontend/src/lib/providerForm.ts": {
-    "mtime": 1782307512.2103348,
+    "mtime": 1782773230.9357412,
     "ast_hash": "bea3a743343fb41accfd0ae331722227",
     "semantic_hash": "bea3a743343fb41accfd0ae331722227"
   },
   "frontend/src/test/setup.ts": {
-    "mtime": 1782307795.1932447,
+    "mtime": 1782773230.936741,
     "ast_hash": "079800536075abd01630a41087cf8298",
     "semantic_hash": "079800536075abd01630a41087cf8298"
   },
   "frontend/vitest.config.ts": {
-    "mtime": 1782307907.8090212,
+    "mtime": 1782773230.9377413,
     "ast_hash": "0030ab476cec78d91c8e3d3c11b4d3f7",
     "semantic_hash": "0030ab476cec78d91c8e3d3c11b4d3f7"
   },
   "security.py": {
-    "mtime": 1784348439.267969,
+    "mtime": 1783996466.6252244,
     "ast_hash": "823dc66bf4692cb0388eb04f37c4ecff",
     "semantic_hash": ""
   },
   "tests/test_security.py": {
-    "mtime": 1782309001.7966795,
+    "mtime": 1782773230.9767425,
     "ast_hash": "24f2bc3c87a20c0ef85acb26ce01af26",
     "semantic_hash": "24f2bc3c87a20c0ef85acb26ce01af26"
   },
   "frontend/src/hooks/useUnevContent.ts": {
-    "mtime": 1782310179.9442627,
+    "mtime": 1782773230.9357412,
     "ast_hash": "6fed1b6aa8b2760855b1be6bac3c74c8",
     "semantic_hash": "6fed1b6aa8b2760855b1be6bac3c74c8"
   },
   "frontend/src/screens/ContentScreen.tsx": {
-    "mtime": 1784691397.287463,
+    "mtime": 1784687009.0186386,
     "ast_hash": "aef26eec9f852286f94a70ef8a5302f5",
     "semantic_hash": ""
   },
   "skills/unev_content.py": {
-    "mtime": 1784691397.3007934,
+    "mtime": 1784687009.063639,
     "ast_hash": "824925859b7d05fb6a0d1d10353f42f5",
     "semantic_hash": ""
   },
   "tests/test_unev_content.py": {
-    "mtime": 1782310079.5577385,
+    "mtime": 1782773230.9767425,
     "ast_hash": "8b979f13e1e8525c3a96033262eb2fac",
     "semantic_hash": "8b979f13e1e8525c3a96033262eb2fac"
   },
   "tests/test_camera_stop.py": {
-    "mtime": 1782310905.8658226,
+    "mtime": 1782773230.9762797,
     "ast_hash": "9c0c859430837793e338c899bbe8c8ae",
     "semantic_hash": "9c0c859430837793e338c899bbe8c8ae"
   },
   "docs/PACKAGING.md": {
-    "mtime": 1785113574.9259133,
+    "mtime": 1784779964.6823554,
     "ast_hash": "b4858642ea4bfe5b68fc4a89fbff6f07",
     "semantic_hash": ""
   },
   "frontend/src/components/HologramConnection.tsx": {
-    "mtime": 1782313332.2489812,
+    "mtime": 1782773230.933741,
     "ast_hash": "0fe7ed99c7a7811a8bfe783889724a8d",
     "semantic_hash": "0fe7ed99c7a7811a8bfe783889724a8d"
   },
   "frontend/src/screens/AssistantScreen.test.tsx": {
-    "mtime": 1782313521.0287971,
+    "mtime": 1782773230.9357412,
     "ast_hash": "45e1735395af7e3f561d0ce13164ce44",
     "semantic_hash": "45e1735395af7e3f561d0ce13164ce44"
   },
   "tests/test_hologram_controller.py": {
-    "mtime": 1785113577.8659232,
-    "ast_hash": "7ed95227bbfe424dcbecaaf294a09509",
+    "mtime": 1785242828.959783,
+    "ast_hash": "f1a7ca027529918082b246cdb8619fda",
     "semantic_hash": ""
   },
   "docs/HOLOGRAM.md": {
-    "mtime": 1785113577.845923,
+    "mtime": 1785242828.8947825,
     "ast_hash": "4f68292510f2d1b3bfe754211105bbea",
     "semantic_hash": ""
   },
   "tests/test_llm_unify.py": {
-    "mtime": 1783955847.3936508,
+    "mtime": 1783985868.826955,
     "ast_hash": "8c6dab647d9583062e982d9d26d152e6",
     "semantic_hash": "8c6dab647d9583062e982d9d26d152e6"
   },
   "tests/test_ollama_ready_cache.py": {
-    "mtime": 1782600617.9784203,
+    "mtime": 1782773230.9767425,
     "ast_hash": "6cb4e8af1942e6efa8825df296fe7197",
     "semantic_hash": "6cb4e8af1942e6efa8825df296fe7197"
   },
   "tests/test_person_presence.py": {
-    "mtime": 1785113574.9459133,
+    "mtime": 1784691803.5588596,
     "ast_hash": "ae7ff040fb3e242ba04919286566fbfb",
     "semantic_hash": ""
   },
   "app/__init__.py": {
-    "mtime": 1782676738.6160479,
+    "mtime": 1782773230.7737362,
     "ast_hash": "3159862ba86d1b96931ada4ac1ba6e13",
     "semantic_hash": "3159862ba86d1b96931ada4ac1ba6e13"
   },
   "app/connection.py": {
-    "mtime": 1782621641.565103,
+    "mtime": 1782773230.7743704,
     "ast_hash": "406f8b6017342ac26db14cc1571ed6a3",
     "semantic_hash": "406f8b6017342ac26db14cc1571ed6a3"
   },
   "app/services/__init__.py": {
-    "mtime": 1782603222.9797068,
+    "mtime": 1782773230.7743704,
     "ast_hash": "a1359cfd12937be1a1e2322ddb1274e0",
     "semantic_hash": "a1359cfd12937be1a1e2322ddb1274e0"
   },
   "app/services/conversation.py": {
-    "mtime": 1785113574.92258,
-    "ast_hash": "45d01ae468d56a7636376f64de6778f6",
+    "mtime": 1785242828.8927824,
+    "ast_hash": "9c8caa1f2643f30794dc512fcb1160c7",
     "semantic_hash": ""
   },
   "app/services/llm.py": {
-    "mtime": 1784348439.2546353,
+    "mtime": 1783984115.1317842,
     "ast_hash": "e3dfca270811fe8ccc92cba399b820b5",
     "semantic_hash": "e3dfca270811fe8ccc92cba399b820b5"
   },
   "app/services/vision.py": {
-    "mtime": 1785113574.9259133,
+    "mtime": 1784697022.871382,
     "ast_hash": "7046422c778a0eb0f30d0a1b13abaaac",
     "semantic_hash": ""
   },
   "tests/test_app_services.py": {
-    "mtime": 1785113574.9459133,
+    "mtime": 1784697038.4904215,
     "ast_hash": "ff863a9a98a85a7aef7ae6296ea47b3f",
     "semantic_hash": ""
   },
   "tests/test_camera_feed_gate.py": {
-    "mtime": 1782674992.1807067,
+    "mtime": 1782773230.9762797,
     "ast_hash": "f2dcc59a03741674df5dfd4f71a2d79f",
     "semantic_hash": "f2dcc59a03741674df5dfd4f71a2d79f"
   },
   "tests/test_custom_object_interval.py": {
-    "mtime": 1785113574.9459133,
+    "mtime": 1785242818.5579107,
     "ast_hash": "589cbc47d4a8af0caf1aaa6e606522e2",
     "semantic_hash": ""
   },
   "pyproject.toml": {
-    "mtime": 1782270374.6466587,
+    "mtime": 1782773230.9727423,
     "ast_hash": "54929534656e5b622e69791be1639585",
     "semantic_hash": "54929534656e5b622e69791be1639585"
   },
   "tests/test_yolo_predict_opts.py": {
-    "mtime": 1785113574.9459133,
+    "mtime": 1784783313.756697,
     "ast_hash": "78b50172f8ee996d38398aa244074f3c",
     "semantic_hash": ""
   },
   "tests/test_hotwords_cache.py": {
-    "mtime": 1784691397.3007934,
+    "mtime": 1784687025.0427446,
     "ast_hash": "9f3846cc3b791ea6cd5c2bc6e6d23f1f",
     "semantic_hash": ""
   },
   "scripts/piper_wrapper.sh": {
-    "mtime": 1783735766.2348974,
+    "mtime": 1780259808.3298643,
     "ast_hash": "8972b804da0fe05338d46e4c737de47b",
     "semantic_hash": "8972b804da0fe05338d46e4c737de47b"
   },
   "camera_context.py": {
-    "mtime": 1785113574.9259133,
+    "mtime": 1784697022.871382,
     "ast_hash": "30d3fcbf36f34d2e8f98a272a6449e9c",
     "semantic_hash": ""
   },
   "auth_token.py": {
-    "mtime": 1782311095.6431127,
-    "ast_hash": "9c7c5269b387d5c3a09704360d137ff2",
+    "mtime": 1785242828.8927824,
+    "ast_hash": "d44bc4e9ee669e8ea282323313ac24bc",
     "semantic_hash": ""
   },
   "tests/test_auth_token.py": {
-    "mtime": 1782311106.7633631,
-    "ast_hash": "94edf9e593772024ba08a15a2b678931",
+    "mtime": 1785242828.9590182,
+    "ast_hash": "0e6dc0e4773b900e5374faf801dbda24",
     "semantic_hash": ""
   },
   "docs/User_Manual/README.md": {
-    "mtime": 1784691397.5174131,
+    "mtime": 1784700179.5219228,
     "ast_hash": "cb252ece80711a01261ce3e49f6cb3fb",
     "semantic_hash": ""
   },
   "docs/User_Manual/index.html": {
-    "mtime": 1784691397.5221007,
+    "mtime": 1784700179.5229228,
     "ast_hash": "cf22e815f09a97b12f0f468a84357f17",
     "semantic_hash": ""
   },
   "scripts/test_three_holograms.py": {
-    "mtime": 1784840998.14273,
+    "mtime": 1785242828.9590182,
     "ast_hash": "054059b485445ab16ab8eb7f6962c9dd",
     "semantic_hash": ""
   },
   "scripts/hologram_terminal.py": {
-    "mtime": 1784840604.1042097,
+    "mtime": 1785242828.9590182,
     "ast_hash": "77151295e872458316045d05bf1828ed",
     "semantic_hash": ""
   },
   "tests/test_stt_audio_preprocess.py": {
-    "mtime": 1785113574.9459133,
+    "mtime": 1784782507.6932802,
     "ast_hash": "221a709417cdad0ece3453bcf81acf14",
     "semantic_hash": ""
   },
   "yolo_instructions.md": {
-    "mtime": 1785113574.9492466,
-    "ast_hash": "331df3b86eba03fd10bcfac688d57aac",
+    "mtime": 1785327081.6301775,
+    "ast_hash": "2c0318ad8de0c854d2006b4f69c199bc",
     "semantic_hash": ""
   },
   "app/hologram/__init__.py": {
-    "mtime": 1785200246.9231381,
-    "ast_hash": "ff560c9ff5d3022606ec1f2943d1d3e2",
+    "mtime": 1785242828.8897824,
+    "ast_hash": "27ef90368f7e0b2187595f8874d41601",
     "semantic_hash": ""
   },
   "app/hologram/compatibility.py": {
-    "mtime": 1785200273.019659,
-    "ast_hash": "b8db8efe2a0763c47b0b6b5fd8d65f94",
+    "mtime": 1785242828.8908863,
+    "ast_hash": "4e84669781a592b6decf2873567af837",
     "semantic_hash": ""
   },
   "app/hologram/config_store.py": {
-    "mtime": 1785200246.9231381,
+    "mtime": 1785242828.8908863,
     "ast_hash": "62b6b319ab19aaad9bd8d7e55b8cd9ef",
     "semantic_hash": ""
   },
   "app/hologram/director.py": {
-    "mtime": 1785200246.9231381,
-    "ast_hash": "93db4474e6ba7a77bb288235b230b5d0",
+    "mtime": 1785242828.8908863,
+    "ast_hash": "31aaf0ec2a0c5392d29babe3bc01cb35",
     "semantic_hash": ""
   },
   "app/hologram/models.py": {
-    "mtime": 1785200342.5494475,
-    "ast_hash": "86f57c29170cde6686756b49c491d82d",
+    "mtime": 1785242828.8918939,
+    "ast_hash": "b7866798284160ee653372618b38d96e",
     "semantic_hash": ""
   },
   "app/hologram/unit_manager.py": {
-    "mtime": 1785200273.019659,
-    "ast_hash": "395a4306283c1ed31c61f016cf6e6386",
+    "mtime": 1785242828.8921854,
+    "ast_hash": "c496499b11e87143aa32c0aba400502d",
     "semantic_hash": ""
   },
   "tests/test_hologram_config_store.py": {
-    "mtime": 1785200312.8995113,
+    "mtime": 1785242828.9590182,
     "ast_hash": "2c86853026e426384221b7095d53db2c",
     "semantic_hash": ""
   },
   "tests/test_hologram_director.py": {
-    "mtime": 1785200342.5494475,
-    "ast_hash": "53c2e4258fe488bb86e6da48586f71d7",
+    "mtime": 1785242828.959783,
+    "ast_hash": "bff69d549058e3726d0de70bc08ae1cb",
     "semantic_hash": ""
   },
   "tests/test_hologram_unit_manager.py": {
-    "mtime": 1785200342.5494475,
-    "ast_hash": "eba196af48ecf1e4993f2435d3f97ef8",
+    "mtime": 1785242828.959783,
+    "ast_hash": "d0c42f52cb0a3ceee7841d8be8176f1a",
     "semantic_hash": ""
   },
   "docs/hologram-control/INDEX.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8947825,
     "ast_hash": "21fb81d5873482420b4ee43762b15382",
     "semantic_hash": ""
   },
   "docs/hologram-control/QUICK_START.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8960483,
     "ast_hash": "ad4d9a58a6c7248aef166895831b71ff",
     "semantic_hash": ""
   },
   "docs/hologram-control/REPOSITORY_INTEGRATION.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8960483,
     "ast_hash": "60c65a94a65d43bbaa37f30647e4e0c8",
     "semantic_hash": ""
   },
   "docs/hologram-control/architecture/SYSTEM_ARCHITECTURE.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8960483,
     "ast_hash": "d18939abb1c41f9e120e008fee3014d7",
     "semantic_hash": ""
   },
   "docs/hologram-control/architecture/adrs/ADR-001-REUSE-TCP-CONTROLLER.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8964581,
     "ast_hash": "0ca9044bebf4c5075275e026ad0db0a6",
     "semantic_hash": ""
   },
   "docs/hologram-control/architecture/adrs/ADR-002-SEMANTIC-SCENE-PLAN.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8966563,
     "ast_hash": "a53987682a50f2d8b9e70ebddb3ac9b7",
     "semantic_hash": ""
   },
   "docs/hologram-control/architecture/adrs/ADR-003-JSON-CATALOG.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8966563,
     "ast_hash": "8b7f2d37472993c28092a0885ee86d3b",
     "semantic_hash": ""
   },
   "docs/hologram-control/architecture/adrs/ADR-004-HYBRID-ROUTER.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8966563,
     "ast_hash": "2b473ef609e4cf0137e764972d6911ee",
     "semantic_hash": ""
   },
   "docs/hologram-control/architecture/adrs/ADR-005-SINGLE-DIRECTOR.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8966563,
     "ast_hash": "b48c64d766729ef9a54948b5bfbfbf6b",
     "semantic_hash": ""
   },
   "docs/hologram-control/architecture/adrs/README.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8967826,
     "ast_hash": "b2c2a2ae137018f5323f233bb947de52",
     "semantic_hash": ""
   },
   "docs/hologram-control/contracts/API.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8967826,
     "ast_hash": "d8fcd291e9a371aa27d2023086bdb1e6",
     "semantic_hash": ""
   },
   "docs/hologram-control/contracts/CONFIG_SCHEMA.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8974168,
     "ast_hash": "7cea613c6910b9bd614d5467acb1aaaa",
     "semantic_hash": ""
   },
   "docs/hologram-control/contracts/DOMAIN_MODELS.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.897525,
     "ast_hash": "f836d575a319b3f450eccc114ea3716f",
     "semantic_hash": ""
   },
   "docs/hologram-control/contracts/FRONTEND.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.897525,
     "ast_hash": "f2e85dc41503e28272f33e1d3b9ad2eb",
     "semantic_hash": ""
   },
   "docs/hologram-control/contracts/SCENE_PLAN.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.897525,
     "ast_hash": "01e59bce12fb4bd50585831e3ff4d744",
     "semantic_hash": ""
   },
   "docs/hologram-control/governance/AGENT_RULES.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.897525,
     "ast_hash": "2d6e5b69174aa099974ac18219249313",
     "semantic_hash": ""
   },
   "docs/hologram-control/governance/CHANGELOG.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8979964,
     "ast_hash": "e274b4447000631a55ab04086d3dc091",
     "semantic_hash": ""
   },
   "docs/hologram-control/governance/DECISIONS.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8979964,
     "ast_hash": "c64a77ce33fabf61c7104d916ea61153",
     "semantic_hash": ""
   },
   "docs/hologram-control/governance/RISKS.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8979964,
     "ast_hash": "8a436191cc2e884a52cb15c69c64222b",
     "semantic_hash": ""
   },
   "docs/hologram-control/governance/SOURCE_OF_TRUTH.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8979964,
     "ast_hash": "c7cd36bfae0bd2fadd6b8fdbb4b27c80",
     "semantic_hash": ""
   },
   "docs/hologram-control/handoffs/README.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8979964,
     "ast_hash": "e1ab5261a993927dbb4f94d6e472934c",
     "semantic_hash": ""
   },
   "docs/hologram-control/handoffs/WAVE-001-HANDOFF.md": {
-    "mtime": 1785200373.5794127,
-    "ast_hash": "404d1702a8942459f305f5db375d64ad",
+    "mtime": 1785242828.8985977,
+    "ast_hash": "8d8ed7cbb1455acc1364a095ae241624",
     "semantic_hash": ""
   },
   "docs/hologram-control/implementation/IMPLEMENTATION_PROMPT.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8987825,
     "ast_hash": "1516a773b647c3b8eddd57f60d041fe3",
     "semantic_hash": ""
   },
   "docs/hologram-control/implementation/MODEL_ASSIGNMENT.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8999796,
     "ast_hash": "28536a20e60ce07764072bf49df5c245",
     "semantic_hash": ""
   },
   "docs/hologram-control/implementation/ROADMAP.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.8999796,
     "ast_hash": "cbce476e8701b7e87905b936dde5fb17",
     "semantic_hash": ""
   },
   "docs/hologram-control/implementation/STATUS.md": {
-    "mtime": 1785200373.5794127,
-    "ast_hash": "9c338fcd51126a0711eb7e39da958a6b",
+    "mtime": 1785242828.9002109,
+    "ast_hash": "b935d9bdf1135134b78a19511cef3cd7",
     "semantic_hash": ""
   },
   "docs/hologram-control/implementation/TASK_TEMPLATE.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.9002109,
     "ast_hash": "1b74cf8bebd22e2e97c0a1026c42ca34",
     "semantic_hash": ""
   },
   "docs/hologram-control/implementation/waves/README.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.9002109,
     "ast_hash": "e32bb80ef5bccac1f76ed7163cc7b6f1",
     "semantic_hash": ""
   },
   "docs/hologram-control/implementation/waves/WAVE-001.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.9005399,
     "ast_hash": "0b11184cb2ba9aa0707327aa05e4eac9",
     "semantic_hash": ""
   },
   "docs/hologram-control/implementation/waves/WAVE-002.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.9005399,
     "ast_hash": "4a073a5e486b9abb42d6719d0bad413a",
     "semantic_hash": ""
   },
   "docs/hologram-control/implementation/waves/WAVE-003.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.9005399,
     "ast_hash": "b33d6c658140444bcecd972683945c3e",
     "semantic_hash": ""
   },
   "docs/hologram-control/implementation/waves/WAVE-004.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.9005399,
     "ast_hash": "e85ddd7e2fe76e26aad2039deaea0cd5",
     "semantic_hash": ""
   },
   "docs/hologram-control/implementation/waves/WAVE-005.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.9009726,
     "ast_hash": "255cb73c6bf8178ca942aa8333bba922",
     "semantic_hash": ""
   },
   "docs/hologram-control/implementation/waves/WAVE-006.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.9009726,
     "ast_hash": "435557b110d64e0b31e78e3acc021a92",
     "semantic_hash": ""
   },
   "docs/hologram-control/operations/HARDWARE_VALIDATION.md": {
-    "mtime": 1785203594.0,
-    "ast_hash": "1d0505470a9c0a628bef2c2bbeca2c20",
+    "mtime": 1785242828.9009726,
+    "ast_hash": "4f928fd9418e4007952ee1f4d69381f9",
     "semantic_hash": ""
   },
   "docs/hologram-control/operations/MIGRATION_COMPATIBILITY.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.9013858,
     "ast_hash": "4842fe6731788accf50d85b9d2a1bb4e",
     "semantic_hash": ""
   },
   "docs/hologram-control/operations/SIMULATOR.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.9013858,
     "ast_hash": "7ab611488f4864f0e8d380dfa7cc73ff",
     "semantic_hash": ""
   },
   "docs/hologram-control/operations/TROUBLESHOOTING.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.9013858,
     "ast_hash": "e00591677be3cb69aa8b5b598bb875f2",
     "semantic_hash": ""
   },
   "docs/hologram-control/product/BACKLOG.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.9013858,
     "ast_hash": "3f997c8a65ed5836947d4fe2827648c6",
     "semantic_hash": ""
   },
   "docs/hologram-control/product/CURRENT_STATE.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.901814,
     "ast_hash": "eb2e9376fe08644647effc473aef83d8",
     "semantic_hash": ""
   },
   "docs/hologram-control/product/REQUIREMENTS.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.9019167,
     "ast_hash": "6c844c7bed9e39d6636382efab5a69f4",
     "semantic_hash": ""
   },
   "docs/hologram-control/product/VISION_AND_SCOPE.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.9019167,
     "ast_hash": "142f612991aacfbf784f2bfe73c93e20",
     "semantic_hash": ""
   },
   "docs/hologram-control/quality/ACCEPTANCE_MATRIX.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.9019167,
     "ast_hash": "e4da7886eb05c11d10e2cbb244d18d97",
     "semantic_hash": ""
   },
   "docs/hologram-control/quality/REVIEW_CHECKLIST.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.9023087,
     "ast_hash": "b92682f5ba57c01c18fbc0e76e084206",
     "semantic_hash": ""
   },
   "docs/hologram-control/quality/TEST_STRATEGY.md": {
-    "mtime": 1785203594.0,
+    "mtime": 1785242828.9023087,
     "ast_hash": "206b1625f24010ba3e4d9d269f738a11",
+    "semantic_hash": ""
+  },
+  "app/data/honduras_info.json": {
+    "mtime": 1782786137.8206134,
+    "ast_hash": "1d6f97ef916710a695f083e843733de1",
+    "semantic_hash": ""
+  },
+  "app/data/training_metadata.json": {
+    "mtime": 1784850312.1177204,
+    "ast_hash": "f17c6890ce3e5d805aad7ee46da00fd7",
+    "semantic_hash": ""
+  },
+  "app/data/unev_info.json": {
+    "mtime": 1784687015.151679,
+    "ast_hash": "79392c61296f3377d8bad7fdb0423262",
+    "semantic_hash": ""
+  },
+  "app/hologram/conversation_orchestrator.py": {
+    "mtime": 1785242828.8908863,
+    "ast_hash": "185958eaf5e4a3f638b915385511c425",
+    "semantic_hash": ""
+  },
+  "app/hologram/media_router.py": {
+    "mtime": 1785242828.8908863,
+    "ast_hash": "43b8090dc4429e76bd0671e4cd04acc9",
+    "semantic_hash": ""
+  },
+  "app/hologram/rotation.py": {
+    "mtime": 1785242828.8921854,
+    "ast_hash": "a11adfb6048775c483bc6658b6acc713",
+    "semantic_hash": ""
+  },
+  "app/hologram/router_prompts.py": {
+    "mtime": 1785242828.8921854,
+    "ast_hash": "a6e7a0e2c2077fb538ef601fec615baa",
+    "semantic_hash": ""
+  },
+  "app/hologram/router_provider.py": {
+    "mtime": 1785242828.8921854,
+    "ast_hash": "65f8dca0c58b25dea46497eb29c563f6",
+    "semantic_hash": ""
+  },
+  "app/hologram/scene_observer.py": {
+    "mtime": 1785242828.8921854,
+    "ast_hash": "7ad4a774b88b237471da8e44707a81a6",
+    "semantic_hash": ""
+  },
+  "app/hologram/simulator.py": {
+    "mtime": 1785242828.8921854,
+    "ast_hash": "ba73df4749afcfa53c9dd82cca351eae",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/hologram/FanUnitsPanel.tsx": {
+    "mtime": 1785242828.903558,
+    "ast_hash": "653195ae734915d326eb5ac25c3c6c0f",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/hologram/HologramControlPanel.tsx": {
+    "mtime": 1785242828.903954,
+    "ast_hash": "082335b0b893fc3e4f5a6be205e5abdc",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/hologram/IdentityCatalog.tsx": {
+    "mtime": 1785242828.903954,
+    "ast_hash": "45621136b6f79cb190735fbcd2de0c95",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/hologram/LiveHologramStatus.tsx": {
+    "mtime": 1785242828.903954,
+    "ast_hash": "b2d6a1e484e2ef0d1607e2b6f1dce466",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/hologram/PromotionCatalog.tsx": {
+    "mtime": 1785242828.903954,
+    "ast_hash": "876b38829f024fb06c864fab2326932f",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/hologram/RotationControls.tsx": {
+    "mtime": 1785242828.903954,
+    "ast_hash": "62d2d7c3f8f8f18c23afb0989dbceba6",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/hologram/__tests__/HologramControlPanel.test.tsx": {
+    "mtime": 1785242828.903954,
+    "ast_hash": "67ac5f201e2cd6fc0c2313edbd6d9e2c",
+    "semantic_hash": ""
+  },
+  "frontend/src/hooks/__tests__/useHologramControl.test.ts": {
+    "mtime": 1785242828.903954,
+    "ast_hash": "bee8f42ed4d7d2d9b38e3ac0ec521a9f",
+    "semantic_hash": ""
+  },
+  "frontend/src/hooks/useHologramControl.ts": {
+    "mtime": 1785242828.9047825,
+    "ast_hash": "2083a2183dfba02e32358fcd40b01247",
+    "semantic_hash": ""
+  },
+  "frontend/src/lib/backend.test.ts": {
+    "mtime": 1785242828.9047825,
+    "ast_hash": "90b36318ae628f22f53e23a6c2a729bf",
+    "semantic_hash": ""
+  },
+  "frontend/src/lib/hologramApi.ts": {
+    "mtime": 1785242828.9047825,
+    "ast_hash": "f7c2dab7a46ae8c02776f14707458e58",
+    "semantic_hash": ""
+  },
+  "tests/test_hologram_api.py": {
+    "mtime": 1785242828.9590182,
+    "ast_hash": "a40f186346de051ca8aafc2a31be1e03",
+    "semantic_hash": ""
+  },
+  "tests/test_hologram_conversation_integration.py": {
+    "mtime": 1785242828.959783,
+    "ast_hash": "df97cab466758e615f755aa4d8538f89",
+    "semantic_hash": ""
+  },
+  "tests/test_hologram_conversation_orchestrator.py": {
+    "mtime": 1785242828.959783,
+    "ast_hash": "566249ba4853cd053b093d96c1330f54",
+    "semantic_hash": ""
+  },
+  "tests/test_hologram_diagnostics.py": {
+    "mtime": 1785242828.959783,
+    "ast_hash": "abcf5ca59e6917cd721e6d1d48504e8e",
+    "semantic_hash": ""
+  },
+  "tests/test_hologram_simulator.py": {
+    "mtime": 1785242828.959783,
+    "ast_hash": "208481cc21dc1828fad6e72fc27e6239",
+    "semantic_hash": ""
+  },
+  "tests/test_hologram_zero_index.py": {
+    "mtime": 1785242828.960783,
+    "ast_hash": "c70ee96157a11aa976606dc39d48f767",
+    "semantic_hash": ""
+  },
+  "tests/test_media_router.py": {
+    "mtime": 1785242828.960783,
+    "ast_hash": "eebe27806909934122383977e3cca40b",
+    "semantic_hash": ""
+  },
+  "tests/test_promotion_rotation.py": {
+    "mtime": 1785242828.960783,
+    "ast_hash": "4c5b9aea101b6097839a8bec2ec937df",
+    "semantic_hash": ""
+  },
+  "tests/test_scene_observer.py": {
+    "mtime": 1785242828.960783,
+    "ast_hash": "1d6a30f7d7e0c430ac92cb150fb29975",
+    "semantic_hash": ""
+  },
+  "docs/HOLOGRAM_MEDIA_CATALOG.md": {
+    "mtime": 1785242828.8947825,
+    "ast_hash": "ca9055b2f227183aa8e6c299727c5254",
+    "semantic_hash": ""
+  },
+  "docs/HOLOGRAM_SCHOOL_DEMO.md": {
+    "mtime": 1785242828.8947825,
+    "ast_hash": "d871ab36e10492d797142afac49de86d",
+    "semantic_hash": ""
+  },
+  "docs/HOLOGRAM_THREE_FAN_SETUP.md": {
+    "mtime": 1785242828.8947825,
+    "ast_hash": "c1a4f81c406ce6c872491a951ff54712",
+    "semantic_hash": ""
+  },
+  "docs/HOLOGRAM_TROUBLESHOOTING.md": {
+    "mtime": 1785242828.8947825,
+    "ast_hash": "3cf8a4b25524c8f7b7db1acb8f2cfcaf",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/handoffs/WAVE-002-HANDOFF.md": {
+    "mtime": 1785242828.8985977,
+    "ast_hash": "d73acdff39ee07de39bd53e75fc587cc",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/handoffs/WAVE-003-HANDOFF.md": {
+    "mtime": 1785242828.8985977,
+    "ast_hash": "496a053dd4632395a6c6f85a4521d51e",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/handoffs/WAVE-004-HANDOFF.md": {
+    "mtime": 1785242828.8987825,
+    "ast_hash": "c0c40e102f3cf5e00272e68adace7c2e",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/handoffs/WAVE-005-HANDOFF.md": {
+    "mtime": 1785242828.8987825,
+    "ast_hash": "a5d7b2776e203d3bcc33712291bb2a03",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/handoffs/WAVE-006-FIX-HANDOFF.md": {
+    "mtime": 1785242828.8987825,
+    "ast_hash": "fdebffd49de6e15d1dd5cecb38c66ee7",
+    "semantic_hash": ""
+  },
+  "docs/hologram-control/quality/WAVE-006-AUDIT.md": {
+    "mtime": 1785242828.9023087,
+    "ast_hash": "2b40a45234bf48b8356274068c28f7bb",
+    "semantic_hash": ""
+  },
+  "app/tools/__init__.py": {
+    "mtime": 1785324091.3001127,
+    "ast_hash": "d558df572040050e70e7da2497ae7b71",
+    "semantic_hash": ""
+  },
+  "app/tools/lightpanda_engine.py": {
+    "mtime": 1785324464.648373,
+    "ast_hash": "06bb7438c014f634a0a3e5626115a491",
+    "semantic_hash": ""
+  },
+  "app/tools/orchestrator.py": {
+    "mtime": 1785325588.2455068,
+    "ast_hash": "dc7ceb938465f862d6a476a11a1d4d14",
+    "semantic_hash": ""
+  },
+  "app/tools/schema.py": {
+    "mtime": 1785325558.2295475,
+    "ast_hash": "6e8619c16c8de6a5eecc98cd19b784ed",
+    "semantic_hash": ""
+  },
+  "scripts/smoke_lightpanda.py": {
+    "mtime": 1785324500.344478,
+    "ast_hash": "8281d26dbd8d49a7cc04acc44ac9c7a5",
+    "semantic_hash": ""
+  },
+  "tests/test_lightpanda_engine.py": {
+    "mtime": 1785324367.8830755,
+    "ast_hash": "cc8414c20f5b01b762254611b5c525ed",
+    "semantic_hash": ""
+  },
+  "tests/test_tool_orchestrator.py": {
+    "mtime": 1785324468.4243839,
+    "ast_hash": "5e0d4a1b99ed7a0867c7e5bdd7bde6cc",
+    "semantic_hash": ""
+  },
+  "docker-compose.yml": {
+    "mtime": 1785325157.019738,
+    "ast_hash": "89a15a90c38ddd49423028e41985312f",
+    "semantic_hash": ""
+  },
+  "app/tools/availability.py": {
+    "mtime": 1785325541.5275722,
+    "ast_hash": "739d18c719c00784239db8e510ba0f0e",
+    "semantic_hash": ""
+  },
+  "tests/test_web_availability.py": {
+    "mtime": 1785326028.9261007,
+    "ast_hash": "f0bf8ae38adff7c651b693c4c5daefe0",
+    "semantic_hash": ""
+  },
+  "tests/test_vision_geometry.py": {
+    "mtime": 1785326911.9731905,
+    "ast_hash": "0b1b9c9a889a6fe97f5f67167cfbbe23",
+    "semantic_hash": ""
+  },
+  "tests/test_vision_signals.py": {
+    "mtime": 1785326951.1092417,
+    "ast_hash": "84595e7df130e53d03c4a24877870865",
+    "semantic_hash": ""
+  },
+  "vision/geometry.py": {
+    "mtime": 1785326474.7546747,
+    "ast_hash": "540c0557c1d7b8efe202c7b50bdb9ea5",
+    "semantic_hash": ""
+  },
+  "vision/image_signals.py": {
+    "mtime": 1785326511.2937126,
+    "ast_hash": "9814e1192ce8cd75ef1616fdc9608503",
     "semantic_hash": ""
   }
 }

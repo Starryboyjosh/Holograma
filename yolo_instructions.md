@@ -4,8 +4,8 @@ Documento de handoff para **modificar, depurar o rehacer** la visión del kiosco
 Úsalo en otra conversación o sesión de agente: resume arquitectura, decisiones,
 trampas conocidas, variables de entorno, archivos y fuentes.
 
-**Última actualización de este doc:** 2026-07-22 (sesiones de unificación YOLOE,
-precisión de uniforme ITEE y corrección del bbox en cuello vs pecho).
+**Última actualización de este doc:** 2026-07-29 (sesión 4: separación de
+`geometry.py` / `image_signals.py` y fix de la prioridad `logo_ref`).
 
 ---
 
@@ -32,8 +32,11 @@ Constante canónica: `DEFAULT_YOLOE_WEIGHTS` en `vision/person_detector.py`.
 
 | Archivo | Rol |
 |---------|-----|
-| **`vision/person_detector.py`** | Núcleo: carga YOLOE, `set_classes`, predict, uniforme, logos ORB/template, bucle continuo, overlay JPEG |
+| **`vision/person_detector.py`** | Orquestación: carga YOLOE, `set_classes`, predict, filtro de uniforme, bucle continuo, overlay JPEG |
+| **`vision/geometry.py`** | **Funciones puras** de cajas y ROI del pecho: `logo_roi_fractions`, `collar_y_max`, `snap_box_to_logo_zone`, `best_person_for_box`, `point_in_logo_zone`, `clamp_box_to_frame` |
+| **`vision/image_signals.py`** | **Funciones puras** de imagen: `compute_hsv_hist`, `is_white_light_or_glare`, `compare_hsv_signature`, `match_template_multiscale`, `match_orb` |
 | `vision/camera.py` | Captura OpenCV (índice, resolución, backend) |
+| `vision/face_analyzer.py` | Estimación de rostro (usada opcionalmente por `analyze_frame`) |
 | `vision/__init__.py` | Exporta `YoloPersonDetector`, `DEFAULT_YOLOE_WEIGHTS` |
 | `call.py` | Hilo de cámara, `_last_camera_analysis`, `_camera_context_for_prompt`, callback de eventos |
 | `main.py` | Arranque FastAPI: `start_camera_thread`, monkey-patch del callback → `CameraContextProvider` |
@@ -44,6 +47,8 @@ Constante canónica: `DEFAULT_YOLOE_WEIGHTS` en `vision/person_detector.py`.
 | `data/images/` | Fotos de Entrenar (plantillas logo) |
 | `data/open_vocabulary.txt` | Vocabulario libre (coma/separado) |
 | `tests/test_custom_object_interval.py` | Inferencia única, uniforme, pecho vs cuello |
+| `tests/test_vision_geometry.py` | Geometría pura + **prioridad de fuente** en el dedupe |
+| `tests/test_vision_signals.py` | HSV, glare/ventanas, template multiescala, ORB |
 | `tests/test_yolo_predict_opts.py` | imgsz, conf floor, prepare_frame |
 | `tests/test_camera_stop.py`, `test_camera_feed_gate.py`, `test_person_presence.py` | Bucle / feed / presencia |
 | `scripts/diagnose_hologram.py --yolo` | Smoke test de un frame |
@@ -166,6 +171,19 @@ de ITEE y rompe otros colegios. El HSV histogram es genérico.
 2. Open-vocab de etiqueta **con** fotos Entrenar → solo si
    `_verify_logo_reference` confirma la plantilla (`logo_ref_verified`).
 3. Open-vocab de etiqueta **sin** fotos (p. ej. «botella») → umbral custom normal.
+
+Esta prioridad se aplica en `_dedupe_custom` mediante `_SOURCE_PRIORITY`
+(verificado = 3, `open_vocab_snapped` = 1). La confianza **solo** desempata
+entre detecciones de la misma fuente.
+
+> **Regresión histórica (sesión 4).** Durante mucho tiempo esta prioridad estuvo
+> escrita en el documento pero **no** en el código: `_dedupe_custom` ordenaba
+> solo por confianza y la preferencia por fuente se aplicaba después, en
+> `_detect_all`, sobre una lista que ya tenía una sola entrada por label — así
+> que era código muerto. En la práctica ganaba el open-vocab (0.92) sobre el
+> match verificado contra la foto de Entrenar (0.70): exactamente al revés de lo
+> diseñado. Si vuelves a tocar el dedupe, **no reordenes por confianza antes de
+> resolver la fuente**. Lo blinda `test_verified_logo_beats_higher_confidence_open_vocab`.
 
 **No reintroducir** gates de color ITEE (`_box_has_itee_structure`, seeds amarillas)
 como condición principal.
@@ -503,10 +521,31 @@ Archivo: `vision/person_detector.py`
 | `DEFAULT_YOLOE_WEIGHTS` | `yoloe-26n-seg.pt` |
 | `_BASE_PERSON_PROMPTS` | person, persona, people, human, man, woman, estudiante |
 | `_OPEN_VOCAB_ALIASES` | mapeo etiqueta → prompts (sin genéricos de camisa) |
-| `_LOGO_Y0/_Y1/_X0/_X1` | ROI pecho |
-| `_COLLAR_Y_MAX` | 0.34 |
+| `_SOURCE_PRIORITY` | verificado (3) > open_vocab_snapped (1) > desconocido (0) |
 | `_UNIFORM_OPEN_VOCAB_MIN_CONF` | 0.45 |
 | `_MAX_OPEN_VOCAB_PROMPTS` | 40 |
+| `_TMPL_MATCH_MIN` | 0.62 (override: `YOLO_LOGO_TMPL_MIN`) |
+
+Archivo: `vision/geometry.py`
+
+| Símbolo | Valor / idea |
+|---------|----------------|
+| `LOGO_Y0/Y1/X0/X1` | ROI pecho: `0.36 / 0.58 / 0.08 / 0.48` |
+| `COLLAR_Y_MAX` | 0.34 |
+| `SNAP_MIN_W_FRACTION` / `SNAP_MIN_H_FRACTION` | 0.55 / 0.65 del pecho |
+| `SNAP_MIN_SIDE_PX` | 50 px (evita el cuadro invisible de 20×20) |
+
+Archivo: `vision/image_signals.py`
+
+| Símbolo | Valor / idea |
+|---------|----------------|
+| `HSV_HUE_BINS` / `HSV_SAT_BINS` | 18 / 16 |
+| `GLARE_SAT_MAX` / `GLARE_VAL_MIN` | 40 / 180 (píxel «blanco») |
+| `GLARE_RATIO_MAX` | 0.40 del parche |
+| `GLARE_MEAN_SAT_MAX` / `GLARE_MEAN_VAL_MIN` | 32.0 / 175.0 |
+| `TEMPLATE_SCALES` | 7 niveles: 0.14 → 0.80 |
+| `ROI_MIN_STDDEV` / `TEMPLATE_MIN_STDDEV` | 4.0 / 8.0 (sin textura, no se matchea) |
+| `ORB_FEATURES` / `ORB_RATIO` / `ORB_MIN_GOOD_MATCHES` | 700 / 0.75 / 14 |
 
 ---
 
@@ -545,6 +584,35 @@ Archivo: `vision/person_detector.py`
     que cubría todo el frame y causaba FP en ventanas.
 12. Umbrales de glare ajustados (más agresivos): la versión anterior
     (Sat < 35, Val > 195, ratio > 55%) dejaba pasar ventanas con luz difusa.
+
+### Sesión 4: Separación de módulos + bug de prioridad de fuente
+
+13. **`vision/geometry.py` y `vision/image_signals.py`**: ~440 líneas de lógica
+    pura salen de `person_detector.py` (2110 → 1880). Antes, probar aritmética de
+    rectángulos obligaba a instanciar el detector y cargar Ultralytics; ahora son
+    funciones puras con tests propios (`test_vision_geometry`, `test_vision_signals`).
+    Los métodos del detector siguen existiendo como delegaciones finas, así que la
+    API interna y los tests históricos no cambian.
+14. **Bug corregido — la prioridad `logo_ref` no se aplicaba** (§4.3): el bloque
+    de preferencia por fuente de `_detect_all` era código muerto porque
+    `_dedupe_custom` ya había colapsado a una entrada por label ordenando por
+    confianza. Ahora la prioridad vive en `_dedupe_custom` vía `_SOURCE_PRIORITY`
+    y la confianza solo desempata dentro de la misma fuente.
+15. **Números mágicos a constantes con nombre**: umbrales de glare, bins HSV,
+    escalas del template, parámetros ORB y proporciones del snap estaban
+    incrustados en el cuerpo de los métodos.
+16. **`import cv2` / `import numpy` sacados de los bucles**: `_match_template_multiscale`
+    los importaba **dentro** del bucle de plantillas, que corre en cada frame.
+17. **Deduplicación de código**: el recorte+clampeo+chequeo de glare estaba
+    copiado literal en las dos ramas de `_filter_uniform_objects` → `_box_is_glare`.
+    El chequeo de `HOLOGRAM_YOLO_DEBUG` estaba repetido en 4 sitios → `_yolo_debug()`.
+18. **`except Exception` genéricos acotados** a las excepciones reales
+    (`cv2.error`, `TypeError`, `ValueError`…) en el código extraído: antes un
+    error de programación quedaba enmascarado como «no hubo match».
+19. **Docstring de `run_continuous` corregido**: documentaba
+    `callback(event, count)` cuando siempre se invoca con
+    `(event, count, analysis)`, y omitía `analysis_update` y
+    `custom_object_detected`.
 
 ---
 

@@ -49,6 +49,8 @@ piper_amd64.tar.gz
 whisper_cache/
 runs/
 weights/
+.gemini/
+GEMINI.md
 
 # Generated frontend static bundle (if present at repo root)
 static/

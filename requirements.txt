@@ -43,3 +43,7 @@ uvicorn>=0.49.0
 python-dotenv>=1.0.0
 pydantic>=2.0
 
+# === Navegación web: cliente CDP contra Lightpanda ===
+# Se usa websockets.sync.client (API síncrona, disponible desde la 13).
+websockets>=13.0
+
