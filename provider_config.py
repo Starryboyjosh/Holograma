@@ -47,6 +47,12 @@ class Provider:
     # Los proveedores en la nube heredan LLM_MODEL si no tienen su propio override;
     # los locales (ollama) NO, para no usar por error un modelo de la nube.
     generic_model_fallback: bool = True
+    # Forma de los ids que este proveedor sabe resolver, para no heredar de
+    # LLM_MODEL un id imposible (ver resolve_model):
+    #   "namespaced" → con barra ("meta/llama", "moonshotai/kimi-k2.6")
+    #   "bare"       → sin barra ("gpt-4o-mini", "llama-3.3-70b-versatile")
+    #   "any"        → sin restricción (endpoints propios: no se puede saber)
+    model_id_style: str = "any"
 
 
 # Registro único. El orden importa para la auto-detección (ver AUTODETECT_ORDER).
@@ -62,6 +68,7 @@ PROVIDERS: dict[str, Provider] = {
         default_base_url="https://openrouter.ai/api/v1",
         openai_compatible=True,
         supports_discovery=True,
+        model_id_style="namespaced",
     ),
     "openai": Provider(
         id="openai",
@@ -75,6 +82,7 @@ PROVIDERS: dict[str, Provider] = {
         default_base_url="https://api.openai.com/v1",
         openai_compatible=True,
         supports_discovery=True,
+        model_id_style="bare",
     ),
     "claude_native": Provider(
         id="claude_native",
@@ -86,6 +94,7 @@ PROVIDERS: dict[str, Provider] = {
         default_model="claude-3-5-sonnet-latest",
         openai_compatible=False,
         supports_discovery=False,
+        model_id_style="bare",
     ),
     "nvidia": Provider(
         id="nvidia",
@@ -99,6 +108,7 @@ PROVIDERS: dict[str, Provider] = {
         default_base_url="https://integrate.api.nvidia.com/v1",
         openai_compatible=True,
         supports_discovery=True,
+        model_id_style="namespaced",
     ),
     "groq": Provider(
         id="groq",
@@ -115,6 +125,7 @@ PROVIDERS: dict[str, Provider] = {
         default_base_url="https://api.groq.com/openai/v1",
         openai_compatible=True,
         supports_discovery=True,
+        model_id_style="bare",
     ),
     "custom_openai": Provider(
         id="custom_openai",
@@ -227,14 +238,39 @@ def select_backend(
     return "ollama"
 
 
+def _model_id_fits(provider: Provider, model_id: str) -> bool:
+    """¿El id genérico tiene la forma que este proveedor sabe resolver?
+
+    Sólo mira la forma del id (con o sin ``/``), nunca el catálogo remoto: no
+    hay red en esta capa. ``model_id_style="any"`` acepta todo.
+    """
+    if provider.model_id_style == "namespaced":
+        return "/" in model_id
+    if provider.model_id_style == "bare":
+        return "/" not in model_id
+    return True
+
+
 def resolve_model(provider: str, env: Mapping[str, str] | None = None) -> str:
     """Modelo efectivo para un proveedor.
 
     Precedencia: variable específica del proveedor (p. ej. ``OPENAI_MODEL``) >
-    ``LLM_MODEL`` genérico (solo proveedores en la nube) > modelo por defecto.
+    ``LLM_MODEL`` genérico (solo proveedores en la nube, y sólo si el id encaja
+    con el proveedor) > modelo por defecto.
 
     Esto hace que el modelo elegido en la interfaz (``LLM_MODEL``) sí aplique a
     OpenAI/NVIDIA, sin romper a quien fije ``OPENAI_MODEL`` en ``.env``.
+
+    El filtro por forma existe porque ``LLM_MODEL`` es *la* variable de
+    OpenRouter (``openrouter.model_env == "LLM_MODEL"``), así que su valor se
+    derramaba a toda la cadena de fallback: con
+    ``LLM_MODEL=nvidia/nemotron-...:free``, Groq recibía un id que su API no
+    conoce y fallaba tras el timeout completo, gastando el eslabón de respaldo
+    sin poder responder nunca. Se descarta el id genérico cuando su forma no
+    coincide con ``Provider.model_id_style`` y se cae al modelo por defecto del
+    proveedor, que sí es válido; el proveedor sigue en la cadena, ahora como
+    respaldo real. No se toca el override específico: si alguien fija
+    ``GROQ_MODEL`` a mano, manda esa variable.
     """
     env = os.environ if env is None else env
     p = PROVIDERS.get(_canonical_provider(provider) or provider)
@@ -248,7 +284,7 @@ def resolve_model(provider: str, env: Mapping[str, str] | None = None) -> str:
 
     if p.generic_model_fallback:
         generic = (env.get("LLM_MODEL") or "").strip()
-        if generic:
+        if generic and _model_id_fits(p, generic):
             return generic
 
     return p.default_model

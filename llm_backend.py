@@ -1100,7 +1100,18 @@ async def stream_llm_response(
             async for chunk in _stream_backend_response(backend, messages):
                 produced = True
                 yield chunk
-            return
+            if produced:
+                return
+            # Stream vacío (HTTP 200 sin un solo token): no es un turno válido.
+            # Retornar acá dejaba al visitante sin respuesta; se prueba el
+            # siguiente backend, igual que hace `iter_reply_tokens` en la ruta
+            # de voz. El aviso NO depende de `_cot_log_enabled()`: es la única
+            # señal de que el proveedor contestó en blanco.
+            print(
+                f"[LLM] Stream vacío del backend '{backend}': probando el siguiente.",
+                flush=True,
+            )
+            continue
         except Exception as error:
             print(f"[LLM] Error usando backend '{backend}', probando fallback: {error}")
             if produced:
