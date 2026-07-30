@@ -6,7 +6,13 @@ dónde está todo.
 
 Última actualización: **2026-07-30** — los 13 archivos del plan están escritos (10 WAVEs + este
 archivo + `README.md` + el documento maestro `../HOLOGRAM_CONTEXT_AND_MODEL_ARCHITECTURE_PLAN.md`)
-y commiteados en `514b2e4`. **WAVE-01 ejecutada y commiteada (`99d40c7`).**
+y commiteados en `514b2e4`. **WAVE-01 (`99d40c7`) y WAVE-02 (`cd3b1cd`) ejecutadas y commiteadas.**
+
+> **Cambio de protocolo — 2026-07-30, decisión del usuario.** Las verificaciones que necesitan
+> hardware físico, percepción humana o una llamada de pago real **no** bloquean el cierre de cada
+> WAVE: se acumulan en [`PRUEBAS-MANUALES-PENDIENTES.md`](PRUEBAS-MANUALES-PENDIENTES.md) y el
+> usuario las revisa todas juntas **al terminar las WAVEs**. Todo lo demás (suite, ruff, prueba de
+> reversión, evidencia de la métrica) se sigue exigiendo wave por wave, sin excepción.
 
 ---
 
@@ -15,8 +21,8 @@ y commiteados en `514b2e4`. **WAVE-01 ejecutada y commiteada (`99d40c7`).**
 | WAVE | Estado | Commit | Fecha | Notas |
 |---|---|---|---|---|
 | 01 · Desbloquear el turno | ✅ commiteada | `99d40c7` | 2026-07-30 | criterio 4 no cumplido → WAVE-09 |
-| 02 · Filtro CoT streaming | ⬜ pendiente | — | — | **siguiente** |
-| 03 · Instrumentación | ⬜ pendiente | — | — | |
+| 02 · Filtro CoT streaming | ✅ commiteada | `cd3b1cd` | 2026-07-30 | smoke test de audio diferido → pruebas manuales |
+| 03 · Instrumentación | ⬜ pendiente | — | — | **siguiente** |
 | 04 · Secciones de contexto | ⬜ pendiente | — | — | |
 | 05 · PromptPackage + router | ⬜ pendiente | — | — | |
 | 06 · Memoria de sesión | ⬜ pendiente | — | — | |
@@ -27,7 +33,7 @@ y commiteados en `514b2e4`. **WAVE-01 ejecutada y commiteada (`99d40c7`).**
 
 Estados: ⬜ pendiente · 🟡 en curso · ✅ commiteada · ⛔ bloqueada (ver Desvíos)
 
-**Siguiente acción:** abrir `WAVE-02-filtro-cot-streaming.md` y seguir `README.md`.
+**Siguiente acción:** abrir `WAVE-03-instrumentacion.md` y seguir `README.md`.
 
 ---
 
@@ -104,7 +110,7 @@ Cada uno se verifica con la instrumentación de WAVE-03. Sin número, no hay cri
 | Contexto medio por turno | 18.439 chars | **≤ 2.500** | 05 |
 | Tokens de entrada estimados | ~5.340 | **≤ 750** | 05 |
 | Peor caso de fallback | ~180 s | **< 20 s** | ~~01~~ → **09** (depende de `LLM_REQUEST_TIMEOUT`) |
-| Cláusulas con CoT habladas | posible | **0** | 02 |
+| Cláusulas con CoT habladas | posible | **0 ✅ logrado** (falta confirmar por oído: P02-1) | 02 |
 | Turnos vacíos por stream vacío en la ruta web | posible | **0 ✅ logrado** | 01 |
 | Precisión del router (11 preguntas) | **4/7 aplicables** (8/11 total) | **≥ 6/7** (≥ 10/11) | 05 · 06 |
 | Follow-ups resueltos (`«¿y cuánto dura?»`) | 0 % | **funciona en ambas rutas** | 06 |
@@ -170,6 +176,63 @@ Al cerrar cada WAVE, añadí un bloque acá con este formato. No borres bloques 
 - Hallazgos nuevos (NO arreglados): ver RUFF-1 abajo.
 - Revisión humana: OK explícito del usuario, 2026-07-30, tras presentar el checklist completo, los
   dos desvíos y el resumen del diff.
+- Pruebas manuales diferidas: **P01-1**, **P01-2** (ver `PRUEBAS-MANUALES-PENDIENTES.md`).
+
+### WAVE-02 — Filtro de razonamiento en streaming
+- Commit: `cd3b1cd` · Fecha: 2026-07-30
+- Archivos tocados: `llm_backend.py`, `call.py`, `tests/test_cot_filter.py` (nuevo).
+  `utils.py` intacto (`git diff` vacío, como exige la WAVE). `app/services/conversation.py` **no**
+  se tocó: filtrar en el origen del stream bastó para las dos rutas, así que el servicio sigue sin
+  saber nada de etiquetas.
+- Qué se hizo:
+  - El juego de tags (`think|thinking|reasoning|analysis|scratchpad`) pasó a constantes de módulo
+    en `llm_backend.py` —`_COT_TAGS`, `COT_BLOCK_RE`, `COT_LOOSE_TAG_RE`, `COT_OPEN_RE`,
+    `COT_CLOSE_RE`, `COT_ANY_TAG_RE`— y ahora lo consumen los tres interesados:
+    `_strip_qwen_thinking`, `_CotStreamMirror` y el filtro nuevo. **Una sola definición.**
+  - Clase nueva `_CotStreamFilter` (`feed(text) -> str` / `flush() -> str`), con estado `in_think`
+    por turno y cola de 24 caracteres para que una etiqueta partida entre chunks no se cuele.
+    Un bloque abierto que nunca cierra se descarta entero.
+  - Aplicado en los **tres** puntos que emiten tokens en streaming:
+    `_iter_openai_compatible_tokens` (ruta de voz) y las dos ramas de `_stream_backend_response`
+    (claude_native y openai-compatible, ruta web). El espejo `_CotStreamMirror` recibe el texto
+    **crudo** antes de filtrar: sigue sirviendo de diagnóstico.
+  - Los dos sitios **no**-streaming quedan sin filtro a propósito: acumulan en `parts` y ya pasan
+    por `_postprocess_reply` → `_strip_qwen_thinking`.
+  - `call.clean_for_tts` pasó de conocer sólo `<think>` a usar el regex compartido, incluidas
+    etiquetas sueltas sin pareja.
+  - Flag de rollback `HOLOGRAM_COT_FILTER=0`, con la forma de `_tts_stream_enabled()`.
+- Tests añadidos (`tests/test_cot_filter.py`, 8): `::test_bloque_partido_entre_chunks_no_se_emite`,
+  `::test_clausula_con_think_abierto_no_llega_al_tts`, `::test_texto_sin_tags_pasa_intacto`,
+  `::test_los_cinco_tags_se_filtran`, `::test_tag_abierto_sin_cerrar_al_final_se_descarta`,
+  `::test_filtro_funciona_con_LLM_LOG_COT_apagado`, `::test_flag_desactiva_el_filtro`,
+  `::test_ruta_web_difunde_texto_limpio`
+- Métricas antes → después:
+  - Suite: 215 → **223 casos**, exit 0.
+  - Cláusulas con CoT habladas (simulador del hallazgo D, chunks de 1 carácter): **2 de 3 → 0 de 1**.
+    Antes: `'<think>El usuario pregunta…'` / `'Debo responder breve.</think>La carrera…'`.
+    Después: una sola cláusula, `'La carrera de Programacion Web dura 2 anos.'`
+  - Etiquetas que `clean_for_tts` sabía quitar: **1 de 5 → 5 de 5**.
+  - Prueba de reversión: con `llm_backend.py` y `call.py` en `git stash`, **8 de 8 fallan**;
+    restaurados, 8 de 8 pasan.
+  - `ruff` en los archivos tocados: limpio. Proyecto: sigue en 18 errores preexistentes (RUFF-1).
+- Criterios de aceptación: cumplidos, con una contradicción del propio archivo resuelta (abajo).
+- Desvíos del plan:
+  - **§2 contradice al criterio 7.** §2 pide que un chunk vacío tras filtrar "tampoco cuente como
+    stream vacío para el `produced` de WAVE-01"; el criterio 7 pide que un turno enteramente de
+    razonamiento caiga al fallback de WAVE-01. Son incompatibles: lo primero implica `produced=True`
+    sin texto y lo segundo `produced=False`.
+    **Implementado el criterio 7:** sólo se emite texto visible, así que un turno todo-CoT deja
+    `produced=False` y se prueba el siguiente backend. Verificado en vivo con dobles: la cadena
+    imprime `[LLM] Stream vacío del backend 'openrouter': probando el siguiente` y groq responde.
+    **Por qué así:** la lectura de §2 dejaría el turno cerrado en silencio, que es exactamente el
+    defecto que WAVE-01 acababa de cerrar.
+  - **Pase de revisión con agente `worker`: omitido**, por el mismo motivo que en WAVE-01
+    (instrucción de sesión de no lanzar subagentes). La WAVE lo marca como "asistencia, NO la puerta".
+- Hallazgos nuevos (NO arreglados): ninguno.
+- Revisión humana: OK explícito del usuario, 2026-07-30, tras presentar el checklist completo, la
+  evidencia antes/después del hallazgo D y el desvío §2 vs criterio 7.
+- Pruebas manuales diferidas: **P02-1** (smoke test de audio), **P02-2**, **P02-3**
+  (ver `PRUEBAS-MANUALES-PENDIENTES.md`).
 
 ---
 

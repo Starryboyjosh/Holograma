@@ -1,12 +1,12 @@
 {
   "call.py": {
-    "mtime": 1785202995.329609,
-    "ast_hash": "94939195cd8668bbe6685f263db6a791",
+    "mtime": 1785428188.2531562,
+    "ast_hash": "0a214730766a0b2dfa6cbe7772c2e84e",
     "semantic_hash": ""
   },
   "llm_backend.py": {
-    "mtime": 1785424907.0043254,
-    "ast_hash": "c8589410d59992f31108544993cc0b8b",
+    "mtime": 1785428188.2531562,
+    "ast_hash": "e4ed0ff9f1d91b54260b7fa0e4b47a2d",
     "semantic_hash": ""
   },
   "main.py": {
@@ -1345,8 +1345,8 @@
     "semantic_hash": ""
   },
   "docs/plans/execution/PROGRESS.md": {
-    "mtime": 1785422460.3704393,
-    "ast_hash": "852c4cc0c4f25ab5f840379064c6778c",
+    "mtime": 1785425690.7437406,
+    "ast_hash": "8915af5fe11f2ad1b5914dffe58d79be",
     "semantic_hash": ""
   },
   "docs/plans/execution/README.md": {
@@ -1402,6 +1402,11 @@
   "docs/plans/execution/WAVE-10-dataset-evaluacion.md": {
     "mtime": 1785421927.6135466,
     "ast_hash": "9b45fea90cfd9d3d803e305dd6a50956",
+    "semantic_hash": ""
+  },
+  "tests/test_cot_filter.py": {
+    "mtime": 1785426168.9986475,
+    "ast_hash": "29ce0ac31c0b1302569a608f6ad79a5e",
     "semantic_hash": ""
   }
 }

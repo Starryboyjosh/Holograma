@@ -195,5 +195,12 @@
   "193": "Fase 3 — Mapa exacto del flujo actual",
   "194": "Fase 4 — Auditoría del prompt y del contexto",
   "195": "10. Matriz de decisión",
-  "196": "12. Contratos y componentes propuestos"
+  "196": "12. Contratos y componentes propuestos",
+  "197": "test_hologram_controller.py",
+  "198": ".handle_prompt",
+  "199": "_CotStreamFilter",
+  "200": "PresenceManager",
+  "201": "FakeWS",
+  "202": ".analyze_frame",
+  "203": ".bind_loop"
 }
