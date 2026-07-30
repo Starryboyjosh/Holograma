@@ -5,8 +5,8 @@ parar. Un modelo que llega sin contexto lee `README.md` y este archivo, y sabe e
 dónde está todo.
 
 Última actualización: **2026-07-30** — los 13 archivos del plan están escritos (10 WAVEs + este
-archivo + `README.md` + el documento maestro `../HOLOGRAM_CONTEXT_AND_MODEL_ARCHITECTURE_PLAN.md`).
-**Ninguna WAVE ejecutada. Ningún archivo de código, test o configuración tocado.**
+archivo + `README.md` + el documento maestro `../HOLOGRAM_CONTEXT_AND_MODEL_ARCHITECTURE_PLAN.md`)
+y commiteados en `514b2e4`. **WAVE-01 ejecutada y commiteada (`99d40c7`).**
 
 ---
 
@@ -14,8 +14,8 @@ archivo + `README.md` + el documento maestro `../HOLOGRAM_CONTEXT_AND_MODEL_ARCH
 
 | WAVE | Estado | Commit | Fecha | Notas |
 |---|---|---|---|---|
-| 01 · Desbloquear el turno | ⬜ pendiente | — | — | **siguiente** |
-| 02 · Filtro CoT streaming | ⬜ pendiente | — | — | |
+| 01 · Desbloquear el turno | ✅ commiteada | `99d40c7` | 2026-07-30 | criterio 4 no cumplido → WAVE-09 |
+| 02 · Filtro CoT streaming | ⬜ pendiente | — | — | **siguiente** |
 | 03 · Instrumentación | ⬜ pendiente | — | — | |
 | 04 · Secciones de contexto | ⬜ pendiente | — | — | |
 | 05 · PromptPackage + router | ⬜ pendiente | — | — | |
@@ -27,7 +27,7 @@ archivo + `README.md` + el documento maestro `../HOLOGRAM_CONTEXT_AND_MODEL_ARCH
 
 Estados: ⬜ pendiente · 🟡 en curso · ✅ commiteada · ⛔ bloqueada (ver Desvíos)
 
-**Siguiente acción:** abrir `WAVE-01-desbloquear-turno.md` y seguir `README.md`.
+**Siguiente acción:** abrir `WAVE-02-filtro-cot-streaming.md` y seguir `README.md`.
 
 ---
 
@@ -103,9 +103,9 @@ Cada uno se verifica con la instrumentación de WAVE-03. Sin número, no hay cri
 |---|---|---|---|
 | Contexto medio por turno | 18.439 chars | **≤ 2.500** | 05 |
 | Tokens de entrada estimados | ~5.340 | **≤ 750** | 05 |
-| Peor caso de fallback | ~180 s | **< 20 s** | 01 |
+| Peor caso de fallback | ~180 s | **< 20 s** | ~~01~~ → **09** (depende de `LLM_REQUEST_TIMEOUT`) |
 | Cláusulas con CoT habladas | posible | **0** | 02 |
-| Turnos vacíos por stream vacío en la ruta web | posible | **0** | 01 |
+| Turnos vacíos por stream vacío en la ruta web | posible | **0 ✅ logrado** | 01 |
 | Precisión del router (11 preguntas) | **4/7 aplicables** (8/11 total) | **≥ 6/7** (≥ 10/11) | 05 · 06 |
 | Follow-ups resueltos (`«¿y cuánto dura?»`) | 0 % | **funciona en ambas rutas** | 06 |
 | Tests que cubren `skills/` | 0 | **> 0, con dataset** | 10 |
@@ -128,7 +128,48 @@ Al cerrar cada WAVE, añadí un bloque acá con este formato. No borres bloques 
 - Revisión humana: <OK de quién, fecha>
 ```
 
-*(sin entradas todavía)*
+### WAVE-01 — Desbloquear el turno
+- Commit: `99d40c7` · Fecha: 2026-07-30
+- Archivos tocados: `llm_backend.py`, `provider_config.py`, `tests/test_llm_fallback.py` (nuevo).
+  `.env` local: `LLM_MAX_TOKENS` 180 → 800, `LLM_LOG_COT` 0 → 1 (no versionado).
+  `main.py` y `.env.example` **no** se tocaron: el primero no documenta estas variables y el
+  segundo documenta el default del código (450), que no cambió.
+- Tests añadidos: `tests/test_llm_fallback.py::test_stream_vacio_cae_al_siguiente_backend`,
+  `::test_stream_vacio_en_todos_los_backends_devuelve_respuesta_local`,
+  `::test_texto_parcial_no_reintenta_otro_backend`, `::test_stream_vacio_registra_advertencia`,
+  `::test_resolve_model_no_filtra_generico_a_otro_proveedor`,
+  `::test_resolve_model_respeta_variable_especifica`
+- Métricas antes → después:
+  - Suite: 209 → **215 casos**, exit 0.
+  - Turnos vacíos por stream vacío en la ruta web: posible → **0** (la cadena continúa).
+  - Modelo efectivo de `groq` en la cadena: `nvidia/nemotron-3-nano-30b-a3b:free` (id que su API
+    no conoce, fallo garantizado tras 90 s) → **`llama-3.3-70b-versatile`**, respaldo real.
+  - Peor caso de la cadena: ~180 s → **~180 s, sin cambio** (ver criterios).
+- Criterios de aceptación: 1, 2 y 3 cumplidos con salida real. **El 4 (`< 20 s`) NO se cumple**,
+  y su justificación en el archivo de la WAVE era incorrecta: suponía que el eslabón envenenado
+  desaparecía de la cadena. No desaparece —y aunque lo hiciera, un solo eslabón a 90 s ya excede
+  los 20 s. Bajar el peor caso es exclusivamente `LLM_REQUEST_TIMEOUT`, que §14 asigna a
+  **WAVE-09**. Se deja constancia y se mueve el objetivo allá.
+- Desvíos del plan:
+  - **`resolve_model`: ninguna de las dos opciones del archivo era aplicable tal cual.** La
+    Opción 1 (genérico sólo para el primario) rompe `test_model_uses_llm_model_for_cloud_providers`
+    y exigiría cambiar la firma, porque `resolve_model` no sabe quién es el primario. La Opción 2
+    literal ("rechazar ids con `/`") rompe la misma prueba: **NVIDIA usa namespace legítimamente**
+    (`meta/llama`; su propio default es `moonshotai/kimi-k2.6`).
+    **Implementado (espíritu de la Opción 2):** campo nuevo `Provider.model_id_style` con valores
+    `"namespaced"` (openrouter, nvidia) · `"bare"` (openai, groq, claude_native) · `"any"` (default
+    permisivo: custom_openai, ollama, local_only). El filtro se aplica **sólo** a la herencia de
+    `LLM_MODEL`; el override específico por proveedor (`GROQ_MODEL`, `OPENAI_MODEL`) sigue mandando.
+    **Por qué así:** el default permisivo mantiene la compatibilidad hacia atrás (nadie hereda menos
+    que antes salvo cuando la forma es incompatible), no cambia ninguna firma, no toca `select_backend`
+    ni `resolve_api_key`, y deja pasar las cuatro pruebas existentes de `resolve_model` sin editarlas.
+    Documentado en el docstring de `resolve_model`.
+  - **Pase de revisión con agente `worker`: omitido.** La sesión tenía instrucción de no lanzar
+    subagentes salvo pedido explícito. La WAVE lo marca como "asistencia, NO la puerta"; la revisión
+    humana sí se hizo.
+- Hallazgos nuevos (NO arreglados): ver RUFF-1 abajo.
+- Revisión humana: OK explícito del usuario, 2026-07-30, tras presentar el checklist completo, los
+  dos desvíos y el resumen del diff.
 
 ---
 
@@ -156,7 +197,15 @@ Incluí archivo y símbolo para que sea accionable después.
 
 ### Nuevos (añadir acá durante la ejecución)
 
-*(vacío)*
+- **RUFF-1 · 18 errores de lint preexistentes fuera del alcance.** `ruff check .` no está limpio en
+  `main`, y no lo estaba antes de WAVE-01: `skills/honduras.py` (10), `vision/person_detector.py` (4),
+  `utils.py` (1), `stt/listener.py` (1), `tests/test_hotwords_cache.py` (1),
+  `tests/test_custom_object_interval.py` (1). Mayormente variables sin usar; 14 los arregla
+  `ruff --fix`. Los archivos tocados por cada WAVE sí deben quedar limpios, y WAVE-01 lo está.
+  *Estado: anotado, no arreglado (regla "anotá, no arregles"). Candidato a una limpieza propia.*
+
+- **INFO-3 · `audit_prompt.md` sin trackear en la raíz.** Archivo de trabajo previo al plan, sigue
+  fuera de git. Decidir si se archiva bajo `docs/` o se borra. *Estado: sólo informe.*
 
 ---
 
@@ -164,7 +213,8 @@ Incluí archivo y símbolo para que sea accionable después.
 
 | # | Decisión | Se necesita en | Estado |
 |---|---|---|---|
-| D1 | `LLM_MAX_TOKENS`: la propuesta es 800. Confirmar con las métricas reales de WAVE-03. | Puerta de WAVE-01 (provisional) y WAVE-09 (definitiva) | abierta |
+| D1 | `LLM_MAX_TOKENS`: la propuesta es 800. Confirmar con las métricas reales de WAVE-03. | Puerta de WAVE-01 (provisional) y WAVE-09 (definitiva) | **provisional aplicada**: 800 en el `.env` local (era 180). Sin hardcodear: el default del código sigue en 450. Confirmar en WAVE-09. |
+| D4 | `LLM_REQUEST_TIMEOUT` (hoy 90 s por eslabón, cadena de 4 → peor caso ~180 s de espera cloud). Para cumplir el objetivo de **< 20 s** hace falta un timeout escalonado o un presupuesto de cadena. Es cambio de `.env`, cero código. Riesgo: cortar respuestas lentas legítimas. | Puerta de WAVE-09 | **abierta** — heredada de WAVE-01, ver su registro |
 | D2 | Seguir con el modelo de razonamiento en tier `:free`, o pasar a un no-razonador de pago. Afecta latencia a primera palabra en vivo. | Puerta de WAVE-09 | abierta |
 | D3 | TTL de frescura de cámara (hoy 60 s hardcodeado). Valor y comportamiento con dato viejo. | Puerta de WAVE-08 | abierta |
 
