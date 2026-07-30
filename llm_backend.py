@@ -502,22 +502,41 @@ def _chat_with_openai_compatible(provider, messages):
     return text
 
 
+# ---------------------------------------------------------------------------
+# Etiquetas de razonamiento (CoT)
+#
+# El juego de tags se define UNA sola vez y lo comparten los tres consumidores:
+# el saneado de texto completo (`_strip_qwen_thinking`), el espejo de terminal
+# (`_CotStreamMirror`) y el filtro incremental (`_CotStreamFilter`). `call.py`
+# importa `COT_BLOCK_RE`/`COT_LOOSE_TAG_RE` para `clean_for_tts`. Duplicar el
+# regex es cómo se llegó a que `clean_for_tts` sólo conociera `<think>` y dejara
+# pasar `<reasoning>` al TTS.
+# ---------------------------------------------------------------------------
+_COT_TAGS = r"(think|thinking|reasoning|analysis|scratchpad)"
+
+# Bloque completo <tag>…</tag> (el cierre debe coincidir con la apertura).
+COT_BLOCK_RE = re.compile(
+    rf"<\s*{_COT_TAGS}\s*>.*?<\s*/\s*\1\s*>",
+    re.DOTALL | re.IGNORECASE,
+)
+# Etiquetas sueltas que algún modelo deja sin pareja.
+COT_LOOSE_TAG_RE = re.compile(rf"<\s*/?\s*{_COT_TAGS}\s*>", re.IGNORECASE)
+# Sólo apertura / sólo cierre / cualquiera de las dos (para el escaneo por chunks).
+COT_OPEN_RE = re.compile(rf"<\s*{_COT_TAGS}\s*>", re.IGNORECASE)
+COT_CLOSE_RE = re.compile(rf"<\s*/\s*{_COT_TAGS}\s*>", re.IGNORECASE)
+COT_ANY_TAG_RE = re.compile(rf"<\s*(?:/\s*)?{_COT_TAGS}\s*>", re.IGNORECASE)
+
+
 def _strip_qwen_thinking(text):
     """Remove reasoning/thinking blocks so they are not spoken by TTS.
 
     Cubre varios formatos de modelos de razonamiento (qwen, nemotron, etc.):
     <think>, <thinking>, <reasoning>, <analysis>, <scratchpad>.
+
+    Sólo sirve sobre el texto **completo**; para streaming ver `_CotStreamFilter`.
     """
-    tags = r"(think|thinking|reasoning|analysis|scratchpad)"
-    # Bloques completos <tag>...</tag>
-    text = re.sub(
-        rf"<\s*{tags}\s*>.*?<\s*/\s*\1\s*>",
-        "",
-        text,
-        flags=re.DOTALL | re.IGNORECASE,
-    )
-    # Etiquetas sueltas que algún modelo deja sin cerrar.
-    text = re.sub(rf"<\s*/?\s*{tags}\s*>", "", text, flags=re.IGNORECASE)
+    text = COT_BLOCK_RE.sub("", text)
+    text = COT_LOOSE_TAG_RE.sub("", text)
     return text.strip()
 
 
@@ -528,6 +547,96 @@ def _cot_log_enabled() -> bool:
     y no emiten respuesta). Desactivar con ``LLM_LOG_COT=0``.
     """
     return _env("LLM_LOG_COT", "1").lower() not in ("0", "false", "no", "off")
+
+
+def _cot_filter_enabled() -> bool:
+    """¿Quitar el razonamiento del stream antes de hablarlo/difundirlo?
+
+    Activo por defecto. Es una decisión **distinta** de `_cot_log_enabled()`:
+    aquel decide si el CoT se *imprime* en la terminal (diagnóstico), éste si se
+    *habla*. Estaban acoplados y por eso apagar el log dejaba el filtro sin
+    aplicar. Rollback con ``HOLOGRAM_COT_FILTER=0``.
+    """
+    return _env("HOLOGRAM_COT_FILTER", "1").lower() not in (
+        "0",
+        "false",
+        "no",
+        "off",
+    )
+
+
+class _CotStreamFilter:
+    """Quita bloques de razonamiento de un stream, trozo a trozo.
+
+    `_strip_qwen_thinking` sólo funciona sobre la respuesta entera, y en
+    streaming eso llega tarde: el TTS ya habló la cláusula mucho antes de que
+    exista el ``</think>`` que la cerraba (hallazgo D). Este objeto guarda el
+    estado del turno (``in_think``) y retiene una cola corta para que una
+    etiqueta partida entre dos chunks no se cuele como texto visible.
+
+    Uso: un objeto **por turno**; `feed()` por cada trozo y `flush()` al cerrar.
+    """
+
+    # ≥ len("< / scratchpad >"): cubre cualquier etiqueta partida por el medio.
+    _HOLD = 24
+
+    def __init__(self, enabled: bool | None = None):
+        self.in_think = False
+        self._tail = ""
+        self._enabled = _cot_filter_enabled() if enabled is None else enabled
+
+    def feed(self, text: str) -> str:
+        """Parte visible de ``text``; cadena vacía si el trozo era todo CoT.
+
+        Un texto sin etiquetas sale byte a byte igual que entró, sumando lo que
+        devuelvan las llamadas sucesivas más el `flush()` final.
+        """
+        if not text or not self._enabled:
+            return text or ""
+
+        buf = self._tail + text
+        self._tail = ""
+        out: list[str] = []
+        i = 0
+        while i < len(buf):
+            if self.in_think:
+                m = COT_CLOSE_RE.search(buf, i)
+                if not m:
+                    # Sin cierre a la vista: lo de en medio es razonamiento y se
+                    # descarta; sólo retenemos la cola por si el ``</think>``
+                    # viene partido en el próximo chunk.
+                    self._tail = buf[max(i, len(buf) - self._HOLD) :]
+                    break
+                self.in_think = False
+                i = m.end()
+            else:
+                m = COT_ANY_TAG_RE.search(buf, i)
+                if not m:
+                    corte = len(buf) - min(self._HOLD, len(buf) - i)
+                    out.append(buf[i:corte])
+                    self._tail = buf[corte:]
+                    break
+                out.append(buf[i : m.start()])
+                # Un cierre suelto (sin apertura previa) no abre nada: se
+                # descarta la etiqueta y se sigue con el texto visible.
+                self.in_think = "/" not in m.group(0)
+                i = m.end()
+
+        return "".join(out)
+
+    def flush(self) -> str:
+        """Cierra el turno y devuelve la cola retenida, si era visible.
+
+        Un bloque abierto que nunca se cerró (el modelo agotó los tokens a mitad
+        del razonamiento) se descarta entero: hablarlo sería justo el defecto que
+        este filtro existe para evitar.
+        """
+        tail, self._tail = self._tail, ""
+        if not self._enabled:
+            return tail
+        if self.in_think:
+            return ""
+        return COT_LOOSE_TAG_RE.sub("", tail)
 
 
 def _cot_print(text: str, *, end: str = "", prefix: str | None = None) -> None:
@@ -568,14 +677,9 @@ class _CotStreamMirror:
     cuando "no responde".
     """
 
-    _OPEN_RE = re.compile(
-        r"<\s*(think|thinking|reasoning|analysis|scratchpad)\s*>",
-        re.IGNORECASE,
-    )
-    _CLOSE_RE = re.compile(
-        r"<\s*/\s*(think|thinking|reasoning|analysis|scratchpad)\s*>",
-        re.IGNORECASE,
-    )
+    # Mismo juego de tags que el filtro y que `_strip_qwen_thinking`.
+    _OPEN_RE = COT_OPEN_RE
+    _CLOSE_RE = COT_CLOSE_RE
 
     def __init__(self, backend: str, model: str | None = None):
         self.backend = backend
@@ -868,6 +972,9 @@ def _iter_openai_compatible_tokens(provider, messages):
         timeout=timeout,
     )
     mirror = _CotStreamMirror(provider, model)
+    # El espejo recibe el texto crudo (es el diagnóstico); el consumidor recibe
+    # sólo lo visible. Filtrar acá, en el origen, cubre las dos rutas.
+    cot = _CotStreamFilter()
     try:
         response = client.chat.completions.create(
             model=model,
@@ -886,7 +993,12 @@ def _iter_openai_compatible_tokens(provider, messages):
             content = delta.content if delta is not None else None
             if content:
                 mirror.feed(content)
-                yield content
+                visible = cot.feed(content)
+                if visible:
+                    yield visible
+        resto = cot.flush()
+        if resto:
+            yield resto
         mirror.finish()
     except Exception as error:
         mirror.finish(error=str(error))
@@ -993,6 +1105,7 @@ async def _stream_backend_response(backend, messages):
             formatted_messages.append({"role": role, "content": m["content"]})
 
         mirror = _CotStreamMirror("claude_native", model)
+        cot = _CotStreamFilter()
         try:
             if _cot_log_enabled():
                 print(
@@ -1009,7 +1122,12 @@ async def _stream_backend_response(backend, messages):
             ) as stream:
                 async for text in stream.text_stream:
                     mirror.feed(text)
-                    yield text
+                    visible = cot.feed(text)
+                    if visible:
+                        yield visible
+            resto = cot.flush()
+            if resto:
+                yield resto
             mirror.finish()
         except Exception as error:
             mirror.finish(error=str(error))
@@ -1030,6 +1148,7 @@ async def _stream_backend_response(backend, messages):
         raise LLMBackendError(f"Backend no soportado para streaming: {backend}")
 
     mirror = _CotStreamMirror(backend, model)
+    cot = _CotStreamFilter()
     try:
         if _cot_log_enabled():
             print(
@@ -1053,7 +1172,12 @@ async def _stream_backend_response(backend, messages):
             content = delta.content if delta is not None else None
             if content:
                 mirror.feed(content)
-                yield content
+                visible = cot.feed(content)
+                if visible:
+                    yield visible
+        resto = cot.flush()
+        if resto:
+            yield resto
         mirror.finish()
     except Exception as error:
         mirror.finish(error=str(error))

@@ -32,6 +32,8 @@ from dotenv import load_dotenv
 from camera_context import build_camera_context as _build_camera_context
 from hologram_controller import create_hologram_manager
 from llm_backend import (
+    COT_BLOCK_RE,
+    COT_LOOSE_TAG_RE,
     generate_reply,
     get_backend_status,
     get_selected_backend,
@@ -112,7 +114,13 @@ hologram = create_hologram_manager()
 
 
 def clean_for_tts(text):
-    """Remove characters that can sound awkward when read by a TTS engine."""
+    """Remove characters that can sound awkward when read by a TTS engine.
+
+    Última red del TTS: el stream ya llega filtrado por `_CotStreamFilter`, pero
+    esto protege también las llamadas no-streaming. Usa el mismo juego de tags
+    que `llm_backend` —conocía sólo `<think>` y dejaba pasar `<reasoning>` y
+    compañía al altavoz— incluidas las etiquetas sueltas sin pareja.
+    """
     replacements = {
         "*": "",
         "[": "",
@@ -122,9 +130,8 @@ def clean_for_tts(text):
         "_": "",
     }
 
-    clean_text = re.sub(
-        r"<think>.*?</think>", "", text, flags=re.DOTALL | re.IGNORECASE
-    )
+    clean_text = COT_BLOCK_RE.sub("", text)
+    clean_text = COT_LOOSE_TAG_RE.sub("", clean_text)
     clean_text = re.sub(r"\[([^\]]+)\]\(https?://[^)]+\)", r"\1", clean_text)
     clean_text = re.sub(r"https?://\S+|www\.\S+", "", clean_text)
     clean_text = re.sub(r"[\U0001F300-\U0001FAFF\U00002700-\U000027BF]", "", clean_text)
