@@ -1093,6 +1093,187 @@ def generate_reply(
     return _postprocess_reply("".join(parts))
 
 
+class ToolCallRequest:
+    """Una invocación de herramienta pedida por el modelo, ya normalizada.
+
+    Cada proveedor la devuelve distinta (OpenAI manda ``arguments`` como string
+    JSON, Ollama como dict); aquí siempre es un dict.
+    """
+
+    __slots__ = ("id", "name", "arguments")
+
+    def __init__(self, id: str, name: str, arguments: dict):
+        self.id = id
+        self.name = name
+        self.arguments = arguments
+
+    def __repr__(self) -> str:
+        return f"ToolCallRequest(id={self.id!r}, name={self.name!r}, arguments={self.arguments!r})"
+
+
+class ToolTurn:
+    """Resultado de un turno con herramientas habilitadas."""
+
+    __slots__ = ("content", "tool_calls", "assistant_message")
+
+    def __init__(self, content: str, tool_calls: list, assistant_message: dict):
+        self.content = content
+        self.tool_calls = tool_calls
+        # Mensaje 'assistant' tal como lo espera el proveedor de vuelta en el
+        # historial; reinyectarlo textualmente es lo que hace que el modelo
+        # reconozca sus propias tool_calls en la siguiente ronda.
+        self.assistant_message = assistant_message
+
+
+def _parse_tool_arguments(raw) -> dict:
+    """``arguments`` llega como dict (Ollama) o string JSON (OpenAI)."""
+    if isinstance(raw, dict):
+        return raw
+    if not raw:
+        return {}
+    try:
+        parsed = json.loads(raw)
+    except (TypeError, ValueError):
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
+
+
+def _tool_phase_temperature() -> float:
+    """Temperatura de la fase de herramientas.
+
+    Decidir *si* se navega es una clasificación, no redacción: con la 0.6 del
+    turno conversacional un modelo local pequeño (3B) llamaba a la herramienta
+    de forma intermitente ante el mismo prompt. Bajarla la vuelve estable. No
+    afecta a la respuesta que oye el usuario, que se genera aparte.
+    """
+    return _env_float("HOLOGRAM_TOOL_TEMPERATURE", 0.0)
+
+
+def _chat_with_tools_openai_compatible(provider, messages, tools):
+    """Turno con tools en proveedores OpenAI-compatible (sin streaming).
+
+    Se usa ``stream=False`` a propósito: reensamblar ``tool_calls`` desde deltas
+    es frágil y el turno de herramienta no se locuta por TTS, así que no hay
+    latencia percibida que ganar.
+    """
+    from openai import OpenAI
+
+    api_key, model, base_url = _require(provider)
+    timeout = _request_timeout()
+    client = OpenAI(api_key=api_key or "none", base_url=base_url or None, timeout=timeout)
+
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            tools=tools,
+            tool_choice="auto",
+            temperature=_tool_phase_temperature(),
+            max_tokens=_max_tokens(),
+            stream=False,
+        )
+    except Exception as error:
+        raise LLMBackendError(
+            f"{provider}/{model} falló al invocar herramientas "
+            f"(timeout {timeout:.0f}s): {error}"
+        ) from error
+
+    if not response.choices:
+        raise LLMBackendError(f"{provider}/{model} devolvió una respuesta vacía.")
+
+    message = response.choices[0].message
+    calls = []
+    for call in message.tool_calls or []:
+        function = getattr(call, "function", None)
+        if function is None:
+            continue
+        calls.append(
+            ToolCallRequest(
+                id=getattr(call, "id", "") or "",
+                name=getattr(function, "name", "") or "",
+                arguments=_parse_tool_arguments(getattr(function, "arguments", None)),
+            )
+        )
+
+    assistant_message: dict = {"role": "assistant", "content": message.content or ""}
+    if calls:
+        assistant_message["tool_calls"] = [
+            {
+                "id": call.id,
+                "type": "function",
+                "function": {"name": call.name, "arguments": json.dumps(call.arguments)},
+            }
+            for call in calls
+        ]
+    return ToolTurn(message.content or "", calls, assistant_message)
+
+
+def _chat_with_tools_ollama(messages, tools):
+    """Turno con tools en Ollama (``/api/chat`` soporta ``tools`` nativamente)."""
+    model = _ollama_model_name()
+    timeout = _env_float("OLLAMA_TIMEOUT_SECONDS", 60.0)
+    payload = {
+        "model": model,
+        "messages": messages,
+        "tools": tools,
+        "stream": False,
+        "keep_alive": _env("OLLAMA_KEEP_ALIVE", "30m"),
+        "options": {
+            "temperature": _tool_phase_temperature(),
+            "top_p": 0.9,
+            "num_predict": _max_tokens(),
+        },
+    }
+
+    try:
+        response = _ollama_request("/api/chat", payload=payload, timeout=timeout)
+    except urllib.error.HTTPError as error:
+        body = error.read().decode("utf-8", errors="replace")
+        raise LLMBackendError(f"Ollama respondió {error.code}: {body}") from error
+    except urllib.error.URLError as error:
+        raise LLMBackendError(
+            "No pude conectarme con Ollama. Verifica que el servicio esté iniciado."
+        ) from error
+
+    message = response.get("message", {}) or {}
+    content = message.get("content", "") or ""
+    calls = []
+    for index, call in enumerate(message.get("tool_calls") or []):
+        function = call.get("function", {}) or {}
+        calls.append(
+            ToolCallRequest(
+                # Ollama no siempre asigna id; se sintetiza uno estable.
+                id=call.get("id") or f"call_{index}",
+                name=function.get("name", "") or "",
+                arguments=_parse_tool_arguments(function.get("arguments")),
+            )
+        )
+
+    assistant_message: dict = {"role": "assistant", "content": content}
+    if calls:
+        assistant_message["tool_calls"] = [
+            {"function": {"name": call.name, "arguments": call.arguments}}
+            for call in calls
+        ]
+    return ToolTurn(content, calls, assistant_message)
+
+
+def chat_with_tools(backend, messages, tools):
+    """Un turno de chat con function calling en el backend indicado.
+
+    Devuelve un ``ToolTurn``. No aplica la cadena de fallback de proveedores:
+    el soporte de herramientas varía mucho entre modelos y caer en silencio a
+    otro backend produciría respuestas incoherentes.
+    """
+    if backend == "ollama":
+        return _chat_with_tools_ollama(messages, tools)
+    if backend in PROVIDERS and PROVIDERS[backend].openai_compatible:
+        return _chat_with_tools_openai_compatible(backend, messages, tools)
+    raise LLMBackendError(
+        f"El backend '{backend}' no soporta function calling en Holograma."
+    )
+
+
 def _delta_reasoning(delta) -> str:
     """Extrae CoT de campos separados del delta (si el proveedor los manda)."""
     if delta is None:
@@ -1214,6 +1395,73 @@ async def _stream_backend_response(backend, messages):
         raise
 
 
+def _web_context_block(
+    prompt: str,
+    system_prompt: str,
+    university_context: str,
+    camera_context: str | None,
+) -> dict | None:
+    """Mensaje de sistema con el resultado de la navegación web, o ``None``.
+
+    Tres desenlaces:
+
+    * hay web y el modelo navegó -> bloque con el texto extraído;
+    * no hay web (sin internet / Lightpanda caído) pero el prompt la pedía ->
+      bloque que le PROHÍBE prometer una consulta que no puede hacer;
+    * el prompt no necesitaba web -> ``None``, turno idéntico al de siempre.
+
+    Los imports son perezosos porque ``app.tools.orchestrator`` importa de este
+    módulo; a nivel de módulo sería una dependencia circular.
+    """
+    try:
+        from app.tools.orchestrator import gather_web_context, should_offer_web_tools
+        from app.tools.schema import NO_WEB_SYSTEM_INSTRUCTION
+    except ImportError as error:
+        print(f"[tools] navegación web no disponible: {error}")
+        return None
+
+    try:
+        offer, reason = should_offer_web_tools(prompt)
+    except Exception as error:
+        print(f"[tools] fallo comprobando disponibilidad web: {error}")
+        return None
+
+    if not offer:
+        # Solo se avisa al modelo cuando el prompt SÍ pedía web y no la hay. Si
+        # simplemente no hacía falta, inyectar "no tienes internet" provocaría
+        # que el asistente lo mencionase sin venir a cuento.
+        if reason in (
+            "sin conexión a internet",
+            "Lightpanda no responde (¿contenedor caído?)",
+        ):
+            print(f"[tools] navegación no disponible: {reason}")
+            return {"role": "system", "content": NO_WEB_SYSTEM_INSTRUCTION}
+        return None
+
+    try:
+        collected = gather_web_context(
+            prompt,
+            system_prompt,
+            university_context,
+            camera_context,
+            on_tool_call=lambda name, args: print(f"[tools] {name} -> {args}"),
+        )
+    except Exception as error:
+        print(f"[tools] fallo recogiendo contexto web: {error}")
+        return None
+
+    if not collected:
+        return None
+    return {
+        "role": "system",
+        "content": (
+            "Información obtenida de la web en tiempo real para esta pregunta. "
+            "Úsala como fuente principal y cita de dónde proviene:\n\n"
+            f"{collected}"
+        ),
+    }
+
+
 async def stream_llm_response(
     prompt: str, camera_context: str | None = None
 ) -> AsyncGenerator[str, None]:
@@ -1235,9 +1483,22 @@ async def stream_llm_response(
 
     messages = _build_messages(prompt, system_prompt, university_context, camera_context)
 
+    # Fase de navegación web (Lightpanda). Va antes del stream para que la
+    # respuesta que oye el usuario se siga generando token a token y el TTS
+    # arranque en la primera cláusula. Todo el sondeo de red y la llamada de
+    # herramientas son bloqueantes, así que van a `to_thread`.
+    web_block = await asyncio.to_thread(
+        _web_context_block, prompt, system_prompt, university_context, camera_context
+    )
+    if web_block:
+        # Se inserta antes del mensaje del usuario (último de la lista).
+        messages.insert(len(messages) - 1, web_block)
+
     # Misma métrica y mismo formato que la ruta de voz; lo único que cambia es
     # `route`. `event_mode` es "normal" porque es el modo con el que esta ruta
-    # construye el prompt, unas líneas más arriba.
+    # construye el prompt, unas líneas más arriba. Se instancia DESPUÉS de la
+    # fase web a propósito: así `prompt_chars` cuenta lo que de verdad se envía,
+    # bloque de navegación incluido, en vez del prompt previo a inyectarlo.
     metrics = TurnMetrics("web", user_input=prompt, event_mode="normal")
     metrics.note_prompt(messages, university_context)
 

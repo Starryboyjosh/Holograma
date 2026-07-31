@@ -783,11 +783,33 @@ def speak(text, blocking=True, *, end_idle=True):
         threading.Thread(target=_run, daemon=True).start()
 
 
+# Cláusulas sintetizadas por adelantado durante la reproducción. Con 2 basta
+# para tapar el hueco entre frases sin acumular audio que habría que tirar si el
+# usuario interrumpe.
+_TTS_PIPELINE_DEPTH = 2
+
+
 def speak_streaming_from_llm(token_iter, *, on_text=None, on_speaking=None) -> str:
     """Habla cláusulas en cuanto el LLM las produce (sin esperar al final).
 
     Mantiene el lock/estado de voz durante todo el turno para no parpadear
     a idle entre frases. Devuelve el texto completo post-procesado.
+
+    **Pipeline de 3 etapas.** Antes esta función sintetizaba y reproducía cada
+    cláusula en línea, dentro del bucle de tokens:
+
+        cláusula 1: [sintetiza][reproduce] cláusula 2: [sintetiza][reproduce] …
+
+    Con Piper la síntesis tarda cientos de ms, así que entre frase y frase había
+    un silencio audible, y además el bucle bloqueado dejaba de consumir tokens
+    del LLM. Ahora las tres etapas van en paralelo:
+
+        tokens ─► cola de cláusulas ─► hilo de síntesis ─► cola de wavs ─► hilo de audio
+
+    La cláusula N+1 se sintetiza mientras suena la N, así que el hueco
+    desaparece; y el bucle de tokens no se bloquea nunca detrás del audio.
+    ``_render_chunks`` ya hacía esto para el camino no-streaming, pero la ruta
+    de conversación —la que se oye en el kiosko— no lo usaba.
     """
     from llm_backend import _postprocess_reply  # postproceso ligero al final
 
@@ -802,10 +824,86 @@ def speak_streaming_from_llm(token_iter, *, on_text=None, on_speaking=None) -> s
     speech_buf = ""
     first = True
     parts: list[str] = []
-    spoke_any = False
-    marked_speaking = False
-    t_first_audio = None
     t0 = time.monotonic()
+
+    tts_backend = os.getenv("TTS_BACKEND", "auto").lower().strip()
+    use_piper = tts_backend in ("auto", "piper") and _piper_available()
+
+    clause_q: queue.Queue = queue.Queue()
+    wav_q: queue.Queue = queue.Queue(maxsize=_TTS_PIPELINE_DEPTH)
+    _SENTINEL = object()
+    # Estado compartido con los hilos; solo ellos escriben cada clave.
+    state = {"spoke_any": False, "marked": False, "t_first": None}
+
+    def _synth_worker():
+        """Cláusula → WAV. Va por delante de la reproducción."""
+        try:
+            while True:
+                piece = clause_q.get()
+                if piece is _SENTINEL:
+                    break
+                if _hologram_paused:
+                    continue  # drenar sin sintetizar
+                try:
+                    wav = _piper_synth_to_wav(piece) if use_piper else None
+                except Exception as error:
+                    # Que Piper reviente en una cláusula no debe cortar el turno:
+                    # se emite igual y la reproduce la voz del sistema.
+                    if not _is_quiet():
+                        print(f"[TTS] Fallo sintetizando un fragmento: {error}")
+                    wav = None
+                wav_q.put((piece, wav))
+        finally:
+            wav_q.put(_SENTINEL)
+
+    def _play_worker():
+        """WAV → altavoz, en orden."""
+        while True:
+            item = wav_q.get()
+            if item is _SENTINEL:
+                return
+            piece, wav = item
+            if _hologram_paused:
+                if wav is not None:
+                    wav.unlink(missing_ok=True)
+                continue
+            if state["t_first"] is None:
+                state["t_first"] = time.monotonic()
+                if not _is_quiet():
+                    print(
+                        f"[TTS] primer audio a {state['t_first'] - t0:.2f}s "
+                        f"desde inicio del stream LLM",
+                        flush=True,
+                    )
+            if not state["marked"] and on_speaking is not None:
+                try:
+                    on_speaking()
+                except Exception:
+                    pass
+                state["marked"] = True
+            if not _is_quiet():
+                print(f"\nSpeaking chunk: {piece}")
+            # Un fallo reproduciendo UNA cláusula no puede matar el hilo: si
+            # muriera, nadie vaciaría `wav_q`, el hilo de síntesis se quedaría
+            # bloqueado en un `put()` lleno y el `join()` colgaría el kiosko.
+            try:
+                if wav is None:
+                    # Sin Piper, o su síntesis falló: voz nativa del sistema.
+                    _speak_chunk_os(piece)
+                else:
+                    try:
+                        play_wav_file(str(wav))
+                    finally:
+                        wav.unlink(missing_ok=True)
+                state["spoke_any"] = True
+            except Exception as error:
+                if not _is_quiet():
+                    print(f"[TTS] Fallo reproduciendo un fragmento: {error}")
+
+    synth_thread = threading.Thread(target=_synth_worker, daemon=True)
+    play_thread = threading.Thread(target=_play_worker, daemon=True)
+    synth_thread.start()
+    play_thread.start()
 
     try:
         for token in token_iter:
@@ -825,45 +923,32 @@ def speak_streaming_from_llm(token_iter, *, on_text=None, on_speaking=None) -> s
             ready, speech_buf, first = pop_ready_speech(speech_buf, first)
             for piece in ready:
                 piece = clean_for_tts(piece)
-                if not piece:
-                    continue
-                if t_first_audio is None:
-                    t_first_audio = time.monotonic()
-                    if not _is_quiet():
-                        print(
-                            f"[TTS] primer audio a {t_first_audio - t0:.2f}s "
-                            f"desde inicio del stream LLM",
-                            flush=True,
-                        )
-                if not marked_speaking and on_speaking is not None:
-                    on_speaking()
-                    marked_speaking = True
-                _speak_one_chunk(piece)
-                spoke_any = True
+                if piece:
+                    clause_q.put(piece)
 
         remainder = clean_for_tts(speech_buf)
         if remainder and not _hologram_paused:
-            if t_first_audio is None:
-                t_first_audio = time.monotonic()
-                if not _is_quiet():
-                    print(
-                        f"[TTS] primer audio a {t_first_audio - t0:.2f}s "
-                        f"(resto final)",
-                        flush=True,
-                    )
-            if not marked_speaking and on_speaking is not None:
-                on_speaking()
-                marked_speaking = True
-            _speak_one_chunk(remainder)
-            spoke_any = True
+            clause_q.put(remainder)
     finally:
+        # Cerrar el pipeline y esperar a que termine el audio antes de soltar el
+        # lock: si no, el siguiente turno pisaría el final de este.
+        clause_q.put(_SENTINEL)
+        synth_thread.join()
+        play_thread.join()
         speak_lock.release()
         hologram.set_state("idle")
 
     full = _postprocess_reply("".join(parts))
-    if not spoke_any and full.strip() and not _hologram_paused:
-        # Fallback: una sola pasada si no hubo cláusulas.
-        speak(full)
+    if not state["spoke_any"] and full.strip() and not _hologram_paused:
+        # Fallback: una sola pasada si no hubo cláusulas. El audio es
+        # best-effort; el contrato de esta función es DEVOLVER el texto. Si el
+        # dispositivo de sonido está roto, el visitante debe seguir viendo la
+        # respuesta escrita en pantalla en vez de recibir un error.
+        try:
+            speak(full)
+        except Exception as error:
+            if not _is_quiet():
+                print(f"[TTS] No se pudo locutar la respuesta: {error}")
     return full
 
 

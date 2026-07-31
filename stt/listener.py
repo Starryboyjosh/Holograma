@@ -398,6 +398,13 @@ class WhisperListener:
         # Factor multiplicativo sobre el ruido ambiente medido. El umbral final es
         # max(silence_threshold, ruido * noise_factor).
         self.noise_factor = _env_float("WHISPER_NOISE_FACTOR", 2.8)
+        # Percentil de los bloques de calibración que define el piso de ruido.
+        # Bajo (20) a propósito: es robusto a que el visitante ya esté hablando
+        # durante la ventana de calibración. Con la mediana (50) esa voz se medía
+        # como ruido y la frase se perdía entera.
+        self.noise_percentile = max(
+            1.0, min(50.0, _env_float("WHISPER_NOISE_PERCENTILE", 20.0))
+        )
         # Pre-roll / post-pad en segundos (bordes de sílabas + contexto Whisper).
         self.preroll_seconds = _env_float("WHISPER_PREROLL_SECONDS", 0.45)
         self.pad_seconds = _env_float("WHISPER_PAD_SECONDS", 0.18)
@@ -619,6 +626,8 @@ class WhisperListener:
         onset_count = 0
         threshold = self.silence_threshold
         self._last_noise_floor = 0.0
+        # Piso de ruido observado hasta ahora; solo baja (ver fase 1).
+        observed_floor = float("inf")
 
         stream_kwargs = {
             "samplerate": self.sample_rate,
@@ -653,13 +662,22 @@ class WhisperListener:
                     preroll.append(block)
                     noise_levels.append(self._block_rms(block))
                 if noise_levels:
-                    noise_floor = float(np.median(noise_levels))
+                    # Percentil bajo, no mediana. El piso de ruido es la línea
+                    # base silenciosa de la sala; la mediana es el valor central,
+                    # así que si el visitante YA está hablando cuando arranca la
+                    # escucha (lo normal en un kiosko: la gente no espera), más de
+                    # la mitad de la ventana es voz y la mediana mide su voz. El
+                    # umbral sube por encima del habla y la frase se pierde entera.
+                    noise_floor = float(
+                        np.percentile(noise_levels, self.noise_percentile)
+                    )
                     self._last_noise_floor = noise_floor
                     threshold = max(
                         self.silence_threshold, noise_floor * self.noise_factor
                     )
                     if self.max_threshold is not None:
                         threshold = min(threshold, self.max_threshold)
+                    observed_floor = noise_floor
                     if not _is_quiet():
                         print(
                             f"[STT] Ruido ambiente={noise_floor:.4f} "
@@ -668,40 +686,77 @@ class WhisperListener:
                         )
 
                 # --- Captura continua ---
-                processed = 0
-                while processed < max_blocks:
+                #
+                # Los dos presupuestos son INDEPENDIENTES:
+                #   `waited_blocks`   ≤ wait_blocks  (max_wait_seconds)
+                #   `recorded_blocks` ≤ max_blocks   (max_record_seconds)
+                #
+                # Antes ambos consumían un único contador, así que dudar antes de
+                # hablar recortaba la frase: con 8 s de duda, 6 s de habla se
+                # capturaban como 4,4 s y la pregunta llegaba truncada a Whisper.
+                recorded_blocks = 0
+                while True:
                     try:
                         block = audio_q.get(timeout=self.max_wait_seconds + 1.0)
                     except _queue.Empty:
                         break
-                    processed += 1
                     rms = self._block_rms(block)
 
                     # Fase 1: esperar habla real (histéresis de onset).
                     if not speech_started:
                         preroll.append(block)
+                        # Recalibración continua a la BAJA. La ventana de
+                        # calibración dura medio segundo y puede salir contaminada
+                        # (el visitante ya hablaba, o la cola del TTS anterior):
+                        # entonces el umbral queda por encima de la voz y no se
+                        # detecta nada. Aquí cualquier bloque más silencioso baja
+                        # el piso — los huecos naturales entre sílabas bastan para
+                        # recuperarse. El umbral nunca sube por esta vía.
+                        if rms < observed_floor:
+                            observed_floor = rms
+                            relaxed = max(
+                                self.silence_threshold,
+                                observed_floor * self.noise_factor,
+                            )
+                            if self.max_threshold is not None:
+                                relaxed = min(relaxed, self.max_threshold)
+                            if relaxed < threshold:
+                                threshold = relaxed
+                                self._last_noise_floor = observed_floor
                         if rms >= threshold:
                             onset_count += 1
                             if onset_count >= onset_needed:
                                 speech_started = True
                                 recorded.extend(preroll)
+                                recorded_blocks = len(preroll)
                                 preroll.clear()
                                 silent_blocks = 0
                         else:
                             onset_count = 0
-                            waited_blocks += 1
-                            if waited_blocks >= wait_blocks:
-                                return np.array([], dtype=np.float32)
+                        # El tiempo de espera corre en CADA bloque, no solo en los
+                        # silenciosos: si no, una sala ruidosa que nunca confirma
+                        # onset dejaba la espera colgada sin tope real.
+                        waited_blocks += 1
+                        if waited_blocks >= wait_blocks:
+                            return np.array([], dtype=np.float32)
                         continue
 
                     # Fase 2: ya hay habla; grabar hasta pausa sostenida.
                     recorded.append(block)
+                    recorded_blocks += 1
                     if rms < threshold:
                         silent_blocks += 1
                     else:
                         silent_blocks = 0
 
                     if silent_blocks >= silence_blocks_needed:
+                        break
+                    if recorded_blocks >= max_blocks:
+                        if not _is_quiet():
+                            print(
+                                f"[STT] Corte por longitud máxima "
+                                f"({self.max_record_seconds:.0f}s)"
+                            )
                         break
         except Exception as error:
             if not _is_quiet():
@@ -1239,7 +1294,7 @@ def get_stt_status():
             groq_status = "librería groq instalada"
         except ImportError:
             return "STT no disponible: falta librería groq. Ejecuta: pip install groq"
-        
+
         has_key = bool(_env("GROQ_API_KEY"))
         key_status = "API key configurada" if has_key else "falta API key de Groq"
         return f"STT activo (Groq Cloud): modelo '{model}', {mic_status}, {groq_status}, {key_status}."

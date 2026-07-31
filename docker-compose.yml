@@ -1,0 +1,77 @@
+# ============================================================
+# Holograma UNEV — Docker Compose
+#
+# Uso habitual en desarrollo (backend en el host, navegador en Docker):
+#     docker compose up -d lightpanda
+#   Holograma corre con ./.venv/bin/python main.py y alcanza el motor en
+#   ws://127.0.0.1:9222 (valor por defecto de LIGHTPANDA_CDP_URL).
+#
+# Stack completo en contenedores:
+#     docker compose --profile full up -d
+#   Aquí Holograma alcanza el motor por DNS interno: ws://lightpanda:9222
+# ============================================================
+
+services:
+  # --- Motor de navegación web (único y definitivo) ---
+  lightpanda:
+    image: lightpanda/browser:nightly
+    container_name: holograma-lightpanda
+    restart: unless-stopped
+    # Sin `command:` a propósito. La imagen ya arranca el servidor CDP en
+    # 0.0.0.0:9222 con su CMD por defecto; sobrescribirlo con ["serve", ...]
+    # deja al entrypoint (tini) buscando un binario llamado "serve" y el
+    # contenedor entra en bucle de reinicio con exit 127.
+    ports:
+      # Solo loopback: el endpoint CDP permite controlar el navegador por
+      # completo (navegar, ejecutar JS, leer el DOM). Publicarlo en 0.0.0.0
+      # lo dejaría accesible desde la red — no lo cambies a "9222:9222".
+      - "127.0.0.1:9222:9222"
+    networks:
+      - holograma
+    # El endpoint CDP no habla HTTP plano, y la imagen es distroless (sin curl
+    # ni wget), así que un healthcheck estándar daría falsos negativos.
+    # La resiliencia la aporta `restart: unless-stopped` + los timeouts
+    # agresivos del cliente en app/tools/lightpanda_engine.py.
+
+  # --- Backend de Holograma (FastAPI) ---
+  # Perfil "full": no arranca en un `docker compose up` normal, porque en
+  # kiosko el backend corre en el host para acceder a cámara, micrófono y GPU.
+  holograma:
+    profiles: ["full"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: holograma-app
+    restart: unless-stopped
+    depends_on:
+      - lightpanda
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      # DNS interno de Compose: el servicio se resuelve por nombre.
+      LIGHTPANDA_CDP_URL: "ws://lightpanda:9222"
+      HOLOGRAM_HOST: "0.0.0.0"
+      HOLOGRAM_PORT: "8000"
+      # Ollama en el host, no en el contenedor.
+      OLLAMA_BASE_URL: "http://host.docker.internal:11434"
+    env_file:
+      # Claves de proveedores (GROQ_API_KEY, OPENROUTER_API_KEY, ...).
+      # Opcional: si no existe .env, Compose falla — créalo aunque esté vacío.
+      - .env
+    volumes:
+      - ./config.json:/app/config.json
+      - ./data:/app/data
+      - ./models:/app/models
+    extra_hosts:
+      # Necesario en Linux para que host.docker.internal resuelva al host.
+      - "host.docker.internal:host-gateway"
+    networks:
+      - holograma
+    # Cámara y audio son específicos del host; descomenta lo que necesites:
+    # devices:
+    #   - "/dev/video0:/dev/video0"
+    #   - "/dev/snd:/dev/snd"
+
+networks:
+  holograma:
+    driver: bridge

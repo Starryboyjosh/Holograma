@@ -45,14 +45,17 @@ Cada intento sigue una sonda cacheada de Ollama (`OLLAMA_READY_TTL_SECONDS`, fue
 
 | Ruta | Rol |
 |------|-----|
-| `main.py` | FastAPI + WebSocket + lifespan; orquesta la ruta async web |
-| `call.py` | CLI: teclado / voz / cámara; ruta sync del LLM |
+| `main.py` | FastAPI + WebSocket + lifespan; orquesta la ruta **async** web |
+| `call.py` | CLI: teclado / voz / cámara; ruta **sync** del LLM (`generate_reply`) |
 | `app/` | Servicios Fase 3: `ConversationService`, `LLMService`, `CameraContextProvider`, `ConnectionManager` |
+| `app/tools/` | Herramientas del LLM (function calling): navegación web con Lightpanda |
 | `llm_backend.py` | Streaming/fallback multi-proveedor, CoT en terminal, timeouts unificados, caché de readiness |
+| `metrics.py` | Métrica por turno: una línea estructurada en stderr, un solo punto de emisión |
 | `provider_config.py` | Contrato de 8 proveedores (`LLM_PROVIDER`, keys, modelos, detección automática) |
 | `camera_context.py` | Contexto de cámara neutro (desacoplado de CLI ↔ LLM) |
-| `vision/` | Cámara OpenCV + YOLOE open-vocab (`yoloe-26n-seg`), detector de personas, análisis facial |
+| `vision/` | Cámara OpenCV + YOLOE open-vocab (`yoloe-26n-seg`), detector de personas, análisis facial; `geometry.py` e `image_signals.py` son funciones puras testeables sin cargar el modelo |
 | `stt/` | Faster-Whisper + sounddevice, wakeword |
+| `docker-compose.yml` | Servicio Lightpanda (motor de navegación web) y, con perfil `full`, el backend |
 | `skills/` | Router local, contenido UNEV, Honduras, presencia, modos de evento, apariencia, universidad |
 | `data/` | Contenido institucional UNEV, info de Honduras, vocabulario abierto, metadatos de entrenamiento, logo index |
 | `hologram_controller.py` | Ventilador holográfico TCP (estado, playlist, pausa/reanudación, fail-soft) |
@@ -61,8 +64,9 @@ Cada intento sigue una sonda cacheada de Ollama (`OLLAMA_READY_TTL_SECONDS`, fue
 | `scripts/` | Setup, diagnóstico, launchers (`Holograma.sh`, `Holograma.cmd`, `run_web.*`) |
 | `static/` | Frontend compilado (SPA React) servido por FastAPI |
 | `frontend/` | UI React + shell Tauri (fuente, no compilado) |
-| `graphify-out/` | Grafo de conocimiento del repo (`graph.json`, `GRAPH_REPORT.md`, `graph.html`) |
-| `tests/` | 17 archivos de pytest (contratos de proveedor, LLM unify, servicios, cámara, holograma, seguridad, STT) |
+| `docs/plans/` | Plan de arquitectura de contexto/modelo y su runbook de ejecución por WAVEs |
+| `graphify-out/` | Grafo de conocimiento del repo — **generado, no versionado** (ver abajo) |
+| `tests/` | Pytest (contratos de proveedor, unificación LLM, servicios, cámara, holograma, seguridad, STT, TTS, navegación web) |
 
 ## Proveedores de IA soportados
 
@@ -78,6 +82,45 @@ Cada intento sigue una sonda cacheada de Ollama (`OLLAMA_READY_TTL_SECONDS`, fue
 | `local_only` | local | — | — |
 
 La elección de proveedor es **autoritativa**: si eliges Ollama, se usa Ollama aunque queden API keys cloud configuradas. Cada turno puede caer al siguiente en la cadena de fallback. Detalles en [`docs/CONFIG.md`](docs/CONFIG.md).
+
+## Navegación web (Lightpanda)
+
+El LLM puede leer una página en tiempo real mediante la herramienta
+`browse_web_page` (function calling). El motor es **Lightpanda**, único y sin
+fallback: se habla CDP por WebSocket, sin Puppeteer ni Node.
+
+```bash
+docker compose up -d lightpanda          # motor en ws://127.0.0.1:9222
+./.venv/bin/python scripts/smoke_lightpanda.py   # prueba de humo
+```
+
+Funciona con modelos locales (Ollama) y de nube, siempre que el modelo soporte
+`tools` — en Ollama se comprueba con `ollama show <modelo>`.
+
+**Sin internet no se ofrece la herramienta.** Antes de cada turno se comprueba
+que Lightpanda responda y que haya red; si no, al modelo se le inyecta una
+instrucción que le prohíbe prometer una consulta que no puede hacer, en vez de
+dejarle inventar datos o quedarse esperando un timeout. Es el caso típico de un
+kiosco con modelo local y la red caída.
+
+| Variable | Uso |
+|----------|-----|
+| `HOLOGRAM_WEB_TOOLS` | `auto` (default, solo si el prompt lo pide) · `always` · `off` |
+| `LIGHTPANDA_CDP_URL` | `ws://127.0.0.1:9222`; en Compose `ws://lightpanda:9222` |
+| `LIGHTPANDA_MAX_CHARS` | Recorte del texto extraído (default `8000`) |
+| `HOLOGRAM_TOOL_TEMPERATURE` | Determinismo al decidir si navegar (default `0.0`) |
+
+En modo `auto` un pre-filtro detecta URLs y palabras de tiempo real, así que las
+preguntas normales sobre la UNEV no pagan la llamada extra al LLM.
+
+> El puerto 9222 se publica **solo en loopback**: el endpoint CDP permite
+> controlar el navegador por completo, así que no lo expongas a la red.
+
+## Reglas de compatibilidad Linux ↔ Windows
+
+1. **`pathlib`** para rutas de archivos  
+2. **`sounddevice`** para micrófono (no PyAudio)  
+3. Dependencias en **`requirements.txt`**
 
 ## Instalación
 
@@ -120,7 +163,10 @@ Todas las variables en [`.env.example`](.env.example):
 | `YOLO_IMGSZ` / `YOLO_INTERVAL_SECONDS` | Coste de inferencia local |
 | `PRESENCE_ENTER_SECONDS` / `PRESENCE_ABSENCE_SECONDS` | Anti-rebote de presencia |
 | `WHISPER_MODEL` / `WHISPER_LANGUAGE` / `WHISPER_BEAM_SIZE` | STT |
-| `TTS_BACKEND` / `HOLOGRAM_TTS_STREAM` | TTS (Piper in-process o CLI) |
+| `WHISPER_MAX_RECORD_SECONDS` / `WHISPER_MAX_WAIT_SECONDS` | Presupuestos **independientes**: cuánto se graba y cuánto se espera a que la persona arranque |
+| `WHISPER_NOISE_PERCENTILE` / `WHISPER_NOISE_FACTOR` | Umbral adaptativo sobre el ruido ambiente |
+| `TTS_BACKEND` / `HOLOGRAM_TTS_STREAM` | TTS (Piper in-process, CLI u OS); por cláusulas en web |
+| `HOLOGRAM_WEB_TOOLS` | Navegación web del LLM (`auto` / `always` / `off`) |
 | `HOLOGRAM_TCP_IP` / `HOLOGRAM_TCP_PORT` | Ventilador físico (vacío = modo software) |
 | `HOLOGRAM_CLIP_IDLE/LISTENING/SPEAKING/THINKING` | Índices de playlist en el dispositivo |
 | `CORS_ALLOW_ORIGINS` | Orígenes CORS permitidos (vacío = `*`) |
@@ -128,12 +174,25 @@ Todas las variables en [`.env.example`](.env.example):
 | `OLLAMA_READY_TTL_SECONDS` | Cache de sondeo Ollama (default 10 s) |
 | `HOLOGRAM_METRICS` | Métrica por turno en stderr (`1` = activa, default) |
 
-Con `HOLOGRAM_METRICS=1` cada turno deja una línea `[METRICS] {...}` en **stderr**
-—contexto y prompt en caracteres, tokens estimados, proveedor/modelo, latencia a
-primer token y a primera cláusula, número de fallbacks— sin claves ni texto del
-prompt. Para aislarla del log humano: `python main.py 2> metrics.log`.
+### Voz: latencia y robustez
 
-La detección YOLO sigue activa sin personas; el encode MJPEG se espacia si no hay suscriptores. Las API keys se redactan automáticamente en logs y respuestas de error.
+El TTS en streaming usa un pipeline de 3 etapas (tokens → síntesis → audio), así
+que la cláusula siguiente se sintetiza mientras suena la actual y no hay
+silencios entre frases.
+
+En el STT, el umbral de silencio se recalibra **a la baja** durante la espera:
+si el visitante ya estaba hablando cuando arrancó la escucha, su voz no se
+confunde con el ruido de fondo. Y esperar a que alguien se decida no recorta el
+tiempo disponible para grabar su frase.
+
+### Métrica por turno
+
+Con `HOLOGRAM_METRICS=1` (default) cada turno deja una línea `[METRICS] {...}` en
+**stderr** —contexto y prompt en caracteres, tokens estimados, proveedor/modelo,
+latencia a primer token y a primera cláusula, número de fallbacks— sin claves ni
+texto del prompt. Para aislarla del log humano: `python main.py 2> metrics.log`.
+
+La detección YOLO **sigue activa** aunque no haya personas; solo se espacia el coste y el encode MJPEG si nadie mira el feed. Las API keys se redactan automáticamente en logs y respuestas de error.
 
 ## Endpoints de la API
 
@@ -177,6 +236,14 @@ Contratos clave:
 - `tests/test_security.py` — redacción de secretos, saneo de texto
 - `tests/test_hologram_controller.py` — conexión TCP, comandos, fail-soft
 - `tests/test_llm_backend.py` — limpieza de bloques CoT, detección de inglés, `_require`
+- `tests/test_context_sections.py` — paridad del contexto institucional por secciones
+- `tests/test_metrics.py` — la línea de métrica y su redacción de secretos
+- `tests/test_tts_pipeline.py` — solape síntesis/audio
+- `tests/test_stt_capture_budget.py` — presupuestos de captura y umbral adaptativo
+- `tests/test_web_availability.py` — navegación web y modo sin internet
+
+Toda la suite corre sin hardware: cámara, micrófono, altavoces y Lightpanda se
+sustituyen por dobles.
 
 Frontend: `cd frontend && npm test` (Vitest + Testing Library).
 
@@ -193,7 +260,13 @@ graphify explain "CameraContextProvider"
 graphify update .   # tras cambiar código (AST, sin coste de LLM)
 ```
 
-Abrir `graphify-out/graph.html` o leer `GRAPH_REPORT.md`.
+Abrir `graphify-out/graph.html` en el navegador o leer `GRAPH_REPORT.md`.
+
+**`graphify-out/` no se versiona.** Es un artefacto generado (~7 MB) que se
+reescribe entero en cada actualización: `graph.json` y `graph.html` son de una
+sola línea, así que cada diff sería el archivo completo. En un clon nuevo se
+regenera con `graphify .` (el paso AST no cuesta tokens; la parte semántica de
+docs sí usa LLM).
 
 ## Licencia
 
