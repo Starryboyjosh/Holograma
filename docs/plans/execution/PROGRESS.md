@@ -338,6 +338,92 @@ Qué columnas son de qué naturaleza, para no confundirlas al revisar:
   la parada del runbook.
 - Pruebas manuales diferidas: **P03-1**, **P03-2** (ver `PRUEBAS-MANUALES-PENDIENTES.md`).
 
+### WAVE-04 — Secciones de contexto
+- Commit: `<pendiente>` · Fecha: 2026-07-30
+- Archivos tocados: `skills/university.py`, `tests/test_context_sections.py` (**nuevo**).
+  `skills/unev_content.py` **no** se tocó: `TEXT_FIELDS` ya era importable tal cual, así que no
+  hizo falta exportarlo de otra forma (la WAVE pedía evitarlo). `data/unev_info.json` intacto.
+- Qué se hizo:
+  - `get_context_sections(keys)`: devuelve **sólo** las secciones pedidas, con el formato, las
+    etiquetas y el orden de lectura de hoy. Acepta cualquier iterable.
+  - `context_section_keys()`: las 27 claves válidas en orden (25 campos de `TEXT_FIELDS` +
+    `"programs"` + `"honduras"`). Pasarlas enteras reproduce el bloque completo.
+  - `_rendered_sections()`: renderiza cada sección **una vez** y la cachea en `_SECTION_CACHE`.
+    Un campo vacío no entra al diccionario, así que no produce una línea `- Etiqueta: ` colgada
+    (preserva el `continue` del bucle original).
+  - `get_university_context()` se reimplementa encima; su firma, su caché `_CONTEXT_CACHE` y sus
+    llamadores quedan igual. **Ningún llamador fue modificado**: en el diff, la única aparición
+    del símbolo es dentro de `skills/university.py`.
+  - `invalidate_context_cache()` limpia ahora `_CONTEXT_CACHE`, `_SECTION_CACHE` y el registro de
+    avisos. Sigue siendo el único punto de invalidación, el que llama
+    `unev_content._invalidate_skill_caches`.
+- **Nombres de las pseudo-secciones:** `"programs"` y `"honduras"`, expuestas como constantes
+  `PROGRAMS_SECTION` / `HONDURAS_SECTION` y agrupadas en `PSEUDO_SECTIONS`.
+- **Cabecera y cierre: obligatorias, no seleccionables.** Son guardarraíles, no datos: la
+  cabecera evita que el STT convierta «UNEV» en «UNED» y el cierre prohíbe inventar. Un
+  subconjunto pequeño es justo cuando más falta hacen, así que van siempre. Cuestan **337 chars**
+  de piso. La propia WAVE lo confirma: su comando de verificación logra paridad pidiendo sólo
+  `list(_CONTEXT_FIELD_LABELS) + ['programs', 'honduras']`, sin nombrarlas.
+- **Claves desconocidas: ignoradas**, con aviso por `stderr` **una vez por clave** (registro
+  `_WARNED_UNKNOWN_SECTIONS`, que `invalidate_context_cache` limpia). Frente a un visitante, un
+  router desactualizado degrada la respuesta; no la cancela. Una sola vez para que no inunde el
+  log turno a turno; por stderr por lo mismo que la métrica de WAVE-03.
+- **Estrategia de caché: por sección + el bloque completo aparte.** `_SECTION_CACHE` guarda cada
+  pieza ya formateada y `_CONTEXT_CACHE` el ensamblado completo, que es con diferencia el
+  subconjunto más pedido. No es optimización (construirlo cuesta 0,129 ms): es corrección de
+  invalidación, y por eso las dos se limpian en el mismo sitio.
+- **Paridad exacta verificada: sí.** `get_context_sections(context_section_keys()) ==
+  get_university_context()`, carácter por carácter, y también con la lista literal del comando de
+  la WAVE.
+- `context_chars`: **15.516 → 15.516** (sin cambio, esperado). `prompt_chars` de «¿Qué carreras
+  ofrecen?»: **18.506 → 18.506**, idéntico a la fila 3 de la línea base de WAVE-03.
+- Ahorro por sección medido sobre código real (no estimación):
+
+  | secciones pedidas | chars | vs. bloque completo |
+  |---|---|---|
+  | `[]` (sólo cabecera + cierre) | 337 | −97 % |
+  | `['address']` | 551 | −97 % |
+  | `['approval', 'governance']` | 1.214 | −93 % |
+  | `['acronyms', 'full_name', 'independence_note']` | 1.397 | −91 % |
+  | `['programs']` | 1.468 | −91 % |
+  | `['honduras']` | 2.777 | −82 % |
+  | todas (bloque completo) | 15.516 | — |
+
+  Con esto, el objetivo de **≤ 2.500 chars** de WAVE-05 es alcanzable para las 11 preguntas
+  obligatorias sin tocar el contenido: una pregunta típica necesita 2–4 secciones.
+- Tests añadidos (`tests/test_context_sections.py`, 8):
+  `::test_todas_las_secciones_reproducen_el_bloque_actual`,
+  `::test_subconjunto_contiene_solo_lo_pedido`, `::test_orden_de_lectura_estable`,
+  `::test_campos_y_etiquetas_en_sincronia`, `::test_honduras_es_opcional`,
+  `::test_invalidar_cache_limpia_todo`, `::test_claves_desconocidas`,
+  `::test_seccion_vacia_se_omite`
+- Métricas antes → después:
+  - Suite: 230 → **238 casos**, exit 0.
+  - Tests que cubren `skills/university.py`: **0 → 8**. Son los primeros.
+  - Prueba de reversión: con `skills/university.py` en `git stash`, **7 fallan y 1 pasa**. El que
+    pasa es `test_campos_y_etiquetas_en_sincronia`, y es correcto que pase: la WAVE lo define como
+    *guardarraíl permanente* sobre la sincronía 25/25, no como prueba del código nuevo.
+  - `ruff` en los archivos tocados: limpio. Proyecto: sigue en **18** errores preexistentes
+    (RUFF-1), sin cambio.
+  - `git diff --stat tests/` sobre tests previos: **vacío**. `data/unev_info.json`: fuera del diff.
+- Criterios de aceptación: **1–8 cumplidos**, con salida real pegada arriba.
+- Desvíos del plan:
+  - **Pase de revisión con agente `worker`: omitido**, igual que en las tres WAVEs anteriores
+    (instrucción de sesión de no lanzar subagentes). La WAVE lo marca como "asistencia, NO la
+    puerta". Los tests los escribió la sesión principal en vez de `worker`, por lo mismo.
+  - **`TEXT_FIELDS` pasó a importarse a nivel de módulo** en `skills/university.py` (antes se
+    importaba dentro de `get_university_context`). No añade acoplamiento: el módulo ya importaba
+    `get_unev_info` del mismo sitio en la cabecera. El import de `skills.honduras` **sí** sigue
+    siendo diferido, porque ese módulo lee su JSON al importarse y falla duro si no está.
+  - **Se encadenó con WAVE-03 en la misma sesión**, saltando la parada del runbook, por
+    autorización explícita del usuario en la Puerta 1 de WAVE-03.
+- Hallazgos nuevos (NO arreglados): ninguno.
+- Revisión humana: **OK explícito del 2026-07-30** («comitea»), tras presentar el checklist
+  completo con la prueba de reversión real (7 fallan / 1 pasa, no 8/8) y las cuatro decisiones
+  de diseño. Se aprobó también la omisión del pase con `worker`.
+- Pruebas manuales diferidas: ninguna. Esta WAVE no cambia comportamiento observable, así que no
+  hay nada que percibir por oído ni por hardware.
+
 ---
 
 ## Desvíos y hallazgos nuevos
