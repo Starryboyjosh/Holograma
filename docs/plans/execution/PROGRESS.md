@@ -437,6 +437,31 @@ Qué columnas son de qué naturaleza, para no confundirlas al revisar:
 Todo lo que se encuentre roto **fuera** del alcance de la WAVE en curso va acá, sin arreglarse.
 Incluí archivo y símbolo para que sea accionable después.
 
+### Abiertos desde la fusión con `origin/main` (2026-07-30, commit `6f96ebc`)
+
+Al empujar las WAVEs 01–04 apareció que `origin/main` tenía 2 commits sin integrar (navegación
+web con Lightpanda, function calling, rebuild de STT/TTS, visión). Se fusionaron sin perder nada
+de ninguno de los dos lados; la suite quedó en **372 casos en verde** y el contexto institucional
+intacto en 15.516 chars. Tres cosas que las WAVEs siguientes tienen que tener en cuenta:
+
+- **MERGE-1 · La navegación web sólo existe en la ruta web.** `_web_context_block` se inyecta en
+  `stream_llm_response` (ruta web/WS) y **no** en `iter_reply_tokens` (ruta voz/CLI). Es
+  exactamente el patrón de divergencia entre rutas que WAVE-07 viene a cerrar, ahora con un caso
+  más. *Impacto en WAVE-05:* el `PromptPackage` tiene que dejar sitio a un bloque de sistema
+  inyectado en tiempo de turno, no sólo al contexto institucional.
+- **MERGE-2 · Contenido institucional duplicado.** El remoto añadió `app/data/unev_info.json` y
+  `app/data/honduras_info.json`. Hoy son **idénticos** a los de `data/`, pero el código en
+  ejecución lee `data/` (`skills/unev_content.JSON_PATH = BASE_DIR / "data" / …`) y el panel de
+  administración escribe ahí. Si alguien edita la copia de `app/data/`, el cambio no se ve.
+  *No arreglado: fuera del alcance de WAVE-04.*
+- **MERGE-3 · `graphify-out/` ya no se versiona.** Decisión del remoto (`.gitignore` + README):
+  es un artefacto generado de ~7 MB. Se acató; los archivos siguen en disco y se regeneran con
+  `graphify update .`. Esto elimina de raíz la fricción de las Puertas 2 anteriores, donde
+  `git add graphify-out` fallaba por estar ignorado.
+
+Rama de respaldo previa a la fusión: `backup-waves-pre-merge` → `6f36a05`. Borrable cuando la
+fusión se dé por buena en ejecución real.
+
 ### Abiertos desde la auditoría (fuera del alcance de las 10 WAVEs)
 
 - **SEC-1 · Clave en texto plano.** `config.json` guarda una clave de Groq en claro y es el
