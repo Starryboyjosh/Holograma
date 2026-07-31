@@ -200,5 +200,18 @@
   "198": ".handle_prompt",
   "199": "_CotStreamFilter",
   "200": "PresenceManager",
-  "202": ".analyze_frame"
+  "201": ".run",
+  "202": ".analyze_frame",
+  "203": "request_listen",
+  "204": "pop_ready_speech",
+  "205": "test_hologram_controller.py",
+  "206": "WakeWordDetector",
+  "207": "get_context_sections",
+  "208": "HologramArrayTester",
+  "209": "._split_detections",
+  "210": "set_camera",
+  "211": ".bind_loop",
+  "212": "camera_feed_subscribe",
+  "213": "camera_feed_unsubscribe",
+  "214": ".is_available"
 }

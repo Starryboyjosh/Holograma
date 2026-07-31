@@ -23,8 +23,8 @@ y commiteados en `514b2e4`. **WAVE-01 (`99d40c7`) y WAVE-02 (`cd3b1cd`) ejecutad
 | 01 · Desbloquear el turno | ✅ commiteada | `99d40c7` | 2026-07-30 | criterio 4 no cumplido → WAVE-09 |
 | 02 · Filtro CoT streaming | ✅ commiteada | `cd3b1cd` | 2026-07-30 | smoke test de audio diferido → pruebas manuales |
 | 03 · Instrumentación | ✅ commiteada | `9313531` | 2026-07-30 | línea base offline lista; latencias reales diferidas → P03-1 |
-| 04 · Secciones de contexto | 🟡 en curso | — | 2026-07-30 | **siguiente** |
-| 05 · PromptPackage + router | ⬜ pendiente | — | — | |
+| 04 · Secciones de contexto | ✅ commiteada | `c402a0e` | 2026-07-30 | paridad exacta, 15.516 chars sin cambio; sin comportamiento nuevo |
+| 05 · PromptPackage + router | ⬜ pendiente | — | — | **siguiente** · la de mayor riesgo |
 | 06 · Memoria de sesión | ⬜ pendiente | — | — | |
 | 07 · Paridad de rutas | ⬜ pendiente | — | — | |
 | 08 · Política de cámara | ⬜ pendiente | — | — | |
@@ -33,8 +33,14 @@ y commiteados en `514b2e4`. **WAVE-01 (`99d40c7`) y WAVE-02 (`cd3b1cd`) ejecutad
 
 Estados: ⬜ pendiente · 🟡 en curso · ✅ commiteada · ⛔ bloqueada (ver Desvíos)
 
-**Siguiente acción:** ejecutar `WAVE-04-secciones-contexto.md` siguiendo `README.md`.
-Fase 1 cerrada: las tres WAVEs de la demo están commiteadas.
+**Siguiente acción:** ejecutar `WAVE-05-promptpackage-router.md` siguiendo `README.md`, **en una
+sesión nueva**. Es la WAVE de mayor riesgo del plan y el runbook exige entrar con la suite verde y
+el contexto intacto: ambas cosas se cumplen ahora mismo (238 casos en verde, contexto en 15.516
+chars sin cambio). WAVE-04 dejó la herramienta lista (`get_context_sections`); WAVE-05 es quien
+decide **quién pide menos que todo**, y ahí sí cambia lo que ve el LLM.
+
+Pendiente operativo: `main` está **8 commits por delante de `origin/main`**; el push no se hizo
+desde esta sesión.
 
 ---
 
@@ -339,7 +345,7 @@ Qué columnas son de qué naturaleza, para no confundirlas al revisar:
 - Pruebas manuales diferidas: **P03-1**, **P03-2** (ver `PRUEBAS-MANUALES-PENDIENTES.md`).
 
 ### WAVE-04 — Secciones de contexto
-- Commit: `<pendiente>` · Fecha: 2026-07-30
+- Commit: `c402a0e` · Fecha: 2026-07-30
 - Archivos tocados: `skills/university.py`, `tests/test_context_sections.py` (**nuevo**).
   `skills/unev_content.py` **no** se tocó: `TEXT_FIELDS` ya era importable tal cual, así que no
   hizo falta exportarlo de otra forma (la WAVE pedía evitarlo). `data/unev_info.json` intacto.

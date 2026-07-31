@@ -248,8 +248,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "app_connection_connectionmanager",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": "connectionmanager"
     },
     {
@@ -259,8 +259,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "app_connection_connectionmanager_init",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": ".__init__()"
     },
     {
@@ -270,8 +270,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "app_connection_connectionmanager_count",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": ".count()"
     },
     {
@@ -314,8 +314,8 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "app_connection_connectionmanager_bind_loop",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 211,
+      "community_name": ".bind_loop",
       "norm_label": ".bind_loop()"
     },
     {
@@ -325,8 +325,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "abstracteventloop",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 211,
+      "community_name": ".bind_loop",
       "norm_label": "abstracteventloop"
     },
     {
@@ -347,8 +347,8 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "app_connection_connectionmanager_close_all",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": ".close_all()"
     },
     {
@@ -380,8 +380,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "app_connection_rationale_23",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": "registro de conexiones + difusion async, seguro ante sockets caidos."
     },
     {
@@ -402,8 +402,8 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "app_connection_rationale_69",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 211,
+      "community_name": ".bind_loop",
       "norm_label": "captura el event loop del servidor para emitir desde hilos no-async.          se"
     },
     {
@@ -424,8 +424,8 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "app_connection_rationale_91",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": "cierra y olvida todas las conexiones (apagado ordenado del servidor).          e"
     },
     {
@@ -457,8 +457,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_hologram_compatibility",
-      "community": 171,
-      "community_name": ".listen_once",
+      "community": 127,
+      "community_name": "HologramDirector",
       "norm_label": "compatibility.py"
     },
     {
@@ -600,8 +600,8 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "app_hologram_compatibility_create_legacy_hologram_manager",
-      "community": 171,
-      "community_name": ".listen_once",
+      "community": 127,
+      "community_name": "HologramDirector",
       "norm_label": "create_legacy_hologram_manager()"
     },
     {
@@ -611,8 +611,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_hologram_compatibility_rationale_1",
-      "community": 171,
-      "community_name": ".listen_once",
+      "community": 127,
+      "community_name": "HologramDirector",
       "norm_label": "adaptador de la api de una unidad para los consumidores heredados."
     },
     {
@@ -721,8 +721,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "app_hologram_conversation_orchestrator_hologramconversationorchestrator",
-      "community": 160,
-      "community_name": "test_unev_content.py",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": "hologramconversationorchestrator"
     },
     {
@@ -743,8 +743,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "app_hologram_conversation_orchestrator_hologramconversationorchestrator_active_context_id",
-      "community": 160,
-      "community_name": "test_unev_content.py",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": ".active_context_id()"
     },
     {
@@ -754,8 +754,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "app_hologram_conversation_orchestrator_hologramconversationorchestrator_reconfigure",
-      "community": 160,
-      "community_name": "test_unev_content.py",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": ".reconfigure()"
     },
     {
@@ -765,8 +765,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "app_hologram_conversation_orchestrator_hologramconversationorchestrator_mark_listening",
-      "community": 160,
-      "community_name": "test_unev_content.py",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": ".mark_listening()"
     },
     {
@@ -776,8 +776,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "app_hologram_conversation_orchestrator_hologramconversationorchestrator_mark_thinking",
-      "community": 160,
-      "community_name": "test_unev_content.py",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": ".mark_thinking()"
     },
     {
@@ -787,8 +787,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "app_hologram_conversation_orchestrator_hologramconversationorchestrator_mark_speaking",
-      "community": 160,
-      "community_name": "test_unev_content.py",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": ".mark_speaking()"
     },
     {
@@ -798,8 +798,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "app_hologram_conversation_orchestrator_hologramconversationorchestrator_start_turn",
-      "community": 160,
-      "community_name": "test_unev_content.py",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": ".start_turn()"
     },
     {
@@ -809,8 +809,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "app_hologram_conversation_orchestrator_hologramconversationorchestrator_observe_response_text",
-      "community": 160,
-      "community_name": "test_unev_content.py",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": ".observe_response_text()"
     },
     {
@@ -820,8 +820,8 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "app_hologram_conversation_orchestrator_hologramconversationorchestrator_finish_turn",
-      "community": 160,
-      "community_name": "test_unev_content.py",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": ".finish_turn()"
     },
     {
@@ -831,8 +831,8 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "app_hologram_conversation_orchestrator_hologramconversationorchestrator_fail_turn",
-      "community": 160,
-      "community_name": "test_unev_content.py",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": ".fail_turn()"
     },
     {
@@ -842,8 +842,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "app_hologram_conversation_orchestrator_py_exception",
-      "community": 160,
-      "community_name": "test_unev_content.py",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": "exception"
     },
     {
@@ -853,8 +853,8 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "app_hologram_conversation_orchestrator_hologramconversationorchestrator_close_turn",
-      "community": 160,
-      "community_name": "test_unev_content.py",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": "._close_turn()"
     },
     {
@@ -864,8 +864,8 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "app_hologram_conversation_orchestrator_hologramconversationorchestrator_safe",
-      "community": 160,
-      "community_name": "test_unev_content.py",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": "._safe()"
     },
     {
@@ -1161,8 +1161,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "app_hologram_media_router_mediarouter_init",
-      "community": 160,
-      "community_name": "test_unev_content.py",
+      "community": 11,
+      "community_name": "FastAPI Main Routes",
       "norm_label": ".__init__()"
     },
     {
@@ -1194,8 +1194,8 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "app_hologram_media_router_mediarouter_config",
-      "community": 160,
-      "community_name": "test_unev_content.py",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": ".config()"
     },
     {
@@ -1359,8 +1359,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_hologram_models",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 127,
+      "community_name": "HologramDirector",
       "norm_label": "models.py"
     },
     {
@@ -1370,8 +1370,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "app_hologram_models_index",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 127,
+      "community_name": "HologramDirector",
       "norm_label": "_index()"
     },
     {
@@ -1392,8 +1392,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "app_hologram_models_fanunitconfig_post_init",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 127,
+      "community_name": "HologramDirector",
       "norm_label": ".__post_init__()"
     },
     {
@@ -1414,8 +1414,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "app_hologram_models_identitymedia_post_init",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 127,
+      "community_name": "HologramDirector",
       "norm_label": ".__post_init__()"
     },
     {
@@ -1436,8 +1436,8 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "app_hologram_models_promotionmedia_post_init",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 127,
+      "community_name": "HologramDirector",
       "norm_label": ".__post_init__()"
     },
     {
@@ -1469,8 +1469,8 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "app_hologram_models_routingconfig",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 127,
+      "community_name": "HologramDirector",
       "norm_label": "routingconfig"
     },
     {
@@ -1480,8 +1480,8 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "app_hologram_models_routingconfig_post_init",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 127,
+      "community_name": "HologramDirector",
       "norm_label": ".__post_init__()"
     },
     {
@@ -1546,8 +1546,8 @@
       "source_location": "L179",
       "_origin": "ast",
       "id": "app_hologram_models_hologramconfig_post_init",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 127,
+      "community_name": "HologramDirector",
       "norm_label": ".__post_init__()"
     },
     {
@@ -1601,8 +1601,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_hologram_models_rationale_1",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 127,
+      "community_name": "HologramDirector",
       "norm_label": "modelos validados del catalogo holografico; no contienen transporte tcp."
     },
     {
@@ -2503,8 +2503,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_hologram_unit_manager",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 127,
+      "community_name": "HologramDirector",
       "norm_label": "unit_manager.py"
     },
     {
@@ -2525,8 +2525,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "app_hologram_unit_manager_hologramunitmanager_init",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 168,
+      "community_name": "FakeFan",
       "norm_label": ".__init__()"
     },
     {
@@ -2668,8 +2668,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_hologram_unit_manager_rationale_1",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 127,
+      "community_name": "HologramDirector",
       "norm_label": "worker aislado por ventilador, construido sobre el transporte existente."
     },
     {
@@ -2899,8 +2899,8 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "app_services_conversation_conversationservice",
-      "community": 72,
-      "community_name": "README.md",
+      "community": 52,
+      "community_name": "Backend URL Hooks",
       "norm_label": "conversationservice"
     },
     {
@@ -2921,8 +2921,8 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "app_services_conversation_conversationservice_hologram_call",
-      "community": 20,
-      "community_name": "Hologram State Manager",
+      "community": 52,
+      "community_name": "Backend URL Hooks",
       "norm_label": "._hologram_call()"
     },
     {
@@ -2976,8 +2976,8 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "app_services_conversation_rationale_109",
-      "community": 20,
-      "community_name": "Hologram State Manager",
+      "community": 52,
+      "community_name": "Backend URL Hooks",
       "norm_label": "ejecuta una operacion del holograma sin romper la conversacion."
     },
     {
@@ -3350,8 +3350,8 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "call_clean_for_tts",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 204,
+      "community_name": "pop_ready_speech",
       "norm_label": "clean_for_tts()"
     },
     {
@@ -3361,8 +3361,8 @@
       "source_location": "L145",
       "_origin": "ast",
       "id": "call_get_piper_command_args",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 191,
+      "community_name": "useHologramControl.test.ts",
       "norm_label": "get_piper_command_args()"
     },
     {
@@ -3383,8 +3383,8 @@
       "source_location": "L211",
       "_origin": "ast",
       "id": "call_get_piper_model_path",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 191,
+      "community_name": "useHologramControl.test.ts",
       "norm_label": "get_piper_model_path()"
     },
     {
@@ -3438,8 +3438,8 @@
       "source_location": "L316",
       "_origin": "ast",
       "id": "call_play_wav_file",
-      "community": 152,
-      "community_name": "CONFIG_SCHEMA.md",
+      "community": 41,
+      "community_name": "Frontend Theme Toast",
       "norm_label": "play_wav_file()"
     },
     {
@@ -3449,8 +3449,8 @@
       "source_location": "L373",
       "_origin": "ast",
       "id": "call_piper_available",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 191,
+      "community_name": "useHologramControl.test.ts",
       "norm_label": "_piper_available()"
     },
     {
@@ -3460,8 +3460,8 @@
       "source_location": "L387",
       "_origin": "ast",
       "id": "call_get_piper_voice",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 191,
+      "community_name": "useHologramControl.test.ts",
       "norm_label": "_get_piper_voice()"
     },
     {
@@ -3471,8 +3471,8 @@
       "source_location": "L420",
       "_origin": "ast",
       "id": "call_warm_tts",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 191,
+      "community_name": "useHologramControl.test.ts",
       "norm_label": "warm_tts()"
     },
     {
@@ -3482,8 +3482,8 @@
       "source_location": "L430",
       "_origin": "ast",
       "id": "call_piper_synth_to_wav_python",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 191,
+      "community_name": "useHologramControl.test.ts",
       "norm_label": "_piper_synth_to_wav_python()"
     },
     {
@@ -3493,8 +3493,8 @@
       "source_location": "L458",
       "_origin": "ast",
       "id": "call_piper_synth_to_wav_cli",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 191,
+      "community_name": "useHologramControl.test.ts",
       "norm_label": "_piper_synth_to_wav_cli()"
     },
     {
@@ -3504,8 +3504,8 @@
       "source_location": "L528",
       "_origin": "ast",
       "id": "call_piper_synth_to_wav",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 191,
+      "community_name": "useHologramControl.test.ts",
       "norm_label": "_piper_synth_to_wav()"
     },
     {
@@ -3548,8 +3548,8 @@
       "source_location": "L631",
       "_origin": "ast",
       "id": "call_split_into_chunks",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 204,
+      "community_name": "pop_ready_speech",
       "norm_label": "_split_into_chunks()"
     },
     {
@@ -3603,8 +3603,8 @@
       "source_location": "L786",
       "_origin": "ast",
       "id": "call_speak_streaming_from_llm",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 204,
+      "community_name": "pop_ready_speech",
       "norm_label": "speak_streaming_from_llm()"
     },
     {
@@ -3614,8 +3614,8 @@
       "source_location": "L917",
       "_origin": "ast",
       "id": "call_is_visual_question",
-      "community": 191,
-      "community_name": "useHologramControl.test.ts",
+      "community": 35,
+      "community_name": "Appearance Skill",
       "norm_label": "_is_visual_question()"
     },
     {
@@ -3636,8 +3636,8 @@
       "source_location": "L947",
       "_origin": "ast",
       "id": "call_camera_context_for_prompt",
-      "community": 191,
-      "community_name": "useHologramControl.test.ts",
+      "community": 35,
+      "community_name": "Appearance Skill",
       "norm_label": "_camera_context_for_prompt()"
     },
     {
@@ -3669,8 +3669,8 @@
       "source_location": "L1021",
       "_origin": "ast",
       "id": "call_ask_ai_and_speak",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 35,
+      "community_name": "Appearance Skill",
       "norm_label": "ask_ai_and_speak()"
     },
     {
@@ -3724,8 +3724,8 @@
       "source_location": "L1161",
       "_origin": "ast",
       "id": "call_camera_feed_subscribe",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 212,
+      "community_name": "camera_feed_subscribe",
       "norm_label": "camera_feed_subscribe()"
     },
     {
@@ -3735,8 +3735,8 @@
       "source_location": "L1172",
       "_origin": "ast",
       "id": "call_camera_feed_unsubscribe",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 213,
+      "community_name": "camera_feed_unsubscribe",
       "norm_label": "camera_feed_unsubscribe()"
     },
     {
@@ -3768,7 +3768,7 @@
       "source_location": "L1292",
       "_origin": "ast",
       "id": "call_stop_camera_thread",
-      "community": 169,
+      "community": 210,
       "community_name": "set_camera",
       "norm_label": "stop_camera_thread()"
     },
@@ -3779,8 +3779,8 @@
       "source_location": "L1319",
       "_origin": "ast",
       "id": "call_is_camera_detection_running",
-      "community": 191,
-      "community_name": "useHologramControl.test.ts",
+      "community": 35,
+      "community_name": "Appearance Skill",
       "norm_label": "is_camera_detection_running()"
     },
     {
@@ -3790,8 +3790,8 @@
       "source_location": "L1325",
       "_origin": "ast",
       "id": "call_ensure_camera_for_vision",
-      "community": 191,
-      "community_name": "useHologramControl.test.ts",
+      "community": 68,
+      "community_name": "STT Record Transcribe",
       "norm_label": "ensure_camera_for_vision()"
     },
     {
@@ -3812,8 +3812,8 @@
       "source_location": "L1436",
       "_origin": "ast",
       "id": "call_emit_voice_event",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 203,
+      "community_name": "request_listen",
       "norm_label": "_emit_voice_event()"
     },
     {
@@ -3823,8 +3823,8 @@
       "source_location": "L1447",
       "_origin": "ast",
       "id": "call_request_listen",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 203,
+      "community_name": "request_listen",
       "norm_label": "request_listen()"
     },
     {
@@ -3834,8 +3834,8 @@
       "source_location": "L1463",
       "_origin": "ast",
       "id": "call_set_trigger_mode",
-      "community": 169,
-      "community_name": "set_camera",
+      "community": 203,
+      "community_name": "request_listen",
       "norm_label": "set_trigger_mode()"
     },
     {
@@ -3845,8 +3845,8 @@
       "source_location": "L1474",
       "_origin": "ast",
       "id": "call_get_trigger_mode",
-      "community": 169,
-      "community_name": "set_camera",
+      "community": 203,
+      "community_name": "request_listen",
       "norm_label": "get_trigger_mode()"
     },
     {
@@ -3856,8 +3856,8 @@
       "source_location": "L1479",
       "_origin": "ast",
       "id": "call_stdin_ptt_reader",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 203,
+      "community_name": "request_listen",
       "norm_label": "_stdin_ptt_reader()"
     },
     {
@@ -3944,8 +3944,8 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "call_rationale_117",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 204,
+      "community_name": "pop_ready_speech",
       "norm_label": "remove characters that can sound awkward when read by a tts engine.      ultima"
     },
     {
@@ -3955,8 +3955,8 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "call_rationale_146",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 191,
+      "community_name": "useHologramControl.test.ts",
       "norm_label": "return the command used to run piper if it is available."
     },
     {
@@ -3977,8 +3977,8 @@
       "source_location": "L212",
       "_origin": "ast",
       "id": "call_rationale_212",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 191,
+      "community_name": "useHologramControl.test.ts",
       "norm_label": "return the piper voice model to use, preferring spanish voices."
     },
     {
@@ -4032,8 +4032,8 @@
       "source_location": "L317",
       "_origin": "ast",
       "id": "call_rationale_317",
-      "community": 152,
-      "community_name": "CONFIG_SCHEMA.md",
+      "community": 41,
+      "community_name": "Frontend Theme Toast",
       "norm_label": "play a wav file on windows, linux, or macos using available system tools."
     },
     {
@@ -4043,8 +4043,8 @@
       "source_location": "L374",
       "_origin": "ast",
       "id": "call_rationale_374",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 191,
+      "community_name": "useHologramControl.test.ts",
       "norm_label": "true si piper y su modelo de voz estan listos para usarse."
     },
     {
@@ -4054,8 +4054,8 @@
       "source_location": "L388",
       "_origin": "ast",
       "id": "call_rationale_388",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 191,
+      "community_name": "useHologramControl.test.ts",
       "norm_label": "carga (o reutiliza) ``pipervoice`` del paquete ``piper`` en este proceso."
     },
     {
@@ -4065,8 +4065,8 @@
       "source_location": "L421",
       "_origin": "ast",
       "id": "call_rationale_421",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 191,
+      "community_name": "useHologramControl.test.ts",
       "norm_label": "precarga piper al arrancar el bucle de voz (evita el 1.er hueco largo)."
     },
     {
@@ -4076,8 +4076,8 @@
       "source_location": "L431",
       "_origin": "ast",
       "id": "call_rationale_431",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 191,
+      "community_name": "useHologramControl.test.ts",
       "norm_label": "sintesis in-process con pipervoice \u2192 wav temporal. none si no aplica."
     },
     {
@@ -4087,8 +4087,8 @@
       "source_location": "L459",
       "_origin": "ast",
       "id": "call_rationale_459",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 191,
+      "community_name": "useHologramControl.test.ts",
       "norm_label": "sintesis via subprocess (fallback si no hay api python)."
     },
     {
@@ -4098,8 +4098,8 @@
       "source_location": "L529",
       "_origin": "ast",
       "id": "call_rationale_529",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 191,
+      "community_name": "useHologramControl.test.ts",
       "norm_label": "sintetiza *text* a un wav temporal con piper. devuelve la ruta (path) o     ``no"
     },
     {
@@ -4142,8 +4142,8 @@
       "source_location": "L632",
       "_origin": "ast",
       "id": "call_rationale_632",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 204,
+      "community_name": "pop_ready_speech",
       "norm_label": "divide texto limpio en fragmentos tts (misma heuristica que el stream).      usa"
     },
     {
@@ -4197,8 +4197,8 @@
       "source_location": "L787",
       "_origin": "ast",
       "id": "call_rationale_787",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 204,
+      "community_name": "pop_ready_speech",
       "norm_label": "habla clausulas en cuanto el llm las produce (sin esperar al final).      mantie"
     },
     {
@@ -4208,8 +4208,8 @@
       "source_location": "L948",
       "_origin": "ast",
       "id": "call_rationale_948",
-      "community": 191,
-      "community_name": "useHologramControl.test.ts",
+      "community": 35,
+      "community_name": "Appearance Skill",
       "norm_label": "contexto de camara listo para el llm (misma logica en ask_ai y stream)."
     },
     {
@@ -4230,8 +4230,8 @@
       "source_location": "L1022",
       "_origin": "ast",
       "id": "call_rationale_1022",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 35,
+      "community_name": "Appearance Skill",
       "norm_label": "stream llm + tts por clausulas (menor latencia a primera voz)."
     },
     {
@@ -4252,8 +4252,8 @@
       "source_location": "L1162",
       "_origin": "ast",
       "id": "call_rationale_1162",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 212,
+      "community_name": "camera_feed_subscribe",
       "norm_label": "registra un cliente del feed de video (activa la codificacion jpeg).      el det"
     },
     {
@@ -4263,8 +4263,8 @@
       "source_location": "L1173",
       "_origin": "ast",
       "id": "call_rationale_1173",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 213,
+      "community_name": "camera_feed_unsubscribe",
       "norm_label": "da de baja un cliente del feed de video."
     },
     {
@@ -4296,7 +4296,7 @@
       "source_location": "L1293",
       "_origin": "ast",
       "id": "call_rationale_1293",
-      "community": 169,
+      "community": 210,
       "community_name": "set_camera",
       "norm_label": "deten la deteccion y libera la camara (apagar la camara = liberarla).      senal"
     },
@@ -4307,8 +4307,8 @@
       "source_location": "L1320",
       "_origin": "ast",
       "id": "call_rationale_1320",
-      "community": 191,
-      "community_name": "useHologramControl.test.ts",
+      "community": 35,
+      "community_name": "Appearance Skill",
       "norm_label": "true si el hilo yolo esta vivo."
     },
     {
@@ -4318,8 +4318,8 @@
       "source_location": "L1326",
       "_origin": "ast",
       "id": "call_rationale_1326",
-      "community": 191,
-      "community_name": "useHologramControl.test.ts",
+      "community": 68,
+      "community_name": "STT Record Transcribe",
       "norm_label": "si ``hologram_camera=1`` y el hilo murio, lo relanza (p. ej. tras apagar ui)."
     },
     {
@@ -4340,8 +4340,8 @@
       "source_location": "L1437",
       "_origin": "ast",
       "id": "call_rationale_1437",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 203,
+      "community_name": "request_listen",
       "norm_label": "difunde un evento de voz a la webapp si hay puente ws (main.py)."
     },
     {
@@ -4351,8 +4351,8 @@
       "source_location": "L1448",
       "_origin": "ast",
       "id": "call_rationale_1448",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 203,
+      "community_name": "request_listen",
       "norm_label": "solicita una escucha puntual (push-to-talk remoto, p. ej. la webapp)."
     },
     {
@@ -4362,8 +4362,8 @@
       "source_location": "L1464",
       "_origin": "ast",
       "id": "call_rationale_1464",
-      "community": 169,
-      "community_name": "set_camera",
+      "community": 203,
+      "community_name": "request_listen",
       "norm_label": "cambia en caliente el modo de activacion de voz. devuelve el modo final."
     },
     {
@@ -4373,8 +4373,8 @@
       "source_location": "L1475",
       "_origin": "ast",
       "id": "call_rationale_1475",
-      "community": 169,
-      "community_name": "set_camera",
+      "community": 203,
+      "community_name": "request_listen",
       "norm_label": "devuelve el modo de activacion de voz actual."
     },
     {
@@ -4384,8 +4384,8 @@
       "source_location": "L1480",
       "_origin": "ast",
       "id": "call_rationale_1480",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 203,
+      "community_name": "request_listen",
       "norm_label": "lee enter de la terminal y solicita una escucha (push-to-talk en cli)."
     },
     {
@@ -5968,8 +5968,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_hologramconnection",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "hologramconnection.tsx"
     },
     {
@@ -5979,8 +5979,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "frontend_src_components_hologramconnection_hologram",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "hologram"
     },
     {
@@ -5990,8 +5990,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "frontend_src_components_hologramconnection_hologramconnection",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "hologramconnection()"
     },
     {
@@ -6111,8 +6111,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_hologram_fanunitspanel",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "fanunitspanel.tsx"
     },
     {
@@ -6122,8 +6122,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "frontend_src_components_hologram_fanunitspanel_role_labels",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "role_labels"
     },
     {
@@ -6144,8 +6144,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "frontend_src_components_hologram_fanunitspanel_fanunitcard",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "fanunitcard()"
     },
     {
@@ -6177,8 +6177,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_hologram_identitycatalog",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "identitycatalog.tsx"
     },
     {
@@ -6188,8 +6188,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "frontend_src_components_hologram_identitycatalog_empty",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "empty"
     },
     {
@@ -6199,8 +6199,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "frontend_src_components_hologram_identitycatalog_identitycatalog",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "identitycatalog()"
     },
     {
@@ -6232,8 +6232,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_hologram_promotioncatalog",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "promotioncatalog.tsx"
     },
     {
@@ -6243,8 +6243,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "frontend_src_components_hologram_promotioncatalog_empty",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "empty"
     },
     {
@@ -6254,8 +6254,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "frontend_src_components_hologram_promotioncatalog_promotioncatalog",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "promotioncatalog()"
     },
     {
@@ -6298,8 +6298,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_hologram_tests_hologramcontrolpanel_test",
-      "community": 15,
-      "community_name": "Setup Wizard Scripts",
+      "community": 31,
+      "community_name": "App Services Layer",
       "norm_label": "hologramcontrolpanel.test.tsx"
     },
     {
@@ -6309,8 +6309,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "frontend_src_components_hologram_tests_hologramcontrolpanel_test_fetchmock",
-      "community": 15,
-      "community_name": "Setup Wizard Scripts",
+      "community": 31,
+      "community_name": "App Services Layer",
       "norm_label": "fetchmock"
     },
     {
@@ -6320,8 +6320,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "frontend_src_components_hologram_tests_hologramcontrolpanel_test_response",
-      "community": 15,
-      "community_name": "Setup Wizard Scripts",
+      "community": 31,
+      "community_name": "App Services Layer",
       "norm_label": "response()"
     },
     {
@@ -6331,8 +6331,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_ui_card",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "card.tsx"
     },
     {
@@ -6342,8 +6342,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "frontend_src_components_ui_card_cardprops",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "cardprops"
     },
     {
@@ -6353,8 +6353,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "frontend_src_components_ui_card_card",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "card()"
     },
     {
@@ -6364,8 +6364,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "frontend_src_components_ui_card_sectiontitle",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "sectiontitle()"
     },
     {
@@ -6375,8 +6375,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_ui_field",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "field.tsx"
     },
     {
@@ -6386,8 +6386,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "frontend_src_components_ui_field_field",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "field()"
     },
     {
@@ -6397,8 +6397,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "frontend_src_components_ui_field_textinput",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "textinput()"
     },
     {
@@ -6408,8 +6408,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "frontend_src_components_ui_field_select",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "select()"
     },
     {
@@ -6419,8 +6419,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "frontend_src_components_ui_field_textarea",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "textarea()"
     },
     {
@@ -6430,8 +6430,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_ui_togglegroup",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "togglegroup.tsx"
     },
     {
@@ -6441,8 +6441,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "frontend_src_components_ui_togglegroup_toggleoption",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "toggleoption"
     },
     {
@@ -6452,8 +6452,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "frontend_src_components_ui_togglegroup_togglegroupprops",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "togglegroupprops"
     },
     {
@@ -6463,8 +6463,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "frontend_src_components_ui_togglegroup_togglegroup",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "togglegroup()"
     },
     {
@@ -6529,8 +6529,8 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "frontend_src_context_sessioncontext_usesession",
-      "community": 31,
-      "community_name": "App Services Layer",
+      "community": 27,
+      "community_name": "Tauri App Config",
       "norm_label": "usesession()"
     },
     {
@@ -6628,8 +6628,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_context_toastcontext",
-      "community": 5,
-      "community_name": "Frontend Orb Chat UI",
+      "community": 31,
+      "community_name": "App Services Layer",
       "norm_label": "toastcontext.tsx"
     },
     {
@@ -6639,8 +6639,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "frontend_src_context_toastcontext_showtoast",
-      "community": 5,
-      "community_name": "Frontend Orb Chat UI",
+      "community": 31,
+      "community_name": "App Services Layer",
       "norm_label": "showtoast"
     },
     {
@@ -6650,8 +6650,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "frontend_src_context_toastcontext_toastctx",
-      "community": 5,
-      "community_name": "Frontend Orb Chat UI",
+      "community": 31,
+      "community_name": "App Services Layer",
       "norm_label": "toastctx"
     },
     {
@@ -6661,8 +6661,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "frontend_src_context_toastcontext_toastprovider",
-      "community": 5,
-      "community_name": "Frontend Orb Chat UI",
+      "community": 31,
+      "community_name": "App Services Layer",
       "norm_label": "toastprovider()"
     },
     {
@@ -6815,8 +6815,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_hooks_usehologram",
-      "community": 5,
-      "community_name": "Frontend Orb Chat UI",
+      "community": 27,
+      "community_name": "Tauri App Config",
       "norm_label": "usehologram.ts"
     },
     {
@@ -6826,8 +6826,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "frontend_src_hooks_usehologram_usehologramoptions",
-      "community": 5,
-      "community_name": "Frontend Orb Chat UI",
+      "community": 27,
+      "community_name": "Tauri App Config",
       "norm_label": "usehologramoptions"
     },
     {
@@ -7266,8 +7266,8 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "frontend_src_lib_hologramapi_splittags",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "splittags()"
     },
     {
@@ -7420,8 +7420,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_main",
-      "community": 5,
-      "community_name": "Frontend Orb Chat UI",
+      "community": 31,
+      "community_name": "App Services Layer",
       "norm_label": "main.tsx"
     },
     {
@@ -7497,8 +7497,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_screens_contentscreen",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "contentscreen.tsx"
     },
     {
@@ -7508,8 +7508,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "frontend_src_screens_contentscreen_field_labels",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "field_labels"
     },
     {
@@ -7530,8 +7530,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_screens_settingsscreen",
-      "community": 42,
-      "community_name": "Detached Windows UI",
+      "community": 15,
+      "community_name": "Setup Wizard Scripts",
       "norm_label": "settingsscreen.tsx"
     },
     {
@@ -8421,8 +8421,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hologram_controller",
-      "community": 171,
-      "community_name": ".listen_once",
+      "community": 10,
+      "community_name": "Hologram Fan Controller",
       "norm_label": "hologram_controller.py"
     },
     {
@@ -8465,8 +8465,8 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_connect",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 201,
+      "community_name": ".run",
       "norm_label": ".connect()"
     },
     {
@@ -8476,8 +8476,8 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_disconnect",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 201,
+      "community_name": ".run",
       "norm_label": ".disconnect()"
     },
     {
@@ -8509,8 +8509,8 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_shutdown",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 201,
+      "community_name": ".run",
       "norm_label": ".shutdown()"
     },
     {
@@ -8553,8 +8553,8 @@
       "source_location": "L145",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_play_file",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": ".play_file()"
     },
     {
@@ -8608,8 +8608,8 @@
       "source_location": "L180",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_enter",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 201,
+      "community_name": ".run",
       "norm_label": ".__enter__()"
     },
     {
@@ -8619,8 +8619,8 @@
       "source_location": "L183",
       "_origin": "ast",
       "id": "hologram_controller_hologramfancontroller_exit",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 201,
+      "community_name": ".run",
       "norm_label": ".__exit__()"
     },
     {
@@ -8630,8 +8630,8 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "hologram_controller_discover_devices",
-      "community": 171,
-      "community_name": ".listen_once",
+      "community": 10,
+      "community_name": "Hologram Fan Controller",
       "norm_label": "discover_devices()"
     },
     {
@@ -8641,8 +8641,8 @@
       "source_location": "L234",
       "_origin": "ast",
       "id": "hologram_controller_hologramarraytester",
-      "community": 16,
-      "community_name": "Hologram Controller Tests",
+      "community": 208,
+      "community_name": "HologramArrayTester",
       "norm_label": "hologramarraytester"
     },
     {
@@ -8652,8 +8652,8 @@
       "source_location": "L242",
       "_origin": "ast",
       "id": "hologram_controller_hologramarraytester_init",
-      "community": 16,
-      "community_name": "Hologram Controller Tests",
+      "community": 208,
+      "community_name": "HologramArrayTester",
       "norm_label": ".__init__()"
     },
     {
@@ -8663,8 +8663,8 @@
       "source_location": "L257",
       "_origin": "ast",
       "id": "hologram_controller_hologramarraytester_run",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 201,
+      "community_name": ".run",
       "norm_label": ".run()"
     },
     {
@@ -8674,8 +8674,8 @@
       "source_location": "L277",
       "_origin": "ast",
       "id": "hologram_controller_hologramarraytester_close",
-      "community": 16,
-      "community_name": "Hologram Controller Tests",
+      "community": 208,
+      "community_name": "HologramArrayTester",
       "norm_label": ".close()"
     },
     {
@@ -8685,8 +8685,8 @@
       "source_location": "L306",
       "_origin": "ast",
       "id": "hologram_controller_resolve_state_clips",
-      "community": 16,
-      "community_name": "Hologram Controller Tests",
+      "community": 205,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "resolve_state_clips()"
     },
     {
@@ -8696,8 +8696,8 @@
       "source_location": "L342",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": "hologramstatemanager"
     },
     {
@@ -8707,8 +8707,8 @@
       "source_location": "L364",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_init",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": ".__init__()"
     },
     {
@@ -8718,8 +8718,8 @@
       "source_location": "L393",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_is_connected",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": ".is_connected()"
     },
     {
@@ -8729,8 +8729,8 @@
       "source_location": "L398",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_configure",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": ".configure()"
     },
     {
@@ -8740,8 +8740,8 @@
       "source_location": "L428",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_disable",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 201,
+      "community_name": ".run",
       "norm_label": ".disable()"
     },
     {
@@ -8751,8 +8751,8 @@
       "source_location": "L435",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_execute",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": ".execute()"
     },
     {
@@ -8762,8 +8762,8 @@
       "source_location": "L463",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_start",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": ".start()"
     },
     {
@@ -8773,8 +8773,8 @@
       "source_location": "L474",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_set_state",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": ".set_state()"
     },
     {
@@ -8784,8 +8784,8 @@
       "source_location": "L485",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_close",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 201,
+      "community_name": ".run",
       "norm_label": ".close()"
     },
     {
@@ -8795,8 +8795,8 @@
       "source_location": "L507",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_run",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": "._run()"
     },
     {
@@ -8806,8 +8806,8 @@
       "source_location": "L527",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_apply",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": "._apply()"
     },
     {
@@ -8817,8 +8817,8 @@
       "source_location": "L550",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_ensure_connected",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": "._ensure_connected()"
     },
     {
@@ -8828,8 +8828,8 @@
       "source_location": "L575",
       "_origin": "ast",
       "id": "hologram_controller_hologramstatemanager_drop_connection",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": "._drop_connection()"
     },
     {
@@ -8839,8 +8839,8 @@
       "source_location": "L584",
       "_origin": "ast",
       "id": "hologram_controller_create_hologram_manager",
-      "community": 171,
-      "community_name": ".listen_once",
+      "community": 10,
+      "community_name": "Hologram Fan Controller",
       "norm_label": "create_hologram_manager()"
     },
     {
@@ -8850,8 +8850,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hologram_controller_rationale_1",
-      "community": 171,
-      "community_name": ".listen_once",
+      "community": 10,
+      "community_name": "Hologram Fan Controller",
       "norm_label": "=============================================================  controlador pytho"
     },
     {
@@ -8894,8 +8894,8 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "hologram_controller_rationale_85",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 201,
+      "community_name": ".run",
       "norm_label": "establece la conexion tcp con el holograma."
     },
     {
@@ -8905,8 +8905,8 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "hologram_controller_rationale_103",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 201,
+      "community_name": ".run",
       "norm_label": "cierra la conexion tcp limpiamente."
     },
     {
@@ -8938,8 +8938,8 @@
       "source_location": "L130",
       "_origin": "ast",
       "id": "hologram_controller_rationale_130",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 201,
+      "community_name": ".run",
       "norm_label": "detiene la rotacion y apaga el holograma. [stop]"
     },
     {
@@ -8982,8 +8982,8 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "hologram_controller_rationale_146",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": "salta directamente al video numero n de la playlist.          args:"
     },
     {
@@ -9037,8 +9037,8 @@
       "source_location": "L191",
       "_origin": "ast",
       "id": "hologram_controller_rationale_191",
-      "community": 171,
-      "community_name": ".listen_once",
+      "community": 10,
+      "community_name": "Hologram Fan Controller",
       "norm_label": "escanea la red local buscando hologramas missyou en el puerto 50200.      util c"
     },
     {
@@ -9048,8 +9048,8 @@
       "source_location": "L235",
       "_origin": "ast",
       "id": "hologram_controller_rationale_235",
-      "community": 16,
-      "community_name": "Hologram Controller Tests",
+      "community": 208,
+      "community_name": "HologramArrayTester",
       "norm_label": "envia un clip independiente a cada holograma de un arreglo.      este flujo es d"
     },
     {
@@ -9059,8 +9059,8 @@
       "source_location": "L258",
       "_origin": "ast",
       "id": "hologram_controller_rationale_258",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 201,
+      "community_name": ".run",
       "norm_label": "conecta cada unidad, reproduce su indice y devuelve el resultado."
     },
     {
@@ -9070,8 +9070,8 @@
       "source_location": "L278",
       "_origin": "ast",
       "id": "hologram_controller_rationale_278",
-      "community": 16,
-      "community_name": "Hologram Controller Tests",
+      "community": 208,
+      "community_name": "HologramArrayTester",
       "norm_label": "cierra las conexiones abiertas sin apagar unidades ya probadas."
     },
     {
@@ -9081,8 +9081,8 @@
       "source_location": "L307",
       "_origin": "ast",
       "id": "hologram_controller_rationale_307",
-      "community": 16,
-      "community_name": "Hologram Controller Tests",
+      "community": 205,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "construye el mapeo estado\u2192indice respetando el orden real de la playlist.      l"
     },
     {
@@ -9092,8 +9092,8 @@
       "source_location": "L343",
       "_origin": "ast",
       "id": "hologram_controller_rationale_343",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": "puente thread-safe entre los estados de la ia y los clips del holograma.      la"
     },
     {
@@ -9103,8 +9103,8 @@
       "source_location": "L394",
       "_origin": "ast",
       "id": "hologram_controller_rationale_394",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": "true cuando el gestor automatico tiene un socket tcp activo."
     },
     {
@@ -9114,8 +9114,8 @@
       "source_location": "L399",
       "_origin": "ast",
       "id": "hologram_controller_rationale_399",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": "aplica un destino tcp nuevo y activa el cambio automatico de clips."
     },
     {
@@ -9125,8 +9125,8 @@
       "source_location": "L429",
       "_origin": "ast",
       "id": "hologram_controller_rationale_429",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 201,
+      "community_name": ".run",
       "norm_label": "desconecta el dispositivo y desactiva los reintentos automaticos."
     },
     {
@@ -9136,8 +9136,8 @@
       "source_location": "L436",
       "_origin": "ast",
       "id": "hologram_controller_rationale_436",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": "compatibilidad con la api: ejecuta un comando usando la conexion compartida."
     },
     {
@@ -9147,8 +9147,8 @@
       "source_location": "L464",
       "_origin": "ast",
       "id": "hologram_controller_rationale_464",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": "arranca el hilo de control y deja el holograma en idle. no-op si esta deshabilit"
     },
     {
@@ -9158,8 +9158,8 @@
       "source_location": "L475",
       "_origin": "ast",
       "id": "hologram_controller_rationale_475",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": "solicita un cambio de estado del holograma. no bloquea ni lanza excepciones."
     },
     {
@@ -9169,8 +9169,8 @@
       "source_location": "L486",
       "_origin": "ast",
       "id": "hologram_controller_rationale_486",
-      "community": 10,
-      "community_name": "Hologram Fan Controller",
+      "community": 201,
+      "community_name": ".run",
       "norm_label": "detiene el hilo, apaga el giro y cierra la conexion limpiamente."
     },
     {
@@ -9180,8 +9180,8 @@
       "source_location": "L585",
       "_origin": "ast",
       "id": "hologram_controller_rationale_585",
-      "community": 171,
-      "community_name": ".listen_once",
+      "community": 10,
+      "community_name": "Hologram Fan Controller",
       "norm_label": "construye un hologramstatemanager a partir de variables de entorno.      variabl"
     },
     {
@@ -9334,8 +9334,8 @@
       "source_location": "L222",
       "_origin": "ast",
       "id": "llm_backend_get_selected_backend",
-      "community": 3,
-      "community_name": "Call Voice Camera Core",
+      "community": 35,
+      "community_name": "Appearance Skill",
       "norm_label": "get_selected_backend()"
     },
     {
@@ -9345,8 +9345,8 @@
       "source_location": "L237",
       "_origin": "ast",
       "id": "llm_backend_get_backend_status",
-      "community": 3,
-      "community_name": "Call Voice Camera Core",
+      "community": 68,
+      "community_name": "STT Record Transcribe",
       "norm_label": "get_backend_status()"
     },
     {
@@ -9378,8 +9378,8 @@
       "source_location": "L342",
       "_origin": "ast",
       "id": "llm_backend_candidate_backends",
-      "community": 3,
-      "community_name": "Call Voice Camera Core",
+      "community": 125,
+      "community_name": "FakeFan",
       "norm_label": "_candidate_backends()"
     },
     {
@@ -9389,8 +9389,8 @@
       "source_location": "L367",
       "_origin": "ast",
       "id": "llm_backend_local_only_reply",
-      "community": 3,
-      "community_name": "Call Voice Camera Core",
+      "community": 125,
+      "community_name": "FakeFan",
       "norm_label": "_local_only_reply()"
     },
     {
@@ -9411,8 +9411,8 @@
       "source_location": "L396",
       "_origin": "ast",
       "id": "llm_backend_build_messages",
-      "community": 3,
-      "community_name": "Call Voice Camera Core",
+      "community": 125,
+      "community_name": "FakeFan",
       "norm_label": "_build_messages()"
     },
     {
@@ -9642,8 +9642,8 @@
       "source_location": "L916",
       "_origin": "ast",
       "id": "llm_backend_is_mostly_english",
-      "community": 35,
-      "community_name": "Appearance Skill",
+      "community": 3,
+      "community_name": "Call Voice Camera Core",
       "norm_label": "_is_mostly_english()"
     },
     {
@@ -9653,8 +9653,8 @@
       "source_location": "L935",
       "_origin": "ast",
       "id": "llm_backend_postprocess_reply",
-      "community": 35,
-      "community_name": "Appearance Skill",
+      "community": 204,
+      "community_name": "pop_ready_speech",
       "norm_label": "_postprocess_reply()"
     },
     {
@@ -9675,8 +9675,8 @@
       "source_location": "L1011",
       "_origin": "ast",
       "id": "llm_backend_iter_reply_tokens",
-      "community": 3,
-      "community_name": "Call Voice Camera Core",
+      "community": 125,
+      "community_name": "FakeFan",
       "norm_label": "iter_reply_tokens()"
     },
     {
@@ -9719,8 +9719,8 @@
       "source_location": "L1217",
       "_origin": "ast",
       "id": "llm_backend_stream_llm_response",
-      "community": 3,
-      "community_name": "Call Voice Camera Core",
+      "community": 125,
+      "community_name": "FakeFan",
       "norm_label": "stream_llm_response()"
     },
     {
@@ -9774,8 +9774,8 @@
       "source_location": "L223",
       "_origin": "ast",
       "id": "llm_backend_rationale_223",
-      "community": 3,
-      "community_name": "Call Voice Camera Core",
+      "community": 35,
+      "community_name": "Appearance Skill",
       "norm_label": "backend efectivo segun la configuracion actual.      delega en :func:`provider_c"
     },
     {
@@ -9807,8 +9807,8 @@
       "source_location": "L343",
       "_origin": "ast",
       "id": "llm_backend_rationale_343",
-      "community": 3,
-      "community_name": "Call Voice Camera Core",
+      "community": 125,
+      "community_name": "FakeFan",
       "norm_label": "orden de intentos del llm, de mas a menos preferente.      primario -> otros pro"
     },
     {
@@ -9961,8 +9961,8 @@
       "source_location": "L917",
       "_origin": "ast",
       "id": "llm_backend_rationale_917",
-      "community": 35,
-      "community_name": "Appearance Skill",
+      "community": 3,
+      "community_name": "Call Voice Camera Core",
       "norm_label": "heuristic: return true only when the text is clearly english.      se exige evid"
     },
     {
@@ -9972,8 +9972,8 @@
       "source_location": "L936",
       "_origin": "ast",
       "id": "llm_backend_rationale_936",
-      "community": 35,
-      "community_name": "Appearance Skill",
+      "community": 204,
+      "community_name": "pop_ready_speech",
       "norm_label": "clean up llm response: strip thinking blocks and handle language issues."
     },
     {
@@ -9994,8 +9994,8 @@
       "source_location": "L1018",
       "_origin": "ast",
       "id": "llm_backend_rationale_1018",
-      "community": 3,
-      "community_name": "Call Voice Camera Core",
+      "community": 125,
+      "community_name": "FakeFan",
       "norm_label": "genera deltas de texto del llm en cuanto llegan (sincrono).      usado por el bu"
     },
     {
@@ -10027,8 +10027,8 @@
       "source_location": "L1220",
       "_origin": "ast",
       "id": "llm_backend_rationale_1220",
-      "community": 3,
-      "community_name": "Call Voice Camera Core",
+      "community": 125,
+      "community_name": "FakeFan",
       "norm_label": "generador asincrono para transmitir la respuesta del llm en tiempo real.      ``"
     },
     {
@@ -10258,8 +10258,8 @@
       "source_location": "L612",
       "_origin": "ast",
       "id": "main_get_unev_content",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "community": 197,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "get_unev_content()"
     },
     {
@@ -10291,7 +10291,7 @@
       "source_location": "L638",
       "_origin": "ast",
       "id": "main_set_camera",
-      "community": 169,
+      "community": 210,
       "community_name": "set_camera",
       "norm_label": "set_camera()"
     },
@@ -10896,8 +10896,8 @@
       "source_location": "L1354",
       "_origin": "ast",
       "id": "main_websocket_chat_endpoint",
-      "community": 169,
-      "community_name": "set_camera",
+      "community": 203,
+      "community_name": "request_listen",
       "norm_label": "websocket_chat_endpoint()"
     },
     {
@@ -10907,8 +10907,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "websocket",
-      "community": 169,
-      "community_name": "set_camera",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": "websocket"
     },
     {
@@ -10984,8 +10984,8 @@
       "source_location": "L613",
       "_origin": "ast",
       "id": "main_rationale_613",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "community": 197,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "contenido institucional de unev (fuente unica editable)."
     },
     {
@@ -11006,7 +11006,7 @@
       "source_location": "L639",
       "_origin": "ast",
       "id": "main_rationale_639",
-      "community": 169,
+      "community": 210,
       "community_name": "set_camera",
       "norm_label": "enciende o apaga la camara.      por defecto, *apagar en la ui* **no** detiene e"
     },
@@ -11039,8 +11039,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "metrics",
-      "community": 125,
-      "community_name": "FakeFan",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "metrics.py"
     },
     {
@@ -11050,8 +11050,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "metrics_metrics_enabled",
-      "community": 125,
-      "community_name": "FakeFan",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "metrics_enabled()"
     },
     {
@@ -11061,8 +11061,8 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "metrics_local_skill_would_answer",
-      "community": 125,
-      "community_name": "FakeFan",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "_local_skill_would_answer()"
     },
     {
@@ -11072,8 +11072,8 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "metrics_model_for",
-      "community": 125,
-      "community_name": "FakeFan",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "_model_for()"
     },
     {
@@ -11094,8 +11094,8 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "metrics_turnmetrics_init",
-      "community": 125,
-      "community_name": "FakeFan",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": ".__init__()"
     },
     {
@@ -11127,8 +11127,8 @@
       "source_location": "L153",
       "_origin": "ast",
       "id": "metrics_turnmetrics_note_token",
-      "community": 154,
-      "community_name": "camera_feed_subscribe",
+      "community": 125,
+      "community_name": "FakeFan",
       "norm_label": ".note_token()"
     },
     {
@@ -11138,8 +11138,8 @@
       "source_location": "L170",
       "_origin": "ast",
       "id": "metrics_turnmetrics_ms",
-      "community": 125,
-      "community_name": "FakeFan",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "._ms()"
     },
     {
@@ -11149,8 +11149,8 @@
       "source_location": "L173",
       "_origin": "ast",
       "id": "metrics_turnmetrics_as_dict",
-      "community": 125,
-      "community_name": "FakeFan",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": ".as_dict()"
     },
     {
@@ -11160,8 +11160,8 @@
       "source_location": "L189",
       "_origin": "ast",
       "id": "metrics_turnmetrics_emit",
-      "community": 125,
-      "community_name": "FakeFan",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": ".emit()"
     },
     {
@@ -11171,8 +11171,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "metrics_rationale_1",
-      "community": 125,
-      "community_name": "FakeFan",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "metrica por turno: una linea estructurada, un solo punto de emision.  por que ex"
     },
     {
@@ -11182,8 +11182,8 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "metrics_rationale_59",
-      "community": 125,
-      "community_name": "FakeFan",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "\u00bfemitir la linea de metrica? activo por defecto.      una linea por turno en un"
     },
     {
@@ -11193,8 +11193,8 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "metrics_rationale_69",
-      "community": 125,
-      "community_name": "FakeFan",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "\u00bfel router local tenia respuesta para esta pregunta?      se consulta **aparte**"
     },
     {
@@ -11204,8 +11204,8 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "metrics_rationale_90",
-      "community": 125,
-      "community_name": "FakeFan",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "modelo efectivo del backend, sin claves. ``none`` si no aplica."
     },
     {
@@ -11248,8 +11248,8 @@
       "source_location": "L154",
       "_origin": "ast",
       "id": "metrics_rationale_154",
-      "community": 154,
-      "community_name": "camera_feed_subscribe",
+      "community": 125,
+      "community_name": "FakeFan",
       "norm_label": "un trozo de respuesta visible; marca los dos hitos de latencia."
     },
     {
@@ -11259,8 +11259,8 @@
       "source_location": "L174",
       "_origin": "ast",
       "id": "metrics_rationale_174",
-      "community": 125,
-      "community_name": "FakeFan",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "la metrica ya resuelta. separada de `emit` para poder testearla."
     },
     {
@@ -11270,8 +11270,8 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "metrics_rationale_190",
-      "community": 125,
-      "community_name": "FakeFan",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "cierra el turno e imprime la linea. llamarla dos veces no duplica.          la i"
     },
     {
@@ -11844,8 +11844,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_setup_hologram",
-      "community": 114,
-      "community_name": "get_stt_status",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "setup_hologram.py"
     },
     {
@@ -11855,8 +11855,8 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "scripts_setup_hologram_print_header",
-      "community": 114,
-      "community_name": "get_stt_status",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "print_header()"
     },
     {
@@ -11866,8 +11866,8 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "scripts_setup_hologram_update_env_file",
-      "community": 114,
-      "community_name": "get_stt_status",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "update_env_file()"
     },
     {
@@ -11877,8 +11877,8 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "scripts_setup_hologram_select_brain",
-      "community": 114,
-      "community_name": "get_stt_status",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "select_brain()"
     },
     {
@@ -11888,8 +11888,8 @@
       "source_location": "L189",
       "_origin": "ast",
       "id": "scripts_setup_hologram_select_ears",
-      "community": 114,
-      "community_name": "get_stt_status",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "select_ears()"
     },
     {
@@ -11899,8 +11899,8 @@
       "source_location": "L223",
       "_origin": "ast",
       "id": "scripts_setup_hologram_configure_vision",
-      "community": 114,
-      "community_name": "get_stt_status",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "configure_vision()"
     },
     {
@@ -11910,8 +11910,8 @@
       "source_location": "L248",
       "_origin": "ast",
       "id": "scripts_setup_hologram_run_setup",
-      "community": 114,
-      "community_name": "get_stt_status",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "run_setup()"
     },
     {
@@ -11921,8 +11921,8 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "scripts_setup_hologram_rationale_66",
-      "community": 114,
-      "community_name": "get_stt_status",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "imprime el header estilo 'hermes setup'."
     },
     {
@@ -11932,8 +11932,8 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "scripts_setup_hologram_rationale_104",
-      "community": 114,
-      "community_name": "get_stt_status",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "flujo interactivo para configurar el cerebro (llm local o cloud)."
     },
     {
@@ -11943,8 +11943,8 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "scripts_setup_hologram_rationale_190",
-      "community": 114,
-      "community_name": "get_stt_status",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "flujo interactivo para configurar los oidos (whisper)."
     },
     {
@@ -11954,8 +11954,8 @@
       "source_location": "L224",
       "_origin": "ast",
       "id": "scripts_setup_hologram_rationale_224",
-      "community": 114,
-      "community_name": "get_stt_status",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "flujo interactivo para la vision (yoloe-26n open-vocab + opencv)."
     },
     {
@@ -11965,8 +11965,8 @@
       "source_location": "L249",
       "_origin": "ast",
       "id": "scripts_setup_hologram_rationale_249",
-      "community": 114,
-      "community_name": "get_stt_status",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "ejecuta el asistente interactivo de configuracion completo."
     },
     {
@@ -12295,8 +12295,8 @@
       "source_location": "L193",
       "_origin": "ast",
       "id": "skills_honduras_get_university_context",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "community": 114,
+      "community_name": "get_stt_status",
       "norm_label": "get_university_context()"
     },
     {
@@ -12394,8 +12394,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_router",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "community": 197,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "router.py"
     },
     {
@@ -12471,8 +12471,8 @@
       "source_location": "L351",
       "_origin": "ast",
       "id": "skills_unev_content_get_unev_info",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "community": 197,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "get_unev_info()"
     },
     {
@@ -12559,8 +12559,8 @@
       "source_location": "L352",
       "_origin": "ast",
       "id": "skills_unev_content_rationale_352",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "community": 197,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "contenido vigente (cacheado). llamado por las skills en cada respuesta."
     },
     {
@@ -12603,15 +12603,15 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_university",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "community": 197,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "university.py"
     },
     {
       "label": "invalidate_context_cache()",
       "file_type": "code",
       "source_file": "skills/university.py",
-      "source_location": "L27",
+      "source_location": "L40",
       "_origin": "ast",
       "id": "skills_university_invalidate_context_cache",
       "community": 60,
@@ -12622,88 +12622,132 @@
       "label": "get_university_summary()",
       "file_type": "code",
       "source_file": "skills/university.py",
-      "source_location": "L33",
+      "source_location": "L53",
       "_origin": "ast",
       "id": "skills_university_get_university_summary",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "community": 197,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "get_university_summary()"
     },
     {
       "label": "get_programs_summary()",
       "file_type": "code",
       "source_file": "skills/university.py",
-      "source_location": "L50",
+      "source_location": "L70",
       "_origin": "ast",
       "id": "skills_university_get_programs_summary",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "community": 197,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "get_programs_summary()"
     },
     {
       "label": "get_program_info()",
       "file_type": "code",
       "source_file": "skills/university.py",
-      "source_location": "L62",
+      "source_location": "L82",
       "_origin": "ast",
       "id": "skills_university_get_program_info",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "community": 197,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "get_program_info()"
     },
     {
       "label": "get_admission_info()",
       "file_type": "code",
       "source_file": "skills/university.py",
-      "source_location": "L77",
+      "source_location": "L97",
       "_origin": "ast",
       "id": "skills_university_get_admission_info",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "community": 197,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "get_admission_info()"
     },
     {
       "label": "get_location_info()",
       "file_type": "code",
       "source_file": "skills/university.py",
-      "source_location": "L95",
+      "source_location": "L115",
       "_origin": "ast",
       "id": "skills_university_get_location_info",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "community": 197,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "get_location_info()"
     },
     {
       "label": "get_approval_info()",
       "file_type": "code",
       "source_file": "skills/university.py",
-      "source_location": "L100",
+      "source_location": "L120",
       "_origin": "ast",
       "id": "skills_university_get_approval_info",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "community": 197,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "get_approval_info()"
     },
     {
       "label": "get_website_info()",
       "file_type": "code",
       "source_file": "skills/university.py",
-      "source_location": "L104",
+      "source_location": "L124",
       "_origin": "ast",
       "id": "skills_university_get_website_info",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "community": 197,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "get_website_info()"
+    },
+    {
+      "label": "context_section_keys()",
+      "file_type": "code",
+      "source_file": "skills/university.py",
+      "source_location": "L180",
+      "_origin": "ast",
+      "id": "skills_university_context_section_keys",
+      "community": 207,
+      "community_name": "get_context_sections",
+      "norm_label": "context_section_keys()"
+    },
+    {
+      "label": "_warn_unknown_section()",
+      "file_type": "code",
+      "source_file": "skills/university.py",
+      "source_location": "L189",
+      "_origin": "ast",
+      "id": "skills_university_warn_unknown_section",
+      "community": 207,
+      "community_name": "get_context_sections",
+      "norm_label": "_warn_unknown_section()"
+    },
+    {
+      "label": "_rendered_sections()",
+      "file_type": "code",
+      "source_file": "skills/university.py",
+      "source_location": "L202",
+      "_origin": "ast",
+      "id": "skills_university_rendered_sections",
+      "community": 207,
+      "community_name": "get_context_sections",
+      "norm_label": "_rendered_sections()"
+    },
+    {
+      "label": "get_context_sections()",
+      "file_type": "code",
+      "source_file": "skills/university.py",
+      "source_location": "L241",
+      "_origin": "ast",
+      "id": "skills_university_get_context_sections",
+      "community": 207,
+      "community_name": "get_context_sections",
+      "norm_label": "get_context_sections()"
     },
     {
       "label": "get_university_context()",
       "file_type": "code",
       "source_file": "skills/university.py",
-      "source_location": "L138",
+      "source_location": "L282",
       "_origin": "ast",
       "id": "skills_university_get_university_context",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "community": 35,
+      "community_name": "Appearance Skill",
       "norm_label": "get_university_context()"
     },
     {
@@ -12713,41 +12757,85 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "skills_university_rationale_1",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "community": 197,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "respuestas sobre unev. los datos provienen de la fuente unica y editable ``skill"
     },
     {
-      "label": "Limpia la cach\u00e9 de ``get_university_context`` (p. ej. tras editar JSON).",
+      "label": "Limpia **todas** las cach\u00e9s de contexto (p. ej. tras editar el JSON).      Es el",
       "file_type": "rationale",
       "source_file": "skills/university.py",
-      "source_location": "L28",
+      "source_location": "L41",
       "_origin": "ast",
-      "id": "skills_university_rationale_28",
+      "id": "skills_university_rationale_41",
       "community": 60,
       "community_name": "Detector Overlay Feed",
-      "norm_label": "limpia la cache de ``get_university_context`` (p. ej. tras editar json)."
+      "norm_label": "limpia **todas** las caches de contexto (p. ej. tras editar el json).      es el"
     },
     {
       "label": "Admisi\u00f3n desde la fuente editable (evita texto duplicado/desactualizado).",
       "file_type": "rationale",
       "source_file": "skills/university.py",
-      "source_location": "L78",
+      "source_location": "L98",
       "_origin": "ast",
-      "id": "skills_university_rationale_78",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "id": "skills_university_rationale_98",
+      "community": 197,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "admision desde la fuente editable (evita texto duplicado/desactualizado)."
+    },
+    {
+      "label": "Todas las claves v\u00e1lidas, en orden de lectura.      Los 25 campos de ``TEXT_FIEL",
+      "file_type": "rationale",
+      "source_file": "skills/university.py",
+      "source_location": "L181",
+      "_origin": "ast",
+      "id": "skills_university_rationale_181",
+      "community": 207,
+      "community_name": "get_context_sections",
+      "norm_label": "todas las claves validas, en orden de lectura.      los 25 campos de ``text_fiel"
+    },
+    {
+      "label": "Avisa una vez por clave desconocida, sin tumbar el turno.      Un router que pid",
+      "file_type": "rationale",
+      "source_file": "skills/university.py",
+      "source_location": "L190",
+      "_origin": "ast",
+      "id": "skills_university_rationale_190",
+      "community": 207,
+      "community_name": "get_context_sections",
+      "norm_label": "avisa una vez por clave desconocida, sin tumbar el turno.      un router que pid"
+    },
+    {
+      "label": "Cada secci\u00f3n ya formateada, por clave (cacheado).      Un campo vac\u00edo en la fuen",
+      "file_type": "rationale",
+      "source_file": "skills/university.py",
+      "source_location": "L203",
+      "_origin": "ast",
+      "id": "skills_university_rationale_203",
+      "community": 207,
+      "community_name": "get_context_sections",
+      "norm_label": "cada seccion ya formateada, por clave (cacheado).      un campo vacio en la fuen"
+    },
+    {
+      "label": "Contexto institucional con **s\u00f3lo** las secciones pedidas.      ``keys`` es cual",
+      "file_type": "rationale",
+      "source_file": "skills/university.py",
+      "source_location": "L242",
+      "_origin": "ast",
+      "id": "skills_university_rationale_242",
+      "community": 207,
+      "community_name": "get_context_sections",
+      "norm_label": "contexto institucional con **solo** las secciones pedidas.      ``keys`` es cual"
     },
     {
       "label": "Contexto de sistema UNEV + Honduras (cacheado entre turnos del LLM).      Entreg",
       "file_type": "rationale",
       "source_file": "skills/university.py",
-      "source_location": "L139",
+      "source_location": "L283",
       "_origin": "ast",
-      "id": "skills_university_rationale_139",
-      "community": 126,
-      "community_name": "@testing-library/user-event",
+      "id": "skills_university_rationale_283",
+      "community": 35,
+      "community_name": "Appearance Skill",
       "norm_label": "contexto de sistema unev + honduras (cacheado entre turnos del llm).      entreg"
     },
     {
@@ -12812,8 +12900,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "stt_listener",
-      "community": 200,
-      "community_name": "PresenceManager",
+      "community": 63,
+      "community_name": "Camera Context Builder",
       "norm_label": "listener.py"
     },
     {
@@ -12823,8 +12911,8 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "stt_listener_resolve_stt_language",
-      "community": 200,
-      "community_name": "PresenceManager",
+      "community": 63,
+      "community_name": "Camera Context Builder",
       "norm_label": "_resolve_stt_language()"
     },
     {
@@ -12834,8 +12922,8 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "stt_listener_truncate_stt_prompt",
-      "community": 197,
-      "community_name": "test_hologram_controller.py",
+      "community": 63,
+      "community_name": "Camera Context Builder",
       "norm_label": "_truncate_stt_prompt()"
     },
     {
@@ -12856,8 +12944,8 @@
       "source_location": "L196",
       "_origin": "ast",
       "id": "stt_listener_normalize_hotword",
-      "community": 200,
-      "community_name": "PresenceManager",
+      "community": 63,
+      "community_name": "Camera Context Builder",
       "norm_label": "_normalize_hotword()"
     },
     {
@@ -12900,8 +12988,8 @@
       "source_location": "L342",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener",
-      "community": 170,
-      "community_name": "test_llm",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": "whisperlistener"
     },
     {
@@ -12911,8 +12999,8 @@
       "source_location": "L362",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_init",
-      "community": 200,
-      "community_name": "PresenceManager",
+      "community": 63,
+      "community_name": "Camera Context Builder",
       "norm_label": ".__init__()"
     },
     {
@@ -13076,8 +13164,8 @@
       "source_location": "L1202",
       "_origin": "ast",
       "id": "stt_listener_whisperlistener_is_available",
-      "community": 170,
-      "community_name": "test_llm",
+      "community": 214,
+      "community_name": ".is_available",
       "norm_label": ".is_available()"
     },
     {
@@ -13087,8 +13175,8 @@
       "source_location": "L1216",
       "_origin": "ast",
       "id": "stt_listener_get_stt_status",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 63,
+      "community_name": "Camera Context Builder",
       "norm_label": "get_stt_status()"
     },
     {
@@ -13098,8 +13186,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "stt_listener_rationale_1",
-      "community": 200,
-      "community_name": "PresenceManager",
+      "community": 63,
+      "community_name": "Camera Context Builder",
       "norm_label": "speech-to-text listener using faster-whisper and sounddevice.  regla de oro a: t"
     },
     {
@@ -13109,8 +13197,8 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "stt_listener_rationale_46",
-      "community": 200,
-      "community_name": "PresenceManager",
+      "community": 63,
+      "community_name": "Camera Context Builder",
       "norm_label": "idioma efectivo para stt. por defecto y en duda: espanol (``es``).      ``whispe"
     },
     {
@@ -13120,8 +13208,8 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "stt_listener_rationale_66",
-      "community": 197,
-      "community_name": "test_hologram_controller.py",
+      "community": 63,
+      "community_name": "Camera Context Builder",
       "norm_label": "corta el prompt al tope, preferiblemente en un espacio (no parte un termino)."
     },
     {
@@ -13131,8 +13219,8 @@
       "source_location": "L197",
       "_origin": "ast",
       "id": "stt_listener_rationale_197",
-      "community": 200,
-      "community_name": "PresenceManager",
+      "community": 63,
+      "community_name": "Camera Context Builder",
       "norm_label": "limpia un termino de hotword (parentesis rotos, puntuacion, basura)."
     },
     {
@@ -13175,8 +13263,8 @@
       "source_location": "L343",
       "_origin": "ast",
       "id": "stt_listener_rationale_343",
-      "community": 170,
-      "community_name": "test_llm",
+      "community": 65,
+      "community_name": "LLM Test Service",
       "norm_label": "record from the microphone and transcribe with faster-whisper.      parameters"
     },
     {
@@ -13307,8 +13395,8 @@
       "source_location": "L1203",
       "_origin": "ast",
       "id": "stt_listener_rationale_1203",
-      "community": 170,
-      "community_name": "test_llm",
+      "community": 214,
+      "community_name": ".is_available",
       "norm_label": "return true if sounddevice and faster-whisper (or groq if selected) are importab"
     },
     {
@@ -13318,8 +13406,8 @@
       "source_location": "L1217",
       "_origin": "ast",
       "id": "stt_listener_rationale_1217",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 63,
+      "community_name": "Camera Context Builder",
       "norm_label": "return a human-readable status string for the stt subsystem."
     },
     {
@@ -13340,8 +13428,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 206,
+      "community_name": "WakeWordDetector",
       "norm_label": "wakeworddetector"
     },
     {
@@ -13351,8 +13439,8 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_init",
-      "community": 200,
-      "community_name": "PresenceManager",
+      "community": 206,
+      "community_name": "WakeWordDetector",
       "norm_label": ".__init__()"
     },
     {
@@ -13362,8 +13450,8 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_load_model",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 206,
+      "community_name": "WakeWordDetector",
       "norm_label": "._load_model()"
     },
     {
@@ -13373,8 +13461,8 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_find_bundled_model",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 206,
+      "community_name": "WakeWordDetector",
       "norm_label": "._find_bundled_model()"
     },
     {
@@ -13384,8 +13472,8 @@
       "source_location": "L143",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_wait_for_wake",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 206,
+      "community_name": "WakeWordDetector",
       "norm_label": ".wait_for_wake()"
     },
     {
@@ -13395,8 +13483,8 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "stt_wakeword_wakeworddetector_is_available",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 206,
+      "community_name": "WakeWordDetector",
       "norm_label": ".is_available()"
     },
     {
@@ -13417,8 +13505,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "stt_wakeword_rationale_39",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 206,
+      "community_name": "WakeWordDetector",
       "norm_label": "detecta una palabra clave en streaming con openwakeword."
     },
     {
@@ -13428,8 +13516,8 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "stt_wakeword_rationale_123",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 206,
+      "community_name": "WakeWordDetector",
       "norm_label": "resuelve un nombre corto a la ruta de un .onnx incluido (0.4.x).          ej.: `"
     },
     {
@@ -13439,8 +13527,8 @@
       "source_location": "L144",
       "_origin": "ast",
       "id": "stt_wakeword_rationale_144",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 206,
+      "community_name": "WakeWordDetector",
       "norm_label": "bloquea hasta detectar la palabra clave.          parameters         ----------"
     },
     {
@@ -13450,8 +13538,8 @@
       "source_location": "L220",
       "_origin": "ast",
       "id": "stt_wakeword_rationale_220",
-      "community": 41,
-      "community_name": "Frontend Theme Toast",
+      "community": 206,
+      "community_name": "WakeWordDetector",
       "norm_label": "return true if openwakeword and sounddevice are importable."
     },
     {
@@ -13472,8 +13560,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_test_app_services_fakews",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 72,
+      "community_name": "README.md",
       "norm_label": "fakews"
     },
     {
@@ -13483,8 +13571,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "tests_test_app_services_fakews_init",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 72,
+      "community_name": "README.md",
       "norm_label": ".__init__()"
     },
     {
@@ -13494,8 +13582,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "tests_test_app_services_fakews_send_json",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 72,
+      "community_name": "README.md",
       "norm_label": ".send_json()"
     },
     {
@@ -13571,8 +13659,8 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "tests_test_app_services_test_connection_manager_broadcasts_to_all",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 72,
+      "community_name": "README.md",
       "norm_label": "test_connection_manager_broadcasts_to_all()"
     },
     {
@@ -13582,8 +13670,8 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "tests_test_app_services_test_connection_manager_drops_dead_socket",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 72,
+      "community_name": "README.md",
       "norm_label": "test_connection_manager_drops_dead_socket()"
     },
     {
@@ -13593,8 +13681,8 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "tests_test_app_services_test_broadcast_threadsafe_bridges_thread_to_loop",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 72,
+      "community_name": "README.md",
       "norm_label": "test_broadcast_threadsafe_bridges_thread_to_loop()"
     },
     {
@@ -13604,8 +13692,8 @@
       "source_location": "L127",
       "_origin": "ast",
       "id": "tests_test_app_services_test_broadcast_threadsafe_is_silent_without_bound_loop",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 72,
+      "community_name": "README.md",
       "norm_label": "test_broadcast_threadsafe_is_silent_without_bound_loop()"
     },
     {
@@ -13725,8 +13813,8 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "tests_test_app_services_rationale_93",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 72,
+      "community_name": "README.md",
       "norm_label": "puente hilo\u2192loop: un hilo no-async difunde encolando en el loop ligado.      es"
     },
     {
@@ -13736,8 +13824,8 @@
       "source_location": "L128",
       "_origin": "ast",
       "id": "tests_test_app_services_rationale_128",
-      "community": 174,
-      "community_name": "build_camera_context",
+      "community": 72,
+      "community_name": "README.md",
       "norm_label": "sin loop ligado (arranque incompleto), no revienta el hilo; se descarta."
     },
     {
@@ -13967,8 +14055,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_camera_stop",
-      "community": 70,
-      "community_name": "Camera Context Prompt",
+      "community": 202,
+      "community_name": ".analyze_frame",
       "norm_label": "test_camera_stop.py"
     },
     {
@@ -13978,8 +14066,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_test_camera_stop_test_run_continuous_stops_and_releases_camera",
-      "community": 70,
-      "community_name": "Camera Context Prompt",
+      "community": 202,
+      "community_name": ".analyze_frame",
       "norm_label": "test_run_continuous_stops_and_releases_camera()"
     },
     {
@@ -13989,8 +14077,8 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "tests_test_camera_stop_test_stop_is_idempotent_before_run",
-      "community": 70,
-      "community_name": "Camera Context Prompt",
+      "community": 202,
+      "community_name": ".analyze_frame",
       "norm_label": "test_stop_is_idempotent_before_run()"
     },
     {
@@ -14000,9 +14088,207 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_camera_stop_rationale_1",
-      "community": 70,
-      "community_name": "Camera Context Prompt",
+      "community": 202,
+      "community_name": ".analyze_frame",
       "norm_label": "test del mecanismo de parada/liberacion de la camara (fase b).  no requiere cama"
+    },
+    {
+      "label": "test_context_sections.py",
+      "file_type": "code",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_context_sections",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "test_context_sections.py"
+    },
+    {
+      "label": "contexto_limpio()",
+      "file_type": "code",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "tests_test_context_sections_contexto_limpio",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "contexto_limpio()"
+    },
+    {
+      "label": "test_todas_las_secciones_reproducen_el_bloque_actual()",
+      "file_type": "code",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "tests_test_context_sections_test_todas_las_secciones_reproducen_el_bloque_actual",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "test_todas_las_secciones_reproducen_el_bloque_actual()"
+    },
+    {
+      "label": "test_subconjunto_contiene_solo_lo_pedido()",
+      "file_type": "code",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L40",
+      "_origin": "ast",
+      "id": "tests_test_context_sections_test_subconjunto_contiene_solo_lo_pedido",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "test_subconjunto_contiene_solo_lo_pedido()"
+    },
+    {
+      "label": "test_orden_de_lectura_estable()",
+      "file_type": "code",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L53",
+      "_origin": "ast",
+      "id": "tests_test_context_sections_test_orden_de_lectura_estable",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "test_orden_de_lectura_estable()"
+    },
+    {
+      "label": "test_campos_y_etiquetas_en_sincronia()",
+      "file_type": "code",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L70",
+      "_origin": "ast",
+      "id": "tests_test_context_sections_test_campos_y_etiquetas_en_sincronia",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "test_campos_y_etiquetas_en_sincronia()"
+    },
+    {
+      "label": "test_honduras_es_opcional()",
+      "file_type": "code",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L80",
+      "_origin": "ast",
+      "id": "tests_test_context_sections_test_honduras_es_opcional",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "test_honduras_es_opcional()"
+    },
+    {
+      "label": "test_invalidar_cache_limpia_todo()",
+      "file_type": "code",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L95",
+      "_origin": "ast",
+      "id": "tests_test_context_sections_test_invalidar_cache_limpia_todo",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "test_invalidar_cache_limpia_todo()"
+    },
+    {
+      "label": "test_claves_desconocidas()",
+      "file_type": "code",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L118",
+      "_origin": "ast",
+      "id": "tests_test_context_sections_test_claves_desconocidas",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "test_claves_desconocidas()"
+    },
+    {
+      "label": "test_seccion_vacia_se_omite()",
+      "file_type": "code",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L134",
+      "_origin": "ast",
+      "id": "tests_test_context_sections_test_seccion_vacia_se_omite",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "test_seccion_vacia_se_omite()"
+    },
+    {
+      "label": "Tests del selector de secciones de contexto (WAVE-04).  Son los **primeros tests",
+      "file_type": "rationale",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_context_sections_rationale_1",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "tests del selector de secciones de contexto (wave-04).  son los **primeros tests"
+    },
+    {
+      "label": "Cach\u00e9s limpias antes y despu\u00e9s de cada caso.",
+      "file_type": "rationale",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "tests_test_context_sections_rationale_24",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "caches limpias antes y despues de cada caso."
+    },
+    {
+      "label": "Paridad exacta: mismo texto, car\u00e1cter por car\u00e1cter.",
+      "file_type": "rationale",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L31",
+      "_origin": "ast",
+      "id": "tests_test_context_sections_rationale_31",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "paridad exacta: mismo texto, caracter por caracter."
+    },
+    {
+      "label": "El orden de salida es el de TEXT_FIELDS, no el de las claves de entrada.",
+      "file_type": "rationale",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L54",
+      "_origin": "ast",
+      "id": "tests_test_context_sections_rationale_54",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "el orden de salida es el de text_fields, no el de las claves de entrada."
+    },
+    {
+      "label": "Guardarra\u00edl permanente: 25 campos, 25 etiquetas, mismo orden.      Sin esto, a\u00f1a",
+      "file_type": "rationale",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L71",
+      "_origin": "ast",
+      "id": "tests_test_context_sections_rationale_71",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "guardarrail permanente: 25 campos, 25 etiquetas, mismo orden.      sin esto, ana"
+    },
+    {
+      "label": "Con cach\u00e9 por secci\u00f3n, olvidar limpiarla es el fallo probable de WAVE-04.",
+      "file_type": "rationale",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L96",
+      "_origin": "ast",
+      "id": "tests_test_context_sections_rationale_96",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "con cache por seccion, olvidar limpiarla es el fallo probable de wave-04."
+    },
+    {
+      "label": "Se ignoran y se avisan una sola vez; nunca tumban el turno.",
+      "file_type": "rationale",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L119",
+      "_origin": "ast",
+      "id": "tests_test_context_sections_rationale_119",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "se ignoran y se avisan una sola vez; nunca tumban el turno."
+    },
+    {
+      "label": "Un campo vac\u00edo no produce una l\u00ednea `- Etiqueta: ` colgada.",
+      "file_type": "rationale",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L135",
+      "_origin": "ast",
+      "id": "tests_test_context_sections_rationale_135",
+      "community": 114,
+      "community_name": "get_stt_status",
+      "norm_label": "un campo vacio no produce una linea `- etiqueta: ` colgada."
     },
     {
       "label": "test_cot_filter.py",
@@ -14572,8 +14858,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "tests_test_hologram_api_setup_runtime",
-      "community": 145,
-      "community_name": "university.py",
+      "community": 6,
+      "community_name": "WebSocket Connection Manager",
       "norm_label": "setup_runtime()"
     },
     {
@@ -14583,8 +14869,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_hologram_api_py_path",
-      "community": 145,
-      "community_name": "university.py",
+      "community": 6,
+      "community_name": "WebSocket Connection Manager",
       "norm_label": "path"
     },
     {
@@ -14671,8 +14957,8 @@
       "source_location": "L147",
       "_origin": "ast",
       "id": "tests_test_hologram_api_test_hologram_token_gate_protects_read_and_mutation_when_enabled",
-      "community": 145,
-      "community_name": "university.py",
+      "community": 6,
+      "community_name": "WebSocket Connection Manager",
       "norm_label": "test_hologram_token_gate_protects_read_and_mutation_when_enabled()"
     },
     {
@@ -14748,8 +15034,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_hologram_controller",
-      "community": 16,
-      "community_name": "Hologram Controller Tests",
+      "community": 205,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "test_hologram_controller.py"
     },
     {
@@ -14913,8 +15199,8 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "tests_test_hologram_controller_wait_for_event",
-      "community": 16,
-      "community_name": "Hologram Controller Tests",
+      "community": 205,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "wait_for_event()"
     },
     {
@@ -14924,8 +15210,8 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "tests_test_hologram_controller_test_configured_manager_applies_ai_state_clips",
-      "community": 16,
-      "community_name": "Hologram Controller Tests",
+      "community": 205,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "test_configured_manager_applies_ai_state_clips()"
     },
     {
@@ -14935,8 +15221,8 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "tests_test_hologram_controller_test_manager_rejects_invalid_connection_settings",
-      "community": 16,
-      "community_name": "Hologram Controller Tests",
+      "community": 42,
+      "community_name": "Detached Windows UI",
       "norm_label": "test_manager_rejects_invalid_connection_settings()"
     },
     {
@@ -14946,8 +15232,8 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "tests_test_hologram_controller_test_resolve_state_clips_defaults_when_env_empty",
-      "community": 16,
-      "community_name": "Hologram Controller Tests",
+      "community": 205,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "test_resolve_state_clips_defaults_when_env_empty()"
     },
     {
@@ -14957,8 +15243,8 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "tests_test_hologram_controller_test_resolve_state_clips_honors_playlist_order_overrides",
-      "community": 16,
-      "community_name": "Hologram Controller Tests",
+      "community": 205,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "test_resolve_state_clips_honors_playlist_order_overrides()"
     },
     {
@@ -14968,8 +15254,8 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "tests_test_hologram_controller_test_resolve_state_clips_preserves_explicit_zero",
-      "community": 16,
-      "community_name": "Hologram Controller Tests",
+      "community": 205,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "test_resolve_state_clips_preserves_explicit_zero()"
     },
     {
@@ -14979,8 +15265,8 @@
       "source_location": "L114",
       "_origin": "ast",
       "id": "tests_test_hologram_controller_test_resolve_state_clips_ignores_invalid_values",
-      "community": 16,
-      "community_name": "Hologram Controller Tests",
+      "community": 205,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "test_resolve_state_clips_ignores_invalid_values()"
     },
     {
@@ -14990,8 +15276,8 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "tests_test_hologram_controller_test_configured_manager_uses_custom_clip_map",
-      "community": 16,
-      "community_name": "Hologram Controller Tests",
+      "community": 205,
+      "community_name": "test_hologram_controller.py",
       "norm_label": "test_configured_manager_uses_custom_clip_map()"
     },
     {
@@ -15001,8 +15287,8 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "tests_test_hologram_controller_test_array_tester_sends_a_different_clip_to_each_hologram",
-      "community": 16,
-      "community_name": "Hologram Controller Tests",
+      "community": 208,
+      "community_name": "HologramArrayTester",
       "norm_label": "test_array_tester_sends_a_different_clip_to_each_hologram()"
     },
     {
@@ -15771,8 +16057,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": "test_hologram_zero_index.py"
     },
     {
@@ -15782,8 +16068,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_fan",
-      "community": 168,
-      "community_name": "FakeFan",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": "fan"
     },
     {
@@ -15793,8 +16079,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_fan_init",
-      "community": 168,
-      "community_name": "FakeFan",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": ".__init__()"
     },
     {
@@ -15804,8 +16090,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_fan_connect",
-      "community": 168,
-      "community_name": "FakeFan",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": ".connect()"
     },
     {
@@ -15815,8 +16101,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_fan_start",
-      "community": 168,
-      "community_name": "FakeFan",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": ".start()"
     },
     {
@@ -15826,8 +16112,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_fan_pause",
-      "community": 168,
-      "community_name": "FakeFan",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": ".pause()"
     },
     {
@@ -15837,8 +16123,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_fan_play",
-      "community": 168,
-      "community_name": "FakeFan",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": ".play()"
     },
     {
@@ -15848,8 +16134,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_fan_loop_current",
-      "community": 168,
-      "community_name": "FakeFan",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": ".loop_current()"
     },
     {
@@ -15859,8 +16145,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_fan_next_file",
-      "community": 168,
-      "community_name": "FakeFan",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": ".next_file()"
     },
     {
@@ -15870,8 +16156,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_fan_prev_file",
-      "community": 168,
-      "community_name": "FakeFan",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": ".prev_file()"
     },
     {
@@ -15881,8 +16167,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_fan_brightness_up",
-      "community": 168,
-      "community_name": "FakeFan",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": ".brightness_up()"
     },
     {
@@ -15892,8 +16178,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_fan_brightness_down",
-      "community": 168,
-      "community_name": "FakeFan",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": ".brightness_down()"
     },
     {
@@ -15903,8 +16189,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_fan_shutdown",
-      "community": 168,
-      "community_name": "FakeFan",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": ".shutdown()"
     },
     {
@@ -15914,8 +16200,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_fan_disconnect",
-      "community": 168,
-      "community_name": "FakeFan",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": ".disconnect()"
     },
     {
@@ -15925,8 +16211,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_fan_play_file",
-      "community": 168,
-      "community_name": "FakeFan",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": ".play_file()"
     },
     {
@@ -15936,8 +16222,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_test_zero_and_255_are_valid_across_models_manager_and_simulator",
-      "community": 168,
-      "community_name": "FakeFan",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": "test_zero_and_255_are_valid_across_models_manager_and_simulator()"
     },
     {
@@ -15947,8 +16233,8 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_test_direct_legacy_failure_keeps_last_successful_index_and_requested_zero",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": "test_direct_legacy_failure_keeps_last_successful_index_and_requested_zero()"
     },
     {
@@ -15958,8 +16244,8 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_test_invalid_physical_indexes_are_rejected",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": "test_invalid_physical_indexes_are_rejected()"
     },
     {
@@ -15969,8 +16255,8 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_test_api_test_with_zero_sends_exact_zero_not_identify_index",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 145,
+      "community_name": "university.py",
       "norm_label": "test_api_test_with_zero_sends_exact_zero_not_identify_index()"
     },
     {
@@ -15980,8 +16266,8 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "tests_test_hologram_zero_index_test_default_config_keeps_zero_on_restart",
-      "community": 65,
-      "community_name": "LLM Test Service",
+      "community": 171,
+      "community_name": ".listen_once",
       "norm_label": "test_default_config_keeps_zero_on_restart()"
     },
     {
@@ -16090,8 +16376,8 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "tests_test_hotwords_cache_test_stt_prompt_respects_groq_char_limit",
-      "community": 197,
-      "community_name": "test_hologram_controller.py",
+      "community": 21,
+      "community_name": "STT Hotwords Cache",
       "norm_label": "test_stt_prompt_respects_groq_char_limit()"
     },
     {
@@ -16145,8 +16431,8 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "tests_test_hotwords_cache_rationale_106",
-      "community": 197,
-      "community_name": "test_hologram_controller.py",
+      "community": 21,
+      "community_name": "STT Hotwords Cache",
       "norm_label": "groq exige prompt \u2264896; tildes no deben empujar el conteo del api."
     },
     {
@@ -18642,8 +18928,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "utils_pop_ready_speech",
-      "community": 154,
-      "community_name": "camera_feed_subscribe",
+      "community": 204,
+      "community_name": "pop_ready_speech",
       "norm_label": "pop_ready_speech()"
     },
     {
@@ -18653,8 +18939,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "utils_env",
-      "community": 200,
-      "community_name": "PresenceManager",
+      "community": 63,
+      "community_name": "Camera Context Builder",
       "norm_label": "_env()"
     },
     {
@@ -18675,8 +18961,8 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "utils_env_int",
-      "community": 200,
-      "community_name": "PresenceManager",
+      "community": 63,
+      "community_name": "Camera Context Builder",
       "norm_label": "_env_int()"
     },
     {
@@ -18730,8 +19016,8 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "utils_read_dotenv",
-      "community": 114,
-      "community_name": "get_stt_status",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "read_dotenv()"
     },
     {
@@ -18752,8 +19038,8 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "utils_apply_config_to_env",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 200,
+      "community_name": "PresenceManager",
       "norm_label": "apply_config_to_env()"
     },
     {
@@ -18763,8 +19049,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "utils_rationale_18",
-      "community": 154,
-      "community_name": "camera_feed_subscribe",
+      "community": 204,
+      "community_name": "pop_ready_speech",
       "norm_label": "extrae clausulas/oraciones listas para tts desde un buffer de stream.      el pr"
     },
     {
@@ -18774,8 +19060,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "utils_rationale_51",
-      "community": 200,
-      "community_name": "PresenceManager",
+      "community": 63,
+      "community_name": "Camera Context Builder",
       "norm_label": "helper to retrieve string environment variables."
     },
     {
@@ -18796,8 +19082,8 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "utils_rationale_65",
-      "community": 200,
-      "community_name": "PresenceManager",
+      "community": 63,
+      "community_name": "Camera Context Builder",
       "norm_label": "helper to retrieve integer environment variables."
     },
     {
@@ -18851,8 +19137,8 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "utils_rationale_118",
-      "community": 114,
-      "community_name": "get_stt_status",
+      "community": 169,
+      "community_name": "set_camera",
       "norm_label": "lee un ``.env`` (``key=value``, ignora comentarios) en un dict."
     },
     {
@@ -18873,8 +19159,8 @@
       "source_location": "L137",
       "_origin": "ast",
       "id": "utils_rationale_137",
-      "community": 68,
-      "community_name": "STT Record Transcribe",
+      "community": 200,
+      "community_name": "PresenceManager",
       "norm_label": "vuelca ``config.json`` a ``os.environ`` solo donde la variable no exista ya."
     },
     {
@@ -18884,8 +19170,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_init",
-      "community": 58,
-      "community_name": "Piper Playback Paths",
+      "community": 202,
+      "community_name": ".analyze_frame",
       "norm_label": "vision/__init__.py"
     },
     {
@@ -18895,8 +19181,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_init_rationale_1",
-      "community": 58,
-      "community_name": "Piper Playback Paths",
+      "community": 202,
+      "community_name": ".analyze_frame",
       "norm_label": "vision helpers for the unev hologram assistant."
     },
     {
@@ -18906,8 +19192,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_camera",
-      "community": 200,
-      "community_name": "PresenceManager",
+      "community": 70,
+      "community_name": "Camera Context Prompt",
       "norm_label": "camera.py"
     },
     {
@@ -19027,8 +19313,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_camera_rationale_1",
-      "community": 200,
-      "community_name": "PresenceManager",
+      "community": 70,
+      "community_name": "Camera Context Prompt",
       "norm_label": "cross-platform opencv camera wrapper.  regla de oro a: todas las rutas usan path"
     },
     {
@@ -19115,8 +19401,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_face_analyzer",
-      "community": 200,
-      "community_name": "PresenceManager",
+      "community": 103,
+      "community_name": "Vision Package Init",
       "norm_label": "face_analyzer.py"
     },
     {
@@ -19126,8 +19412,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "vision_face_analyzer_faceanalyzer",
-      "community": 70,
-      "community_name": "Camera Context Prompt",
+      "community": 103,
+      "community_name": "Vision Package Init",
       "norm_label": "faceanalyzer"
     },
     {
@@ -19137,8 +19423,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "vision_face_analyzer_faceanalyzer_init",
-      "community": 200,
-      "community_name": "PresenceManager",
+      "community": 103,
+      "community_name": "Vision Package Init",
       "norm_label": ".__init__()"
     },
     {
@@ -19148,8 +19434,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "vision_face_analyzer_faceanalyzer_load",
-      "community": 70,
-      "community_name": "Camera Context Prompt",
+      "community": 103,
+      "community_name": "Vision Package Init",
       "norm_label": ".load()"
     },
     {
@@ -19159,8 +19445,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "vision_face_analyzer_faceanalyzer_ensure_loaded",
-      "community": 70,
-      "community_name": "Camera Context Prompt",
+      "community": 103,
+      "community_name": "Vision Package Init",
       "norm_label": "._ensure_loaded()"
     },
     {
@@ -19170,8 +19456,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "vision_face_analyzer_faceanalyzer_analyze_frame",
-      "community": 70,
-      "community_name": "Camera Context Prompt",
+      "community": 103,
+      "community_name": "Vision Package Init",
       "norm_label": ".analyze_frame()"
     },
     {
@@ -19181,8 +19467,8 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "vision_face_analyzer_faceanalyzer_describe_count",
-      "community": 70,
-      "community_name": "Camera Context Prompt",
+      "community": 103,
+      "community_name": "Vision Package Init",
       "norm_label": ".describe_count()"
     },
     {
@@ -19192,8 +19478,8 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "vision_face_analyzer_faceanalyzer_is_available",
-      "community": 70,
-      "community_name": "Camera Context Prompt",
+      "community": 103,
+      "community_name": "Vision Package Init",
       "norm_label": ".is_available()"
     },
     {
@@ -19203,8 +19489,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_face_analyzer_rationale_1",
-      "community": 200,
-      "community_name": "PresenceManager",
+      "community": 103,
+      "community_name": "Vision Package Init",
       "norm_label": "safe face presence analysis with opencv.  this module only detects/counts visibl"
     },
     {
@@ -19214,8 +19500,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "vision_face_analyzer_rationale_14",
-      "community": 70,
-      "community_name": "Camera Context Prompt",
+      "community": 103,
+      "community_name": "Vision Package Init",
       "norm_label": "count visible frontal faces using opencv's bundled haar cascade."
     },
     {
@@ -19225,8 +19511,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "vision_face_analyzer_rationale_44",
-      "community": 70,
-      "community_name": "Camera Context Prompt",
+      "community": 103,
+      "community_name": "Vision Package Init",
       "norm_label": "return a safe visual summary for a frame."
     },
     {
@@ -19236,8 +19522,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_person_detector",
-      "community": 70,
-      "community_name": "Camera Context Prompt",
+      "community": 202,
+      "community_name": ".analyze_frame",
       "norm_label": "person_detector.py"
     },
     {
@@ -19269,8 +19555,8 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "vision_person_detector_xyxy_tuple",
-      "community": 90,
-      "community_name": "Detect Person Once",
+      "community": 202,
+      "community_name": ".analyze_frame",
       "norm_label": "_xyxy_tuple()"
     },
     {
@@ -19280,8 +19566,8 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "vision_person_detector_compute_scale_back",
-      "community": 90,
-      "community_name": "Detect Person Once",
+      "community": 202,
+      "community_name": ".analyze_frame",
       "norm_label": "_compute_scale_back()"
     },
     {
@@ -19291,8 +19577,8 @@
       "source_location": "L166",
       "_origin": "ast",
       "id": "vision_person_detector_scale_box",
-      "community": 90,
-      "community_name": "Detect Person Once",
+      "community": 202,
+      "community_name": ".analyze_frame",
       "norm_label": "_scale_box()"
     },
     {
@@ -19456,8 +19742,8 @@
       "source_location": "L435",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_get_active_prompts",
-      "community": 202,
-      "community_name": ".analyze_frame",
+      "community": 37,
+      "community_name": "Event Mode Skill",
       "norm_label": ".get_active_prompts()"
     },
     {
@@ -19511,8 +19797,8 @@
       "source_location": "L495",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_map_label",
-      "community": 37,
-      "community_name": "Event Mode Skill",
+      "community": 209,
+      "community_name": "._split_detections",
       "norm_label": "._map_label()"
     },
     {
@@ -19698,8 +19984,8 @@
       "source_location": "L993",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_compute_hsv_hist",
-      "community": 158,
-      "community_name": "test_unev_content.py",
+      "community": 58,
+      "community_name": "Piper Playback Paths",
       "norm_label": "._compute_hsv_hist()"
     },
     {
@@ -19797,8 +20083,8 @@
       "source_location": "L1382",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_is_person_label",
-      "community": 37,
-      "community_name": "Event Mode Skill",
+      "community": 209,
+      "community_name": "._split_detections",
       "norm_label": "._is_person_label()"
     },
     {
@@ -19808,8 +20094,8 @@
       "source_location": "L1390",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_split_detections",
-      "community": 37,
-      "community_name": "Event Mode Skill",
+      "community": 209,
+      "community_name": "._split_detections",
       "norm_label": "._split_detections()"
     },
     {
@@ -19896,8 +20182,8 @@
       "source_location": "L1761",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_analyze_frame",
-      "community": 202,
-      "community_name": ".analyze_frame",
+      "community": 37,
+      "community_name": "Event Mode Skill",
       "norm_label": ".analyze_frame()"
     },
     {
@@ -19962,8 +20248,8 @@
       "source_location": "L1824",
       "_origin": "ast",
       "id": "vision_person_detector_yolopersondetector_analyze_once",
-      "community": 202,
-      "community_name": ".analyze_frame",
+      "community": 37,
+      "community_name": "Event Mode Skill",
       "norm_label": ".analyze_once()"
     },
     {
@@ -20072,8 +20358,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_1",
-      "community": 70,
-      "community_name": "Camera Context Prompt",
+      "community": 202,
+      "community_name": ".analyze_frame",
       "norm_label": "detector de vision del holograma unev: un solo modelo open-vocab yoloe.  por def"
     },
     {
@@ -20094,8 +20380,8 @@
       "source_location": "L147",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_147",
-      "community": 90,
-      "community_name": "Detect Person Once",
+      "community": 202,
+      "community_name": ".analyze_frame",
       "norm_label": "normaliza `box.xyxy[0]` de ultralytics (tensor) o de fakes de test (list)."
     },
     {
@@ -20105,8 +20391,8 @@
       "source_location": "L156",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_156",
-      "community": 90,
-      "community_name": "Detect Person Once",
+      "community": 202,
+      "community_name": ".analyze_frame",
       "norm_label": "factor para reescalar cajas del frame reducido al frame original."
     },
     {
@@ -20116,8 +20402,8 @@
       "source_location": "L167",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_167",
-      "community": 90,
-      "community_name": "Detect Person Once",
+      "community": 202,
+      "community_name": ".analyze_frame",
       "norm_label": "reescala una caja ``(x1, y1, x2, y2)`` si ``scale_back != 1.0``."
     },
     {
@@ -20259,8 +20545,8 @@
       "source_location": "L436",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_436",
-      "community": 202,
-      "community_name": ".analyze_frame",
+      "community": 37,
+      "community_name": "Event Mode Skill",
       "norm_label": "prompts actualmente enviados a ``set_classes`` (o la lista objetivo)."
     },
     {
@@ -20314,8 +20600,8 @@
       "source_location": "L496",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_496",
-      "community": 37,
-      "community_name": "Event Mode Skill",
+      "community": 209,
+      "community_name": "._split_detections",
       "norm_label": "normaliza nombre de clase (sinonimos \u2192 etiqueta del operador)."
     },
     {
@@ -20457,8 +20743,8 @@
       "source_location": "L994",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_994",
-      "community": 158,
-      "community_name": "test_unev_content.py",
+      "community": 58,
+      "community_name": "Piper Playback Paths",
       "norm_label": "calcula histograma 2d normalizado en espacio hsv (hue 18 bins, sat 16 bins)."
     },
     {
@@ -20556,8 +20842,8 @@
       "source_location": "L1393",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_1393",
-      "community": 37,
-      "community_name": "Event Mode Skill",
+      "community": 209,
+      "community_name": "._split_detections",
       "norm_label": "parte (raw, conf, box) en personas vs custom segun umbrales."
     },
     {
@@ -20644,8 +20930,8 @@
       "source_location": "L1762",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_1762",
-      "community": 202,
-      "community_name": ".analyze_frame",
+      "community": 37,
+      "community_name": "Event Mode Skill",
       "norm_label": "personas + custom yoloe (+ rostros opcional). un solo predict."
     },
     {
@@ -20710,8 +20996,8 @@
       "source_location": "L1825",
       "_origin": "ast",
       "id": "vision_person_detector_rationale_1825",
-      "community": 202,
-      "community_name": ".analyze_frame",
+      "community": 37,
+      "community_name": "Event Mode Skill",
       "norm_label": "un frame de camara \u2192 ``analyze_frame`` completo (personas + custom)."
     },
     {
@@ -26787,10 +27073,21 @@
       "norm_label": "linea base de las 11 preguntas obligatorias"
     },
     {
+      "label": "WAVE-04 \u2014 Secciones de contexto",
+      "file_type": "document",
+      "source_file": "docs/plans/execution/PROGRESS.md",
+      "source_location": "L341",
+      "_origin": "ast",
+      "id": "docs_plans_execution_progress_wave_04_secciones_de_contexto",
+      "community": 150,
+      "community_name": "Backlog",
+      "norm_label": "wave-04 \u2014 secciones de contexto"
+    },
+    {
       "label": "Desv\u00edos y hallazgos nuevos",
       "file_type": "document",
       "source_file": "docs/plans/execution/PROGRESS.md",
-      "source_location": "L343",
+      "source_location": "L429",
       "_origin": "ast",
       "id": "docs_plans_execution_progress_desv\u00edos_y_hallazgos_nuevos",
       "community": 150,
@@ -26801,7 +27098,7 @@
       "label": "Abiertos desde la auditor\u00eda (fuera del alcance de las 10 WAVEs)",
       "file_type": "document",
       "source_file": "docs/plans/execution/PROGRESS.md",
-      "source_location": "L348",
+      "source_location": "L434",
       "_origin": "ast",
       "id": "docs_plans_execution_progress_abiertos_desde_la_auditor\u00eda_fuera_del_alcance_de_las_10_waves",
       "community": 150,
@@ -26812,7 +27109,7 @@
       "label": "Nuevos (a\u00f1adir ac\u00e1 durante la ejecuci\u00f3n)",
       "file_type": "document",
       "source_file": "docs/plans/execution/PROGRESS.md",
-      "source_location": "L365",
+      "source_location": "L451",
       "_origin": "ast",
       "id": "docs_plans_execution_progress_nuevos_a\u00f1adir_ac\u00e1_durante_la_ejecuci\u00f3n",
       "community": 150,
@@ -26823,7 +27120,7 @@
       "label": "Decisiones pendientes de humano",
       "file_type": "document",
       "source_file": "docs/plans/execution/PROGRESS.md",
-      "source_location": "L392",
+      "source_location": "L478",
       "_origin": "ast",
       "id": "docs_plans_execution_progress_decisiones_pendientes_de_humano",
       "community": 150,
@@ -26875,15 +27172,15 @@
       "norm_label": "wave-02 \u2014 filtro de razonamiento en streaming (commit `cd3b1cd`)"
     },
     {
-      "label": "WAVE-03 \u2014 Instrumentaci\u00f3n del turno (commit `<pendiente>`)",
+      "label": "WAVE-03 \u2014 Instrumentaci\u00f3n del turno (commit `9313531`)",
       "file_type": "document",
       "source_file": "docs/plans/execution/PRUEBAS-MANUALES-PENDIENTES.md",
       "source_location": "L41",
       "_origin": "ast",
-      "id": "docs_plans_execution_pruebas_manuales_pendientes_wave_03_instrumentaci\u00f3n_del_turno_commit_pendiente",
+      "id": "docs_plans_execution_pruebas_manuales_pendientes_wave_03_instrumentaci\u00f3n_del_turno_commit_9313531",
       "community": 150,
       "community_name": "Backlog",
-      "norm_label": "wave-03 \u2014 instrumentacion del turno (commit `<pendiente>`)"
+      "norm_label": "wave-03 \u2014 instrumentacion del turno (commit `9313531`)"
     },
     {
       "label": "execution/README.md",
@@ -66093,7 +66390,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L149",
+      "source_location": "L230",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university",
@@ -66105,10 +66402,34 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L153",
+      "source_location": "L232",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "skills_university_get_university_context",
+      "source": "skills_university_rendered_sections",
+      "target": "skills_honduras_get_university_context",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L81",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections",
+      "target": "skills_honduras_get_university_context",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L83",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections_test_honduras_es_opcional",
       "target": "skills_honduras_get_university_context",
       "confidence_score": 1.0
     },
@@ -66534,10 +66855,22 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L5",
+      "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university",
+      "target": "skills_unev_content",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L19",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections",
       "target": "skills_unev_content",
       "confidence_score": 1.0
     },
@@ -66698,7 +67031,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L5",
+      "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university",
@@ -66710,7 +67043,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L79",
+      "source_location": "L99",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university_get_admission_info",
@@ -66722,7 +67055,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L101",
+      "source_location": "L121",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university_get_approval_info",
@@ -66734,7 +67067,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L96",
+      "source_location": "L116",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university_get_location_info",
@@ -66746,7 +67079,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L64",
+      "source_location": "L84",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university_get_program_info",
@@ -66758,7 +67091,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L51",
+      "source_location": "L71",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university_get_programs_summary",
@@ -66770,19 +67103,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L157",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "skills_university_get_university_context",
-      "target": "skills_unev_content_get_unev_info",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "skills/university.py",
-      "source_location": "L34",
+      "source_location": "L54",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university_get_university_summary",
@@ -66794,10 +67115,22 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L105",
+      "source_location": "L125",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university_get_website_info",
+      "target": "skills_unev_content_get_unev_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L212",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "skills_university_rendered_sections",
       "target": "skills_unev_content_get_unev_info",
       "confidence_score": 1.0
     },
@@ -66874,7 +67207,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L77",
+      "source_location": "L180",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "skills_university",
+      "target": "skills_university_context_section_keys",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L97",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university",
@@ -66885,7 +67229,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L100",
+      "source_location": "L120",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university",
@@ -66896,7 +67240,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L95",
+      "source_location": "L241",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "skills_university",
+      "target": "skills_university_get_context_sections",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L115",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university",
@@ -66907,7 +67262,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L62",
+      "source_location": "L82",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university",
@@ -66918,7 +67273,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L50",
+      "source_location": "L70",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university",
@@ -66929,7 +67284,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L138",
+      "source_location": "L282",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university",
@@ -66940,7 +67295,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L33",
+      "source_location": "L53",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university",
@@ -66951,7 +67306,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L104",
+      "source_location": "L124",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university",
@@ -66962,7 +67317,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L27",
+      "source_location": "L40",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university",
@@ -66970,11 +67325,33 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L202",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "skills_university",
+      "target": "skills_university_rendered_sections",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L189",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "skills_university",
+      "target": "skills_university_warn_unknown_section",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L6",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university",
@@ -66986,7 +67363,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L6",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university",
@@ -67005,13 +67382,25 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections",
+      "target": "skills_university",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L28",
+      "source_location": "L41",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "skills_university_rationale_28",
+      "source": "skills_university_rationale_41",
       "target": "skills_university_invalidate_context_cache",
       "confidence_score": 1.0
     },
@@ -67020,7 +67409,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L63",
+      "source_location": "L83",
       "weight": 1.0,
       "_origin": "ast",
       "source": "skills_university_get_program_info",
@@ -67031,21 +67420,125 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L78",
+      "source_location": "L98",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "skills_university_rationale_78",
+      "source": "skills_university_rationale_98",
       "target": "skills_university_get_admission_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L265",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "skills_university_get_context_sections",
+      "target": "skills_university_context_section_keys",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L296",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "skills_university_get_university_context",
+      "target": "skills_university_context_section_keys",
       "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "skills/university.py",
-      "source_location": "L139",
+      "source_location": "L181",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "skills_university_rationale_139",
+      "source": "skills_university_rationale_181",
+      "target": "skills_university_context_section_keys",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L266",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "skills_university_get_context_sections",
+      "target": "skills_university_warn_unknown_section",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L190",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "skills_university_rationale_190",
+      "target": "skills_university_warn_unknown_section",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L263",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "skills_university_get_context_sections",
+      "target": "skills_university_rendered_sections",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L203",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "skills_university_rationale_203",
+      "target": "skills_university_rendered_sections",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L296",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "skills_university_get_university_context",
+      "target": "skills_university_get_context_sections",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L242",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "skills_university_rationale_242",
+      "target": "skills_university_get_context_sections",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "skills/university.py",
+      "source_location": "L283",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "skills_university_rationale_283",
       "target": "skills_university_get_university_context",
       "confidence_score": 1.0
     },
@@ -69378,6 +69871,193 @@
       "_origin": "ast",
       "source": "tests_test_camera_stop_rationale_1",
       "target": "tests_test_camera_stop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L23",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections",
+      "target": "tests_test_context_sections_contexto_limpio",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections",
+      "target": "tests_test_context_sections_test_campos_y_etiquetas_en_sincronia",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L118",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections",
+      "target": "tests_test_context_sections_test_claves_desconocidas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L80",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections",
+      "target": "tests_test_context_sections_test_honduras_es_opcional",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L95",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections",
+      "target": "tests_test_context_sections_test_invalidar_cache_limpia_todo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L53",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections",
+      "target": "tests_test_context_sections_test_orden_de_lectura_estable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L134",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections",
+      "target": "tests_test_context_sections_test_seccion_vacia_se_omite",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections",
+      "target": "tests_test_context_sections_test_subconjunto_contiene_solo_lo_pedido",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections",
+      "target": "tests_test_context_sections_test_todas_las_secciones_reproducen_el_bloque_actual",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections_rationale_1",
+      "target": "tests_test_context_sections",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L24",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections_rationale_24",
+      "target": "tests_test_context_sections_contexto_limpio",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections_rationale_31",
+      "target": "tests_test_context_sections_test_todas_las_secciones_reproducen_el_bloque_actual",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L54",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections_rationale_54",
+      "target": "tests_test_context_sections_test_orden_de_lectura_estable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L71",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections_rationale_71",
+      "target": "tests_test_context_sections_test_campos_y_etiquetas_en_sincronia",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L96",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections_rationale_96",
+      "target": "tests_test_context_sections_test_invalidar_cache_limpia_todo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L119",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections_rationale_119",
+      "target": "tests_test_context_sections_test_claves_desconocidas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_context_sections.py",
+      "source_location": "L135",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_context_sections_rationale_135",
+      "target": "tests_test_context_sections_test_seccion_vacia_se_omite",
       "confidence_score": 1.0
     },
     {
@@ -85169,7 +85849,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/plans/execution/PROGRESS.md",
-      "source_location": "L392",
+      "source_location": "L478",
       "weight": 1.0,
       "_origin": "ast",
       "source": "docs_plans_execution_progress_progress_estado_vivo_de_la_ejecuci\u00f3n",
@@ -85180,7 +85860,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/plans/execution/PROGRESS.md",
-      "source_location": "L343",
+      "source_location": "L429",
       "weight": 1.0,
       "_origin": "ast",
       "source": "docs_plans_execution_progress_progress_estado_vivo_de_la_ejecuci\u00f3n",
@@ -85323,6 +86003,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/plans/execution/PROGRESS.md",
+      "source_location": "L341",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_plans_execution_progress_registro_por_wave",
+      "target": "docs_plans_execution_progress_wave_04_secciones_de_contexto",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/plans/execution/PROGRESS.md",
       "source_location": "L278",
       "weight": 1.0,
       "_origin": "ast",
@@ -85334,7 +86025,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/plans/execution/PROGRESS.md",
-      "source_location": "L348",
+      "source_location": "L434",
       "weight": 1.0,
       "_origin": "ast",
       "source": "docs_plans_execution_progress_desv\u00edos_y_hallazgos_nuevos",
@@ -85345,7 +86036,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/plans/execution/PROGRESS.md",
-      "source_location": "L365",
+      "source_location": "L451",
       "weight": 1.0,
       "_origin": "ast",
       "source": "docs_plans_execution_progress_desv\u00edos_y_hallazgos_nuevos",
@@ -85393,7 +86084,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "docs_plans_execution_pruebas_manuales_pendientes_pruebas_manuales_pendientes",
-      "target": "docs_plans_execution_pruebas_manuales_pendientes_wave_03_instrumentaci\u00f3n_del_turno_commit_pendiente",
+      "target": "docs_plans_execution_pruebas_manuales_pendientes_wave_03_instrumentaci\u00f3n_del_turno_commit_9313531",
       "confidence_score": 1.0
     },
     {
@@ -91214,5 +91905,5 @@
       "source_file": "frontend/src-tauri/icons/ios/AppIcon-20x20@1x.png"
     }
   ],
-  "built_at_commit": "93135313872f3e7758e541da4c69df69d9caef0c"
+  "built_at_commit": "c402a0ef17fb1f413aa6d95a4dc1165cd27efb3c"
 }
