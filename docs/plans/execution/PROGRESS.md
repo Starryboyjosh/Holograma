@@ -6,7 +6,8 @@ dónde está todo.
 
 Última actualización: **2026-07-30** — los 13 archivos del plan están escritos (10 WAVEs + este
 archivo + `README.md` + el documento maestro `../HOLOGRAM_CONTEXT_AND_MODEL_ARCHITECTURE_PLAN.md`)
-y commiteados en `514b2e4`. **WAVE-01 (`99d40c7`) y WAVE-02 (`cd3b1cd`) ejecutadas y commiteadas.**
+y commiteados en `514b2e4`. **WAVEs 01–05 ejecutadas y commiteadas** (`99d40c7`, `cd3b1cd`,
+`9313531`, `c402a0e`, `b218e3c`). WAVE-05 es la primera que **cambia lo que ve el modelo**.
 
 > **Cambio de protocolo — 2026-07-30, decisión del usuario.** Las verificaciones que necesitan
 > hardware físico, percepción humana o una llamada de pago real **no** bloquean el cierre de cada
@@ -24,8 +25,8 @@ y commiteados en `514b2e4`. **WAVE-01 (`99d40c7`) y WAVE-02 (`cd3b1cd`) ejecutad
 | 02 · Filtro CoT streaming | ✅ commiteada | `cd3b1cd` | 2026-07-30 | smoke test de audio diferido → pruebas manuales |
 | 03 · Instrumentación | ✅ commiteada | `9313531` | 2026-07-30 | línea base offline lista; latencias reales diferidas → P03-1 |
 | 04 · Secciones de contexto | ✅ commiteada | `c402a0e` | 2026-07-30 | paridad exacta, 15.516 chars sin cambio; sin comportamiento nuevo |
-| 05 · PromptPackage + router | ⬜ pendiente | — | — | **siguiente** · la de mayor riesgo |
-| 06 · Memoria de sesión | ⬜ pendiente | — | — | |
+| 05 · PromptPackage + router | ✅ commiteada | `b218e3c` | 2026-07-30 | contexto −92,6 %; router 4/7 → 6/7; criterio 4 sólo con cámara apagada → WAVE-08 |
+| 06 · Memoria de sesión | ⬜ pendiente | — | — | **siguiente** · desbloquea la pregunta 5 (xfail estricto ya puesto) |
 | 07 · Paridad de rutas | ⬜ pendiente | — | — | |
 | 08 · Política de cámara | ⬜ pendiente | — | — | |
 | 09 · Política de modelos | ⬜ pendiente | — | — | espera decisión humana en su puerta |
@@ -33,14 +34,16 @@ y commiteados en `514b2e4`. **WAVE-01 (`99d40c7`) y WAVE-02 (`cd3b1cd`) ejecutad
 
 Estados: ⬜ pendiente · 🟡 en curso · ✅ commiteada · ⛔ bloqueada (ver Desvíos)
 
-**Siguiente acción:** ejecutar `WAVE-05-promptpackage-router.md` siguiendo `README.md`, **en una
-sesión nueva**. Es la WAVE de mayor riesgo del plan y el runbook exige entrar con la suite verde y
-el contexto intacto: ambas cosas se cumplen ahora mismo (238 casos en verde, contexto en 15.516
-chars sin cambio). WAVE-04 dejó la herramienta lista (`get_context_sections`); WAVE-05 es quien
-decide **quién pide menos que todo**, y ahí sí cambia lo que ve el LLM.
+**Siguiente acción:** ejecutar `WAVE-06-memoria-sesion.md` siguiendo `README.md`, **en una sesión
+nueva**. Entra con la suite en **405 casos verdes + 1 xfailed** y el contexto ya recortado. WAVE-05
+dejó el trabajo medio hecho para ella: el `xfail` **estricto** de «¿Y cuánto dura?» en
+`tests/test_router_confidence.py` falla el día que la memoria conversacional funcione, así que
+obliga a quitar la marca; y `RouteDecision` ya devuelve `topic` y `sections`, que es exactamente el
+estado del turno anterior que hace falta guardar.
 
-Pendiente operativo: `main` está **8 commits por delante de `origin/main`**; el push no se hizo
-desde esta sesión.
+**Antes de seguir, usá el sistema un rato.** Esta WAVE cambia *qué sabe el modelo*: los tests
+cubren 11 preguntas, no las mil que hará un visitante. Si algo suena mal, la salida de emergencia
+es `HOLOGRAM_SELECTIVE_CONTEXT=0` (contexto completo, sin desplegar nada) y lo que aparezca va acá.
 
 ---
 
@@ -114,12 +117,12 @@ Cada uno se verifica con la instrumentación de WAVE-03. Sin número, no hay cri
 
 | Métrica | Base | Objetivo | WAVE |
 |---|---|---|---|
-| Contexto medio por turno | 18.439 chars | **≤ 2.500** | 05 |
-| Tokens de entrada estimados | ~5.340 | **≤ 750** | 05 |
+| Contexto medio por turno | 18.439 chars | **≤ 2.500 ✅ logrado** (1.146 medido; el bloque institucional pasó de 15.516 a 1.146) | 05 |
+| Tokens de entrada estimados | ~5.340 | **≤ 750 · 727 con `HOLOGRAM_CAMERA=0`, 1.182 con la cámara encendida** → el resto lo cierra la 08 | 05 · **08** |
 | Peor caso de fallback | ~180 s | **< 20 s** | ~~01~~ → **09** (depende de `LLM_REQUEST_TIMEOUT`) |
 | Cláusulas con CoT habladas | posible | **0 ✅ logrado** (falta confirmar por oído: P02-1) | 02 |
 | Turnos vacíos por stream vacío en la ruta web | posible | **0 ✅ logrado** | 01 |
-| Precisión del router (11 preguntas) | **4/7 aplicables** (8/11 total) | **≥ 6/7** (≥ 10/11) | 05 · 06 |
+| Precisión del router (11 preguntas) | **4/7 aplicables** (8/11 total) | **≥ 6/7 ✅ logrado** — 6/7 (10/11); la 7ª es la pregunta 5, que necesita memoria | 05 · **06** |
 | Follow-ups resueltos (`«¿y cuánto dura?»`) | 0 % | **funciona en ambas rutas** | 06 |
 | Tests que cubren `skills/` | 0 | **> 0, con dataset** | 10 |
 
@@ -430,6 +433,117 @@ Qué columnas son de qué naturaleza, para no confundirlas al revisar:
 - Pruebas manuales diferidas: ninguna. Esta WAVE no cambia comportamiento observable, así que no
   hay nada que percibir por oído ni por hardware.
 
+### WAVE-05 — PromptPackage y router determinista
+- Commit: `b218e3c` · Fecha: 2026-07-30
+- Archivos tocados: `prompt_package.py` (**nuevo**), `skills/router.py` (reescrito),
+  `llm_backend.py`, `call.py`, `tests/test_prompt_package.py` (**nuevo**),
+  `tests/test_router_confidence.py` (**nuevo**). `data/unev_info.json` intacto; `metrics.py` y
+  `app/services/conversation.py` **no** se tocaron (ver Desvíos).
+- **Dónde vive el ensamblador:** `prompt_package.py::build_prompt_package`, módulo nuevo en la
+  raíz, junto a `llm_backend.py`. Importa `security`, `skills.router`, `skills.unev_content`,
+  `skills.university` y `utils` — y `skills.event_mode` de forma diferida. **No importa `call.py`**,
+  que es lo que el docstring de `stream_llm_response` pide expresamente para no reintroducir el
+  ciclo `call ↔ llm_backend`. Atajo para la ruta de voz: `build_university_context(pregunta)`.
+- **Umbral: `MINIMUM_CONFIDENCE = 0.75`**, comparado como `confidence < MINIMUM_CONFIDENCE`, igual
+  que `app/hologram/media_router.py`. La confianza es `min(0.99, mejor_puntaje / 100)` con puntajes
+  enteros (exacto 95, frase 88, primario 78, apoyo 62, +4 por término acumulado, tope 99). 0,75 cae
+  justo entre un término de apoyo suelto (0,62 → no alcanza) y un término primario (0,78 → alcanza):
+  una sola palabra ambigua no elige sección, una palabra propia del tema sí.
+- **Conjunto por defecto bajo umbral: `("name", "main_claim", "description")`** — quién es la UNEV,
+  qué ofrece y en una línea qué es. Es lo mínimo para no responder «no sé» a algo institucional que
+  el router no supo clasificar, y cuesta ~800 chars. Con **cero** señal institucional (un chiste, la
+  hora) no se manda **ninguna** sección: sólo los guardarraíles.
+- **Tres desenlaces explícitos**, en `RouteDecision.reason_code`: `NO_LOCAL_MATCH` (sin señal → `()`),
+  `INSTITUTIONAL_NO_RULE` (nombra la UNEV pero ninguna regla puntúa → por defecto),
+  `BELOW_THRESHOLD` (→ por defecto), `RULE_MATCH` (→ las secciones de la regla).
+- **Topes: 3.000 chars por sección, 6.000 en total** (`MAX_SECTION_CHARS` / `MAX_CONTEXT_CHARS`,
+  con un `assert` que los mantiene ≤ `MAX_FIELD_CHARS`). Truncado determinista reutilizando
+  `clamp_text`. Cuando algo no cabe **se descarta la sección entera, no se corta a media frase**:
+  media frase institucional se lee como un hecho completo y equivocado, mientras que la ausencia la
+  cubre el guardarraíl anti-invención. Lo descartado queda en `PromptPackage.dropped_sections`.
+- **Los guardarraíles nunca se recortan.** Cabecera (sigla UNEV) y cierre (no inventes) son los
+  337 chars de piso de WAVE-04 y sobreviven incluso con `total_limit=10`; hay un test que lo fija.
+- **Los dos defectos del router, corregidos y con test cada uno:**
+  - `"habla"` ⊂ `"hablame"` mandaba **todo** «Háblame de…» a vulgarismos hondureños. Ahora se
+    tokeniza por límite de palabra (`[a-z0-9]+` sobre el texto ya normalizado).
+  - Ganaba el primer `if`, no la mejor coincidencia. Ahora se puntúan **las 27 reglas** y gana la
+    mejor, con desempate por nombre de tema para que la decisión sea reproducible.
+  - Efecto colateral arreglado: `"minimo"` era término de vulgarismos y secuestraba «¿cuál es el
+    mínimo para entrar?»; se quitó de ahí y `mínimo/mínimos` pasó a `unev.admision`.
+- **6 literales acentuados estaban muertos por construcción**: `normalize_text` quita acentos de la
+  consulta, así que una regla escrita `"hondureño"` no coincidía nunca. Ahora los dos lados pasan
+  por la misma normalización. **Los acentos que van como argumento a `get_program_info()` se
+  dejaron byte a byte**: ésos no son términos de búsqueda, son claves de datos.
+- Métricas antes → después (medidas con `HOLOGRAM_CAMERA=0`, `system_prompt` de 1.330 chars):
+  - contexto medio: **15.516 → 1.146 chars (−92,6 %)**; peor caso 2.777 (`honduras`)
+  - prompt medio: **16.914 → 2.544 chars (−85,0 %)**
+  - tokens estimados: **4.833 → 727**
+  - router en las 7 preguntas institucionales: **4/7 → 6/7** (10/11 contando los `None` correctos)
+  - latencia del router: **0,0116 → 0,0408 ms** por consulta. Subió a propósito: antes cortaba en
+    el primer `if`, ahora puntúa las 27 reglas. Sigue **24× por debajo** del presupuesto de 1 ms.
+  - suite: **372 → 405 casos + 1 xfailed**, exit 0
+  - `ruff` en los 6 archivos: limpio. Proyecto: **13** errores preexistentes (RUFF-1, ver nota).
+- Tests añadidos:
+  - `tests/test_router_confidence.py` (19 + 1 xfail): `::test_hablame_de_no_cae_en_vulgarismos`,
+    `::test_minimo_va_a_admision`, `::test_vulgarismos_sigue_funcionando`,
+    `::test_literales_acentuados_alcanzables`,
+    `::test_investigacion_no_secuestra_la_pregunta_institucional`, `::test_umbral_de_confianza`,
+    `::test_decision_es_determinista`, `::test_route_local_skill_conserva_su_contrato`,
+    `::test_router_bajo_1ms`, `::test_las_11_preguntas_obligatorias` (parametrizado ×11)
+  - `tests/test_prompt_package.py` (14): `::test_contexto_medio_bajo_2500_chars`,
+    `::test_datos_criticos_presentes`, `::test_guardarrailes_siempre_presentes`,
+    `::test_pregunta_no_institucional_no_lleva_secciones`,
+    `::test_tope_por_seccion_descarta_seccion_inflada`,
+    `::test_tope_total_respetado_con_campo_inflado`, `::test_presupuesto_es_coherente`,
+    `::test_flag_rollback_devuelve_bloque_completo`, `::test_paquete_es_determinista`,
+    `::test_orden_de_secciones_no_altera_el_texto`,
+    `::test_mensajes_de_sistema_conservan_el_formato`,
+    `::test_ambas_rutas_usan_el_mismo_ensamblador`,
+    `::test_ruta_de_voz_envia_el_contexto_reducido`, `::test_metadatos_para_la_metrica`
+  - Los dos casos centrales son `::test_contexto_medio_bajo_2500_chars` y
+    `::test_datos_criticos_presentes`, y **ninguno vale sin el otro**: el primero mide que encogió,
+    el segundo que cada pregunta institucional sigue llevando encima el dato con el que responder.
+    Recortar por recortar es fácil y se paga en alucinaciones frente a un visitante.
+- **Rollback verificado carácter por carácter.** Con `HOLOGRAM_SELECTIVE_CONTEXT=0` la suite queda
+  igual (405 + 1 xfailed) y la salida de `_build_messages` sobre 4 casos hashea
+  `a0375e99…cd0f9e55`; tras `git stash` de los tres archivos modificados, el código pre-WAVE produjo
+  **el mismo** SHA256. `git stash pop` limpio y `diff -q` conforme. Es la salida de emergencia del
+  evento y es decisión de operador, no despliegue.
+- **Pregunta 5 («¿Y cuánto dura?»): sigue fallando, a propósito.** Marcada `xfail` **estricto** con
+  motivo «WAVE-06». Estricto y no `skip` para que el día que llegue la memoria conversacional el
+  test falle *por pasar* y obligue a quitar la marca.
+- Criterios de aceptación: **1–12 cumplidos salvo el 4**, que se cumple con la cámara apagada (727
+  tokens estimados) pero no con la cámara encendida (**1.182**). La causa está medida y no es el
+  contexto: con `HOLOGRAM_CAMERA=1` el `system_prompt` solo pesa 2.923 chars (~835 tokens), o sea
+  que **ya excede el presupuesto antes de añadir una sola sección**. Eso es exactamente **OBS-2**,
+  ya anotado y asignado a **WAVE-08**. Precedente: WAVE-01 reasignó su propio criterio 4 a WAVE-09.
+- Desvíos del plan:
+  - **`app/services/conversation.py` estaba declarado en la WAVE y no se tocó.** La decisión de
+    contexto de la ruta web vive dentro de `stream_llm_response`, y subirla a `ConversationService`
+    obligaría a cambiar firmas a través de `LLMService.stream`: eso es el trabajo de **WAVE-07**. El
+    objetivo de la WAVE —*un solo* sitio donde se decide qué ve el modelo— **sí se cumple**: las dos
+    rutas entran por `build_prompt_package`, y hay un test que lo comprueba por comportamiento
+    (`::test_ambas_rutas_usan_el_mismo_ensamblador`), no sólo por cableado. WAVE-03 dejó ese archivo
+    igual y por la misma razón.
+  - **`metrics.py` no se tocó.** WAVE-03 aplazó acá el renombre de `local_skill_hit` a nombre de
+    tema, pero `metrics.py` no está en la lista de archivos de esta WAVE y la regla es no ampliarla.
+    Queda **pendiente para quien lo recoja**, y ahora es trivial: `RouteDecision.topic` y
+    `PromptPackage.topic` ya traen el nombre. Nota para esa tarea: hoy el turno enruta **dos veces**
+    (una en `build_prompt_package`, otra en `metrics._local_skill_would_answer`); a 0,04 ms es
+    irrelevante, pero pasar el `topic` del paquete ahorraría la segunda.
+  - **Se lanzó el agente `scout`** (las WAVEs 01–04 lo registraron como «omitido»). Justificado por
+    tres cosas que apuntan al mismo lado: `CLAUDE.md` lo manda para tareas no triviales, esta WAVE
+    marca el brief como *obligatorio*, y el propio usuario pidió ejecutarla «con precaución de no
+    llegar al límite ni alucinar contexto». Los tests los escribió la sesión principal, no `worker`.
+- Hallazgos nuevos (NO arreglados): ver **DOC-1** y la corrección de **RUFF-1** más abajo.
+- Revisión humana: **OK explícito del 2026-07-30** («commit and push»), tras presentar el checklist
+  de la Puerta 1 con las métricas reales, el hash de la prueba de reversión y el conflicto del
+  criterio 4 declarado como no cumplido con la cámara encendida.
+- Pruebas manuales diferidas: **la prueba de humo (3 preguntas por voz + 3 por web)**. Es la única
+  casilla del checklist que no se puede cubrir sin hardware de audio y sin una llamada de pago real,
+  así que va a `PRUEBAS-MANUALES-PENDIENTES.md` como **P05-1**, según el cambio de protocolo del
+  2026-07-30. Es la más importante de la lista: esta WAVE cambia lo que sabe el modelo.
+
 ---
 
 ## Desvíos y hallazgos nuevos
@@ -481,12 +595,21 @@ fusión se dé por buena en ejecución real.
 
 ### Nuevos (añadir acá durante la ejecución)
 
-- **RUFF-1 · 18 errores de lint preexistentes fuera del alcance.** `ruff check .` no está limpio en
+- **RUFF-1 · errores de lint preexistentes fuera del alcance.** `ruff check .` no está limpio en
   `main`, y no lo estaba antes de WAVE-01: `skills/honduras.py` (10), `vision/person_detector.py` (4),
   `utils.py` (1), `stt/listener.py` (1), `tests/test_hotwords_cache.py` (1),
   `tests/test_custom_object_interval.py` (1). Mayormente variables sin usar; 14 los arregla
   `ruff --fix`. Los archivos tocados por cada WAVE sí deben quedar limpios, y WAVE-01 lo está.
-  *Estado: anotado, no arreglado (regla "anotá, no arregles"). Candidato a una limpieza propia.*
+  **Corrección medida en WAVE-05: hoy son 13, no 18.** El desglose de arriba suma 18 y es el de la
+  auditoría; la diferencia la introdujo la fusión con `origin/main` (`6f96ebc`), que reescribió
+  parte de esos archivos. Nadie los arregló dentro de una WAVE. *Estado: anotado, no arreglado
+  (regla "anotá, no arregles"). Candidato a una limpieza propia, que debería re-medir el desglose.*
+
+- **DOC-1 · `clamp_text` no vive donde dice el plan.** `WAVE-05` (y la tabla de reutilización del
+  `README.md`) lo sitúan junto a `MAX_FIELD_CHARS` en `skills/unev_content.py`. Está en
+  `security.py:84-94`; en `skills/unev_content.py` sólo vive `MAX_FIELD_CHARS`. Se reutilizó el
+  correcto, así que no afectó al código, pero cualquier WAVE que lo busque donde dice el documento
+  no lo va a encontrar. *Estado: sólo informe; corregir el texto de los planes si se editan.*
 
 - **OBS-1 · `test_stream_vacio_registra_advertencia` afirma sobre todo el stdout.** La aserción es
   `assert "groq" not in salida` sobre `capsys.readouterr().out` **entero**, no sobre la línea de
@@ -500,6 +623,11 @@ fusión se dé por buena en ejecución real.
   ~455 tokens por turno**— aunque la pregunta no tenga nada que ver con lo que ve la cámara (10 de
   las 11 obligatorias). Es ~8,6 % del prompt y es condicionable por intención. *Estado: anotado,
   no arreglado. Encaja en **WAVE-08** (política de cámara) y le da munición a **WAVE-05**.*
+  **Ascendido a bloqueante tras WAVE-05:** ahora es lo único que separa al plan del objetivo de
+  ≤ 750 tokens de entrada. Con el contexto ya recortado a 1.146 chars, el prompt queda en **727**
+  tokens con `HOLOGRAM_CAMERA=0` y en **1.182** con la cámara encendida; el `system_prompt` solo
+  pesa entonces 2.923 chars (~835 tokens), o sea que **excede el presupuesto antes de añadir una
+  sola sección de contexto**. El criterio 4 de WAVE-05 queda reasignado acá.
 
 - **INFO-3 · `audit_prompt.md` sin trackear en la raíz.** Archivo de trabajo previo al plan, sigue
   fuera de git. Decidir si se archiva bajo `docs/` o se borra. *Estado: sólo informe.*

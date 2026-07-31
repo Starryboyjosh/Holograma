@@ -51,3 +51,31 @@ Estado: `[ ]` pendiente · `[x]` verificada · `[!]` falló → abrir hallazgo.
 - [ ] **P03-2 · La línea no ensucia el log del kiosco.** Arrancar sin redirigir y
   confirmar por vista que el log humano (CoT, TTS, cámara) sigue legible, y que
   `2> metrics.log` separa limpiamente los dos flujos. *Percepción humana.*
+
+## WAVE-04 — Secciones de contexto (commit `c402a0e`)
+
+Ninguna. No cambia comportamiento observable: paridad exacta con el bloque de antes.
+
+## WAVE-05 — PromptPackage y router determinista (commit `b218e3c`)
+
+**Esta es la más importante de la lista.** Es la primera WAVE que cambia *qué
+sabe el modelo*: a partir de acá el LLM recibe 1.146 chars de contexto en vez de
+15.516. Los tests cubren 11 preguntas; un visitante hará mil. Un contexto
+recortado de más no se ve como un error, se ve como una respuesta inventada.
+
+- [ ] **P05-1 · Prueba de humo: 3 preguntas por voz + 3 por web.** Del checklist
+  de la propia WAVE. Sugeridas, porque cubren los tres desenlaces del router:
+  «¿Qué carreras ofrecen?» (`RULE_MATCH`), «¿Hacen investigación en la UNEV?»
+  (`BELOW_THRESHOLD` → conjunto por defecto) y «Cuéntame un chiste»
+  (`NO_LOCAL_MATCH` → sólo guardarraíles). Confirmar que las respuestas siguen
+  siendo **correctas**, no sólo fluidas. *Requiere micrófono + llamada de pago.*
+- [ ] **P05-2 · Rollback en caliente.** Arrancar con
+  `HOLOGRAM_SELECTIVE_CONTEXT=0` y confirmar que el holograma vuelve a
+  comportarse como antes. Está probado por hash carácter a carácter en la suite;
+  lo que falta es que el **operador lo haya hecho una vez** antes del evento, para
+  que no sea la primera vez bajo presión. Es la salida de emergencia.
+- [ ] **P05-3 · Escuchar si falta algún dato.** Durante el uso normal, anotar
+  cualquier pregunta donde el holograma diga que no sabe algo que **sí** está en
+  `data/unev_info.json`. Eso es una regla del router que falta, no un fallo del
+  modelo: va a `PROGRESS.md` con la pregunta textual. *Percepción humana; es el
+  único modo de encontrar los huecos que las 11 preguntas no cubren.*
