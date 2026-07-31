@@ -22,8 +22,8 @@ y commiteados en `514b2e4`. **WAVE-01 (`99d40c7`) y WAVE-02 (`cd3b1cd`) ejecutad
 |---|---|---|---|---|
 | 01 · Desbloquear el turno | ✅ commiteada | `99d40c7` | 2026-07-30 | criterio 4 no cumplido → WAVE-09 |
 | 02 · Filtro CoT streaming | ✅ commiteada | `cd3b1cd` | 2026-07-30 | smoke test de audio diferido → pruebas manuales |
-| 03 · Instrumentación | 🟡 en curso | — | 2026-07-30 | línea base offline lista; latencias reales diferidas → P03-1 |
-| 04 · Secciones de contexto | ⬜ pendiente | — | — | **siguiente** |
+| 03 · Instrumentación | ✅ commiteada | `9313531` | 2026-07-30 | línea base offline lista; latencias reales diferidas → P03-1 |
+| 04 · Secciones de contexto | 🟡 en curso | — | 2026-07-30 | **siguiente** |
 | 05 · PromptPackage + router | ⬜ pendiente | — | — | |
 | 06 · Memoria de sesión | ⬜ pendiente | — | — | |
 | 07 · Paridad de rutas | ⬜ pendiente | — | — | |
@@ -33,8 +33,8 @@ y commiteados en `514b2e4`. **WAVE-01 (`99d40c7`) y WAVE-02 (`cd3b1cd`) ejecutad
 
 Estados: ⬜ pendiente · 🟡 en curso · ✅ commiteada · ⛔ bloqueada (ver Desvíos)
 
-**Siguiente acción:** cerrar la Puerta 1 de WAVE-03 (revisión humana) y commitear; después abrir
-`WAVE-04-secciones-contexto.md` y seguir `README.md`.
+**Siguiente acción:** ejecutar `WAVE-04-secciones-contexto.md` siguiendo `README.md`.
+Fase 1 cerrada: las tres WAVEs de la demo están commiteadas.
 
 ---
 
@@ -236,7 +236,7 @@ Al cerrar cada WAVE, añadí un bloque acá con este formato. No borres bloques 
   (ver `PRUEBAS-MANUALES-PENDIENTES.md`).
 
 ### WAVE-03 — Instrumentación del turno
-- Commit: `<pendiente>` · Fecha: 2026-07-30
+- Commit: `9313531` · Fecha: 2026-07-30
 - Archivos tocados: `metrics.py` (**nuevo**), `llm_backend.py`, `call.py`,
   `tests/test_metrics.py` (**nuevo**), `.env.example`, `README.md`.
   `app/services/conversation.py` **no** se tocó, y eso es más fuerte que lo que sugería la WAVE

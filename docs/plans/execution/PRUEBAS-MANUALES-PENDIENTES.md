@@ -38,7 +38,7 @@ Estado: `[ ]` pendiente · `[x]` verificada · `[!]` falló → abrir hallazgo.
 - [ ] **P02-3 · Rollback.** Arrancar con `HOLOGRAM_COT_FILTER=0` y confirmar que
   vuelve el comportamiento anterior (útil si el filtro come texto en producción).
 
-## WAVE-03 — Instrumentación del turno (commit `<pendiente>`)
+## WAVE-03 — Instrumentación del turno (commit `9313531`)
 
 - [ ] **P03-1 · Latencias reales.** Las dos columnas de tiempo de la línea base
   (`time_to_first_token_ms`, `time_to_first_clause_ms`) están **sin medir**: con

@@ -200,7 +200,5 @@
   "198": ".handle_prompt",
   "199": "_CotStreamFilter",
   "200": "PresenceManager",
-  "201": "FakeWS",
-  "202": ".analyze_frame",
-  "203": ".bind_loop"
+  "202": ".analyze_frame"
 }

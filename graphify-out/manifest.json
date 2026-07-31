@@ -1,12 +1,12 @@
 {
   "call.py": {
-    "mtime": 1785428188.2531562,
-    "ast_hash": "0a214730766a0b2dfa6cbe7772c2e84e",
+    "mtime": 1785460910.7316983,
+    "ast_hash": "8c30e9339356f466f1df38d920ca2f0f",
     "semantic_hash": ""
   },
   "llm_backend.py": {
-    "mtime": 1785428188.2531562,
-    "ast_hash": "e4ed0ff9f1d91b54260b7fa0e4b47a2d",
+    "mtime": 1785460910.7316983,
+    "ast_hash": "4f6ec5e3bbb8a561c9f16063b20ad3b4",
     "semantic_hash": ""
   },
   "main.py": {
@@ -180,8 +180,8 @@
     "semantic_hash": "e55e84abfc1a2ee7fdde9da07fb13126"
   },
   "README.md": {
-    "mtime": 1785178368.0422595,
-    "ast_hash": "e2a1fd8094aa73c718ee0562c5359cec",
+    "mtime": 1785430238.7345836,
+    "ast_hash": "df803a24df943300eed2e2c04c296856",
     "semantic_hash": ""
   },
   "frontend/README.md": {
@@ -1345,8 +1345,8 @@
     "semantic_hash": ""
   },
   "docs/plans/execution/PROGRESS.md": {
-    "mtime": 1785425690.7437406,
-    "ast_hash": "8915af5fe11f2ad1b5914dffe58d79be",
+    "mtime": 1785461067.1321032,
+    "ast_hash": "5f13b9f8ce41b31f26c519f0a145d52f",
     "semantic_hash": ""
   },
   "docs/plans/execution/README.md": {
@@ -1407,6 +1407,21 @@
   "tests/test_cot_filter.py": {
     "mtime": 1785426168.9986475,
     "ast_hash": "29ce0ac31c0b1302569a608f6ad79a5e",
+    "semantic_hash": ""
+  },
+  "metrics.py": {
+    "mtime": 1785430204.473121,
+    "ast_hash": "16a37e4f17230ca7e2455946623c00a5",
+    "semantic_hash": ""
+  },
+  "tests/test_metrics.py": {
+    "mtime": 1785430020.723223,
+    "ast_hash": "45c99f092e9d7bb78cb4309165a247ea",
+    "semantic_hash": ""
+  },
+  "docs/plans/execution/PRUEBAS-MANUALES-PENDIENTES.md": {
+    "mtime": 1785432415.0059376,
+    "ast_hash": "57efc139d996c96ba85982046ffc93a2",
     "semantic_hash": ""
   }
 }
