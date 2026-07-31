@@ -10,6 +10,7 @@ from collections.abc import AsyncGenerator
 
 from dotenv import load_dotenv
 
+from metrics import TurnMetrics
 from provider_config import (
     PROVIDERS,
     VALID_BACKENDS,
@@ -1007,57 +1008,86 @@ def _iter_openai_compatible_tokens(provider, messages):
         ) from error
 
 
-def iter_reply_tokens(user_input, system_prompt, university_context, camera_context=None):
+def iter_reply_tokens(
+    user_input,
+    system_prompt,
+    university_context,
+    camera_context=None,
+    event_mode=None,
+):
     """Genera deltas de texto del LLM en cuanto llegan (síncrono).
 
     Usado por el bucle de voz para arrancar el TTS en la primera cláusula
     sin esperar a que termine toda la respuesta.
+
+    ``event_mode`` sólo se usa para la métrica del turno: el modo ya viene
+    aplicado dentro de ``system_prompt``, pero desde acá no se puede deducir
+    cuál era.
     """
     messages = _build_messages(user_input, system_prompt, university_context, camera_context)
 
-    for backend in _candidate_backends(get_selected_backend()):
-        if backend == "local_only":
-            text = _local_only_reply(user_input)
-            if text:
-                yield text
-            return
+    # La métrica se cierra en el `finally`: cubre el retorno normal, la caída al
+    # fallback local y el consumidor que abandona el generador a media respuesta.
+    metrics = TurnMetrics("voice", user_input=user_input, event_mode=event_mode)
+    metrics.note_prompt(messages, university_context)
 
-        try:
-            if _cot_log_enabled():
-                print(
-                    f"[LLM/CoT] intento voice/streaming backend={backend} "
-                    f"(TTS puede arrancar antes del final)",
-                    flush=True,
-                )
-            if backend == "ollama" or (
-                backend in PROVIDERS and PROVIDERS[backend].openai_compatible
-            ):
-                produced = False
-                for token in _iter_openai_compatible_tokens(backend, messages):
-                    produced = True
-                    yield token
-                if produced:
-                    return
-                # Stream vacío: probar siguiente backend.
-                continue
-            # Claude u otros: respuesta completa de una vez.
-            reply = _chat_with_backend(backend, messages)
-            if reply:
-                yield reply
+    try:
+        for backend in _candidate_backends(get_selected_backend()):
+            metrics.note_attempt(backend)
+            if backend == "local_only":
+                text = _local_only_reply(user_input)
+                if text:
+                    metrics.note_token(text)
+                    yield text
                 return
-        except Exception as error:
-            print(f"[LLM] Error usando backend '{backend}', probando fallback: {error}")
 
-    text = _local_only_reply(user_input)
-    if text:
-        yield text
+            try:
+                if _cot_log_enabled():
+                    print(
+                        f"[LLM/CoT] intento voice/streaming backend={backend} "
+                        f"(TTS puede arrancar antes del final)",
+                        flush=True,
+                    )
+                if backend == "ollama" or (
+                    backend in PROVIDERS and PROVIDERS[backend].openai_compatible
+                ):
+                    produced = False
+                    for token in _iter_openai_compatible_tokens(backend, messages):
+                        produced = True
+                        metrics.note_token(token)
+                        yield token
+                    if produced:
+                        return
+                    # Stream vacío: probar siguiente backend.
+                    continue
+                # Claude u otros: respuesta completa de una vez.
+                reply = _chat_with_backend(backend, messages)
+                if reply:
+                    metrics.note_token(reply)
+                    yield reply
+                    return
+            except Exception as error:
+                print(f"[LLM] Error usando backend '{backend}', probando fallback: {error}")
+
+        text = _local_only_reply(user_input)
+        if text:
+            metrics.note_token(text)
+            yield text
+    finally:
+        metrics.emit()
 
 
-def generate_reply(user_input, system_prompt, university_context, camera_context=None):
+def generate_reply(
+    user_input,
+    system_prompt,
+    university_context,
+    camera_context=None,
+    event_mode=None,
+):
     """Respuesta completa (bloqueante). Internamente reutiliza el stream de tokens."""
     parts: list[str] = []
     for token in iter_reply_tokens(
-        user_input, system_prompt, university_context, camera_context
+        user_input, system_prompt, university_context, camera_context, event_mode
     ):
         parts.append(token)
     return _postprocess_reply("".join(parts))
@@ -1205,42 +1235,57 @@ async def stream_llm_response(
 
     messages = _build_messages(prompt, system_prompt, university_context, camera_context)
 
-    # La selección de backend sondea la readiness de Ollama (HTTP bloqueante, aun
-    # estando cacheada con TTL). Sacarla del hilo del event loop con `to_thread`
-    # evita que un sondeo ocasional congele el video y los demás mensajes mientras
-    # Python espera el `urlopen` (síntoma A).
-    backends = await asyncio.to_thread(
-        lambda: _candidate_backends(get_selected_backend())
-    )
-    for backend in backends:
-        if backend == "local_only":
-            yield _local_only_reply(prompt)
-            return
+    # Misma métrica y mismo formato que la ruta de voz; lo único que cambia es
+    # `route`. `event_mode` es "normal" porque es el modo con el que esta ruta
+    # construye el prompt, unas líneas más arriba.
+    metrics = TurnMetrics("web", user_input=prompt, event_mode="normal")
+    metrics.note_prompt(messages, university_context)
 
-        produced = False
-        try:
-            if _cot_log_enabled():
-                print(f"[LLM/CoT] intento stream backend={backend}", flush=True)
-            async for chunk in _stream_backend_response(backend, messages):
-                produced = True
-                yield chunk
-            if produced:
-                return
-            # Stream vacío (HTTP 200 sin un solo token): no es un turno válido.
-            # Retornar acá dejaba al visitante sin respuesta; se prueba el
-            # siguiente backend, igual que hace `iter_reply_tokens` en la ruta
-            # de voz. El aviso NO depende de `_cot_log_enabled()`: es la única
-            # señal de que el proveedor contestó en blanco.
-            print(
-                f"[LLM] Stream vacío del backend '{backend}': probando el siguiente.",
-                flush=True,
-            )
-            continue
-        except Exception as error:
-            print(f"[LLM] Error usando backend '{backend}', probando fallback: {error}")
-            if produced:
-                # Ya se emitió texto parcial de este backend; reiniciar con otro
-                # mezclaría dos respuestas distintas. Cerramos el turno aquí.
+    try:
+        # La selección de backend sondea la readiness de Ollama (HTTP bloqueante, aun
+        # estando cacheada con TTL). Sacarla del hilo del event loop con `to_thread`
+        # evita que un sondeo ocasional congele el video y los demás mensajes mientras
+        # Python espera el `urlopen` (síntoma A).
+        backends = await asyncio.to_thread(
+            lambda: _candidate_backends(get_selected_backend())
+        )
+        for backend in backends:
+            metrics.note_attempt(backend)
+            if backend == "local_only":
+                texto = _local_only_reply(prompt)
+                metrics.note_token(texto)
+                yield texto
                 return
 
-    yield _local_only_reply(prompt)
+            produced = False
+            try:
+                if _cot_log_enabled():
+                    print(f"[LLM/CoT] intento stream backend={backend}", flush=True)
+                async for chunk in _stream_backend_response(backend, messages):
+                    produced = True
+                    metrics.note_token(chunk)
+                    yield chunk
+                if produced:
+                    return
+                # Stream vacío (HTTP 200 sin un solo token): no es un turno válido.
+                # Retornar acá dejaba al visitante sin respuesta; se prueba el
+                # siguiente backend, igual que hace `iter_reply_tokens` en la ruta
+                # de voz. El aviso NO depende de `_cot_log_enabled()`: es la única
+                # señal de que el proveedor contestó en blanco.
+                print(
+                    f"[LLM] Stream vacío del backend '{backend}': probando el siguiente.",
+                    flush=True,
+                )
+                continue
+            except Exception as error:
+                print(f"[LLM] Error usando backend '{backend}', probando fallback: {error}")
+                if produced:
+                    # Ya se emitió texto parcial de este backend; reiniciar con otro
+                    # mezclaría dos respuestas distintas. Cerramos el turno aquí.
+                    return
+
+        texto = _local_only_reply(prompt)
+        metrics.note_token(texto)
+        yield texto
+    finally:
+        metrics.emit()

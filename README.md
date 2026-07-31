@@ -126,6 +126,12 @@ Todas las variables en [`.env.example`](.env.example):
 | `CORS_ALLOW_ORIGINS` | Orígenes CORS permitidos (vacío = `*`) |
 | `HOLOGRAM_API_TOKEN` | Token de capacidad opt-in para endpoints privilegiados |
 | `OLLAMA_READY_TTL_SECONDS` | Cache de sondeo Ollama (default 10 s) |
+| `HOLOGRAM_METRICS` | Métrica por turno en stderr (`1` = activa, default) |
+
+Con `HOLOGRAM_METRICS=1` cada turno deja una línea `[METRICS] {...}` en **stderr**
+—contexto y prompt en caracteres, tokens estimados, proveedor/modelo, latencia a
+primer token y a primera cláusula, número de fallbacks— sin claves ni texto del
+prompt. Para aislarla del log humano: `python main.py 2> metrics.log`.
 
 La detección YOLO sigue activa sin personas; el encode MJPEG se espacia si no hay suscriptores. Las API keys se redactan automáticamente en logs y respuestas de error.
 

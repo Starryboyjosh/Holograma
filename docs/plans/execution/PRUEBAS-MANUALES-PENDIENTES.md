@@ -37,3 +37,17 @@ Estado: `[ ]` pendiente · `[x]` verificada · `[!]` falló → abrir hallazgo.
   variantes. *Los tests lo cubren con dobles; falta el WebSocket real.*
 - [ ] **P02-3 · Rollback.** Arrancar con `HOLOGRAM_COT_FILTER=0` y confirmar que
   vuelve el comportamiento anterior (útil si el filtro come texto en producción).
+
+## WAVE-03 — Instrumentación del turno (commit `<pendiente>`)
+
+- [ ] **P03-1 · Latencias reales.** Las dos columnas de tiempo de la línea base
+  (`time_to_first_token_ms`, `time_to_first_clause_ms`) están **sin medir**: con
+  backends dobles salen 0–1 ms, que no informa de nada. Hace falta un turno real
+  contra OpenRouter/groq. Procedimiento: arrancar el kiosco con
+  `python main.py 2> metrics.log`, hacer las 11 preguntas obligatorias por voz y
+  guardar el `metrics.log`. Con eso quedan cerradas las dos columnas y además se
+  confirma el peor caso de fallback (decisión **D4**) con números en vez de
+  estimación. *Requiere llamada de pago real: prohibida sin OK explícito.*
+- [ ] **P03-2 · La línea no ensucia el log del kiosco.** Arrancar sin redirigir y
+  confirmar por vista que el log humano (CoT, TTS, cámara) sigue legible, y que
+  `2> metrics.log` separa limpiamente los dos flujos. *Percepción humana.*

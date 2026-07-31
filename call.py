@@ -997,6 +997,7 @@ def ask_ai(user_input, mode=None):
         system_prompt=get_system_prompt(mode),
         university_context=get_university_context(),
         camera_context=_camera_context_for_prompt(user_input),
+        event_mode=mode,
     )
 
 
@@ -1040,6 +1041,9 @@ def ask_ai_and_speak(user_input, mode=None) -> str:
             system_prompt=get_system_prompt(mode),
             university_context=get_university_context(),
             camera_context=_camera_context_for_prompt(user_input),
+            # El modo ya está dentro del system_prompt; se pasa aparte sólo para
+            # que la métrica del turno pueda registrarlo.
+            event_mode=mode,
         )
         return speak_streaming_from_llm(
             tokens,

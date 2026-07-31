@@ -22,8 +22,8 @@ y commiteados en `514b2e4`. **WAVE-01 (`99d40c7`) y WAVE-02 (`cd3b1cd`) ejecutad
 |---|---|---|---|---|
 | 01 · Desbloquear el turno | ✅ commiteada | `99d40c7` | 2026-07-30 | criterio 4 no cumplido → WAVE-09 |
 | 02 · Filtro CoT streaming | ✅ commiteada | `cd3b1cd` | 2026-07-30 | smoke test de audio diferido → pruebas manuales |
-| 03 · Instrumentación | ⬜ pendiente | — | — | **siguiente** |
-| 04 · Secciones de contexto | ⬜ pendiente | — | — | |
+| 03 · Instrumentación | 🟡 en curso | — | 2026-07-30 | línea base offline lista; latencias reales diferidas → P03-1 |
+| 04 · Secciones de contexto | ⬜ pendiente | — | — | **siguiente** |
 | 05 · PromptPackage + router | ⬜ pendiente | — | — | |
 | 06 · Memoria de sesión | ⬜ pendiente | — | — | |
 | 07 · Paridad de rutas | ⬜ pendiente | — | — | |
@@ -33,7 +33,8 @@ y commiteados en `514b2e4`. **WAVE-01 (`99d40c7`) y WAVE-02 (`cd3b1cd`) ejecutad
 
 Estados: ⬜ pendiente · 🟡 en curso · ✅ commiteada · ⛔ bloqueada (ver Desvíos)
 
-**Siguiente acción:** abrir `WAVE-03-instrumentacion.md` y seguir `README.md`.
+**Siguiente acción:** cerrar la Puerta 1 de WAVE-03 (revisión humana) y commitear; después abrir
+`WAVE-04-secciones-contexto.md` y seguir `README.md`.
 
 ---
 
@@ -234,6 +235,109 @@ Al cerrar cada WAVE, añadí un bloque acá con este formato. No borres bloques 
 - Pruebas manuales diferidas: **P02-1** (smoke test de audio), **P02-2**, **P02-3**
   (ver `PRUEBAS-MANUALES-PENDIENTES.md`).
 
+### WAVE-03 — Instrumentación del turno
+- Commit: `<pendiente>` · Fecha: 2026-07-30
+- Archivos tocados: `metrics.py` (**nuevo**), `llm_backend.py`, `call.py`,
+  `tests/test_metrics.py` (**nuevo**), `.env.example`, `README.md`.
+  `app/services/conversation.py` **no** se tocó, y eso es más fuerte que lo que sugería la WAVE
+  (lo listaba como archivo a modificar): instrumentando en el generador que ya posee el bucle de
+  backends, las dos rutas quedan cubiertas sin que el servicio sepa nada de métricas. Es
+  exactamente lo que pide §2 ("no dupliques el formateo en `call.py` y en `conversation.py`").
+- Qué se hizo:
+  - Módulo `metrics.py` con `TurnMetrics`: **un solo punto de emisión y un solo formato** para las
+    dos rutas. Una línea JSON por turno, prefijo `[METRICS]`, con `route`, `event_mode`,
+    `provider`, `model`, `context_chars`, `prompt_chars`, `estimated_input_tokens`,
+    `local_skill_hit`, `time_to_first_token_ms`, `time_to_first_clause_ms`, `fallback_count`.
+  - Instanciado en `iter_reply_tokens` (`route="voice"`) y `stream_llm_response` (`route="web"`),
+    en ambos casos con el `emit()` dentro de un `finally`: cubre el retorno normal, la caída al
+    fallback local y el consumidor que abandona el generador a media respuesta. `emit()` es
+    idempotente porque un `GeneratorExit` lo dispararía además del cierre normal.
+  - `time_to_first_clause_ms` se calcula **dentro** de `TurnMetrics` reutilizando
+    `pop_ready_speech` (tabla de reutilización) sobre el mismo stream que ve el consumidor, en vez
+    de sacar un callback hasta `speak_streaming_from_llm` / `ConversationService`. Así el hito sale
+    idéntico en las dos rutas y no hubo que tocar `LLMService` ni sus dobles.
+  - Secretos: la línea pasa por `security.redact_secrets(payload, os.environ)`, la **misma**
+    función y la misma invocación que usa `main.py`. La línea lleva longitudes, nunca contenido.
+  - Flag de rollback `HOLOGRAM_METRICS=0`, documentado en `.env.example` y `README.md`.
+- Tests añadidos (`tests/test_metrics.py`, 7): `::test_metrica_emitida_una_vez_por_turno_ruta_web`,
+  `::test_metrica_emitida_una_vez_por_turno_ruta_voz`,
+  `::test_metrica_incluye_los_campos_obligatorios`, `::test_metrica_no_contiene_secretos`,
+  `::test_metrica_no_contiene_el_prompt_completo`, `::test_fallback_count_refleja_los_intentos`,
+  `::test_flag_desactiva_las_metricas`
+- Métricas antes → después:
+  - Suite: 223 → **230 casos**, exit 0.
+  - Turnos con métrica: **0 → 1 línea por turno**, en las dos rutas y con el mismo formato.
+  - Prueba de reversión: con `llm_backend.py` y `call.py` en HEAD (y `metrics.py` presente),
+    **7 de 7 fallan**; revertido también el módulo, la colección ni siquiera arranca. Restaurado,
+    7 de 7 pasan.
+  - `ruff` en los archivos tocados: limpio. Proyecto: sigue en **18** errores preexistentes
+    (RUFF-1), sin cambio.
+  - `git diff --stat tests/` sobre los tests previos: **vacío** (criterio 7). `git diff` sobre
+    `requirements*.txt` y `pyproject.toml`: **vacío** (cero dependencias nuevas).
+
+#### Línea base de las 11 preguntas obligatorias
+
+Medida **offline**, sin red y sin una sola llamada de pago: se construye el prompt real con
+`_build_messages(pregunta, get_system_prompt("normal"), get_university_context(), None)` y se
+miden longitudes. Con `HOLOGRAM_CAMERA=1`, que es el default del kiosco.
+
+| # | pregunta | ctx | prompt | ~tok | skill local |
+|---|----------|-----|--------|------|-------------|
+| 1 | ¿Cómo estás? | 15.516 | 18.496 | 5.285 | no |
+| 2 | ¿Qué significa UNEV? | 15.516 | 18.504 | 5.287 | no |
+| 3 | ¿Qué carreras ofrecen? | 15.516 | 18.506 | 5.287 | sí |
+| 4 | ¿Cuánto dura Programación Web? | 15.516 | 18.514 | 5.290 | sí |
+| 5 | ¿Y cuánto dura? | 15.516 | 18.499 | 5.285 | no |
+| 6 | ¿Dónde queda la UNEV? | 15.516 | 18.505 | 5.287 | sí |
+| 7 | ¿Está aprobada por el CES? | 15.516 | 18.510 | 5.289 | sí |
+| 8 | Háblame de la lluvia de peces. | 15.516 | 18.514 | 5.290 | sí |
+| 9 | ¿Qué ves frente a ti? | 15.516 | 18.505 | 5.287 | no |
+| 10 | ¿Cuál es el precio actual de algo que requiere internet? | 15.516 | 18.540 | 5.297 | no |
+| 11 | Cuéntame un chiste. | 15.516 | 18.503 | 5.287 | no |
+
+**Contexto institucional = 15.516 chars, idéntico en las 11.** Media de entrada estimada:
+**~5.288 tokens/turno**. Coincide con el `~5.340` de la auditoría → **criterio 6 cumplido**.
+
+Qué columnas son de qué naturaleza, para no confundirlas al revisar:
+
+| Campo | Cómo se obtuvo |
+|---|---|
+| `context_chars`, `prompt_chars`, `estimated_input_tokens`, `local_skill_hit` | **offline**, deterministas, en la tabla de arriba |
+| `route`, `event_mode`, `fallback_count` | offline, verificados con backends dobles en los tests |
+| `provider`, `model` | offline en los tests; el valor **real** depende del `.env` vivo |
+| `time_to_first_token_ms`, `time_to_first_clause_ms` | **requieren una llamada de pago real**: con dobles salen 0–1 ms y no dicen nada. Diferido → **P03-1** |
+
+> **Reconciliación de la línea base (importante para WAVE-04/05).** El prompt mide 16.9 K chars
+> con `HOLOGRAM_CAMERA=0` y 18.5 K con `HOLOGRAM_CAMERA=1`: `get_system_prompt` le añade el bloque
+> "REGLAS DE HUMANIZACIÓN VISUAL", **+1.593 chars (~455 tokens) en cada turno**, se hable o no de
+> lo que ve la cámara. El `~5.340` de la auditoría es la cifra con cámara encendida, que es el
+> escenario de producción. Al comparar contra el objetivo de ≤ 750 tokens hay que usar **5.288**,
+> no 4.833.
+
+- Criterios de aceptación: 1–7 cumplidos. El criterio 6 (la línea base reproduce los 15.516 chars
+  y los ~5.340 tokens de la auditoría) se cumple exactamente, con la reconciliación de arriba.
+- Desvíos del plan:
+  - **`local_skill_hit` es un booleano, no el nombre de la skill.** La tabla de la WAVE pide el
+    nombre, pero `route_local_skill` devuelve el **texto ya renderizado** y no identifica quién
+    respondió. Sacarle el nombre exige modificar `skills/router.py`, y esta WAVE dice explícitamente
+    que **observa sin alterar lo que mide**. El nombre pertenece a WAVE-05, que reescribe el router.
+  - **La línea sale por `stderr`, no por `stdout`.** No fue una preferencia: emitiendo por stdout se
+    rompía `test_llm_fallback.py::test_stream_vacio_registra_advertencia`, que afirma sobre *todo*
+    lo impreso, y el criterio 7 prohíbe tocar un test previo. Además stdout es el log humano del
+    kiosco y el canal del sidecar. Se aísla con `2> metrics.log`.
+  - **`HOLOGRAM_METRICS` documentada en `.env.example` + `README.md`, no en `main.py`.** La WAVE
+    nombraba `main.py`, pero `metrics_enabled()` usa `utils._env`, que lee **sólo** `os.environ`:
+    meter la variable en el `default_config` de `main.py` la expondría por `GET /api/config` sin
+    que eso la controle, que sería documentación falsa.
+  - **Pase de revisión con agente `worker`: omitido**, igual que en WAVE-01 y WAVE-02
+    (instrucción de sesión de no lanzar subagentes). La WAVE lo marca como "asistencia, NO la puerta".
+- Hallazgos nuevos (NO arreglados): **OBS-1**, **OBS-2** (ver la sección de abajo).
+- Revisión humana: OK explícito del usuario, 2026-07-30, tras presentar el checklist completo
+  (230 pasando, 7/7 fallan al revertir, `context_chars` = 15.516 re-medido), el resumen del diff
+  y los tres desvíos. En el mismo turno autorizó **encadenar WAVE-04 en esta sesión**, saltando
+  la parada del runbook.
+- Pruebas manuales diferidas: **P03-1**, **P03-2** (ver `PRUEBAS-MANUALES-PENDIENTES.md`).
+
 ---
 
 ## Desvíos y hallazgos nuevos
@@ -266,6 +370,19 @@ Incluí archivo y símbolo para que sea accionable después.
   `tests/test_custom_object_interval.py` (1). Mayormente variables sin usar; 14 los arregla
   `ruff --fix`. Los archivos tocados por cada WAVE sí deben quedar limpios, y WAVE-01 lo está.
   *Estado: anotado, no arreglado (regla "anotá, no arregles"). Candidato a una limpieza propia.*
+
+- **OBS-1 · `test_stream_vacio_registra_advertencia` afirma sobre todo el stdout.** La aserción es
+  `assert "groq" not in salida` sobre `capsys.readouterr().out` **entero**, no sobre la línea de
+  advertencia. Cualquier log futuro que nombre un backend rompe ese test sin que haya una regresión
+  real; ya obligó a mover las métricas a stderr en WAVE-03. Arreglo: acotar la aserción a las
+  líneas que empiezan por `[LLM]`. *Estado: anotado, no arreglado — es un test previo y el
+  criterio 7 prohíbe tocarlo dentro de esta WAVE.*
+
+- **OBS-2 · El bloque visual del system prompt se envía siempre.** Con `HOLOGRAM_CAMERA=1`,
+  `skills/event_mode.get_system_prompt` añade "REGLAS DE HUMANIZACIÓN VISUAL" —**+1.593 chars,
+  ~455 tokens por turno**— aunque la pregunta no tenga nada que ver con lo que ve la cámara (10 de
+  las 11 obligatorias). Es ~8,6 % del prompt y es condicionable por intención. *Estado: anotado,
+  no arreglado. Encaja en **WAVE-08** (política de cámara) y le da munición a **WAVE-05**.*
 
 - **INFO-3 · `audit_prompt.md` sin trackear en la raíz.** Archivo de trabajo previo al plan, sigue
   fuera de git. Decidir si se archiva bajo `docs/` o se borra. *Estado: sólo informe.*
