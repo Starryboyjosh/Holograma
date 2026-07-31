@@ -39,11 +39,12 @@ from llm_backend import (
     get_selected_backend,
     iter_reply_tokens,
 )
+from prompt_package import build_university_context
 from skills.appearance import get_cordial_observation
 from skills.event_mode import get_greeting, get_system_prompt
 from skills.presence import PresenceManager
 from skills.router import route_local_skill
-from skills.university import get_university_context, normalize_text
+from skills.university import normalize_text
 from utils import (
     _is_quiet,
     apply_config_to_env,
@@ -1080,7 +1081,9 @@ def ask_ai(user_input, mode=None):
     return generate_reply(
         user_input=user_input,
         system_prompt=get_system_prompt(mode),
-        university_context=get_university_context(),
+        # Sólo las secciones que la pregunta necesita, decididas en el único
+        # ensamblador (`prompt_package`), igual que en la ruta web.
+        university_context=build_university_context(user_input, event_mode=mode),
         camera_context=_camera_context_for_prompt(user_input),
         event_mode=mode,
     )
@@ -1124,7 +1127,7 @@ def ask_ai_and_speak(user_input, mode=None) -> str:
         tokens = iter_reply_tokens(
             user_input=user_input,
             system_prompt=get_system_prompt(mode),
-            university_context=get_university_context(),
+            university_context=build_university_context(user_input, event_mode=mode),
             camera_context=_camera_context_for_prompt(user_input),
             # El modo ya está dentro del system_prompt; se pasa aparte sólo para
             # que la métrica del turno pueda registrarlo.

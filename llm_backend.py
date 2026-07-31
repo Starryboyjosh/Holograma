@@ -11,6 +11,7 @@ from collections.abc import AsyncGenerator
 from dotenv import load_dotenv
 
 from metrics import TurnMetrics
+from prompt_package import PromptPackage, build_prompt_package
 from provider_config import (
     PROVIDERS,
     VALID_BACKENDS,
@@ -394,26 +395,27 @@ def _chat_with_backend(backend, messages):
 
 
 def _build_messages(user_input, system_prompt, university_context, camera_context=None):
+    """Los mensajes del turno, en el orden en que los ve el modelo.
+
+    El formato de los mensajes de sistema lo define `PromptPackage`, no esta
+    función: es el mismo paquete que decide *qué* contexto entra, así que quién
+    decide y quién formatea no pueden volver a divergir entre las dos rutas.
+    Acá sólo se añade el mensaje del usuario.
+
+    La firma no cambia —`tests/test_metrics.py` la llama por posición— y la
+    salida es carácter por carácter la de antes.
+    """
+    package = PromptPackage(
+        user_input=user_input,
+        system_prompt=system_prompt,
+        university_context=university_context,
+        camera_context=camera_context,
+    )
+    messages = package.system_messages()
     # Reforzar idioma español en el mensaje del usuario para modelos débiles
-    user_content = f"{user_input}\n\n[Instrucción: responde siempre en español.]"
-    messages = [
-        {
-            "role": "system",
-            "content": system_prompt,
-        },
-        {
-            "role": "system",
-            "content": university_context,
-        },
-    ]
-    if camera_context:
-        messages.append({
-            "role": "system",
-            "content": f"Contexto actual de la cámara:\n{camera_context}",
-        })
     messages.append({
         "role": "user",
-        "content": user_content,
+        "content": f"{user_input}\n\n[Instrucción: responde siempre en español.]",
     })
     return messages
 
@@ -1472,12 +1474,14 @@ async def stream_llm_response(
     ``call``: inyectarlo rompe el ciclo ``call ↔ llm_backend`` y evita que la
     capa de LLM dependa del estado global de la CLI.
     """
+    # Mismo ensamblador que la ruta de voz: esta ruta ya no decide por su cuenta
+    # qué contexto institucional entra. Antes pedía el bloque completo acá
+    # dentro, y por eso las dos rutas podían divergir sin que nadie lo notara.
     try:
-        from skills.event_mode import get_system_prompt
-        from skills.university import get_university_context
-        system_prompt = get_system_prompt("normal")
-        university_context = get_university_context()
-    except ImportError:
+        package = build_prompt_package(prompt, camera_context=camera_context, event_mode="normal")
+        system_prompt = package.system_prompt or "Eres un asistente de la UNEV."
+        university_context = package.university_context
+    except Exception:
         system_prompt = "Eres un asistente de la UNEV."
         university_context = ""
 
