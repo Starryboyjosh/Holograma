@@ -69,6 +69,7 @@ from vision.image_signals import (
     match_template_multiscale,
 )
 from vision.scoring import fuse_logo_channels
+from vision.tracking import LabelHysteresis
 
 # Checkpoint canónico del kiosco. Cualquier legacy se redirige aquí.
 DEFAULT_YOLOE_WEIGHTS = "yoloe-26n-seg.pt"
@@ -259,6 +260,12 @@ class YoloPersonDetector:
         # Señal cooperativa de parada: al activarla, run_continuous sale del bucle
         # y el context manager de Camera libera el dispositivo (apagar = liberar).
         self._stop_event = threading.Event()
+        # Histéresis M-of-N (I4) para los eventos de custom objects.
+        self._label_tracker = LabelHysteresis(
+            confirm_cycles=_env_int("YOLO_CUSTOM_CONFIRM_CYCLES", 2),
+            forget_seconds=_env_float("YOLO_CUSTOM_FORGET_SECONDS", 10.0),
+            retain_seconds=_env_float("YOLO_CUSTOM_RETAIN_SECONDS", 60.0),
+        )
         self._load_training_data()
 
     @staticmethod
@@ -1873,7 +1880,6 @@ class YoloPersonDetector:
 
         was_present = False
         last_count = 0
-        last_custom_labels: set[str] = set()
         last_analysis = {"person_count": 0, "persons": [], "custom_objects": []}
         last_detect_time = 0.0
         # Anti-rebote: instante en que la persona dejó de verse. Solo declaramos
@@ -1959,9 +1965,21 @@ class YoloPersonDetector:
                     current_custom_labels = {
                         obj["label"] for obj in analysis.get("custom_objects", [])
                     }
-                    new_labels = current_custom_labels - last_custom_labels
-                    if new_labels:
-                        callback("custom_object_detected", len(new_labels), analysis)
+                    # Histéresis M-of-N (I4): un parpadeo de un ciclo ya no
+                    # re-dispara "custom_object_detected". El label solo se
+                    # declara detectado cuando se ve en N ciclos consecutivos
+                    # (confirm_cycles, default 2) y se olvida tras
+                    # forget_seconds de ausencia sostenida (default 10 s).
+                    track_events = self._label_tracker.update(
+                        current_custom_labels, now=now
+                    )
+                    confirmed_labels = {
+                        e["label"]
+                        for e in track_events
+                        if e["event"] == "detected"
+                    }
+                    if confirmed_labels:
+                        callback("custom_object_detected", len(confirmed_labels), analysis)
 
                     # `was_present` lo gestiona la máquina de estados de arriba
                     # (entrada -> True; salida solo cuando la ausencia supera el
@@ -1973,7 +1991,6 @@ class YoloPersonDetector:
                     # cuadro perdido no reinicie la base de tamaño de grupo.
                     if is_present:
                         last_count = count
-                    last_custom_labels = current_custom_labels
 
                 # Publica el cuadro anotado SOLO si alguien mira el feed MJPEG.
                 # Sin suscriptores nos saltamos el imencode; la detección sigue
