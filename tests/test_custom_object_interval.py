@@ -161,28 +161,56 @@ def test_uniform_on_collar_is_rejected_or_snapped_off_neck(monkeypatch):
     assert custom == []
 
 
-def test_uniform_open_vocab_outside_chest_is_dropped(monkeypatch):
-    """Open-vocab en cuello/hombro no cuenta como uniforme."""
+def test_uniform_open_vocab_on_face_or_head_is_dropped(monkeypatch):
+    """Open-vocab en la cara o cabeza no cuenta como uniforme."""
     det, fake = _make_detector(monkeypatch)
     det._custom_classes = ["Uniforme ITEE"]
     det._prompt_key = None
 
-    def predict_neck(frame, **kwargs):
+    def predict_face(frame, **kwargs):
         fake.predict_calls += 1
         return [
             _FakeResult(
                 [
                     _FakeBox(0.95, 0, [0, 0, 100, 100]),
-                    # Centro ~ (80, 30) = pecho derecho / cuello (fuera de logo izq.)
-                    _FakeBox(0.90, 1, [70, 20, 90, 40]),
+                    # Centro (80, 5) = cabeza / cara (y < 0.10)
+                    _FakeBox(0.90, 1, [70, 0, 90, 10]),
                 ],
                 {0: "person", 1: "school uniform"},
             )
         ]
 
-    fake.predict = predict_neck
+    fake.predict = predict_face
     _, custom = det._detect_all(frame=None)
     assert custom == []
+
+
+def test_uniform_open_vocab_on_other_body_parts_accepted(monkeypatch):
+    """Open-vocab en el lado derecho del cuerpo o torso se acepta en su posición real."""
+    det, fake = _make_detector(monkeypatch)
+    det._custom_classes = ["Uniforme ITEE"]
+    det._prompt_key = None
+
+    def predict_body(frame, **kwargs):
+        fake.predict_calls += 1
+        return [
+            _FakeResult(
+                [
+                    _FakeBox(0.95, 0, [0, 0, 100, 100]),
+                    # Centro (75, 55) = torso derecho
+                    _FakeBox(0.90, 1, [60, 40, 90, 70]),
+                ],
+                {0: "person", 1: "school uniform"},
+            )
+        ]
+
+    fake.predict = predict_body
+    _, custom = det._detect_all(frame=None)
+    assert len(custom) == 1
+    assert custom[0]["label"] == "Uniforme ITEE"
+    box = custom[0]["box"]
+    cx = 0.5 * (box[0] + box[2])
+    assert cx >= 60.0  # Mantiene su posición en el lado derecho del cuerpo
 
 
 def test_uniform_open_vocab_low_conf_dropped(monkeypatch):
@@ -276,3 +304,40 @@ def test_logo_ref_from_template_match(monkeypatch):
     assert hits[0]["label"] == "Logo Colegio X"
     assert hits[0]["source"] == "logo_ref"
     assert hits[0]["confidence"] >= 0.55
+
+
+def test_open_vocab_uniform_checked_against_db_logo_images(monkeypatch):
+    """Verifica que 'Uniforme ITEE' (open-vocab) se compare contra las fotos 'Logo ITEE' guardadas en la base de datos."""
+    import numpy as np
+
+    det, fake = _make_detector(monkeypatch)
+    det._custom_classes = ["Uniforme ITEE"]
+    det._prompt_key = None
+
+    tmpl = np.zeros((48, 48), dtype=np.uint8)
+    tmpl[10:38, 10:38] = 200
+    # Guardado en DB como "Logo ITEE"
+    det._logo_images = {"Logo ITEE": [tmpl]}
+    det._logo_templates = {}
+
+    assert det._is_logo_trained_label("Uniforme ITEE") is True
+    assert len(det._logo_templates_for("Uniforme ITEE")) == 1
+
+    def predict(frame, **kwargs):
+        fake.predict_calls += 1
+        return [
+            _FakeResult(
+                [
+                    _FakeBox(0.95, 0, [0, 0, 100, 100]),
+                    _FakeBox(0.90, 1, [40, 50, 60, 70]),
+                ],
+                {0: "person", 1: "school uniform"},
+            )
+        ]
+
+    fake.predict = predict
+    # Frame en blanco sin la plantilla guardada -> debe descartarse por no coincidir con la DB
+    frame_blank = np.zeros((120, 100, 3), dtype=np.uint8)
+    _, custom = det._detect_all(frame=frame_blank)
+    assert custom == [], "Debe descartarse por no coincidir con la imagen guardada en la base de datos"
+

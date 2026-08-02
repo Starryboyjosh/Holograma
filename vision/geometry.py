@@ -16,30 +16,30 @@ import os
 from utils import _env_float
 
 # Geometría del logo relativa a la caja persona (YOLO):
-#   y ∈ [0.36, 0.58]  → pecho (bajo el cuello; el placket suele estar en y<0.34)
-#   x ∈ [0.08, 0.48]  → pecho izquierdo en la imagen del kiosco
+#   y ∈ [0.20, 1.00]  → cuerpo de la persona (bajo el cuello y la cara)
+#   x ∈ [0.00, 1.00]  → cuerpo completo de la persona
 #   YOLO_LOGO_MIRROR=1 si el logo sale al otro lado (cámara espejo).
-LOGO_Y0 = 0.36
-LOGO_Y1 = 0.58
-LOGO_X0 = 0.08
-LOGO_X1 = 0.48
-COLLAR_Y_MAX = 0.34  # por encima = cuello / placket / cara
+LOGO_Y0 = 0.20
+LOGO_Y1 = 1.00
+LOGO_X0 = 0.00
+LOGO_X1 = 1.00
+COLLAR_Y_MAX = 0.25  # por encima = cuello / placket / cara
 
-# Tamaño mínimo de la caja del logo, en fracción de la zona del pecho. Los
+# Tamaño mínimo de la caja del logo, en fracción de la zona del cuerpo. Los
 # logos bordados ocupan un área visible considerable; con 0.30/0.38 el overlay
 # dibujaba cuadros de ~20 px, invisibles en el vídeo del kiosko.
-SNAP_MIN_W_FRACTION = 0.55
-SNAP_MIN_H_FRACTION = 0.65
-SNAP_MIN_SIDE_PX = 50.0
+SNAP_MIN_W_FRACTION = 0.25
+SNAP_MIN_H_FRACTION = 0.25
+SNAP_MIN_SIDE_PX = 45.0
 
-# Margen que se deja a cada lado al clampear el centro dentro del pecho.
-SNAP_CENTER_MARGIN = 0.10
+# Margen que se deja a cada lado al clampear el centro dentro del cuerpo.
+SNAP_CENTER_MARGIN = 0.04
 
 
 def logo_roi_fractions() -> tuple[float, float, float, float]:
     """``(y0, y1, x0, x1)`` del ROI del logo en fracciones de la caja persona.
 
-    Vertical = pecho bajo el cuello. Horizontal = lado del logo bordado.
+    Cubre el cuerpo de la persona (excluyendo cuello y cara).
     """
     y0 = _env_float("YOLO_LOGO_Y0", LOGO_Y0)
     y1 = _env_float("YOLO_LOGO_Y1", LOGO_Y1)
@@ -47,18 +47,18 @@ def logo_roi_fractions() -> tuple[float, float, float, float]:
     x1 = _env_float("YOLO_LOGO_X1", LOGO_X1)
     if os.getenv("YOLO_LOGO_MIRROR", "0").lower() in ("1", "true", "yes"):
         x0, x1 = 1.0 - x1, 1.0 - x0
-    # Clamp: nunca subir el ROI al cuello (y0 >= collar).
-    collar = _env_float("YOLO_COLLAR_Y_MAX", COLLAR_Y_MAX)
-    y0 = max(collar + 0.02, min(0.70, y0))
-    y1 = max(y0 + 0.10, min(0.85, y1))
-    x0 = max(0.0, min(0.80, x0))
-    x1 = max(x0 + 0.12, min(1.0, x1))
+    # Clamp: nunca subir el ROI al cuello/cara (y0 >= collar).
+    collar = collar_y_max()
+    y0 = max(collar + 0.01, min(0.40, y0))
+    y1 = max(y0 + 0.10, min(1.0, y1))
+    x0 = max(0.0, min(0.90, x0))
+    x1 = max(x0 + 0.10, min(1.0, x1))
     return y0, y1, x0, x1
 
 
 def collar_y_max() -> float:
     """Fracción por encima de la cual empieza el cuello (nunca es el logo)."""
-    return max(0.20, min(0.45, _env_float("YOLO_COLLAR_Y_MAX", COLLAR_Y_MAX)))
+    return max(0.10, min(0.45, _env_float("YOLO_COLLAR_Y_MAX", COLLAR_Y_MAX)))
 
 
 def xyxy_tuple(xyxy) -> tuple[float, float, float, float]:
@@ -86,7 +86,7 @@ def scale_box(box, scale_back) -> tuple[float, float, float, float]:
 
 
 def chest_zone(person_box: tuple) -> tuple[float, float, float, float]:
-    """Rectángulo absoluto del pecho ``(x1, y1, x2, y2)`` de una persona."""
+    """Rectángulo absoluto del cuerpo ``(x1, y1, x2, y2)`` de una persona."""
     px1, py1, px2, py2 = (float(v) for v in person_box)
     p_h = max(1.0, py2 - py1)
     p_w = max(1.0, px2 - px1)
@@ -102,13 +102,13 @@ def chest_zone(person_box: tuple) -> tuple[float, float, float, float]:
 def point_in_logo_zone(
     cx: float, cy: float, person_box: tuple, tol: float = 0.04
 ) -> bool:
-    """True si el centro ``(cx, cy)`` cae en el pecho-logo de la persona."""
+    """True si el centro ``(cx, cy)`` cae en el cuerpo/zona de logo de la persona."""
     px1, py1, px2, py2 = person_box
     p_h = max(1.0, py2 - py1)
     p_w = max(1.0, px2 - px1)
     rel_y = (cy - py1) / p_h
     rel_x = (cx - px1) / p_w
-    # Cuello / placket: nunca es el logo bordado.
+    # Cuello / cara: nunca es el logo bordado.
     if rel_y < collar_y_max() - tol * 0.5:
         return False
     y0r, y1r, x0r, x1r = logo_roi_fractions()
@@ -134,13 +134,37 @@ def rel_center_on_person(
 def snap_box_to_logo_zone(
     box: tuple, person_box: tuple
 ) -> tuple[float, float, float, float]:
-    """Mueve y agranda la caja hasta el ROI del pecho, con tamaño proporcional.
+    """Ajusta y escala la caja del logo sobre el cuerpo de la persona.
 
-    El template matching devuelve el rectángulo del template redimensionado
-    (a veces 20×18 px), que sobre el vídeo es invisible. Aquí se garantiza un
-    tamaño mínimo proporcional al pecho y se clampea dentro de la persona.
+    Conserva la ubicación detectada (cx, cy) en cualquier parte del cuerpo,
+    evita que el centro o caja queden en el cuello/cara (los empuja por debajo del cuello),
+    y garantiza un tamaño mínimo visible en vídeo sin saltar a una zona fija.
     """
     px1, py1, px2, py2 = (float(v) for v in person_box)
+    p_h = max(1.0, py2 - py1)
+    p_w = max(1.0, px2 - px1)
+
+    bx1, by1, bx2, by2 = (float(v) for v in box)
+    bw = max(1.0, bx2 - bx1)
+    bh = max(1.0, by2 - by1)
+
+    cx = 0.5 * (bx1 + bx2)
+    cy = 0.5 * (by1 + by2)
+
+    # Nunca colocar en el cuello o la cara: empujar cy por debajo del cuello si hace falta
+    min_cy_collar = py1 + (collar_y_max() + 0.02) * p_h
+    if cy < min_cy_collar:
+        cy = min_cy_collar
+
+    # Clampear el centro dentro del cuerpo de la persona
+    min_cx = px1 + SNAP_CENTER_MARGIN * p_w
+    max_cx = max(min_cx, px2 - SNAP_CENTER_MARGIN * p_w)
+    min_cy = min_cy_collar
+    max_cy = max(min_cy, py2 - SNAP_CENTER_MARGIN * p_h)
+
+    cx = max(min_cx, min(max_cx, cx))
+    cy = max(min_cy, min(max_cy, cy))
+
     zx1, zy1, zx2, zy2 = chest_zone(person_box)
     zw = max(10.0, zx2 - zx1)
     zh = max(10.0, zy2 - zy1)
@@ -148,15 +172,8 @@ def snap_box_to_logo_zone(
     target_w = max(SNAP_MIN_SIDE_PX, SNAP_MIN_W_FRACTION * zw)
     target_h = max(SNAP_MIN_SIDE_PX, SNAP_MIN_H_FRACTION * zh)
 
-    bx1, by1, bx2, by2 = (float(v) for v in box)
-    use_w = max(max(1.0, bx2 - bx1), target_w)
-    use_h = max(max(1.0, by2 - by1), target_h)
-
-    # El centro debe caer dentro de la zona del pecho.
-    cx = 0.5 * (bx1 + bx2)
-    cy = 0.5 * (by1 + by2)
-    cx = max(zx1 + SNAP_CENTER_MARGIN * zw, min(zx2 - SNAP_CENTER_MARGIN * zw, cx))
-    cy = max(zy1 + SNAP_CENTER_MARGIN * zh, min(zy2 - SNAP_CENTER_MARGIN * zh, cy))
+    use_w = max(bw, target_w)
+    use_h = max(bh, target_h)
 
     return (
         max(px1, cx - use_w * 0.5),

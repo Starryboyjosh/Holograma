@@ -57,12 +57,12 @@ export function ChatWidget() {
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Escribe tu consulta..."
-          className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#E25C1D]"
+          className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#FF7208]"
           onKeyDown={(e) => {
             if (e.key === 'Enter') send();
           }}
         />
-        <button onClick={send} className="px-4 py-2 bg-[#E25C1D] hover:bg-orange-600 rounded-xl text-xs font-bold">
+        <button onClick={send} className="px-4 py-2 bg-[#FF7208] hover:bg-orange-deep rounded-xl text-xs font-bold">
           Enviar
         </button>
       </div>

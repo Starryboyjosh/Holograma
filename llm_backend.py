@@ -397,10 +397,18 @@ def _chat_with_backend(backend, messages):
 def _build_messages(user_input, system_prompt, university_context, camera_context=None):
     """Los mensajes del turno, en el orden en que los ve el modelo.
 
-    El formato de los mensajes de sistema lo define `PromptPackage`, no esta
+    El *contenido* de los mensajes de sistema lo define `PromptPackage`, no esta
     función: es el mismo paquete que decide *qué* contexto entra, así que quién
     decide y quién formatea no pueden volver a divergir entre las dos rutas.
-    Acá sólo se añade el mensaje del usuario.
+
+    El *empaquetado* sí es cosa de acá: `PromptPackage.system_messages()`
+    devuelve un mensaje "system" por pieza (prompt, contexto universitario,
+    cámara), pero algunos modelos de Ollama (p. ej. qwen3.5-super-coder)
+    generan su parser de plantilla chat con Jinja y ese parser rechaza
+    cualquier mensaje "system" que no sea el primero y único de la
+    conversación ("System message must be at the beginning"), así que varios
+    bloques "system" sueltos tumbaban siempre el backend local. Se colapsan en
+    uno solo antes de añadir el mensaje del usuario.
 
     La firma no cambia —`tests/test_metrics.py` la llama por posición— y la
     salida es carácter por carácter la de antes.
@@ -411,7 +419,10 @@ def _build_messages(user_input, system_prompt, university_context, camera_contex
         university_context=university_context,
         camera_context=camera_context,
     )
-    messages = package.system_messages()
+    system_content = "\n\n".join(
+        part["content"] for part in package.system_messages() if part.get("content")
+    )
+    messages = [{"role": "system", "content": system_content}] if system_content else []
     # Reforzar idioma español en el mensaje del usuario para modelos débiles
     messages.append({
         "role": "user",
@@ -1495,8 +1506,13 @@ async def stream_llm_response(
         _web_context_block, prompt, system_prompt, university_context, camera_context
     )
     if web_block:
-        # Se inserta antes del mensaje del usuario (último de la lista).
-        messages.insert(len(messages) - 1, web_block)
+        # Se añade al único mensaje "system" (no como entrada aparte): igual que en
+        # `_build_messages`, insertar un segundo bloque "system" suelto rompe los
+        # backends de Ollama cuya plantilla exige un solo mensaje de sistema inicial.
+        if messages and messages[0].get("role") == "system":
+            messages[0]["content"] = f"{messages[0]['content']}\n\n{web_block['content']}"
+        else:
+            messages.insert(0, web_block)
 
     # Misma métrica y mismo formato que la ruta de voz; lo único que cambia es
     # `route`. `event_mode` es "normal" porque es el modo con el que esta ruta

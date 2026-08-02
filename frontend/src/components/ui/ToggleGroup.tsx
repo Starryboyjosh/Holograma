@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useSurface } from './surfaceContext';
 
 export interface ToggleOption<T extends string> {
   value: T;
@@ -14,9 +15,11 @@ interface ToggleGroupProps<T extends string> {
   className?: string;
 }
 
-// The segmented "pill" selector repeated across Settings (theme, engine, YOLO,
-// Whisper) and the assistant voice-mode switch. Active = orange, inactive =
-// muted with a hover, in both themes.
+/**
+ * Selector segmentado del diseño (nodos 58:1168 / 38:26): pastilla contenedora con
+ * radio 50px y el activo en naranja pleno. El tono inactivo depende de la superficie
+ * (crema o degradado) — ver `surface.tsx`.
+ */
 export function ToggleGroup<T extends string>({
   options,
   value,
@@ -25,9 +28,10 @@ export function ToggleGroup<T extends string>({
   className = '',
 }: ToggleGroupProps<T>) {
   const cols = columns ?? options.length;
+  const glass = useSurface() === 'glass';
   return (
     <div
-      className={`grid gap-2 p-1 rounded-xl bg-gray-100 dark:bg-slate-900/60 ${className}`}
+      className={`grid gap-1 rounded-[50px] p-1 ${glass ? 'bg-white/10' : 'bg-black/5'} ${className}`}
       style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
     >
       {options.map((opt) => {
@@ -37,10 +41,12 @@ export function ToggleGroup<T extends string>({
             key={opt.value}
             type="button"
             onClick={() => onChange(opt.value)}
-            className={`py-2 text-xs font-bold uppercase rounded-lg transition-all ${
+            className={`rounded-[50px] py-2.5 text-[12px] font-semibold uppercase transition-colors ${
               active
-                ? 'bg-[#E25C1D] text-white shadow-md'
-                : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200'
+                ? 'bg-orange text-white'
+                : glass
+                  ? 'text-white/80 hover:text-white'
+                  : 'text-ink hover:text-orange'
             }`}
           >
             {opt.label}

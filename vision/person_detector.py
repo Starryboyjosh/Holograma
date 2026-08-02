@@ -151,7 +151,10 @@ _LOGO_OPEN_VOCAB_MIN_CONF = 0.45
 #
 # Open-vocab YOLOE solo sugiere; sin match a la plantilla de Entrenar no cuenta
 # como esa etiqueta. El cuello/placket se evita con geometría de ROI pecho.
-_TMPL_MATCH_MIN = 0.62
+# El score combinado es 0.75*template + 0.25*ORB; cuando ORB=0 (logos bordados
+# pequeños), el máximo posible es 0.75*tmpl.  Con tmpl real ~0.60 eso da ~0.45.
+# Umbral 0.42 acepta matches reales sin tragarse ruido.
+_TMPL_MATCH_MIN = 0.42
 
 
 def _yolo_debug() -> bool:
@@ -870,7 +873,7 @@ class YoloPersonDetector:
     def _is_uniform_label(self, label: str) -> bool:
         """Compat: true si el nombre sugiere uniforme (UI/tests)."""
         key = str(label or "").strip().lower()
-        return "uniforme" in key or "itee" in key
+        return "uniforme" in key or "itee" in key or "uniform" in key
 
     def _is_logo_trained_label(self, label: str) -> bool:
         """True si hay imágenes de Entrenar (plantilla/ORB) para esta etiqueta."""
@@ -882,6 +885,8 @@ class YoloPersonDetector:
         for k in list(self._logo_images.keys()) + list(self._logo_templates.keys()) + list(self._logo_hsv_hists.keys()):
             if str(k).strip().lower() == key:
                 return True
+        if self._is_uniform_label(label) and (self._logo_images or self._logo_templates or self._logo_hsv_hists):
+            return True
         return False
 
     def _logo_templates_for(self, label: str) -> list:
@@ -891,6 +896,15 @@ class YoloPersonDetector:
         for k, v in self._logo_images.items():
             if str(k).strip().lower() == key:
                 return v
+        if self._is_uniform_label(label):
+            for k, v in self._logo_images.items():
+                if self._is_uniform_label(k):
+                    return v
+            if self._logo_images:
+                all_imgs = []
+                for imgs in self._logo_images.values():
+                    all_imgs.extend(imgs)
+                return all_imgs
         return []
 
     def _logo_orb_for(self, label: str) -> list:
@@ -900,6 +914,15 @@ class YoloPersonDetector:
         for k, v in self._logo_templates.items():
             if str(k).strip().lower() == key:
                 return v
+        if self._is_uniform_label(label):
+            for k, v in self._logo_templates.items():
+                if self._is_uniform_label(k):
+                    return v
+            if self._logo_templates:
+                all_orb = []
+                for des in self._logo_templates.values():
+                    all_orb.extend(des)
+                return all_orb
         return []
 
     def _logo_hsv_hists_for(self, label: str) -> list:
@@ -909,9 +932,17 @@ class YoloPersonDetector:
         for k, v in self._logo_hsv_hists.items():
             if str(k).strip().lower() == key:
                 return v
+        if self._is_uniform_label(label):
+            for k, v in self._logo_hsv_hists.items():
+                if self._is_uniform_label(k):
+                    return v
+            if self._logo_hsv_hists:
+                all_hsv = []
+                for h in self._logo_hsv_hists.values():
+                    all_hsv.extend(h)
+                return all_hsv
         return []
 
-    @staticmethod
     @staticmethod
     def _debug_enabled() -> bool:
         return _yolo_debug()
@@ -934,6 +965,7 @@ class YoloPersonDetector:
             return False
         return is_white_light_or_glare(crop)
 
+    @staticmethod
     def _compute_hsv_hist(bgr_img):
         """Histograma 2D HSV normalizado (delegado a ``vision.image_signals``)."""
         return compute_hsv_hist(bgr_img)
@@ -967,7 +999,10 @@ class YoloPersonDetector:
         self, crop, label: str
     ) -> tuple[float, tuple | None, str]:
         """Match firma HSV + plantilla multiescala + ORB de ``label`` en un ROI. → (score, box_rel, method)."""
-        hsv_min = _env_float("YOLO_LOGO_HSV_MIN", 0.35)
+        # Gate de color HSV: solo rechaza discrepancias extremas de color
+        # (e.g. logo rojo vs crop verde). Bajo (0.18) porque la iluminación
+        # del kiosco cambia el balance y el match template+ORB son más fiables.
+        hsv_min = _env_float("YOLO_LOGO_HSV_MIN", 0.18)
         color_score = self._match_hsv_color_signature(crop, label)
         if color_score < hsv_min:
             return 0.0, None, "hsv_mismatch"
@@ -986,9 +1021,10 @@ class YoloPersonDetector:
         tmpl_score, tmpl_box = self._match_template_multiscale(gray_roi, imgs)
         orb_score = self._match_orb_in_roi(gray_roi, des_list)
         # Combinar: template manda en localización; ORB refuerza confianza.
-        if tmpl_box is not None and tmpl_score >= _env_float(
-            "YOLO_LOGO_TMPL_MIN", _TMPL_MATCH_MIN
-        ) * 0.90:
+        # Gate relajado: tmpl_score real >= 0.40 es suficiente para pasar;
+        # el conf combinado se evalúa después contra _TMPL_MATCH_MIN.
+        tmpl_min_internal = _env_float("YOLO_LOGO_TMPL_MIN", _TMPL_MATCH_MIN)
+        if tmpl_box is not None and tmpl_score >= tmpl_min_internal * 0.85:
             conf = min(0.98, 0.75 * tmpl_score + 0.25 * orb_score)
             return conf, tmpl_box, "template"
         if orb_score >= 0.85 and tmpl_box is not None:
@@ -1039,7 +1075,7 @@ class YoloPersonDetector:
             return False, None, 0.0
         score, rel_box, _method = self._match_logo_in_gray(crop, label)
         tmpl_min = _env_float("YOLO_LOGO_TMPL_MIN", _TMPL_MATCH_MIN)
-        if score < tmpl_min * 0.92 or rel_box is None:
+        if score < tmpl_min or rel_box is None:
             return False, None, score
         rx1, ry1, rx2, ry2 = rel_box
         refined = (
@@ -1083,7 +1119,7 @@ class YoloPersonDetector:
 
             for crop, (ox1, oy1, _ox2, _oy2), person_box in rois:
                 score, rel_box, method = self._match_logo_in_gray(crop, label)
-                if rel_box is None or score < tmpl_min * 0.90:
+                if rel_box is None or score < tmpl_min:
                     continue
                 ix1, iy1, ix2, iy2 = rel_box
                 fx1 = float(ox1 + ix1)
@@ -1102,7 +1138,7 @@ class YoloPersonDetector:
                 best_box_frame = self._snap_box_to_logo_zone((fx1, fy1, fx2, fy2), person_box)
                 best_detail = f"{method} score={score:.2f}"
 
-            accept = best_conf >= tmpl_min * 0.92 and best_box_frame is not None
+            accept = best_conf >= tmpl_min and best_box_frame is not None
             if debug and (accept or best_conf >= 0.45):
                 print(
                     f"[YOLO] Logo ref «{label}» conf={best_conf:.2f} "

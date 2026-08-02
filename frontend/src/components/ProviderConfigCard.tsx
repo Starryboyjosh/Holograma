@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Card, SectionTitle } from './ui/Card';
+import { Card } from './ui/Card';
 import { Field, Select, TextInput } from './ui/Field';
 import { apiKeyPlaceholder, buildLlmTestInput } from '../lib/providerForm';
 import type {
@@ -138,14 +138,18 @@ export function ProviderConfigCard({
 
   return (
     <Card>
-      <div className="flex items-center justify-between">
-        <SectionTitle>Cerebro de la IA</SectionTitle>
+      {/* El diseño titula esta tarjeta "CEREBRO DEL HOLOGRAMA", centrado y en navy
+          (no en naranja como el resto de títulos de sección). */}
+      <div className="relative flex items-center justify-center">
+        <h3 className="text-center text-[20px] font-bold uppercase tracking-wide text-navy md:text-[24px]">
+          Cerebro del holograma
+        </h3>
         {selected?.requires_key && (
           <span
-            className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full ${
+            className={`absolute end-0 rounded-[50px] px-3 py-1 text-[10px] font-bold uppercase tracking-wider ${
               selected.key_configured
-                ? 'bg-emerald-500/15 text-emerald-500'
-                : 'bg-amber-500/15 text-amber-500'
+                ? 'bg-emerald-500/15 text-emerald-600'
+                : 'bg-amber-500/15 text-amber-600'
             }`}
           >
             {selected.key_configured ? 'API key configurada' : 'Sin API key'}
@@ -153,7 +157,7 @@ export function ProviderConfigCard({
         )}
       </div>
 
-      <Field label="Proveedor de IA">
+      <Field label="Proveedor de IA:">
         <Select
           aria-label="Proveedor de IA"
           value={llmProvider}
@@ -178,11 +182,11 @@ export function ProviderConfigCard({
       </Field>
 
       {selected && (
-        <p className="text-xs text-gray-600 dark:text-gray-400 -mt-1">{selected.description}</p>
+        <p className="text-xs text-muted -mt-1">{selected.description}</p>
       )}
 
       {usesModel && (
-        <Field label="Modelo">
+        <Field label="Modelo:">
           {showOllamaSelect ? (
             <div className="space-y-2">
               <Select
@@ -199,14 +203,14 @@ export function ProviderConfigCard({
                 ))}
               </Select>
               <div className="flex items-center justify-between gap-2">
-                <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                <p className="text-[11px] text-muted">
                   {ollamaMessage || 'Modelos detectados en este PC (ollama list).'}
                 </p>
                 <button
                   type="button"
                   onClick={() => void refreshOllamaModels()}
                   disabled={loading || ollamaLoading}
-                  className="shrink-0 text-[11px] font-semibold uppercase tracking-wider text-[#E25C1D] hover:underline disabled:opacity-50"
+                  className="shrink-0 text-[11px] font-semibold uppercase tracking-wider text-orange hover:underline disabled:opacity-50"
                 >
                   {ollamaLoading ? 'Actualizando…' : 'Actualizar lista'}
                 </button>
@@ -235,8 +239,8 @@ export function ProviderConfigCard({
                     <p
                       className={`text-[11px] ${
                         ollamaStatus === 'error'
-                          ? 'text-amber-600 dark:text-amber-400'
-                          : 'text-gray-500 dark:text-gray-400'
+                          ? 'text-amber-600'
+                          : 'text-muted'
                       }`}
                     >
                       {ollamaStatus === 'loading'
@@ -249,7 +253,7 @@ export function ProviderConfigCard({
                         type="button"
                         onClick={() => void refreshOllamaModels()}
                         disabled={loading || ollamaLoading}
-                        className="shrink-0 text-[11px] font-semibold uppercase tracking-wider text-[#E25C1D] hover:underline disabled:opacity-50"
+                        className="shrink-0 text-[11px] font-semibold uppercase tracking-wider text-orange hover:underline disabled:opacity-50"
                       >
                         {ollamaLoading ? 'Actualizando…' : 'Actualizar lista'}
                       </button>
@@ -263,7 +267,7 @@ export function ProviderConfigCard({
       )}
 
       {selected?.needs_base_url && (
-        <Field label="URL base del endpoint (compatible con OpenAI)">
+        <Field label="URL base del endpoint (compatible con OpenAI):">
           <TextInput
             type="text"
             value={baseUrl}
@@ -274,7 +278,7 @@ export function ProviderConfigCard({
       )}
 
       {selected?.requires_key && (
-        <Field label="API Key">
+        <Field label="API Key:">
           <TextInput
             type="password"
             autoComplete="off"
@@ -286,7 +290,7 @@ export function ProviderConfigCard({
       )}
 
       {!usesModel && (
-        <p className="text-xs text-gray-600 dark:text-gray-400">
+        <p className="text-xs text-muted">
           Este modo no usa un modelo de IA: responde solo con las skills locales de UNEV.
         </p>
       )}
@@ -297,10 +301,9 @@ export function ProviderConfigCard({
             type="button"
             onClick={onTest}
             disabled={testing || loading || !selected}
-            className={`w-full px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
-              testing
-                ? 'bg-[#E25C1D]/20 text-[#E25C1D] border border-[#E25C1D]/50 animate-pulse'
-                : 'bg-gray-100 hover:bg-gray-200 border border-gray-200 text-gray-700 dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-slate-800 dark:text-slate-300'
+            // Pastilla naranja centrada, como "PROBAR CONEXIÓN" en el diseño.
+            className={`mx-auto block rounded-[50px] bg-orange px-8 py-2.5 text-[12px] font-semibold uppercase text-white shadow-[0_1px_5px_rgba(0,0,0,0.25)] transition-opacity hover:opacity-90 disabled:opacity-40 ${
+              testing ? 'animate-pulse' : ''
             }`}
           >
             {testing ? 'Probando…' : 'Probar conexión'}

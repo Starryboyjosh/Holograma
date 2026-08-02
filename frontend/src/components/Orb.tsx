@@ -1,14 +1,20 @@
 import { ORB_RING } from '../theme';
 import type { AssistantState } from '../theme';
+import micIcon from '../assets/holomind/icon-microphone.webp';
 
 interface OrbProps {
   state: AssistantState;
   onActivate: () => void;
 }
 
-// The tappable assistant orb. Visuals key off the assistant state machine:
-// listening (green ping + bars), thinking (amber spinner), speaking (orange
-// bars), idle (mic). Extracted verbatim from the original assistant screen.
+/**
+ * Orbe del asistente (nodos 29:1410 / 29:1411 / 29:1412 / 31:1881).
+ *
+ * El diseño lo compone con tres círculos concéntricos naranjas — halo difuso, aro
+ * fino y disco central — y el icono de micrófono encima. Los círculos van en CSS
+ * porque laten y giran según el estado; el micrófono sí es el asset exportado, que
+ * es la única parte con forma propia que no puedo redibujar.
+ */
 export function Orb({ state, onActivate }: OrbProps) {
   const interactive = state === 'idle' || state === 'listening';
   const bars = state === 'listening' || state === 'speaking';
@@ -17,31 +23,52 @@ export function Orb({ state, onActivate }: OrbProps) {
     <button
       type="button"
       onClick={onActivate}
-      className={`relative flex justify-center items-center h-40 w-40 mb-4 rounded-full transition-all ${
+      className={`relative flex h-48 w-48 items-center justify-center rounded-full transition-transform ${
         interactive ? 'cursor-pointer hover:scale-105 active:scale-95' : 'cursor-default'
       }`}
-      title="Toca para hablar"
-      aria-label="Toca para hablar"
+      // No puede llamarse "Toca para hablar": ese es el nombre del selector de modo
+      // de voz del diseño, y dos controles distintos con el mismo nombre accesible
+      // son indistinguibles para un lector de pantalla.
+      title="Activar micrófono"
+      aria-label="Activar micrófono"
     >
+      {/* Halo difuso exterior. */}
       <span
-        className={`absolute inset-0 rounded-full bg-[#E25C1D] opacity-10 blur-xl ${
-          state !== 'idle' ? 'animate-pulse' : ''
+        aria-hidden
+        className={`absolute inset-0 rounded-full bg-orange/30 blur-2xl ${
+          state === 'idle' ? 'organic-orb' : 'animate-pulse'
         }`}
-      ></span>
+      />
       {state === 'listening' && (
-        <span className="absolute inset-0 rounded-full border-2 border-emerald-400/50 animate-ping"></span>
+        <span
+          aria-hidden
+          className="absolute inset-2 animate-ping rounded-full border-2 border-emerald-500/50"
+        />
       )}
+      {/* Aro fino (177px en el diseño). */}
       <span
-        className={`absolute w-36 h-36 rounded-full border ${
-          state === 'thinking' ? 'border-amber-400/40 spin-slow' : 'border-orange-500/15'
+        aria-hidden
+        className={`absolute h-[177px] w-[177px] rounded-full border-2 ${
+          state === 'thinking' ? 'spin-slow border-amber-500/50' : ORB_RING[state]
         }`}
-      ></span>
+      />
+      {/* Disco central (132px en el diseño). */}
       <span
-        className={`relative w-24 h-24 rounded-full bg-gradient-to-tr from-[#0F172A] to-[#2B1B15] border-2 ${ORB_RING[state]} flex items-center justify-center shadow-inner transition-all`}
-      >
+        aria-hidden
+        className="absolute h-[132px] w-[132px] rounded-full bg-orange/35"
+      />
+
+      <span className="relative flex h-[44px] w-[44px] items-center justify-center">
         {state === 'thinking' ? (
-          <svg className="w-9 h-9 text-amber-400 animate-spin" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <svg className="h-9 w-9 animate-spin text-amber-600" fill="none" viewBox="0 0 24 24">
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
             <path
               className="opacity-75"
               fill="currentColor"
@@ -49,32 +76,31 @@ export function Orb({ state, onActivate }: OrbProps) {
             ></path>
           </svg>
         ) : bars ? (
-          <span className="flex items-end gap-1 h-8">
+          <span className="flex h-8 items-end gap-1">
             <span
-              className={`w-1.5 rounded-full animate-pulse h-5 ${state === 'listening' ? 'bg-emerald-400' : 'bg-[#E25C1D]'}`}
+              className={`h-5 w-1.5 animate-pulse rounded-full ${state === 'listening' ? 'bg-emerald-600' : 'bg-orange-deep'}`}
               style={{ animationDelay: '0.1s' }}
             ></span>
             <span
-              className={`w-1.5 rounded-full animate-pulse h-8 ${state === 'listening' ? 'bg-emerald-300' : 'bg-orange-400'}`}
+              className={`h-8 w-1.5 animate-pulse rounded-full ${state === 'listening' ? 'bg-emerald-500' : 'bg-orange'}`}
               style={{ animationDelay: '0.3s' }}
             ></span>
             <span
-              className={`w-1.5 rounded-full animate-pulse h-6 ${state === 'listening' ? 'bg-emerald-400' : 'bg-[#E25C1D]'}`}
+              className={`h-6 w-1.5 animate-pulse rounded-full ${state === 'listening' ? 'bg-emerald-600' : 'bg-orange-deep'}`}
               style={{ animationDelay: '0.5s' }}
             ></span>
             <span
-              className={`w-1.5 rounded-full animate-pulse h-4 ${state === 'listening' ? 'bg-emerald-300' : 'bg-orange-400'}`}
+              className={`h-4 w-1.5 animate-pulse rounded-full ${state === 'listening' ? 'bg-emerald-500' : 'bg-orange'}`}
               style={{ animationDelay: '0.2s' }}
             ></span>
           </span>
         ) : (
-          <svg className="w-10 h-10 text-[#E25C1D]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
-            />
-          </svg>
+          <img
+            src={micIcon}
+            alt=""
+            draggable={false}
+            className="h-full w-full object-contain"
+          />
         )}
       </span>
     </button>

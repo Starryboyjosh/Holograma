@@ -774,10 +774,20 @@ def train_image(payload: TrainImagePayload):
         else:
             scale_boxes = 1.0
 
-        thumbnail_url = f"/data/images/{image_filename}" if image_data else ""
+        # Antes comprobaba solo `image_data` (verdadero también para las URLs
+        # externas de los botones "Muestra"), así que una foto de muestra dejaba
+        # una miniatura apuntando a un archivo que nunca se escribió (solo el
+        # bloque `if image_data and "base64," in image_data:` de arriba guarda
+        # algo en disco). Usar la misma condición evita miniaturas fantasma.
+        thumbnail_url = (
+            f"/data/images/{image_filename}" if image_data and "base64," in image_data else ""
+        )
 
-        for box in payload.boundingBoxes:
-            new_id = int(time.time() * 1000)
+        for idx, box in enumerate(payload.boundingBoxes):
+            # +idx: varias cajas guardadas en la misma petición caen en el mismo
+            # milisegundo y generaban ids duplicados (el frontend los usa como
+            # `key` de React).
+            new_id = int(time.time() * 1000) + idx
             bx, by, bw, bh = box.x, box.y, box.w, box.h
             if scale_boxes != 1.0:
                 bx, by, bw, bh = (
@@ -823,6 +833,52 @@ def get_training_metadata():
     if not isinstance(items, list):
         items = []
     return {"status": "ok", "items": items}
+
+
+@app.delete("/api/train/image/{item_id}")
+def delete_train_image(item_id: int):
+    """Elimina un objeto entrenado (una caja) de ``training_metadata.json``.
+
+    Varias cajas de la misma foto comparten ``thumbnail``: el archivo de imagen
+    solo se borra del disco si ningún registro restante lo sigue referenciando.
+    """
+    meta_path = os.path.join(DATA_DIR, "training_metadata.json")
+    try:
+        existing = load_config(meta_path)
+        if not isinstance(existing, list):
+            existing = []
+
+        removed = [item for item in existing if item.get("id") == item_id]
+        if not removed:
+            return {"status": "error", "message": "Objeto no encontrado."}
+        remaining = [item for item in existing if item.get("id") != item_id]
+
+        _atomic_write_text(meta_path, json.dumps(remaining, indent=4))
+
+        for item in removed:
+            thumb = item.get("thumbnail") or ""
+            if thumb.startswith("/data/") and not any(
+                r.get("thumbnail") == thumb for r in remaining
+            ):
+                image_path = os.path.join(DATA_DIR, thumb[len("/data/") :])
+                try:
+                    if os.path.isfile(image_path):
+                        os.remove(image_path)
+                except OSError:
+                    pass
+
+        # Invalidar caché de plantillas, igual que train_image(): el próximo
+        # reload de YOLO debe dejar de ver el objeto borrado.
+        try:
+            cache = os.path.join(DATA_DIR, "logo_index.npz")
+            if os.path.isfile(cache):
+                os.remove(cache)
+        except OSError:
+            pass
+
+        return {"status": "ok", "items": remaining}
+    except Exception as e:
+        return {"status": "error", "message": redact_secrets(e, os.environ)}
 
 
 @app.post("/api/train/vocabulary")

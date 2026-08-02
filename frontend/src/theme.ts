@@ -1,66 +1,118 @@
-// UNEV design tokens + shared class fragments. Theme switching uses Tailwind's
-// `dark:` variant (a `.dark` class on <html>) instead of JS ternaries, so most
-// components write `bg-white dark:bg-[#131E3B]` once instead of duplicating
-// every conditional string.
+// Tokens del diseño Holomind-WEB (Figma YkQXNn1SmbJfFPu1ilGWBw).
+//
+// El diseño define UN solo aspecto: no hay modo oscuro. Las superficies "oscuras"
+// son secciones con degradado (el arco navy, la malla naranja), no un tema. Por eso
+// ya no existen variantes `dark:` ni ThemeContext — ver AppShell.
+//
+// Valores extraídos de get_design_context, no aproximados a ojo.
 
 export const COLORS = {
-  navy: '#1C2D5A',
-  orange: '#E25C1D',
-  navyPanel: '#131E3B',
-  bgDark: '#070A12',
-  panelDark: '#0B0F19',
+  /** Fondo de página (crema). */
+  cream: '#F5EFEC',
+  /** Naranja de marca del diseño. */
+  orange: '#FF7208',
+  /** Naranja oscuro, tramo intermedio del degradado del wordmark. */
+  orangeDeep: '#CC5E15',
+  /** Navy del diseño — más claro que el navy institucional histórico. */
+  navy: '#2E3A70',
+  /** Tinta principal. */
+  ink: '#0C0C0C',
+  /** Texto secundario / placeholder. */
+  muted: '#716E6C',
 } as const;
 
 export type AssistantState = 'idle' | 'listening' | 'thinking' | 'speaking';
 export type VoiceMode = 'ptt' | 'presentation' | 'auto';
 
+// Chip de estado del asistente: pastilla rgba(0,0,0,0.1) con punto de color.
+// El diseño solo especifica "EN ESPERA"; los demás estados reusan la misma forma
+// cambiando etiqueta y color de punto.
+//
+// `chip` existe para las ventanas desprendibles (ChatWidget / TranscriptWidget),
+// que el diseño no cubre: van sobre panel oscuro y necesitan su propia variante.
 export const STATE_META: Record<
   AssistantState,
-  { label: string; chip: string; dot: string }
+  { label: string; dot: string; chip: string }
 > = {
   idle: {
     label: 'En espera',
-    chip: 'text-slate-400 border-slate-700 bg-slate-800/40',
-    dot: 'bg-slate-400',
+    dot: 'bg-[#716E6C]',
+    chip: 'text-white/70 border-white/15 bg-white/5',
   },
   listening: {
     label: 'Escuchando',
-    chip: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10',
-    dot: 'bg-emerald-400',
+    dot: 'bg-emerald-500',
+    chip: 'text-emerald-300 border-emerald-400/30 bg-emerald-400/10',
   },
   thinking: {
     label: 'Pensando',
-    chip: 'text-amber-400 border-amber-500/30 bg-amber-500/10',
-    dot: 'bg-amber-400',
+    dot: 'bg-amber-500',
+    chip: 'text-amber-300 border-amber-400/30 bg-amber-400/10',
   },
   speaking: {
     label: 'Hablando',
-    chip: 'text-[#E25C1D] border-[#E25C1D]/30 bg-[#E25C1D]/10',
-    dot: 'bg-[#E25C1D]',
+    dot: 'bg-[#FF7208]',
+    chip: 'text-[#FF7208] border-[#FF7208]/30 bg-[#FF7208]/10',
   },
 };
 
+/** Aro del orbe según estado. El orbe es CSS (se anima); solo el micro es asset. */
 export const ORB_RING: Record<AssistantState, string> = {
-  idle: 'border-[#E25C1D]/40',
-  listening: 'border-emerald-400 shadow-[0_0_45px_rgba(16,185,129,0.55)]',
-  thinking: 'border-amber-400',
-  speaking: 'border-[#E25C1D] shadow-[0_0_45px_rgba(226,92,29,0.5)]',
+  idle: 'border-[#FF7208]/45',
+  listening: 'border-emerald-500 shadow-[0_0_45px_rgba(16,185,129,0.45)]',
+  thinking: 'border-amber-500 shadow-[0_0_45px_rgba(245,158,11,0.4)]',
+  speaking: 'border-[#FF7208] shadow-[0_0_55px_rgba(255,114,8,0.5)]',
 };
 
-// Shared surface/control fragments (light defaults + dark: variants).
-export const CARD =
-  'rounded-3xl border shadow-sm bg-white border-gray-200 text-slate-800 ' +
-  'dark:bg-[#131E3B] dark:border-slate-800 dark:text-slate-100';
+// ---------------------------------------------------------------------------
+// Fragmentos de superficie compartidos
+// ---------------------------------------------------------------------------
 
-// Always-dark glass panel (assistant + widgets).
-export const PANEL =
-  'rounded-3xl bg-[#0B0F19]/80 backdrop-blur-xl border border-white/10 shadow-2xl text-white';
+/** Tarjeta sobre crema: rgba(0,0,0,0.05), radio 30px (nodo 53:584). */
+export const CARD = 'rounded-[30px] bg-black/5';
 
+/** Tarjeta de cristal sobre secciones con degradado (nodo 30:1695). */
+export const GLASS =
+  'rounded-[30px] bg-white/10 backdrop-blur-xl border border-white/20 ' +
+  'shadow-[0_8px_32px_rgba(0,0,0,0.18)] text-white';
+
+/** Chip/pastilla de estado (nodo 31:1867). */
+export const CHIP =
+  'inline-flex items-center gap-2 rounded-[50px] bg-black/10 px-4 py-1.5 ' +
+  'text-[16px] font-semibold italic uppercase text-[#0C0C0C]';
+
+/** Campo de texto sobre crema (nodo 82:x — inputs de CONFIGURACIÓN). */
 export const INPUT =
-  'w-full text-sm p-3 rounded-xl border focus:outline-none focus:border-[#E25C1D] ' +
-  'bg-white border-gray-300 text-slate-800 ' +
-  'dark:bg-slate-900 dark:border-slate-800 dark:text-white';
+  'w-full rounded-[50px] bg-black/5 px-5 py-3 text-[14px] text-[#0C0C0C] ' +
+  'placeholder:text-[#716E6C] focus:outline-none focus:ring-2 focus:ring-[#FF7208]/50';
 
-export const SECTION_TITLE = 'font-bold text-sm uppercase tracking-wider text-[#E25C1D]';
+/** Campo de texto sobre cristal (INFO. UNEV / ENTRENAR VISIÓN). */
+export const INPUT_GLASS =
+  'w-full rounded-[50px] bg-white/10 border border-white/15 px-5 py-3 text-[14px] ' +
+  'text-white placeholder:text-white/60 placeholder:italic focus:outline-none ' +
+  'focus:ring-2 focus:ring-[#FF7208]/60';
 
-export const LABEL = 'text-xs font-semibold text-gray-600 dark:text-gray-400';
+/** Botón primario naranja (nodo 44:187 "Encender cámara"). */
+export const BTN_PRIMARY =
+  'inline-flex items-center justify-center rounded-[50px] bg-[#FF7208] px-7 py-2.5 ' +
+  'text-[14px] font-semibold uppercase text-white shadow-[0_1px_5px_rgba(0,0,0,0.25)] ' +
+  'transition-opacity hover:opacity-90 disabled:opacity-40';
+
+/** Botón destructivo (nodo "Eliminar" de INFO. UNEV). */
+export const BTN_DANGER =
+  'inline-flex items-center justify-center rounded-[50px] bg-[#E03B33] px-6 py-2 ' +
+  'text-[14px] font-semibold italic text-white transition-opacity hover:opacity-90';
+
+/** Título de sección naranja en mayúsculas (nodo "INFORMACIÓN INSTITUCIONAL"). */
+export const SECTION_TITLE =
+  'text-[20px] font-bold uppercase tracking-wide text-[#FF7208]';
+
+/** Etiqueta de campo (nodo "DIRECCIÓN IP:"). */
+export const LABEL = 'text-[12px] font-bold uppercase tracking-wide';
+
+/**
+ * Degradado del wordmark "HoloMind" / "UNEV" en los titulares.
+ * Extraído literal del nodo 30:1847.
+ */
+export const WORDMARK_GRADIENT =
+  'linear-gradient(90deg, #FFFFFF 42.308%, #FF7208 57.212%, #CC5E15 75.962%, #2E3A70 100%)';

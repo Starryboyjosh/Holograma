@@ -1,10 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { SessionProvider } from './context/SessionContext';
 import { AppShell } from './components/AppShell';
-import { AssistantScreen } from './screens/AssistantScreen';
+import { LandingScreen } from './screens/LandingScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
-import { TeachingScreen } from './screens/TeachingScreen';
-import { ContentScreen } from './screens/ContentScreen';
 import { CameraWidget } from './widgets/CameraWidget';
 import { ChatWidget } from './widgets/ChatWidget';
 import { TranscriptWidget } from './widgets/TranscriptWidget';
@@ -21,6 +19,11 @@ function ShellLayout() {
 
 // Thin router. Detachable widget windows render standalone (their own React root,
 // their own hooks) and therefore live OUTSIDE the SessionProvider shell.
+//
+// INICIO/HABLAR/ENTRENAR VISIÓN/INFO. UNEV se fusionaron en una sola landing de
+// una página (ver LandingScreen); CONFIGURACIÓN sigue siendo una ruta aparte,
+// como en el diseño Figma (nodo 63:36 es un frame independiente, no parte del
+// recorrido de las otras cuatro secciones).
 export default function App() {
   return (
     <Routes>
@@ -29,12 +32,9 @@ export default function App() {
       <Route path="/widget/transcript" element={<TranscriptWidget />} />
 
       <Route path="/" element={<ShellLayout />}>
-        <Route index element={<Navigate to="/assistant" replace />} />
-        <Route path="assistant" element={<AssistantScreen />} />
+        <Route index element={<LandingScreen />} />
         <Route path="settings" element={<SettingsScreen />} />
-        <Route path="content" element={<ContentScreen />} />
-        <Route path="teaching" element={<TeachingScreen />} />
-        <Route path="*" element={<Navigate to="/assistant" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
   );

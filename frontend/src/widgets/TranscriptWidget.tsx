@@ -23,7 +23,7 @@ export function TranscriptWidget() {
           <p className="text-base text-slate-300">{chat.userSpokenText}</p>
         </div>
         <div>
-          <p className="text-[10px] uppercase tracking-widest text-[#E25C1D] font-bold mb-1">Holograma</p>
+          <p className="text-[10px] uppercase tracking-widest text-[#FF7208] font-bold mb-1">Holograma</p>
           <p className="text-xl leading-relaxed text-slate-100">"{chat.aiSpokenText}"</p>
         </div>
       </div>

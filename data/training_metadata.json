@@ -1,24 +1,24 @@
 [
     {
-        "id": 1784688875659,
-        "label": "Uniforme ITEE",
-        "desc": "Uniforme ITEE",
-        "x": 4.171875,
-        "y": 4.0,
+        "id": 1785652092559,
+        "label": "Logo ITEE",
+        "desc": "Logo ubicado en el uniforme de un estudiante del ITEE(expotech)",
+        "x": 3.17706298828125,
+        "y": 9.07635498046875,
         "w": 91.0,
-        "h": 76.0,
-        "thumbnail": "/data/images/image_1784688875.jpg",
-        "timestamp": 1784688875.6598856
+        "h": 69.0,
+        "thumbnail": "/data/images/image_1785652092.jpg",
+        "timestamp": 1785652092.5593293
     },
     {
-        "id": 1784689059948,
-        "label": "Uniforme ITEE",
-        "desc": "Uniforme ITEE",
-        "x": 32.421875,
-        "y": 80.0,
-        "w": 222.0,
-        "h": 168.0,
-        "thumbnail": "/data/images/image_1784689059.jpg",
-        "timestamp": 1784689059.9482393
+        "id": 1785652128275,
+        "label": "Logo ITEE",
+        "desc": "Logo ubicado en el uniforme de un estudiante del ITEE(expotech)",
+        "x": 14.160405282331512,
+        "y": 28.486808401639344,
+        "w": 84.71159684274438,
+        "h": 67.61384335154827,
+        "thumbnail": "/data/images/image_1785652128.jpg",
+        "timestamp": 1785652128.2759705
     }
 ]

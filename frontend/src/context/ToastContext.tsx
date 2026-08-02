@@ -19,9 +19,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     <ToastCtx.Provider value={showToast}>
       {children}
       {message && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] bg-[#1C2D5A] border border-[#E25C1D]/30 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 animate-[fade-in_0.2s_ease-out]">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] bg-[#2E3A70] border border-[#FF7208]/30 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 animate-[fade-in_0.2s_ease-out]">
           <svg
-            className="w-5 h-5 text-[#E25C1D] shrink-0"
+            className="w-5 h-5 text-[#FF7208] shrink-0"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

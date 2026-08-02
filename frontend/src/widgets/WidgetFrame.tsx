@@ -7,8 +7,8 @@ export function WidgetFrame({ title, children }: { title?: string; children: Rea
     <div className="min-h-screen w-full bg-[#070A12] text-white flex flex-col p-4 gap-3">
       {title && (
         <div className="flex items-center gap-2 shrink-0">
-          <span className="w-2 h-2 rounded-full bg-[#E25C1D]"></span>
-          <span className="text-[#E25C1D] font-bold text-sm tracking-wide">{title}</span>
+          <span className="w-2 h-2 rounded-full bg-[#FF7208]"></span>
+          <span className="text-[#FF7208] font-bold text-sm tracking-wide">{title}</span>
         </div>
       )}
       {children}

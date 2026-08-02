@@ -1,33 +1,31 @@
 import { useHologram } from '../hooks/useHologram';
-import { Card, SectionTitle } from './ui/Card';
+import { Card } from './ui/Card';
 import { Field, TextInput } from './ui/Field';
 
 type Hologram = ReturnType<typeof useHologram>;
 
+/**
+ * CONEXIÓN DEL HOLOGRAMA — la tarjeta que abre CONFIGURACIÓN en el diseño
+ * (bloque superior del nodo 63:36, sobre la malla degradada).
+ *
+ * El diseño la presenta como tarjeta de cristal con el título centrado y
+ * CONECTAR / DESCONECTAR como una pastilla partida (naranja + navy).
+ */
 export function HologramConnection({ holo }: { holo: Hologram }) {
   return (
     <Card>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-1">
-          <SectionTitle>Conexión del holograma</SectionTitle>
-          <p className="max-w-2xl text-xs leading-relaxed text-gray-500 dark:text-slate-400">
-            La IA selecciona los clips automáticamente cuando escucha, piensa, habla o queda en espera.
-          </p>
-        </div>
-        <span
-          className={`inline-flex w-fit items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-bold ${
-            holo.holoConnected
-              ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-              : 'border-slate-300 bg-slate-100 text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400'
-          }`}
-        >
-          <span className={`h-2 w-2 rounded-full ${holo.holoConnected ? 'bg-emerald-400' : 'bg-slate-400'}`} />
-          {holo.holoConnected ? 'Conectado' : 'Desconectado'}
-        </span>
+      <div className="text-center">
+        <h3 className="text-[20px] font-bold uppercase tracking-wide text-white md:text-[24px]">
+          Conexión del holograma
+        </h3>
+        <p className="mx-auto mt-2 max-w-2xl text-[13px] italic leading-relaxed text-white/85">
+          La IA selecciona los clips automáticamente cuando escucha, piensa, habla o queda en
+          espera.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-[minmax(0,1fr)_9rem]">
-        <Field label="Dirección IP">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-[minmax(0,1fr)_10rem]">
+        <Field label="Dirección IP:">
           <TextInput
             type="text"
             inputMode="decimal"
@@ -36,7 +34,7 @@ export function HologramConnection({ holo }: { holo: Hologram }) {
             placeholder="10.10.10.1"
           />
         </Field>
-        <Field label="Puerto TCP">
+        <Field label="Puerto TCP:">
           <TextInput
             type="number"
             min={1}
@@ -47,28 +45,45 @@ export function HologramConnection({ holo }: { holo: Hologram }) {
         </Field>
       </div>
 
-      <div className="flex flex-col gap-3 border-t border-gray-100 pt-4 dark:border-slate-800 sm:flex-row sm:items-center sm:justify-between">
-        <p className="min-h-4 text-xs text-gray-500 dark:text-slate-400" aria-live="polite">
-          {holo.holoStatusMsg ?? 'Introduce la dirección del dispositivo para conectarlo.'}
-        </p>
-        <div className="flex shrink-0 gap-2">
+      {/* Pastilla partida CONECTAR / DESCONECTAR (nodo 82:x). */}
+      <div className="flex justify-center pt-2">
+        <div className="inline-flex overflow-hidden rounded-[50px]">
+          <button
+            type="button"
+            onClick={holo.connect}
+            className="bg-orange px-7 py-2.5 text-[12px] font-semibold uppercase text-white transition-opacity hover:opacity-90"
+          >
+            {holo.holoConnected ? 'Reconectar' : 'Conectar'}
+          </button>
           <button
             type="button"
             onClick={holo.disconnect}
             disabled={!holo.holoConnected && !holo.holoIp}
-            className="rounded-xl border border-gray-200 px-4 py-2.5 text-xs font-bold text-gray-600 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+            className="bg-navy px-7 py-2.5 text-[12px] font-semibold uppercase text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
           >
             Desconectar
           </button>
-          <button
-            type="button"
-            onClick={holo.connect}
-            className="rounded-xl bg-[#E25C1D] px-5 py-2.5 text-xs font-bold text-white transition-colors hover:bg-orange-600"
-          >
-            {holo.holoConnected ? 'Reconectar' : 'Conectar'}
-          </button>
         </div>
       </div>
+
+      <div className="flex items-center justify-center gap-3">
+        <span
+          className={`inline-flex w-fit items-center gap-2 rounded-[50px] px-3 py-1.5 text-[12px] font-bold ${
+            holo.holoConnected
+              ? 'bg-emerald-500/15 text-emerald-200'
+              : 'bg-black/20 text-white/80'
+          }`}
+        >
+          <span
+            className={`h-2 w-2 rounded-full ${holo.holoConnected ? 'bg-emerald-400' : 'bg-white/50'}`}
+          />
+          {holo.holoConnected ? 'Conectado' : 'Desconectado'}
+        </span>
+      </div>
+
+      <p className="min-h-4 text-center text-[12px] text-white/75" aria-live="polite">
+        {holo.holoStatusMsg ?? 'Introduce la dirección del dispositivo para conectarlo.'}
+      </p>
     </Card>
   );
 }

@@ -1,12 +1,29 @@
 @import "tailwindcss";
 
-/* Tailwind v4 needs an explicit dark variant when toggling a class manually
-   (instead of the default prefers-color-scheme). ThemeProvider toggles `.dark`
-   on <html>, so every `dark:` utility keys off that class. */
-@custom-variant dark (&:where(.dark, .dark *));
+/* Montserrat — la tipografía del diseño Holomind-WEB. Se empaqueta localmente
+   (@fontsource) en vez de servirse desde un CDN: la app corre dentro de Tauri y
+   debe verse igual sin conexión. Pesos usados por el diseño: 400 Regular,
+   600 SemiBold (+ itálica), 700 Bold, 800 ExtraBold itálica. */
+@import "@fontsource/montserrat/400.css";
+@import "@fontsource/montserrat/600.css";
+@import "@fontsource/montserrat/600-italic.css";
+@import "@fontsource/montserrat/700.css";
+@import "@fontsource/montserrat/800-italic.css";
 
-/* Page background — light by default, navy/orange glow in dark mode. Moved here
-   from the per-render inline style so the whole app shares one source. */
+/* Tokens expuestos a Tailwind v4 (config CSS-first: no hay tailwind.config.js).
+   Los mismos valores viven en theme.ts para el código TS — ver COLORS. */
+@theme {
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+
+  --color-cream: #f5efec;
+  --color-orange: #ff7208;
+  --color-orange-deep: #cc5e15;
+  --color-navy: #2e3a70;
+  --color-ink: #0c0c0c;
+  --color-muted: #716e6c;
+}
+
+/* El diseño tiene un solo aspecto (sin modo oscuro), así que el fondo es fijo. */
 html,
 body {
   margin: 0;
@@ -14,31 +31,47 @@ body {
 }
 
 body {
-  background-color: #f4f6fa;
-  color: #1c2d5a;
+  background-color: #f5efec;
+  color: #0c0c0c;
+  font-family: "Montserrat", ui-sans-serif, system-ui, sans-serif;
 }
 
-.dark body {
-  background-color: #070a12;
-  color: #f1f5f9;
-  background-image:
-    radial-gradient(900px 500px at 75% -5%, rgba(226, 92, 29, 0.1), transparent),
-    radial-gradient(700px 500px at 10% 110%, rgba(28, 45, 90, 0.45), transparent);
-  background-attachment: fixed;
+/* Titulares con degradado: "Habla con *HoloMind*", "Contenido de *UNEV*".
+   Recorta el degradado al glifo — nodo 30:1847. */
+.wordmark-gradient {
+  background-image: linear-gradient(
+    90deg,
+    #ffffff 42.308%,
+    #ff7208 57.212%,
+    #cc5e15 75.962%,
+    #2e3a70 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-/* Animations (previously injected through an inline <style> in App.tsx). */
+/* Variante para titulares sobre crema: el tramo blanco inicial desaparecería
+   sobre fondo claro, así que arranca en naranja. */
+.wordmark-gradient-on-cream {
+  background-image: linear-gradient(90deg, #ff7208 0%, #cc5e15 55%, #2e3a70 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Animaciones. El orbe del asistente es CSS (no asset) porque late y gira. */
 @keyframes pulse-orange {
   0%,
   100% {
     transform: scale(1);
     opacity: 0.85;
-    filter: drop-shadow(0 0 0px rgba(226, 92, 29, 0));
+    filter: drop-shadow(0 0 0px rgba(255, 114, 8, 0));
   }
   50% {
-    transform: scale(1.08);
+    transform: scale(1.06);
     opacity: 1;
-    filter: drop-shadow(0 0 15px rgba(226, 92, 29, 0.45));
+    filter: drop-shadow(0 0 18px rgba(255, 114, 8, 0.45));
   }
 }
 
@@ -72,6 +105,30 @@ body {
   }
 }
 
+/* Óvalos de neón del fondo (ver BlueOvals.tsx). `--oval-rotate` fija el ángulo
+   estático del óvalo para que `oval-float` pueda partir de él en vez de resetear
+   la rotación a 0 en cada ciclo. */
+@keyframes oval-pulse {
+  0%,
+  100% {
+    opacity: var(--oval-op-min, 0.3);
+  }
+  50% {
+    opacity: var(--oval-op-max, 0.5);
+  }
+}
+
+@keyframes oval-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(var(--oval-rotate, 0deg));
+  }
+  50% {
+    transform: translate3d(var(--oval-float-x, 10px), var(--oval-float-y, -8px), 0)
+      rotate(calc(var(--oval-rotate, 0deg) + 3deg));
+  }
+}
+
 .organic-orb {
   animation:
     pulse-orange 3.5s ease-in-out infinite,
@@ -84,4 +141,69 @@ body {
 
 .animate-fade-in {
   animation: fade-in 0.4s ease-out;
+}
+
+.oval-pulse {
+  animation: oval-pulse 8s ease-in-out infinite;
+}
+
+.oval-float {
+  animation: oval-float 9s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .organic-orb,
+  .spin-slow,
+  .animate-fade-in,
+  .oval-pulse,
+  .oval-float {
+    animation: none;
+  }
+}
+
+/* La landing de una sola página navega por anclas (nav + pie): el scroll suave va
+   en CSS, no en JS, para que respete `prefers-reduced-motion` automáticamente —
+   `scrollIntoView()` sigue el `scroll-behavior` de la caja de scroll cuando no se
+   le pasa `behavior` explícito. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Scroll delgado del textarea autoajustable (ver useAutosizeTextarea) al pasar
+   de 6 líneas visibles. Dos variantes porque el mismo componente se usa sobre
+   superficie "cream" (thumb oscuro) y "glass" (texto blanco sobre fondo
+   oscuro, thumb claro) — ver Field.tsx. */
+.thin-scroll,
+.thin-scroll-glass {
+  scrollbar-width: thin;
+}
+
+.thin-scroll {
+  scrollbar-color: rgba(12, 12, 12, 0.3) transparent;
+}
+
+.thin-scroll-glass {
+  scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+}
+
+.thin-scroll::-webkit-scrollbar,
+.thin-scroll-glass::-webkit-scrollbar {
+  width: 6px;
+}
+
+.thin-scroll::-webkit-scrollbar-track,
+.thin-scroll-glass::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thin-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(12, 12, 12, 0.3);
+  border-radius: 999px;
+}
+
+.thin-scroll-glass::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
 }

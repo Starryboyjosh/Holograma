@@ -20,8 +20,8 @@ def test_roi_defaults(monkeypatch):
                 "YOLO_COLLAR_Y_MAX", "YOLO_LOGO_MIRROR"):
         monkeypatch.delenv(var, raising=False)
     y0, y1, x0, x1 = g.logo_roi_fractions()
-    assert (round(y0, 2), round(y1, 2)) == (0.36, 0.58)
-    assert (round(x0, 2), round(x1, 2)) == (0.08, 0.48)
+    assert (round(y0, 2), round(y1, 2)) == (0.26, 1.0)
+    assert (round(x0, 2), round(x1, 2)) == (0.0, 1.0)
 
 
 def test_roi_never_climbs_into_the_collar(monkeypatch):
@@ -33,18 +33,18 @@ def test_roi_never_climbs_into_the_collar(monkeypatch):
 
 
 def test_mirror_flips_horizontal_band(monkeypatch):
-    monkeypatch.delenv("YOLO_LOGO_X0", raising=False)
-    monkeypatch.delenv("YOLO_LOGO_X1", raising=False)
+    monkeypatch.setenv("YOLO_LOGO_X0", "0.10")
+    monkeypatch.setenv("YOLO_LOGO_X1", "0.40")
     monkeypatch.setenv("YOLO_LOGO_MIRROR", "1")
     _, _, x0, x1 = g.logo_roi_fractions()
-    assert (round(x0, 2), round(x1, 2)) == (0.52, 0.92)
+    assert (round(x0, 2), round(x1, 2)) == (0.60, 0.90)
 
 
 def test_collar_is_clamped_to_sane_range(monkeypatch):
     monkeypatch.setenv("YOLO_COLLAR_Y_MAX", "9.0")
     assert g.collar_y_max() == 0.45
     monkeypatch.setenv("YOLO_COLLAR_Y_MAX", "-1")
-    assert g.collar_y_max() == 0.20
+    assert g.collar_y_max() == 0.10
 
 
 # --- Zona / pertenencia ---
@@ -56,13 +56,13 @@ def test_point_in_chest_is_accepted():
 
 
 def test_point_on_collar_is_rejected():
-    # y=0.10 → cuello.
+    # y=0.10 → cuello/cara.
     assert g.point_in_logo_zone(50.0, 40.0, PERSON) is False
 
 
 def test_point_outside_horizontal_band_is_rejected():
-    # x=0.90 del ancho: fuera de la banda del logo.
-    assert g.point_in_logo_zone(180.0, 180.0, PERSON) is False
+    # x = -10 (fuera de la persona)
+    assert g.point_in_logo_zone(-10.0, 180.0, PERSON) is False
 
 
 def test_rel_center_is_normalised():
@@ -98,6 +98,16 @@ def test_snap_pulls_a_collar_box_down_to_the_chest():
     _, y1, _, y2 = g.snap_box_to_logo_zone(collar_box, PERSON)
     center_rel_y = (0.5 * (y1 + y2) - PERSON[1]) / (PERSON[3] - PERSON[1])
     assert center_rel_y > g.collar_y_max()
+
+
+def test_snap_preserves_detected_location_anywhere_on_body():
+    """Un logo en el brazo derecho o cintura mantiene su centro sin saltar al pecho izquierdo."""
+    body_box = (150.0, 250.0, 170.0, 270.0)
+    x1, y1, x2, y2 = g.snap_box_to_logo_zone(body_box, PERSON)
+    cx = 0.5 * (x1 + x2)
+    cy = 0.5 * (y1 + y2)
+    assert cx == pytest.approx(160.0, abs=15.0)
+    assert cy == pytest.approx(260.0, abs=15.0)
 
 
 def test_snap_does_not_shrink_a_large_box():
