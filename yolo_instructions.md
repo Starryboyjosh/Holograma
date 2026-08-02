@@ -1010,6 +1010,31 @@ Archivo: `vision/image_signals.py`
     matcher robusto, I10 caché por contenido de imagen, I11 canal visual-prompt
     YOLOE). Sin código en esta sesión — solo este documento.
 
+### Sesión 13: WAVEs 18–21 implementadas (I8–I11)
+
+46. **WAVE-18 (I8) — coordenadas de Entrenar normalizadas:**
+    `EntrenarSection.tsx` `saveTeaching` divide `x,y,w,h` por el rect del canvas
+    antes del POST; `main.py /api/train/image` deja de multiplicar por
+    `scale_boxes` cuando la caja ya es fracción (`0 < bw ≤ 1.5`); y
+    `_crop_training_roi` registra el fallback defensivo (caja absoluta >1.5 →
+    crop plano) bajo `HOLOGRAM_YOLO_DEBUG=1`.
+47. **WAVE-19 (I9) — `match_orb` devuelve `None` sin evidencia** (ROI vacío /
+    refs vacíos o `None`/`<4` / `<6` keypoints / cv2.error); `0.0` queda para
+    "computado sin matches". `_match_logo_in_gray` usa solo template cuando ORB
+    es `None` (umbral efectivo 0.42, no 0.56). Tests actualizados a `None`
+    (`test_vision_signals.py`) + nuevo test de propagación.
+48. **WAVE-20 (I10) — caché keyed por imagen:** `meta_sig` incluye
+    `nombre:mtime_ns:size` de cada imagen referenciada (o `missing`);
+    `_LOGO_CACHE_VERSION=3`. Tests: reescribir el PNG sin tocar el metadata →
+    rebuild; imagen borrada → no sirve el npz stale.
+49. **WAVE-21 (I11) — `_detect_logo_visual`:** canal visual-prompt YOLOE detrás
+    de `YOLO_LOGO_VISUAL=1` (default 0), con `refer_image` + `visual_prompts` +
+    `predictor=YOLOEVPSegPredictor` (import verificado en ultralytics 8.4.60),
+    fuente `logo_visual` con prioridad de `logo_ref`, y restauración de las
+    prompts del kiosco tras cada llamada.
+50. **Suite completa verde:** 468 passed, 1 xfailed (463 + 5 nuevos), 7 tests de
+    `test_person_presence.py` sin tocar; `npx tsc -b` limpio.
+
 ---
 
 ## 12. Razonamiento parte por parte de `vision/`
@@ -1141,20 +1166,21 @@ cerradas** en el código actual:
 4. ~~Sin estabilidad temporal de etiquetas.~~ **Cerrado con I4** — histéresis
    M-of-N en `_label_tracker` (`run_continuous`, `:2035`).
 
-Brechas **vigentes** (sesión 12, cada una con su WAVE en §13.5):
+Brechas **cerradas en sesión 13** (cada una con su WAVE en §13.5/§13.6):
 
-- **I8 — Contrato de coordenadas Entrenar roto.** La UI manda píxeles CSS
-  display; el backend y `_crop_training_roi` interpretan fracción/px de la
-  imagen natural. Es la causa del bug "logo ya no se detecta tras re-importar".
-  Ver §4.3.
-- **I9 — ORB sin evidencia arrastra el score.** `match_orb` devuelve `0.0` en
-  vez de `None` cuando no hay keypoints; con eso la rama `0.75·tmpl+0.25·orb`
-  exige `tmpl≥0.56` y el self-match de un logo liso queda bajo el umbral. Ver
-  §4.3 y §13 (I9).
-- **I10 — Caché `logo_index.npz` no keyed por contenido de imagen.** Solo
-  `mtime+size` del metadata; borrar/re-importar imágenes puede servir
-  templates stale. No fue la causa activa en sesión 12 (rebuild == caché) pero
-  es un riesgo latente.
+- ~~**I8 — Contrato de coordenadas Entrenar roto.**~~ **Cerrado con WAVE-18**:
+  la UI normaliza a fracciones antes del POST, `main.py` deja de re-escalar las
+  cajas fracción, y `_crop_training_roi` loguea el fallback defensivo. Fue la
+  causa del bug "logo ya no se detecta tras re-importar". Ver §4.3 y §13.6.
+- ~~**I9 — ORB sin evidencia arrastra el score.**~~ **Cerrado con WAVE-19**:
+  `match_orb` devuelve `None` sin evidencia; la escalera usa solo template y
+  el umbral efectivo vuelve a 0.42. Ver §4.3 y §13.6.
+- ~~**I10 — Caché `logo_index.npz` no keyed por contenido de imagen.**~~
+  **Cerrado con WAVE-20**: `meta_sig` incluye el estado de cada imagen
+  (`nombre:mtime_ns:size` o `missing`); `_LOGO_CACHE_VERSION` pasó a 3.
+- ~~**I11 — Canal YOLOE visual-prompt para logos.**~~ **Cerrado con WAVE-21**:
+  `_detect_logo_visual` detrás de `YOLO_LOGO_VISUAL=1` (default 0), canal
+  adicional a template+ORB.
 
 Y un bug latente, distinto de los anteriores, que conviene tener presente:
 
@@ -1192,10 +1218,11 @@ usarlo no añade una dependencia nueva.
 
 ### 13.1 Once mejoras propuestas
 
-> **Estado (sesión 12):** I1–I7 están **implementadas y commiteadas** (WAVEs
-> 11–17, commits `344ded6`…`2234888`). Los textos de I1–I7 abajo se conservan
-> como registro de diseño histórico. Las pendientes son **I8–I11** (WAVEs
-> 18–21, planificadas en §13.5, sin código todavía).
+> **Estado (sesión 13):** I1–I7 están **implementadas y commiteadas** (WAVEs
+> 11–17, commits `344ded6`…`2234888`). En esta sesión se implementaron y
+> commitearon **I8–I11** (WAVEs 18–21). Los textos de I1–I7 abajo se conservan
+> como registro de diseño histórico; los de I8–I11 (§13.5) describen la
+> implementación vigente.
 
 | # | Mejora | Brecha (§12.6) | Coste CPU |
 |---|---|---|---|
@@ -1470,12 +1497,64 @@ su propia sesión y su propio commit — nunca dentro de WAVE-08.
 | 20 | Caché de logos keyed por contenido de las imágenes | I10 | — | Bajo |
 | 21 | Canal YOLOE visual-prompt (`refer_image`) para logos | I11 | 18, 19 | Medio |
 
+> **Estado (sesión 13):** WAVEs 18–21 **implementadas y commiteadas**. §13.6
+> detalla cada una. WAVE-21 queda detrás de `YOLO_LOGO_VISUAL=1` (default 0):
+> el canal visual-prompt no se enciende por defecto hasta validarlo contra una
+> sesión grabada del kiosko.
+
 Prerrequisitos duros: 11→13 (la fusión necesita que el canal HSV exista de
 verdad, no que esté fail-open); 15→16→17; 13→16 (16 reusa `vision/scoring.py`
 creado en 13); 18→19 (un crop correcto es condición para que el matcher sea
 significativo); 18→21 (los visual prompts usan el crop bien normalizado).
 Las waves 11, 12, 14, 15, 18 y 20 son mutuamente independientes y se
 pueden reordenar o hacer en paralelo entre sesiones distintas.
+
+### 13.6 Implementación de las WAVEs 18–21 (sesión 13)
+
+**WAVE-18 (I8) — Normalización de coordenadas de Entrenar.** Tres cambios:
+
+1. `frontend/src/screens/sections/EntrenarSection.tsx` (`saveTeaching`):
+   `x,y,w,h` de cada caja se dividen por el rect del canvas
+   (`canvasRef.getBoundingClientRect()`) antes del POST → el box queda en
+   fracciones `[0,1]` de la imagen mostrada, invariante al resize.
+2. `main.py /api/train/image`: en el bucle de cajas, si la caja ya es
+   **fracción** (`0 < bw ≤ 1.5 and 0 < bh ≤ 1.5`) se **omite** la
+   multiplicación por `scale_boxes` del JPEG (una fracción es invariante al
+   reescalado; antes se re-escalaba dos veces y se rompía el contrato de
+   `_crop_training_roi`).
+3. `vision/person_detector.py` `_crop_training_roi`: fallback defensivo — si
+   una caja **absoluta** (>1.5) produce un crop sin textura (`std <
+   ROI_MIN_STDDEV`) bajo `HOLOGRAM_YOLO_DEBUG=1`, registra el aviso I8 en vez
+   de fallar en silencio.
+
+**WAVE-19 (I9) — Matcher robusto: ORB sin evidencia = `None`.** `match_orb`
+(`image_signals.py`) devuelve `None` cuando **no hay evidencia**: ROI vacío,
+sin descriptores de referencia (o solo `None`/`<4`), sin keypoints suficientes
+(`<6`), o error de cv2. `0.0` queda reservado para "sí se computó, no hay
+matches". `_match_logo_in_gray` propaga ese `None`: en la rama de la escalera
+`0.75·tmpl + 0.25·orb`, un ORB `None` produce `conf = tmpl_score` (el umbral
+efectivo vuelve a 0.42, no 0.56) y el método sigue siendo `"template"`. La
+fusión de `vision/scoring.py` ya excluía del denominador los canales con
+evidencia `None` (WAVE-13), así que solo había que exponer el `None`.
+
+**WAVE-20 (I10) — Caché keyed por contenido de las imágenes.** `meta_sig`
+en `_rebuild_logo_templates` ahora incluye, por cada imagen referenciada, su
+`nombre:mtime_ns:size` (o `missing` si `_resolve_training_image` no la
+encuentra). `_LOGO_CACHE_VERSION` pasó a `3`. Borrar/re-importar una foto sin
+tocar el metadata ya no puede servir un `logo_index.npz` stale.
+
+**WAVE-21 (I11) — Canal visual-prompt para logos.** Nuevo
+`_detect_logo_visual(frame, persons)`: cuando `YOLO_LOGO_VISUAL=1`, por cada
+etiqueta con thumbnail de Entrenar, llama
+`model.predict(frame, refer_image=thumb, visual_prompts={"bboxes": [bbox del
+operador], "cls": [0]}, predictor=YOLOEVPSegPredictor)` (import verificado en
+ultralytics 8.4.60). Es un canal **adicional** a template+ORB (source
+`logo_visual`, prioridad igual a `logo_ref`/`logo_chest`); se restauran las
+prompts del kiosco tras cada llamada porque `refer_image` las fija
+permanentemente. Off por defecto.
+
+**Envolvente de riesgos:** la suite completa pasa (468 passed, 1 xfailed) con
+los 7 tests de `test_person_presence.py` sin tocar.
 
 ---
 
