@@ -147,17 +147,19 @@ del bbox dibujado en la UI de Entrenar. Pipeline de matching (3 etapas):
    - **Razón:** detectar si el parche tiene los colores del logo (amarillo+azul para
      ITEE, rojo+blanco para otro colegio, etc.) sin hardcodear colores ITEE.
      Funciona genérico con cualquier colegio.
-   - **⚠️ Bug en producción, verificado (sesión 5):** este gate está **inerte**
-     hoy. `_rebuild_logo_templates` (`vision/person_detector.py:665`) resetea
-     `_logo_templates`/`_logo_images` en el reset (`:674-675`) pero **no**
-     `_logo_hsv_hists`; y el camino de caché (`data/logo_index.npz`) retorna en
-     `:712` antes de asignar los hists — el npz en disco solo tiene las claves
-     `meta_sig`, `by_img`, `by_des` (verificado con `np.load`, no hay `by_hsv`).
-     Aguas abajo, `compare_hsv_signature` (`image_signals.py:115-116`) hace
-     `if not ref_hists: return 1.0` (fail-open). Resultado: con `_logo_hsv_hists={}`,
-     el color **nunca** rechaza un match. Ver §13 (I1) para el fix propuesto —
-     no lo apliques sin leer esa sección primero, porque re-activar el gate a
-     ciegas puede rechazar logos válidos bajo la iluminación real del kiosco.
+   - **⚠️ Bug histórico, corregido (WAVE-11, sesión 6):** este gate estuvo
+      **inerte** desde sesión 5. `_rebuild_logo_templates`
+      (`vision/person_detector.py:690`) no reseteaba `_logo_hsv_hists` en el
+      reset (`:704` lo hace ahora), y el camino de caché retornaba antes de
+      asignar los hists — el npz en disco solo tenía `meta_sig`, `by_img`,
+      `by_des` (verificado con `np.load`, no había `by_hsv`). Aguas abajo,
+      `compare_hsv_signature` (`image_signals.py:103`) hacía
+      `if not ref_hists: return 1.0` (fail-open). **Estado actual:** WAVE-11
+      añadió `by_hsv` al reset, a la caché (`cache_version` 2) y al guardado —
+      verificado: el `logo_index.npz` de disco ya trae `by_hsv` (ver sesión 6).
+      El gate **sigue fail-open por diseño** en `compare_hsv_signature` (que
+      devuelve `1.0` sin referencias), pero ya no por un bug de reset: con
+      `by_hsv` poblado el HSV es un canal real de la fusión I3.
 2. **Template multi-escala** (`TM_CCOEFF_NORMED`, pirámide de 7 niveles)
    sobre ROI del cuerpo (gris + equalizeHist). Escalas relativas al ROI:
    `0.14, 0.20, 0.28, 0.38, 0.50, 0.65, 0.80`.
@@ -167,12 +169,37 @@ del bbox dibujado en la UI de Entrenar. Pipeline de matching (3 etapas):
      pequeños (14% del ROI) hasta ocupar casi todo el ROI (80%).
 3. **ORB** como refuerzo de confianza (700 keypoints, ratio Lowe 0.75).
 
-La escalera de decisión real (`_match_logo_in_gray`, `person_detector.py:998-1040`)
+La escalera de decisión real (`_match_logo_in_gray`, `person_detector.py:1058`)
 no es un promedio simple de las tres señales: es un `if/elif/elif` con pesos y
 umbrales fijados a mano (`conf = 0.75·tmpl + 0.25·orb` si `tmpl` pasa el umbral;
 si no, `0.55·tmpl + 0.45·orb` si `orb≥0.85`; si no, una caja sintética si
-`orb≥0.95`; si no, cero). §13 (I3) propone reemplazarla por una fusión ponderada
-por calidad — no es una limpieza cosmética, cambia qué gana en casos límite.
+`orb≥0.95`; si no, cero). §13 (I3) ya la reemplazó por la fusión ponderada por
+calidad de `vision/scoring.py` (WAVE-13) — no fue cosmético, cambió qué gana en
+casos límite. **Dato nuevo (sesión 12):** en la rama `0.75·tmpl + 0.25·orb`, si
+el canal ORB no tiene evidencia (retorna `0.0`), la fórmula exige
+`tmpl ≥ YOLO_LOGO_TMPL_MIN / 0.75` (0.42/0.75 ≈ **0.56**) para pasar — un 33 %
+por encima del umbral nominal. Y ORB es **inexistente para logos con textura
+pobre** (ver §13 I9): un logo impreso de una sola tinta sobre tela lisa genera
+pocos keypoints y `by_des` en la caché puede tener 1 descriptor por varias
+plantillas. Verificado (sesión 12): con `by_img=2, by_des=1`, la propia foto de
+entrenamiento puntúa `tmpl≈0.51–0.55` → el **self-match queda por debajo de
+0.42** y el logo entrenado no se detecta ni contra su propia imagen.
+
+> **⚠️ Bug de producción, verificado (sesión 12): desajuste de espacio de
+> coordenadas en Entrenar.** La UI (`EntrenarSection.tsx:81-111`) dibuja la caja
+> en **píxeles CSS de la imagen mostrada** (`max-h-[350px] object-contain`,
+> `getBoundingClientRect`), no en píxeles de la imagen original ni en fracciones.
+> El backend (`main.py /api/train/image`, ~L716) guarda `x,y,w,h` tal cual. En
+> runtime, `_crop_training_roi` (`person_detector.py:658`) interpreta `≤1.5`
+> como **fracción** y `>1.5` como **píxeles absolutos** de la imagen natural.
+> Con una foto re-importada 1280×963 mostrada a ~350 px de alto (scale ≈ 0.36),
+> una caja dibujada sobre el recorte display (ej. `14,28,84,67` CSS px) se guarda
+> así y al cropear la imagen natural recorta `68×84` px de una esquina de tela
+> lisa → `_has_texture` (`image_signals.py:132`, `ROI_MIN_STDDEV=4.0`) da
+> `False` → el matcher devuelve `0.0` **en silencio**. La foto pequeña (84×97)
+> "funcionaba" solo porque el crop abarcaba casi toda la imagen. Las dos
+> entradas actuales de `data/training_metadata.json` lo confirman: una guardó
+> caja absoluta, la otra (la grande) guardó CSS px. Fix general → §13 (I8).
 
 **No** se usa color amarillo/azul hardcodeado como criterio: eso era específico
 de ITEE y rompe otros colegios. El HSV histogram es genérico.
@@ -185,6 +212,7 @@ de ITEE y rompe otros colegios. El HSV histogram es genérico.
 | Varios colegios en Entrenar | Cada `label` tiene sus propios histogramas y plantillas |
 | Cuadro muy pequeño (20×20 px) sobre el video | `_snap_box_to_logo_zone` escala al tamaño proporcional del pecho (ver §4.7) |
 | Ventana con luz blanca detectada como uniforme | `_is_white_light_or_glare` + check directo en la caja YOLOE (ver §4.8) |
+| Logo no se detecta **tras re-importar imágenes** en Entrenar | Cajas guardadas en píxeles CSS display, no en píxeles/fracción de la imagen → crop plano → `0.0` silencioso. Fix: §13 (I8) |
 
 **Señales de aceptación (prioridad):**
 
@@ -249,7 +277,7 @@ YOLO_LOGO_MIRROR=1                 si el logo sale al otro lado
 - Detección YOLO **no se apaga** si no hay personas ni viewers del MJPEG.
 - Solo el **encode JPEG** es opcional (cero suscriptores del feed).
 - Intervalo `YOLO_INTERVAL_SECONDS` (default en código **`1.0`**,
-  `person_detector.py:1772`; `config.json` trae `"1"` — el `~0.6` de versiones
+  `person_detector.py:1940`; `config.json` trae `"1"` — el `~0.6` de versiones
   previas de este doc no corresponde a ningún default real).
 - `run_continuous` también corre un debounce de presencia con
   `PRESENCE_ENTER_SECONDS` (default `0.8`) y `PRESENCE_ABSENCE_SECONDS`
@@ -361,7 +389,7 @@ no ayudaba porque:
 | `YOLO_COLLAR_Y_MAX` | `0.25` | Por encima = cuello (descartar), clamp 0.10–0.45 |
 | `YOLO_LOGO_MIRROR` | `0` | Invierte X del ROI |
 | `YOLO_LOGO_TMPL_MIN` | `0.42` | Score template mínimo (`_TMPL_MATCH_MIN`) |
-| `YOLO_LOGO_HSV_MIN` | `0.18` | Correlación HSV mínima — **hoy inerte en producción**, ver §4.3 y §13 (I1) |
+| `YOLO_LOGO_HSV_MIN` | `0.18` | Correlación HSV mínima — canal activo desde WAVE-11 (`by_hsv` en caché); sigue siendo *fail-open* por diseño en `compare_hsv_signature` |
 | `YOLO_LOGO_TMPL_MAX_SIDE` | `128` | Lado máx. de la plantilla gris cacheada, clamp 64–192 |
 | `YOLO_LOGO_ORB_MAX_SIDE` | `160` | Lado máx. de la miniatura para ORB, clamp `tmpl_max`–256 |
 | `HOLOGRAM_YOLO_DEBUG` | `0` | Logs `[YOLO] Descartado…` / ciclo |
@@ -462,6 +490,27 @@ Logs esperados al arrancar:
 Si `set_classes` falla o el tipo no es YOLOE → revisar `YOLO_MODEL` y pesos en
 `models/`.
 
+Diagnóstico específico de logos (sesión 12):
+
+```bash
+# 1. ¿La caché está fresca o stale? (by_img / by_des / by_hsv)
+.venv/bin/python -c "
+import numpy as np; z = np.load('data/logo_index.npz', allow_pickle=True)
+print('version', z.get('cache_version'), '| by_img', {k: len(v) for k, v in z['by_img'].item().items()}, '| by_des', {k: len(v) for k, v in z['by_des'].item().items()})"
+
+# 2. ¿El crop de Entrenar tiene textura? (std < 4.0 => 0.0 silencioso)
+#    Cargar la imagen natural, cropear con x,y,w,h tal cual están en el metadata
+#    y medir cv2.stdDev. Si el box parece de píxeles CSS display, es I8.
+
+# 3. ¿El self-match pasa? (tmpl>=0.56 con ORB=0, no 0.42)
+```
+
+Regla de oro: si el logo **dejó** de detectarse al borrar y volver a importar
+fotos en Entrenar, y el código no cambió, sospechar primero de las **cajas**
+(`data/training_metadata.json`), no de la caché ni del modelo — la caché se
+reconstruye sola (rebuild == caché, verificado sesión 12) y el modelo no cambia
+entre imports.
+
 ### 6.6 Problemas frecuentes
 
 | Síntoma | Causa probable | Acción |
@@ -475,6 +524,9 @@ Si `set_classes` falla o el tipo no es YOLOE → revisar `YOLO_MODEL` y pesos en
 | Logo al otro lado | espejo de cámara | `YOLO_LOGO_MIRROR=1` |
 | LLM dice que no ve | análisis vacío o pregunta no “visual” | ver log `[Cámara→LLM]`; keywords en `camera_context.py` |
 | Feed negro / sin frames | índice cámara, permisos, otro proceso | `HOLOGRAM_CAMERA_INDEX`, diagnose |
+| **Logo ya no se detecta tras re-importar imágenes** | Cajas guardadas en píxeles CSS display (`max-h-[350px] object-contain`) en vez de píxeles/fracción de la imagen natural → `_crop_training_roi` recorta un parche plano → `_has_texture=False` → `0.0` silencioso | Re-importar la imagen y dibujar la caja **bien ceñida**; fix real en §13 (I8) |
+| **Self-match de la propia foto de entrenamiento < 0.42** | ORB sin keypoints (`by_des` ≪ `by_img`) + rama `0.75·tmpl+0.25·orb` exige `tmpl≥0.56` | Ver §13 (I9); desactivar ORB cuando no hay evidencia |
+| **Caché `logo_index.npz` sirve templates stale tras borrar/recargar** | Key solo por `mtime+size` del metadata, no por contenido de las imágenes | Ver §13 (I10) |
 
 ---
 
@@ -539,14 +591,49 @@ existen hoy, verificados con `grep -n "^def test_" tests/test_custom_object_inte
    - Text vs visual prompts; visual cuando el texto no discrimina (logo).  
    - Usado para: priorizar plantillas Entrenar + color structure sobre texto solo.
 
+7. **Docs Ultralytics — Uso correcto de YOLOE (sesión 12)**  
+   https://docs.ultralytics.com/models/yoloe/  
+   - `set_classes([...])` se llama **una vez** tras el `load`; después `predict`.
+     No re-encodear CLIP por ciclo (el proyecto ya lo cachea vía `_prompt_key`).
+   - Prompts **concretos > genéricos** ("ITEE yellow logo embroidery" > "school
+     uniform"); los genéricos disparan FP en dominios finos (ver §4.5).
+   - **`imgsz=640` es el valor recomendado**; 416 (default actual del proyecto)
+     es válido para velocidad pero penaliza objetos pequeños dentro de una
+     persona — con `YOLO_MAX_SIDE` (resize software) se compensa parcialmente.
+   - `agnostic_nms=True` es el default (funde solapes entre clases) — no
+     desactivarlo sin motivo.
+
+8. **Docs Ultralytics — Visual prompts en YOLOE (sesión 12)**  
+   https://docs.ultralytics.com/models/yoloe/visual-prompts/  
+   - `model.predict(path, visual_prompts={"bboxes": [...], "cls": [...]})` donde
+     las bboxes **encierran los ejemplos** (no el objeto completo) y `cls` son
+     IDs secuenciales desde 0; para segmentación, `visual_prompts` + `refer_image`
+     con el predictor `YOLOEVPSegPredictor`.
+   - Usado para: §13 (I11) — el canal moderno que puede reemplazar template+ORB
+     para logos: en vez de buscar la plantilla con CV clásico, pasar la foto de
+     Entrenar como `refer_image` al propio YOLOE.
+
+9. **YOLOE-26 paper (arXiv 2602.00168)**  
+   - Integra YOLO26 con YOLOE: detección end-to-end **sin NMS**, +3.5 AP sobre
+     YOLO-Worldv2 en LVIS con ~1/3 de recursos de entrenamiento y 1.4× más
+     rápido en inferencia. YOLOE-v8-L fine-tuneado supera a YOLOv8-L por 0.1
+     mAP con ~4× menos entrenamiento.
+   - Usado para: §14 (decisión de quedarse con YOLOE-26 vs migrar).
+
+10. **PaliGemma 2 mix (Google) — VLM multi-tarea (sesión 12, solo análisis)**  
+    - VLM 3B/10B/28B a 224/448 px, multi-tarea out-of-the-box: caption, OCR,
+      VQA, **detección y segmentación** (`detect chair ; table`). Candidato a
+      "volver a multimodal" si se quisiera describir escena — **no** reemplaza
+      al detector en tiempo real (ver §14).
+
 ### Código y comportamiento local del proyecto
 
-7. **Código actual** `vision/person_detector.py`, `call.py`, `main.py`,
-   `camera_context.py`, tests listados arriba.  
-8. **Evidencia de producto:** logs de consola del kiosco (`persons=0`,
-   `custom=[]`, cuadro en cuello) y captura de referencia del polo ITEE.  
-9. **Experiencia previa en el repo:** dual `yolo26n` + World/`yoloe` causaba
-   confusión de config y el mensaje `set_classes` ausente.
+11. **Código actual** `vision/person_detector.py`, `call.py`, `main.py`,
+    `camera_context.py`, tests listados arriba.  
+12. **Evidencia de producto:** logs de consola del kiosco (`persons=0`,
+    `custom=[]`, cuadro en cuello) y captura de referencia del polo ITEE.  
+13. **Experiencia previa en el repo:** dual `yolo26n` + World/`yoloe` causaba
+    confusión de config y el mensaje `set_classes` ausente.
 
 ### Principios de ingeniería aplicados (no paper-specific)
 
@@ -575,14 +662,16 @@ Lee y sigue docs/ o el archivo yolo_instructions.md en la raíz del repo Hologra
   sin gate de estructura de color (fue eliminado); preferir logo Entrenar
   (source=logo_ref/logo_ref_verified sobre open_vocab_snapped); snap bbox
   preserva la ubicación detectada, no la centra en una zona fija.
-- El gate HSV (YOLO_LOGO_HSV_MIN) está inerte en producción por un bug de
-  caché conocido — no asumas que el color está filtrando nada hasta leer §13 (I1).
-- No hay identidad de persona (no hay model.track()); solo presencia
-  booleana con debounce PRESENCE_ENTER_SECONDS/PRESENCE_ABSENCE_SECONDS.
-  _dedupe_custom colapsa a una entrada por etiqueta (sin multi-instancia).
+- El gate HSV (YOLO_LOGO_HSV_MIN) es un canal real desde WAVE-11 (by_hsv en la
+  caché); sigue siendo fail-open por diseño en compare_hsv_signature.
+- Identidad de persona: overlay de tracks detrás de YOLO_REID=0 (I6/I7);
+  la máquina booleana was_present con debounce sigue siendo el default.
+  _dedupe_custom indexa por (label, person_index) (multi-instancia, I2).
 - Contexto LLM: call._last_camera_analysis + CameraContextProvider + camera_context.py.
 - Tests: test_custom_object_interval.py, test_yolo_predict_opts.py, camera_*,
-  test_vision_geometry.py, test_vision_signals.py, test_person_presence.py.
+  test_vision_geometry.py, test_vision_signals.py, test_person_presence.py,
+  test_tracking.py, test_custom_hysteresis.py, test_vision_scoring.py,
+  test_person_signature.py, test_person_associator.py.
 - Antes de tocar detección: leer §13 (comparación con remind-reid-tracker-main/
   y hoja de ruta WAVE-11+) — puede que la mejora que buscas ya esté diseñada ahí.
 
@@ -593,7 +682,7 @@ Tarea: <describe el cambio>
 
 ## 10. Inventario de constantes clave (código)
 
-Archivo: `vision/person_detector.py` (1916 líneas — verificado `wc -l`, sesión 5)
+Archivo: `vision/person_detector.py` (2186 líneas — verificado `wc -l`, sesión 12)
 
 | Símbolo | Valor / idea |
 |---------|----------------|
@@ -886,16 +975,55 @@ Archivo: `vision/image_signals.py`
     I7). Smoke manual con `YOLO_REID=1`: cambio completo de tracks {A}→{B}
     emite `person_left` + `person_entered`. 463 passed, 1 xfailed.
 
+### Sesión 12: WAVE-17 ya commitado + diagnóstico de logos + WAVEs 18–21 planificadas
+
+> **WAVE-17 (I7) SÍ está commiteada** — en `2234888` ("I6 + overlay de presencia
+> (I7)"), junto con WAVE-16, y su changelog en `9b718c4`. Verificado con
+> `git show 2234888:vision/person_detector.py | rg _reid_track`. No faltaba por
+> commitear; lo que no existía eran las waves **18–21** de esta sesión.
+
+43. **Diagnóstico del bug "logo ya no se detecta tras re-importar" (sin fix de
+    código, sesión de documentación):**
+    - **Causa raíz (I8, coordenadas):** `EntrenarSection.tsx` guarda la caja en
+      píxeles CSS display (`max-h-[350px] object-contain`, `getBoundingClientRect`),
+      `main.py /api/train/image` la guarda tal cual, y `_crop_training_roi`
+      interpreta `>1.5` como píxeles absolutos de la imagen natural → recorta
+      un parche plano → `_has_texture=False` → `0.0` silencioso. Verificado en
+      runtime: para `image_1785652128.jpg` (1280×963) la caja guardada era CSS px
+      y el crop real daba `std=1.33 < 4.0`; el mismo box como fracción daría un
+      crop de 815×865 con `std=46.7` (textura válida). La foto pequeña 84×97
+      "funcionaba" solo por coincidencia (crop ≈ toda la imagen).
+    - **Agravante (I9, ORB):** `by_des=1` vs `by_img=2` en la caché; con ORB=0,
+      la rama `0.75·tmpl+0.25·orb` exige `tmpl≥0.56` (no 0.42) y el self-match
+      real es ~0.51–0.55 → la propia foto de entrenamiento no pasa su test.
+    - **Caché NO era el problema activo:** rebuild == caché (los `by_*` cargados
+      coinciden con un rebuild fresco); el bug es latente en la key
+      `meta_sig` (solo `mtime+size` del metadata, sin las imágenes) → I10.
+    - **`imgsz=416` < 640 recomendado por Ultralytics** → ROIs de pecho más
+      pequeños y scores de template más bajos; compensable con `YOLO_MAX_SIDE`.
+44. **Research (sin cambiar código):** uso correcto de YOLOE-26 (docs) —
+    `set_classes` una vez, prompts concretos, `imgsz=640`, `agnostic_nms`
+    default, y **visual prompts** (`visual_prompts` + `refer_image` +
+    `YOLOEVPSegPredictor`) como el canal moderno para logos (base de I11).
+    YOLOE-26 paper: +3.5 AP sobre YOLO-Worldv2 en LVIS sin NMS.
+45. **WAVEs 18–21 planificadas en §13.5** (I8 normalización de coordenadas, I9
+    matcher robusto, I10 caché por contenido de imagen, I11 canal visual-prompt
+    YOLOE). Sin código en esta sesión — solo este documento.
+
 ---
 
 ## 12. Razonamiento parte por parte de `vision/`
 
-Seis archivos, dos capas: `geometry.py` e `image_signals.py` son **puros**
-(sin importar `cv2`/`numpy` a nivel obligatorio — `image_signals.py` los
-envuelve en `try/except` y degrada a valor neutro si faltan; `geometry.py` no
-los necesita en absoluto). Por eso `tests/test_vision_geometry.py` y
-`tests/test_vision_signals.py` corren sin instalar Ultralytics. Todo lo demás
-depende de OpenCV y, para inferencia real, de `ultralytics.YOLOE`.
+Nueve archivos en `vision/` (camera, face_analyzer, geometry, image_signals,
+person_detector, person_signature, scoring, tracking + `__init__`), en dos
+capas: `geometry.py`, `image_signals.py`, `scoring.py`, `person_signature.py`
+y `tracking.py` son **puros** (sin importar `cv2`/`numpy` a nivel obligatorio —
+`image_signals.py` los envuelve en `try/except` y degrada a valor neutro si
+faltan; los otros cuatro no los necesitan en absoluto, salvo numpy). Por eso
+`tests/test_vision_geometry.py`, `tests/test_vision_signals.py`,
+`tests/test_vision_scoring.py`, `tests/test_person_signature.py` y
+`tests/test_tracking.py` corren sin instalar Ultralytics. Todo lo demás depende
+de OpenCV y, para inferencia real, de `ultralytics.YOLOE`.
 
 Dependencia: `person_detector.py` → `{geometry, image_signals, camera, face_analyzer}` + `utils._env*`.
 
@@ -949,7 +1077,7 @@ identidad, edad, género ni emoción — está en el docstring del módulo. Gate
 por `HOLOGRAM_FACE_ANALYSIS == "1"` (debe ser exactamente ese string) en
 `analyze_frame`.
 
-### 12.5 `person_detector.py` (1916 líneas) — el núcleo
+### 12.5 `person_detector.py` (2186 líneas) — el núcleo
 
 Orden de lectura recomendado para un agente nuevo:
 
@@ -963,57 +1091,75 @@ Orden de lectura recomendado para un agente nuevo:
    es un no-op si la clave no cambió.
 3. **Datos de Entrenar** (`_load_training_data`, polling cada 5 s vía
    `_maybe_reload_training`): así es como la UI de Entrenar llega a un kiosko
-   corriendo sin reiniciar.
-4. **El indexador** `_rebuild_logo_templates`: construye plantillas grises +
-   descriptores ORB + histogramas HSV desde las fotos de referencia, con
-   caché en `data/logo_index.npz` keyed por `mtime+size` del metadata. Ver
-   §4.3 para el bug de caché conocido.
-5. **El matcher** `_match_logo_in_gray`: la escalera de decisión de tres
-   señales (HSV → template → ORB), ver §4.3.
+   corriendo sin reiniciar. **Contrato de coordenadas (⚠️ sesión 12):** aquí es
+   donde entra la caja de la UI — `_crop_training_roi` (`:658`) interpreta
+   `≤1.5` como fracción y `>1.5` como píxeles absolutos de la imagen natural.
+   La UI manda píxeles CSS display → desajuste. Ver §4.3 y §13 (I8).
+4. **El indexador** `_rebuild_logo_templates` (`:690`): construye plantillas
+   grises + descriptores ORB + histogramas HSV desde las fotos de referencia,
+   con caché en `data/logo_index.npz` keyed por `mtime+size` del metadata
+   (`meta_sig`, `:722`) — **no** por contenido de las imágenes (bug latente
+   I10). Los `by_*` del npz pueden desincronizarse del número de imágenes reales
+   (`by_img=2, by_des=1` en el dataset actual de ITEE): ORB descarta logos sin
+   suficientes keypoints, así que `by_des` **no** es un error, es un síntoma del
+   canal. Ver §4.3.
+5. **El matcher** `_match_logo_in_gray` (`:1058`): la escalera de decisión de
+   tres señales (HSV → template → ORB), ver §4.3. Desde WAVE-13 el *primer*
+   paso lo decide `vision/scoring.py` (fusión ponderada) y esta función expone
+   las señales crudas; el sesgo `tmpl≥0.56` con ORB=0 es el bug I9.
 6. **Dos rutas convergentes hacia el mismo resultado:**
-   - *Bottom-up* (`_detect_logo_templates`, source=`logo_ref`): escanea el
-     ROI de cada persona contra cada etiqueta entrenada.
-   - *Top-down* (`_filter_uniform_objects`, source=`logo_ref_verified`): un
-     hit open-vocab de YOLOE (≥0.45) es **solo una sugerencia** que debe
+   - *Bottom-up* (`_detect_logo_templates`, `:1186`, source=`logo_ref`): escanea
+     el ROI de cada persona contra cada etiqueta entrenada.
+   - *Top-down* (`_filter_uniform_objects`, `:1402`, source=`logo_ref_verified`):
+     un hit open-vocab de YOLOE (≥0.45) es **solo una sugerencia** que debe
      confirmarse contra la foto de Entrenar, o se descarta.
-7. **`_dedupe_custom`**: colapsa por `label`, prioriza por fuente
+7. **`_dedupe_custom`** (`:1564`): colapsa por `label`, prioriza por fuente
    (`_SOURCE_PRIORITY`) y solo desempata por confianza dentro de la misma
    fuente. Ver la nota de límite conocido en §4.3.
 8. **El buffer MJPEG** (`_store_annotated_frame`, `feed_subscribe`/`unsubscribe`):
    el encode a JPEG solo ocurre si hay suscriptores; la detección YOLO nunca
    se apaga por falta de viewers.
-9. **`run_continuous`**: la máquina de presencia. Estado local (no de
+9. **`run_continuous`** (`:1918`): la máquina de presencia. Estado local (no de
    instancia, se reinicia en cada arranque del bucle): `was_present`,
    `present_since`, `absent_since`, `last_custom_labels`. Debounce de entrada
-   (`PRESENCE_ENTER_SECONDS`) y de salida (`PRESENCE_ABSENCE_SECONDS`).
+   (`PRESENCE_ENTER_SECONDS`) y de salida (`PRESENCE_ABSENCE_SECONDS`). Encima,
+   el overlay I6/I7 (`_reid_track` `:2099`, detrás de `YOLO_REID=1`) superpone
+   tracks de persona sin tocar la máquina booleana.
 
-### 12.6 Las cuatro brechas — diseño actual, no bugs puntuales
+### 12.6 Brechas cerradas (WAVEs 11–17) y brechas vigentes (I8–I11)
 
-Estas cuatro son **límites de diseño**, no descuidos a corregir con un parche
-rápido — cada una tiene una mejora dedicada en §13:
+Las cuatro brechas de diseño que motivaron las WAVEs 11–17 **ya están
+cerradas** en el código actual:
 
-1. **Sin identidad de persona.** `model.track()` nunca se llama;
-   `_split_detections` produce una lista anónima nueva cada ciclo. "La misma
-   persona" ≡ "`person_count>0` no llegó a 0 durante `PRESENCE_ABSENCE_SECONDS`
-   (5 s)". Consecuencia observable: si el estudiante A se va y el estudiante B
-   llega en menos de 5 s, el sistema cree que es la misma presencia continua y
-   **B nunca recibe el saludo de entrada**.
-2. **Colapso multi-instancia.** `_dedupe_custom` indexa solo por `label` — dos
-   personas con el mismo uniforme entrenado producen un único objeto en
-   `analysis["custom_objects"]`.
-3. **Escalera de decisión frágil para logos.** Pesos y umbrales fijados a
-   mano (`0.75·tmpl + 0.25·orb`, etc.) en vez de una fusión que pondere por
-   la calidad de cada señal.
-4. **Sin estabilidad temporal de etiquetas.** `run_continuous` compara el
-   conjunto de etiquetas custom del ciclo actual contra **solo** el ciclo
-   anterior (`:1859-1864`) — un parpadeo de detección de un ciclo re-dispara
-   `custom_object_detected`. El único freno es un cooldown de 60 s por
-   etiqueta en `call.py:1322`, que amortigua el síntoma sin corregir la causa.
+1. ~~Sin identidad de persona.~~ **Cerrado con I5+I6+I7** (`vision/tracking.py`,
+   overlay `_reid_track`). Sigue activo solo si `YOLO_REID=0` (default).
+2. ~~Colapso multi-instancia.~~ **Cerrado con I2** — `_dedupe_custom` indexa
+   por `(label, person_index)` (`person_detector.py:1564`).
+3. ~~Escalera de decisión frágil para logos.~~ **Cerrado con I3** —
+   `vision/scoring.py` fusiona por calidad; `_match_logo_in_gray` expone las
+   señales crudas.
+4. ~~Sin estabilidad temporal de etiquetas.~~ **Cerrado con I4** — histéresis
+   M-of-N en `_label_tracker` (`run_continuous`, `:2035`).
 
-Y dos bugs latentes, distintos del de HSV, que conviene tener presentes:
+Brechas **vigentes** (sesión 12, cada una con su WAVE en §13.5):
 
-- El fallback cruzado en `_logo_templates_for`/`_logo_orb_for`
-  (`person_detector.py:899-907,921-925`): si una etiqueta "parece uniforme" y
+- **I8 — Contrato de coordenadas Entrenar roto.** La UI manda píxeles CSS
+  display; el backend y `_crop_training_roi` interpretan fracción/px de la
+  imagen natural. Es la causa del bug "logo ya no se detecta tras re-importar".
+  Ver §4.3.
+- **I9 — ORB sin evidencia arrastra el score.** `match_orb` devuelve `0.0` en
+  vez de `None` cuando no hay keypoints; con eso la rama `0.75·tmpl+0.25·orb`
+  exige `tmpl≥0.56` y el self-match de un logo liso queda bajo el umbral. Ver
+  §4.3 y §13 (I9).
+- **I10 — Caché `logo_index.npz` no keyed por contenido de imagen.** Solo
+  `mtime+size` del metadata; borrar/re-importar imágenes puede servir
+  templates stale. No fue la causa activa en sesión 12 (rebuild == caché) pero
+  es un riesgo latente.
+
+Y un bug latente, distinto de los anteriores, que conviene tener presente:
+
+- El fallback cruzado en `_logo_templates_for`/`_logo_orb_for`/`_logo_hsv_hists_for`
+  (`person_detector.py:967,980,993`): si una etiqueta "parece uniforme" y
   no tiene sus propias referencias, el código devuelve la concatenación de
   las referencias de **todas** las etiquetas entrenadas. Con una sola escuela
   entrenada esto es inofensivo (es el caso de bootstrap para el que se
@@ -1044,7 +1190,12 @@ y `scipy` (para `linear_sum_assignment`) **ya está instalado**, llega como
 dependencia de `ultralytics` (verificado: `scipy 1.17.1` en `.venv`), así que
 usarlo no añade una dependencia nueva.
 
-### 13.1 Siete mejoras propuestas
+### 13.1 Once mejoras propuestas
+
+> **Estado (sesión 12):** I1–I7 están **implementadas y commiteadas** (WAVEs
+> 11–17, commits `344ded6`…`2234888`). Los textos de I1–I7 abajo se conservan
+> como registro de diseño histórico. Las pendientes son **I8–I11** (WAVEs
+> 18–21, planificadas en §13.5, sin código todavía).
 
 | # | Mejora | Brecha (§12.6) | Coste CPU |
 |---|---|---|---|
@@ -1055,6 +1206,10 @@ usarlo no añade una dependencia nueva.
 | I5 | Descriptor de persona: HSV en 3 bandas agrupado por máscara de segmentación | identidad (habilitador) | 3–8 ms @ 1 Hz |
 | I6 | Asociación: locks → Hungarian → dummy adaptativo → veto de empate | identidad | <1 ms/ciclo |
 | I7 | Presencia derivada de tracks en vez de `was_present` booleano | identidad + temporal | gratis |
+| I8 | **Normalización de coordenadas de Entrenar** (cajas en píxeles CSS display) | logo no detectado tras re-importar | arranque, ≈0 |
+| I9 | **Matcher robusto: ORB sin evidencia no arrastra el score** | self-match < umbral con logos lisos | ≈0 |
+| I10 | **Caché `logo_index.npz` keyed por contenido de las imágenes** | templates stale tras recargar | arranque, ≈0 |
+| I11 | **Canal YOLOE visual-prompt (`refer_image`) para logos** | dependencia de template/ORB | 1 forward extra/frame |
 
 **I1 — Corregir caché npz + aislar referencias por etiqueta.**
 Tres cambios en `_rebuild_logo_templates` (`person_detector.py:665`): (a)
@@ -1142,6 +1297,66 @@ cambiar, el diseño está mal. Desplegar detrás de `YOLO_REID=0` (apagado por
 defecto) y no activar el default hasta medir, en producción, con qué
 frecuencia dispara el veto de empate de I6.
 
+**I8 — Normalización de coordenadas de Entrenar (la causa del bug de sesión 12).**
+El problema es que la caja viaja por tres sistemas de coordenadas distintos sin
+convertir: (a) la UI dibuja en **píxeles CSS display** (`EntrenarSection.tsx`,
+`getBoundingClientRect` sobre un `<img class="max-h-[350px] object-contain">`);
+(b) `main.py /api/train/image` guarda ese `x,y,w,h` **tal cual** en
+`data/training_metadata.json`; (c) `_crop_training_roi` (`person_detector.py:658`)
+interpreta `≤1.5` como fracción y `>1.5` como píxeles de la **imagen natural**.
+Fix propuesto, en orden de robustez:
+1. **Backend (mínimo y suficiente):** en `_crop_training_roi`, cuando la caja
+   sea "grande" (>1.5) y no quepa dentro de la imagen natural (recorte vacío o
+   std de textura nulo), re-interpretarla como fracción del ancho/alto **de la
+   imagen mostrada** — pero el backend no conoce el tamaño mostrado, así que
+   este camino solo sirve como *fallback defensivo*.
+2. **Frontend (la corrección correcta):** `EntrenarSection.tsx` debe normalizar
+   la caja a **fracciones de la imagen natural** antes de enviarla, usando
+   `img.naturalWidth/naturalHeight` (accesible en `onCanvasUp` o al cargar con
+   `readImage`). Así el box siempre queda en `[0,1]` y `_crop_training_roi` lo
+   cropea correctamente sin importar el tamaño de pantalla.
+3. **Migración de datos existentes:** las dos entradas actuales de
+   `data/training_metadata.json` están contaminadas (una con píxeles absolutos,
+   otra con CSS px). Al desplegar I8, **re-importar** las fotos en la UI con la
+   corrección ya activa; no intentar adivinar el scale histórico.
+Despliegue detrás de una flag (`YOLO_TRAIN_NORMALIZE=1`) para poder probar
+contra el dataset actual sin re-importar nada de golpe.
+
+**I9 — Matcher robusto: ORB sin evidencia no debe arrastrar el score.**
+El bug: en `_match_logo_in_gray`, la rama `0.75·tmpl + 0.25·orb` trata un
+`orb=0.0` (canal sin keypoints) como evidencia negativa en vez de "no hay
+evidencia". La fusión de `vision/scoring.py` (I3) **ya** hace lo correcto
+(elimina del denominador los canales con `q_c=None`); lo que falta es que el
+matcher **exponga** "ORB no computable" en lugar de devolver `0.0`. Cambios:
+(a) `match_orb` (`image_signals.py:193`) devuelve `None` cuando el ROI o los
+descriptores de referencia no alcanzan el mínimo de keypoints, no `0.0`;
+(b) `_match_logo_in_gray` propaga ese `None` a la fusión; (c) recalibrar
+`YOLO_LOGO_TMPL_MIN` (hoy 0.42) contra una sesión grabada — con ORB ausente el
+umbral efectivo era 0.56, con ORB `None` vuelve a ser 0.42. Además, re-evaluar
+`YOLO_IMGSZ` (416 hoy vs 640 recomendado) y `YOLO_MAX_SIDE` (960): un ROI de
+pecho a 416 es ~un tercio de la resolución que el template espera.
+
+**I10 — Caché `logo_index.npz` keyed por contenido de las imágenes.**
+Hoy `meta_sig` (`person_detector.py:722`) es `f"{mtime_ns}:{size}"` del
+**metadata** `training_metadata.json`. Si se borran y re-importan imágenes con
+el mismo mtime/size del metadata (o se toca solo el JPEG), el npz puede servir
+plantillas stale — y la sesión 12 confirmó que es un riesgo real aunque no fue
+la causa activa. Fix: la key debe incluir, por cada imagen referenciada, su
+`(mtime_ns, size)` (barato) o un hash de contenido (robusto); si alguna imagen
+falta, invalidar igualmente. Mantener `cache_version` como segundo guardián.
+
+**I11 — Canal YOLOE visual-prompt (`refer_image`) para logos.**
+YOLOE-26 soporta prompts visuales: `model.predict(frame, visual_prompts=...)`
+con `refer_image` de la foto de Entrenar (predictor `YOLOEVPSegPredictor`). Esto
+sustituiría la escalera template+ORB para logos por el propio modelo open-vocab:
+se pasa el crop de Entrenar como referencia y YOLOE busca la aparición en vivo.
+Ventaja: reemplaza CV clásico frágil (I8/I9 desaparecen como bugs, no solo se
+mitigan). Coste: un forward extra por frame (a `imgsz=416` es asumible, medido
+en §14) y los visual prompts deben probarse contra el dataset real antes de
+activar por defecto. Desplegar detrás de `YOLO_LOGO_VISUAL=1`, en paralelo a
+template+ORB, comparando quién gana en cada match — es una evolución de I3, no
+un reemplazo inmediato.
+
 ### 13.2 Qué NO portar, y por qué
 
 - **Grafo de co-ocurrencia + beam search de vecinos.** REMIND lo necesita
@@ -1176,17 +1391,17 @@ frecuencia dispara el veto de empate de I6.
   personas. Cero información de identidad, y diluiría el denominador de la
   fusión de I3/I6.
 
-### 13.3 La victoria más barata de alto valor: I2
+### 13.3 La victoria más barata de alto valor: I2 *(implementada, WAVE-12)*
 
 Costo CPU cero, ~15 líneas de cambio real, compatible hacia atrás sin tocar
-ningún test existente, y es la única mejora de esta lista que cambia de
-inmediato lo que percibe el visitante: hoy dos estudiantes con uniforme ITEE
-delante del kiosko producen `person_count: 2` y **un solo** objeto
-`"Uniforme ITEE"` en el análisis — el LLM no puede decir "los dos llevan
-uniforme del ITEE" porque ese dato no existe en `analysis`. Las demás mejoras
-hacen más confiable lo que ya existe; ésta añade información que hoy no
-existe. Es además prerrequisito de I6/I7: un track necesita poder poseer su
-logo, lo que exige que el logo esté atribuido a una persona primero.
+ningún test existente, y era la única mejora de esta lista que cambia de
+inmediato lo que percibe el visitante: antes, dos estudiantes con uniforme ITEE
+delante del kiosko producían `person_count: 2` y **un solo** objeto
+`"Uniforme ITEE"` en el análisis — el LLM no podía decir "los dos llevan
+uniforme del ITEE" porque ese dato no existía en `analysis`. Se implementó en
+WAVE-12 (`_dedupe_custom` indexa por `(label, person_index)`, sesión 7). Fue
+además prerrequisito de I6/I7: un track necesita poder poseer su logo, lo que
+exige que el logo esté atribuido a una persona primero.
 
 ### 13.4 Identidad de persona sin DINOv3 — evaluación honesta
 
@@ -1217,22 +1432,21 @@ Declaración de alcance, para dejar por escrito y no reinterpretar después:
 > El tracker responde *"¿la persona frente al kiosko ahora es la misma que
 > estaba hace tres segundos?"*. No responde *"¿quién es?"*.
 
-Con estas consecuencias obligatorias si se implementa I7: el track muere tras
-~10 s de ausencia con **borrado duro** (no el `remove_enabled: false` de
-REMIND — una galería sin límite de histogramas de menores de edad es un
-pasivo, no una funcionalidad); nada persiste a disco; `track_id` nunca se
-expone al LLM como una identidad. El pago medible es un bug concreto y
-reproducible: hoy, si el estudiante A se va y el B llega en menos de 5 s,
-`person_count` nunca toca 0 y B nunca recibe el saludo de entrada — corregir
-eso solo exige distinguir "alguien distinto" de "el mismo alguien", un
-requisito mucho más débil que distinguir A de B por identidad.
+Con estas consecuencias obligatorias, **ya implementadas en I7** (WAVE-17,
+sesión 11): el track muere tras ~10 s de ausencia con **borrado duro** (no el
+`remove_enabled: false` de REMIND — una galería sin límite de histogramas de
+menores de edad es un pasivo, no una funcionalidad); nada persiste a disco;
+`track_id` nunca se expone al LLM como una identidad. El pago medible es un
+bug concreto y reproducible: si el estudiante A se va y el B llega en menos de
+5 s, `person_count` nunca toca 0 y B nunca recibe el saludo de entrada —
+corregir eso solo exige distinguir "alguien distinto" de "el mismo alguien",
+un requisito mucho más débil que distinguir A de B por identidad.
 
-**Criterio de cancelación:** si después de desplegar I6 los registros muestran
-el veto de empate disparando en la mayoría de los ciclos con más de una
-persona, esa es la señal honesta de **cancelar I7** y quedarse con la máquina
-de presencia por conteo que existe hoy. Medir eso es precisamente el motivo
-de separar I6 (bajo riesgo, sin cambiar la experiencia del visitante) de I7
-(alto riesgo, cambia los saludos).
+**Criterio de cancelación (vigente):** si después de desplegar I6 los registros
+muestran el veto de empate disparando en la mayoría de los ciclos con más de
+una persona, esa es la señal honesta de **cancelar I7** y quedarse con la
+máquina de presencia por conteo que existe hoy. I7 se desplegó detrás de
+`YOLO_REID=0`; el default no se activa hasta medir esto en producción.
 
 ### 13.5 Secuenciación en WAVEs
 
@@ -1251,11 +1465,55 @@ su propia sesión y su propio commit — nunca dentro de WAVE-08.
 | 15 | Descriptor de persona desde máscaras de segmentación | I5 | — | Medio |
 | 16 | Asociación: locks + Hungarian + veto de empate | I6 | 15, 13 | Medio |
 | 17 | Presencia derivada de tracks | I7 | 16 + métricas de producción de 16 | **Alto** |
+| 18 | Normalización de coordenadas de Entrenar (cajas CSS→fracción) | I8 | — | Bajo |
+| 19 | Matcher robusto: ORB sin evidencia no arrastra el score + imgsz | I9 | 18 | Bajo |
+| 20 | Caché de logos keyed por contenido de las imágenes | I10 | — | Bajo |
+| 21 | Canal YOLOE visual-prompt (`refer_image`) para logos | I11 | 18, 19 | Medio |
 
 Prerrequisitos duros: 11→13 (la fusión necesita que el canal HSV exista de
 verdad, no que esté fail-open); 15→16→17; 13→16 (16 reusa `vision/scoring.py`
-creado en 13). Las waves 11, 12, 14 y 15 son mutuamente independientes y se
+creado en 13); 18→19 (un crop correcto es condición para que el matcher sea
+significativo); 18→21 (los visual prompts usan el crop bien normalizado).
+Las waves 11, 12, 14, 15, 18 y 20 son mutuamente independientes y se
 pueden reordenar o hacer en paralelo entre sesiones distintas.
+
+---
+
+## 14. ¿Cambiar de modelo? Análisis (sesión 12)
+
+**Conclusión: quedarse con `yoloe-26n-seg`.** El bug de sesión 12 (logo no
+detectado tras re-importar) **no es del modelo**: es un fallo de pipeline
+(coordenadas CSS vs imagen natural, I8) + un sesgo de umbral cuando ORB no tiene
+evidencia (I9). Cambiar de modelo no corrige ninguna de las dos cosas; sí lo
+hacen WAVE-18 y WAVE-19 dentro de la misma familia.
+
+| Modelo | Latencia @ bucle 1 Hz | Detección open-vocab | Logos por UI sin reentrenar | Veredicto |
+|---|---|---|---|---|
+| **YOLOE-26n (actual)** | ✓ (imgsz 416, ~1 s) | ✓ | ✓ | **Mantener** |
+| YOLOE-26s/m/l | +GPU/CPU | ✓ | ✓ | Solo si la CPU aguanta; mismos bugs I8/I9 |
+| Grounding DINO2 | 100–200 ms → **2–4× el presupuesto** | ✓ | ✓ | Techo de precisión pero fuera de tiempo real |
+| Florence-2 (230M/770M) | ~30–60 ms GPU / lento CPU | ✓ (multi-task) | ✓ | Interesante, AP inferior a YOLOE; probar como 2ª capa si se quiere VLM |
+| RF-DETR / RT-DETR | ✓ | ✗ (closed-set) | ✗ (fine-tune por clase) | **Descartado** — rompe el caso de uso "añadir logo por UI" |
+| Qwen2.5/3-VL (VLM) | **2–9 s** (edge) | ✓ | ✓ | **Descartado** como detector: rompe el bucle de 1 Hz |
+| PaliGemma 2 mix | segundos (VLM) | ✓ | ✓ | Solo como "descripción de escena" al LLM, no detector |
+
+Criterios de la decisión:
+
+1. **Latencia manda.** El kiosko corre 1 detección/segundo en CPU. Los VLMs
+   (2–9 s) rompen el bucle; Grounding DINO ya casi lo triplica. YOLOE-26n a
+   imgsz=416 cabe.
+2. **El caso de uso exige open-vocab + logos añadidos por UI sin reentrenar.**
+   Eso descarta a todo detector closed-set (RF-DETR, RT-DETR, YOLO26 vanilla):
+   cada nuevo logo del colegio requeriría fine-tune.
+3. **El bug reportado es de coordenadas/umbral, no de modelo.** WAVE-18 y
+   WAVE-19 lo corrigen sin migrar nada.
+4. **Upgrade dentro de la familia:** si en producción la precisión de
+   `yoloe-26n` no alcanza, el paso natural es `yoloe-26s` o `yoloe-26m` (mismos
+   pesos-API) y, para logos, **WAVE-21 (visual prompts)** — el propio YOLOE
+   recibe la foto de Entrenar como referencia. Volver a un multimodal (PaliGemma
+   2 mix, Qwen-VL) solo tendría sentido como **segunda capa opcional** de
+   descripción de escena para el LLM (detrás de un flag), nunca como detector
+   en tiempo real.
 
 ---
 
