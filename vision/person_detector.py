@@ -180,6 +180,7 @@ _SOURCE_PRIORITY = {
     "logo_ref": 3,
     "logo_ref_verified": 3,
     "logo_chest": 3,
+    "logo_visual": 3,
     "open_vocab_snapped": 1,
 }
 
@@ -1319,6 +1320,141 @@ class YoloPersonDetector:
             )
         return found
 
+    def _detect_logo_visual(self, frame, persons: list[dict] | None = None) -> list[dict]:
+        """YOLOE con **visual prompts** (SAVPE) para logos de Entrenar.
+
+        WAVE-21 (I11): cuando ``YOLO_LOGO_VISUAL=1``, YOLOE aprende *one-shot*
+        cómo se ve el logo con ``refer_image`` (el thumbnail de Entrenar) +
+        ``visual_prompts`` (el bbox que dibujó el operador). Es un canal
+        **adicional** al template+ORB: nada lo reemplaza, solo suma evidencia
+        detrás de su flag. Los resultados llevan ``source="logo_visual"`` y
+        compiten por prioridad/confianza en ``_dedupe_custom`` (§13 I3).
+
+        Caveat de Ultralytics: usar ``refer_image`` fija las clases del modelo
+        permanentemente (set_classes). Por eso al terminar se restauran las
+        prompts del kiosco con ``_apply_classes`` para no romper la detección
+        de personas en el siguiente ciclo.
+        """
+        flag = os.getenv("YOLO_LOGO_VISUAL", "0").lower() in ("1", "true", "yes")
+        if not flag or frame is None or self.model is None:
+            return []
+        try:
+            import numpy as np
+            from ultralytics.models.yolo.yoloe import YOLOEVPSegPredictor
+        except Exception:
+            return []
+        if not self._logo_images and not self._logo_templates:
+            return []
+
+        base = Path(__file__).resolve().parent.parent
+        meta_path = base / "data" / "training_metadata.json"
+        if not meta_path.exists():
+            return []
+        try:
+            data = json.loads(meta_path.read_text(encoding="utf-8"))
+        except Exception:
+            return []
+        if not isinstance(data, list) or not data:
+            return []
+
+        # Un referente visual por etiqueta: primer thumbnail con bbox válido.
+        refs: list[tuple[str, Path, tuple]] = []
+        seen_labels: set[str] = set()
+        for entry in data:
+            if not isinstance(entry, dict):
+                continue
+            label = str(entry.get("label") or "").strip()
+            if not label or label in seen_labels:
+                continue
+            img_path = self._resolve_training_image(entry.get("thumbnail") or "")
+            if img_path is None:
+                continue
+            h, w = (0, 0)
+            try:
+                ref_img = cv2.imread(str(img_path))
+                if ref_img is None:
+                    continue
+                h, w = ref_img.shape[:2]
+            except Exception:
+                continue
+            if h < 8 or w < 8:
+                continue
+            try:
+                x = float(entry.get("x", 0) or 0)
+                y = float(entry.get("y", 0) or 0)
+                bw = float(entry.get("w", 0) or 0)
+                bh = float(entry.get("h", 0) or 0)
+            except (TypeError, ValueError):
+                continue
+            if bw < 8 or bh < 8:
+                continue
+            if 0 < bw <= 1.5 and 0 < bh <= 1.5:
+                x, y, bw, bh = x * w, y * h, bw * w, bh * h
+            x1 = float(max(0, min(w - 1, x)))
+            y1 = float(max(0, min(h - 1, y)))
+            x2 = float(max(x1 + 1, min(w, x + bw)))
+            y2 = float(max(y1 + 1, min(h, y + bh)))
+            if x2 - x1 < 8 or y2 - y1 < 8:
+                continue
+            seen_labels.add(label)
+            refs.append((label, img_path, (x1, y1, x2, y2)))
+
+        if not refs:
+            return []
+
+        found: list[dict] = []
+        debug = _yolo_debug()
+        for label, img_path, (x1, y1, x2, y2) in refs:
+            visual_prompts = {
+                "bboxes": np.array([[x1, y1, x2, y2]], dtype=np.float32),
+                "cls": np.array([0]),
+            }
+            try:
+                results = self.model.predict(
+                    frame,
+                    refer_image=str(img_path),
+                    visual_prompts=visual_prompts,
+                    predictor=YOLOEVPSegPredictor,
+                    imgsz=self.imgsz,
+                    conf=self.custom_confidence,
+                    verbose=False,
+                )
+            except Exception as error:
+                if debug:
+                    print(f"[YOLO] Visual prompt «{label}» falló: {error}")
+                continue
+            finally:
+                # refer_image fija las clases del modelo; restaurar el kiosco.
+                self._prompt_key = None
+                self._apply_classes(self._active_class_list())
+
+            if not results:
+                continue
+            for result in results:
+                boxes = getattr(result, "boxes", None)
+                if boxes is None:
+                    continue
+                for box in boxes:
+                    conf = float(box.conf[0])
+                    if conf < self.custom_confidence:
+                        continue
+                    x1f, y1f, x2f, y2f = _xyxy_tuple(box.xyxy[0])
+                    found.append(
+                        {
+                            "label": label,
+                            "confidence": conf,
+                            "box": (float(x1f), float(y1f), float(x2f), float(y2f)),
+                            "source": "logo_visual",
+                            "person_index": self._person_index_for_box(
+                                (float(x1f), float(y1f), float(x2f), float(y2f)),
+                                persons or [],
+                            ),
+                        }
+                    )
+                    if debug:
+                        print(f"[YOLO] Visual «{label}» conf={conf:.2f}")
+        return found
+
     def _predict_boxes(
         self, frame, conf: float | None = None
     ) -> list[tuple[str, float, tuple]]:
@@ -1675,6 +1811,20 @@ class YoloPersonDetector:
                     "confidence": hit["confidence"],
                     "box": hit["box"],
                     "source": hit.get("source", "logo_chest"),
+                    "person_index": hit.get("person_index"),
+                }
+            )
+
+        # WAVE-21 (I11): canal adicional con visual prompts (SAVPE) detrás de
+        # YOLO_LOGO_VISUAL=1. No reemplaza template+ORB; suma evidencia que
+        # compite por prioridad/confianza en `_dedupe_custom`.
+        for hit in self._detect_logo_visual(frame, persons=persons):
+            custom_objects.append(
+                {
+                    "label": hit["label"],
+                    "confidence": hit["confidence"],
+                    "box": hit["box"],
+                    "source": hit.get("source", "logo_visual"),
                     "person_index": hit.get("person_index"),
                 }
             )

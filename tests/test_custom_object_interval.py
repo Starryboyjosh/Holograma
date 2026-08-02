@@ -466,3 +466,23 @@ def test_dedupe_custom_keys_by_person_index(monkeypatch):
     )
     assert len(out2) == 1
 
+
+def test_detect_logo_visual_gated_off_by_default(monkeypatch):
+    """WAVE-21 (I11): YOLO_LOGO_VISUAL=0 (default) → canal visual inerte.
+
+    El canal de visual prompts no puede costar un predict extra por frame ni
+    tocar las clases del modelo salvo que el operador lo active.
+    """
+    det, fake = _make_detector(monkeypatch)
+    monkeypatch.delenv("YOLO_LOGO_VISUAL", raising=False)
+    out = det._detect_logo_visual(frame=None)
+    assert out == []
+    assert fake.predict_calls == 0
+
+
+def test_detect_logo_visual_source_rank():
+    """I11: logo_visual compite por prioridad igual que logo_ref/chest."""
+    import vision.person_detector as pd
+
+    assert pd._SOURCE_PRIORITY["logo_visual"] == pd._SOURCE_PRIORITY["logo_ref"]
+
