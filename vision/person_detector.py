@@ -156,6 +156,11 @@ _LOGO_OPEN_VOCAB_MIN_CONF = 0.45
 # Umbral 0.42 acepta matches reales sin tragarse ruido.
 _TMPL_MATCH_MIN = 0.42
 
+# Versión del formato de ``data/logo_index.npz``. Se incrementa cuando cambia
+# el esquema de la caché: el npz actual en disco (sin ``by_hsv``, sin esta
+# clave) debe rechazarse y reconstruirse en vez de cargarse a medias (§13 I1).
+_LOGO_CACHE_VERSION = 2
+
 
 def _yolo_debug() -> bool:
     """``HOLOGRAM_YOLO_DEBUG`` activo. Estaba copiado en 4 sitios distintos."""
@@ -662,7 +667,7 @@ class YoloPersonDetector:
         crop = img[y1:y2, x1:x2]
         return crop if crop.size else img
 
-    def _rebuild_logo_templates(self) -> None:
+    def _rebuild_logo_templates(self, base_dir=None) -> None:
         """Indexa fotos de Entrenar como plantillas grises + descriptores ORB.
 
         Optimización de memoria/CPU:
@@ -670,10 +675,16 @@ class YoloPersonDetector:
           ``matchTemplate`` ya reescala al tamaño del ROI en runtime.
         - ORB sobre la misma miniatura (~160 px).
         - Opcional: caché ``data/logo_index.npz`` para no releer JPEGs cada reload.
+
+        ``base_dir`` permite apuntar a un directorio de pruebas (tests) en vez
+        del repo; en producción es ``None`` y se usa la raíz del proyecto.
         """
         self._logo_templates = {}
         self._logo_images = {}
-        base = Path(__file__).resolve().parent.parent
+        self._logo_hsv_hists = {}
+        base = Path(base_dir) if base_dir is not None else Path(
+            __file__
+        ).resolve().parent.parent
         meta_path = base / "data" / "training_metadata.json"
         cache_path = base / "data" / "logo_index.npz"
         if not meta_path.exists():
@@ -689,24 +700,30 @@ class YoloPersonDetector:
             return
 
         meta_sig = f"{meta_path.stat().st_mtime_ns}:{meta_path.stat().st_size}"
-        # Caché: si el metadata no cambió, cargar arrays ya preparados.
+        # Caché: si el metadata y la versión del esquema no cambiaron, cargar
+        # arrays ya preparados. Sin la clave `cache_version` (npz escrito por
+        # versiones viejas, sin `by_hsv`) se descarta y se reconstruye.
         try:
             if cache_path.is_file():
                 cached = np.load(str(cache_path), allow_pickle=True)
                 sig = cached["meta_sig"]
                 sig_s = str(sig.item() if hasattr(sig, "item") else sig)
-                if sig_s == meta_sig:
+                cached_version = int(cached.get("cache_version", 0))
+                if sig_s == meta_sig and cached_version == _LOGO_CACHE_VERSION:
                     by_img = dict(cached["by_img"].item())
                     by_des = dict(cached["by_des"].item())
+                    by_hsv = dict(cached["by_hsv"].item())
                     self._logo_images = by_img
                     self._logo_templates = by_des
+                    self._logo_hsv_hists = by_hsv
                     n_img = sum(len(v) for v in by_img.values())
                     n_orb = sum(len(v) for v in by_des.values())
+                    n_hsv = sum(len(v) for v in by_hsv.values())
                     mem = sum(g.nbytes for imgs in by_img.values() for g in imgs)
                     mem += sum(d.nbytes for dess in by_des.values() for d in dess)
                     print(
-                        f"[YOLO] Logos Entrenar (caché npz): "
-                        f"plantillas={n_img} ORB={n_orb} "
+                        f"[YOLO] Logos Entrenar (caché npz v{_LOGO_CACHE_VERSION}): "
+                        f"plantillas={n_img} ORB={n_orb} HSV={n_hsv} "
                         f"labels={list(by_img)} mem≈{mem / 1024:.0f} KiB"
                     )
                     return
@@ -796,8 +813,10 @@ class YoloPersonDetector:
                 np.savez_compressed(
                     str(cache_path),
                     meta_sig=np.asarray(meta_sig),
+                    cache_version=np.asarray(_LOGO_CACHE_VERSION),
                     by_img=np.asarray(by_img, dtype=object),
                     by_des=np.asarray(by_des, dtype=object),
+                    by_hsv=np.asarray(by_hsv, dtype=object),
                 )
             except Exception:
                 pass
@@ -889,6 +908,20 @@ class YoloPersonDetector:
             return True
         return False
 
+    def _num_trained_labels(self) -> int:
+        """Etiquetas distintas con referencias de Entrenar (imagen/ORB/HSV).
+
+        El fallback cruzado de ``_logo_*_for`` (§13 I1) solo debe aplicar cuando
+        existe **exactamente una** etiqueta entrenada: ese es el caso de
+        bootstrap para el que se escribió (una sola escuela "logo X" respalda
+        la etiqueta open-vocab "uniforme X"). Con dos o más, la etiqueta X no
+        debe casar contra las plantillas de la escuela Y.
+        """
+        keys = set(self._logo_images) | set(self._logo_templates) | set(
+            self._logo_hsv_hists
+        )
+        return len(keys)
+
     def _logo_templates_for(self, label: str) -> list:
         if label in self._logo_images:
             return self._logo_images[label]
@@ -896,15 +929,10 @@ class YoloPersonDetector:
         for k, v in self._logo_images.items():
             if str(k).strip().lower() == key:
                 return v
-        if self._is_uniform_label(label):
+        if self._is_uniform_label(label) and self._num_trained_labels() == 1:
             for k, v in self._logo_images.items():
                 if self._is_uniform_label(k):
                     return v
-            if self._logo_images:
-                all_imgs = []
-                for imgs in self._logo_images.values():
-                    all_imgs.extend(imgs)
-                return all_imgs
         return []
 
     def _logo_orb_for(self, label: str) -> list:
@@ -914,15 +942,10 @@ class YoloPersonDetector:
         for k, v in self._logo_templates.items():
             if str(k).strip().lower() == key:
                 return v
-        if self._is_uniform_label(label):
+        if self._is_uniform_label(label) and self._num_trained_labels() == 1:
             for k, v in self._logo_templates.items():
                 if self._is_uniform_label(k):
                     return v
-            if self._logo_templates:
-                all_orb = []
-                for des in self._logo_templates.values():
-                    all_orb.extend(des)
-                return all_orb
         return []
 
     def _logo_hsv_hists_for(self, label: str) -> list:
@@ -932,15 +955,10 @@ class YoloPersonDetector:
         for k, v in self._logo_hsv_hists.items():
             if str(k).strip().lower() == key:
                 return v
-        if self._is_uniform_label(label):
+        if self._is_uniform_label(label) and self._num_trained_labels() == 1:
             for k, v in self._logo_hsv_hists.items():
                 if self._is_uniform_label(k):
                     return v
-            if self._logo_hsv_hists:
-                all_hsv = []
-                for h in self._logo_hsv_hists.values():
-                    all_hsv.extend(h)
-                return all_hsv
         return []
 
     @staticmethod
@@ -999,10 +1017,12 @@ class YoloPersonDetector:
         self, crop, label: str
     ) -> tuple[float, tuple | None, str]:
         """Match firma HSV + plantilla multiescala + ORB de ``label`` en un ROI. → (score, box_rel, method)."""
-        # Gate de color HSV: solo rechaza discrepancias extremas de color
-        # (e.g. logo rojo vs crop verde). Bajo (0.18) porque la iluminación
-        # del kiosco cambia el balance y el match template+ORB son más fiables.
-        hsv_min = _env_float("YOLO_LOGO_HSV_MIN", 0.18)
+        # Gate de color HSV: por diseño está INERTE (§13 I1). El default es 0.0
+        # (nunca rechaza) porque re-activarlo a ciegas puede rechazar logos
+        # válidos bajo la iluminación real del kiosco. Se registra el
+        # ``color_score`` en cada match aceptado bajo HOLOGRAM_YOLO_DEBUG=1,
+        # y la fusión ponderada de I3 lo promueve de veto a canal con datos.
+        hsv_min = _env_float("YOLO_LOGO_HSV_MIN", 0.0)
         color_score = self._match_hsv_color_signature(crop, label)
         if color_score < hsv_min:
             return 0.0, None, "hsv_mismatch"
@@ -1026,9 +1046,11 @@ class YoloPersonDetector:
         tmpl_min_internal = _env_float("YOLO_LOGO_TMPL_MIN", _TMPL_MATCH_MIN)
         if tmpl_box is not None and tmpl_score >= tmpl_min_internal * 0.85:
             conf = min(0.98, 0.75 * tmpl_score + 0.25 * orb_score)
+            self._log_logo_color(label, conf, color_score)
             return conf, tmpl_box, "template"
         if orb_score >= 0.85 and tmpl_box is not None:
             conf = min(0.95, 0.55 * tmpl_score + 0.45 * orb_score)
+            self._log_logo_color(label, conf, color_score)
             return conf, tmpl_box, "orb+template"
         if orb_score >= 0.95:
             # Solo ORB fuerte: caja = centro del ROI (sin localización fina).
@@ -1036,8 +1058,17 @@ class YoloPersonDetector:
             s = min(rw, rh) * 0.35
             cx, cy = rw * 0.5, rh * 0.5
             box = (cx - s * 0.5, cy - s * 0.5, cx + s * 0.5, cy + s * 0.5)
+            self._log_logo_color(label, orb_score, color_score)
             return orb_score, box, "orb"
         return 0.0, None, "none"
+
+    def _log_logo_color(self, label: str, conf: float, color_score: float) -> None:
+        """Registra el ``color_score`` del match aceptado (datos para I3)."""
+        if _yolo_debug():
+            print(
+                f"[YOLO] Logo «{label}» aceptado conf={conf:.2f} "
+                f"color_score={color_score:.2f}"
+            )
 
     def _verify_logo_reference(
         self, frame, box: tuple, label: str

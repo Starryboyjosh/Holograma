@@ -68,6 +68,7 @@ def _make_detector(monkeypatch):
     # Sin plantillas: tests de geometría open-vocab no dependen de fotos Entrenar.
     det._logo_templates = {}
     det._logo_images = {}
+    det._logo_hsv_hists = {}
     fake = _FakeModel()
     det.model = fake
     det._model_kind = "mock"
