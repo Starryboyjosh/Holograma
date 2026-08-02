@@ -28,7 +28,7 @@ Cómo usar este documento:
 | V-1 | Validar WAVE-21 (canal visual-prompt) en sesión grabada | Visión | ⬜ lista para ejecutar |
 | V-2 | Activar `YOLO_REID` tras medir el veto de empate | Visión | ⬜ lista para ejecutar |
 | V-3 | Recalibrar la fusión I3 y sus umbrales | Visión | ⬜ lista para ejecutar |
-| V-4 | Cerrar el fallback cruzado multi-escuela | Visión | ⬜ lista para ejecutar |
+| V-4 | Cerrar el fallback cruzado multi-escuela | Visión | ✅ ya resuelto (WAVE-11) |
 | V-5 | Evaluar `imgsz` 416 → 640 | Visión | ⬜ lista para ejecutar |
 | P-1 | Añadir OpenCode Zen como proveedor LLM | Proveedores | ⬜ lista para ejecutar |
 | X-1 | Memoria de sesión (WAVE-06 del plan) | Otras | ⬜ lista para ejecutar |
@@ -250,6 +250,14 @@ WAVE-11).
 `tests/test_logo_index_cache.py`.
 
 **Riesgo.** Bajo.
+
+> ✅ **Hecho (WAVE V-4, sin cambios de código):** el guard ya existía desde
+> WAVE-11 (commit `344ded6`): los tres `_logo_*_for` exigen
+> `_num_trained_labels() == 1` (`person_detector.py:1048,1061,1074`) antes de
+> aplicar el fallback, y `test_no_cross_label_fallback_with_two_labels` +
+> `test_non_uniform_label_never_uses_cross_fallback` lo cubren. Lo que estaba
+> mal era la documentación: `yolo_instructions.md` §12.6 describía el fallback
+> como "bug latente" con texto anterior a WAVE-11; se corrigió el párrafo.
 
 ### WAVE V-5 — Evaluar `imgsz` 416 → 640 *(lista para ejecutar)*
 

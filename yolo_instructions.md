@@ -1220,15 +1220,18 @@ Brechas **cerradas en sesión 13** (cada una con su WAVE en §13.5/§13.6):
   `_detect_logo_visual` detrás de `YOLO_LOGO_VISUAL=1` (default 0), canal
   adicional a template+ORB.
 
-Y un bug latente, distinto de los anteriores, que conviene tener presente:
+Y un punto de diseño vigente, distinto de los anteriores, que conviene
+tener presente (ya resuelto, ver nota):
 
-- El fallback cruzado en `_logo_templates_for`/`_logo_orb_for`/`_logo_hsv_hists_for`
-  (`person_detector.py:967,980,993`): si una etiqueta "parece uniforme" y
-  no tiene sus propias referencias, el código devuelve la concatenación de
-  las referencias de **todas** las etiquetas entrenadas. Con una sola escuela
-  entrenada esto es inofensivo (es el caso de bootstrap para el que se
-  escribió); con dos o más escuelas, la etiqueta X puede casar legítimamente
-  contra las plantillas de la escuela Y.
+- ~~Fallback cruzado multi-escuela.~~ **Resuelto en WAVE-11** (sesión 6): los
+  `_logo_templates_for`/`_logo_orb_for`/`_logo_hsv_hists_for`
+  (`person_detector.py:1041,1054,1067`) solo aplican el fallback entre
+  etiquetas cuando **exactamente una** etiqueta está entrenada
+  (`_num_trained_labels() == 1`, `:1027`) — el caso de bootstrap de una sola
+  escuela para el que se escribió. Con dos o más escuelas, la etiqueta X ya
+  no casa contra las plantillas de la escuela Y (cubierto por
+  `test_no_cross_label_fallback_with_two_labels`). Este párrafo era un
+  "bug latente" escrito antes de WAVE-11; quedó obsoleto.
 
 ---
 
