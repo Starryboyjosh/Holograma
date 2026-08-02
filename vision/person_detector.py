@@ -68,6 +68,7 @@ from vision.image_signals import (
     match_orb,
     match_template_multiscale,
 )
+from vision.scoring import fuse_logo_channels
 
 # Checkpoint canónico del kiosco. Cualquier legacy se redirige aquí.
 DEFAULT_YOLOE_WEIGHTS = "yoloe-26n-seg.pt"
@@ -1042,8 +1043,7 @@ class YoloPersonDetector:
         # Gate de color HSV: por diseño está INERTE (§13 I1). El default es 0.0
         # (nunca rechaza) porque re-activarlo a ciegas puede rechazar logos
         # válidos bajo la iluminación real del kiosco. Se registra el
-        # ``color_score`` en cada match aceptado bajo HOLOGRAM_YOLO_DEBUG=1,
-        # y la fusión ponderada de I3 lo promueve de veto a canal con datos.
+        # ``color_score`` en cada match aceptado bajo HOLOGRAM_YOLO_DEBUG=1.
         hsv_min = _env_float("YOLO_LOGO_HSV_MIN", 0.0)
         color_score = self._match_hsv_color_signature(crop, label)
         if color_score < hsv_min:
@@ -1062,6 +1062,31 @@ class YoloPersonDetector:
         des_list = self._logo_orb_for(label)
         tmpl_score, tmpl_box = self._match_template_multiscale(gray_roi, imgs)
         orb_score = self._match_orb_in_roi(gray_roi, des_list)
+
+        # I3 (§13): fusión ponderada por calidad detrás de YOLO_LOGO_FUSION=1.
+        # score = Σ(w_c·q_c_eff·s_c) / Σ(w_c·q_c_eff). Un canal sin evidencia
+        # (None) no aporta al numerador ni al denominador. Hasta recalibrar el
+        # umbral contra una sesión grabada, el default sigue siendo la escalera.
+        if _env("YOLO_LOGO_FUSION", "0").lower() in ("1", "true", "yes"):
+            conf = fuse_logo_channels(
+                {
+                    "template": None if tmpl_box is None else tmpl_score,
+                    "orb": None if not des_list else orb_score,
+                    "hsv": color_score,
+                }
+            )
+            self._log_logo_color(label, conf, color_score)
+            if conf <= 0.0:
+                return 0.0, None, "none"
+            # La localización la da el template; sin él, el centro del ROI.
+            if tmpl_box is not None:
+                return conf, tmpl_box, "template"
+            rh, rw = gray_roi.shape[:2]
+            s = min(rw, rh) * 0.35
+            cx, cy = rw * 0.5, rh * 0.5
+            box = (cx - s * 0.5, cy - s * 0.5, cx + s * 0.5, cy + s * 0.5)
+            return conf, box, "fusion"
+
         # Combinar: template manda en localización; ORB refuerza confianza.
         # Gate relajado: tmpl_score real >= 0.40 es suficiente para pasar;
         # el conf combinado se evalúa después contra _TMPL_MATCH_MIN.

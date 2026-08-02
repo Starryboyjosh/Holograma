@@ -307,6 +307,51 @@ def test_logo_ref_from_template_match(monkeypatch):
     assert hits[0]["confidence"] >= 0.55
 
 
+def test_logo_ref_fusion_path_via_env_flag(monkeypatch):
+    """I3: con YOLO_LOGO_FUSION=1, _match_logo_in_gray usa la fusión ponderada.
+
+    Sin ORB disponible (sin descriptores) y sin template, el canal ORB se marca
+    como sin evidencia y la fusión debe seguir produciendo match por template.
+    """
+    import numpy as np
+    import cv2
+    import os
+
+    monkeypatch.setenv("YOLO_LOGO_FUSION", "1")
+    det = pd.YoloPersonDetector()
+    monkeypatch.setattr(det, "_load_training_data", lambda: None)
+    monkeypatch.setattr(det, "_maybe_reload_training", lambda: None)
+    monkeypatch.setattr(det, "_rebuild_logo_templates", lambda: None)
+    det._custom_classes = ["Logo Colegio X"]
+    det._custom_vocabulary = []
+    det._prompt_key = None
+    det.model = None
+    tmpl = np.zeros((48, 48), dtype=np.uint8)
+    tmpl[10:38, 10:38] = 200
+    tmpl[18:30, 18:30] = 40
+    det._logo_images = {"Logo Colegio X": [tmpl]}
+    det._logo_templates = {}
+
+    frame = np.zeros((200, 160, 3), dtype=np.uint8)
+    persons = [{"box": (10, 10, 150, 190), "confidence": 0.9}]
+    rois = det._person_chest_rois(frame, persons)
+    assert rois, "debe haber ROI pecho"
+    _crop, (ox1, oy1, ox2, oy2), _pb = rois[0]
+    ch, cw = _crop.shape[:2]
+    sw, sh = max(24, cw // 3), max(24, ch // 3)
+    patch = cv2.resize(tmpl, (sw, sh), interpolation=cv2.INTER_AREA)
+    y0 = max(0, (ch - sh) // 2)
+    x0 = max(0, (cw - sw) // 2)
+    frame[oy1 + y0 : oy1 + y0 + sh, ox1 + x0 : ox1 + x0 + sw] = cv2.cvtColor(
+        patch, cv2.COLOR_GRAY2BGR
+    )
+
+    hits = det._detect_logo_templates(frame, persons=persons)
+    assert hits, f"la fusión debe aceptar el match, got {hits}"
+    assert hits[0]["source"] == "logo_ref"
+    assert hits[0]["confidence"] >= 0.55
+
+
 def test_open_vocab_uniform_checked_against_db_logo_images(monkeypatch):
     """Verifica que 'Uniforme ITEE' (open-vocab) se compare contra las fotos 'Logo ITEE' guardadas en la base de datos."""
     import numpy as np
