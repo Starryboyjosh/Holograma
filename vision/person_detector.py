@@ -70,7 +70,7 @@ from vision.image_signals import (
 )
 from vision.person_signature import person_signature
 from vision.scoring import fuse_logo_channels
-from vision.tracking import LabelHysteresis
+from vision.tracking import LabelHysteresis, PersonAssociator
 
 # Checkpoint canónico del kiosco. Cualquier legacy se redirige aquí.
 DEFAULT_YOLOE_WEIGHTS = "yoloe-26n-seg.pt"
@@ -270,6 +270,14 @@ class YoloPersonDetector:
             forget_seconds=_env_float("YOLO_CUSTOM_FORGET_SECONDS", 10.0),
             retain_seconds=_env_float("YOLO_CUSTOM_RETAIN_SECONDS", 60.0),
         )
+        # I6/I7: asociador de tracks de persona (REID) detrás de YOLO_REID.
+        # Apagado por defecto; no activar el default hasta medir en producción
+        # con qué frecuencia dispara el veto de empate. Mientras YOLO_REID=0,
+        # run_continuous se comporta exactamente igual que hoy.
+        self._reid_enabled = _env_int("YOLO_REID", 0) != 0
+        self._person_associator = PersonAssociator() if self._reid_enabled else None
+        # Overlay (I6/I7): tracks confirmados del ciclo previo del asociador.
+        self._reid_prev_confirmed = set()
         self._load_training_data()
 
     @staticmethod
@@ -1935,6 +1943,7 @@ class YoloPersonDetector:
         last_count = 0
         last_analysis = {"person_count": 0, "persons": [], "custom_objects": []}
         last_detect_time = 0.0
+
         # Anti-rebote: instante en que la persona dejó de verse. Solo declaramos
         # "person_left" si la ausencia se sostiene, para no cortar la conversación
         # por un cuadro perdido (giro de cabeza, oclusión, parpadeo del detector).
@@ -2045,6 +2054,24 @@ class YoloPersonDetector:
                     if is_present:
                         last_count = count
 
+                    # I6/I7: overlay de tracks de persona (solo con YOLO_REID=1).
+                    # La máquina was_present/present_since/absent_since de arriba
+                    # queda intacta; aquí solo se superpone el estado de tracks y,
+                    # cuando el conjunto de tracks confirmados cambia por completo
+                    # sin que person_count llegue a 0, se emite person_left +
+                    # person_entered en vez de continuar la misma presencia en
+                    # silencio. Con YOLO_REID=0 este bloque es un no-op.
+                    if self._reid_enabled and self._person_associator is not None:
+                        self._reid_events = self._reid_track(
+                            analysis,
+                            count,
+                            now,
+                        )
+                    else:
+                        self._reid_events = []
+                    for reid_event, reid_analysis in self._reid_events:
+                        callback(reid_event, count, reid_analysis)
+
                 # Publica el cuadro anotado SOLO si alguien mira el feed MJPEG.
                 # Sin suscriptores nos saltamos el imencode; la detección sigue
                 # al ritmo de *interval_seconds* aunque la sala esté vacía.
@@ -2064,6 +2091,79 @@ class YoloPersonDetector:
                 else:
                     # interval 0 = cada cuadro (tests / modo máximo).
                     self._interruptible_sleep(0.0)
+
+    # ------------------------------------------------------------------
+    # I6/I7: overlay de tracks de persona (REID, detrás de YOLO_REID=1)
+    # ------------------------------------------------------------------
+
+    def _reid_track(self, analysis: dict, count: int, now: float) -> list[tuple]:
+        """Alimenta el asociador con las detecciones del ciclo y decide el evento.
+
+        Solo se llama con ``self._reid_enabled`` y un ``_person_associator``
+        vivo. Devuelve eventos ``(event, extra_analysis)`` del overlay:
+        cuando el conjunto de tracks confirmados cambia por completo sin que
+        ``count`` llegue a 0, emite ``person_left`` + ``person_entered`` para
+        no continuar la misma presencia en silencio con identidades nuevas.
+        """
+        events: list[tuple] = []
+        associator = self._person_associator
+        detections = self._person_detections_from_analysis(analysis)
+        associator.update(detections, now=now)
+        confirmed_now = set(associator.confirmed())
+        prev_confirmed = self._reid_prev_confirmed
+        self._reid_prev_confirmed = confirmed_now
+        if (
+            prev_confirmed
+            and count > 0
+            and confirmed_now
+            and not confirmed_now.intersection(prev_confirmed)
+        ):
+            events.append(("person_left", analysis))
+            events.append(("person_entered", analysis))
+        return events
+
+    def _person_detections_from_analysis(self, analysis: dict) -> list[dict]:
+        """Detecciones de persona del análisis, con descriptor si disponible.
+
+        El canal de apariencia (I5) se adjunta por IoU de caja: los tracks del
+        asociador se emparejan por geometría aunque el fixture no traiga
+        máscara (descriptor None → apariencia descartada, solo geometría).
+        """
+        sigs_by_box: list[dict] = list(self._last_person_signatures)
+        out: list[dict] = []
+        for person in analysis.get("persons", []):
+            box = tuple(person.get("box") or ())
+            sig = None
+            for s in sigs_by_box:
+                if self._boxes_intersect(box, tuple(s.get("box") or ()), overlap=0.5):
+                    sig = s.get("signature")
+                    break
+            out.append(
+                {
+                    "box": box,
+                    "confidence": float(person.get("confidence", 0.5)),
+                    "signature": sig,
+                }
+            )
+        return out
+
+    @staticmethod
+    def _boxes_intersect(a: tuple, b: tuple, overlap: float = 0.5) -> bool:
+        """True si la caja ``b`` solapa lo suficiente con ``a`` (IoU >= overlap)."""
+        if not a or not b or len(a) != 4 or len(b) != 4:
+            return False
+        ax1, ay1, ax2, ay2 = a
+        bx1, by1, bx2, by2 = b
+        ix1, iy1 = max(ax1, bx1), max(ay1, by1)
+        ix2, iy2 = min(ax2, bx2), min(ay2, by2)
+        iw, ih = ix2 - ix1, iy2 - iy1
+        if iw <= 0 or ih <= 0:
+            return False
+        inter = iw * ih
+        union = (ax2 - ax1) * (ay2 - ay1) + (bx2 - bx1) * (by2 - by1) - inter
+        if union <= 0:
+            return False
+        return (inter / union) >= overlap
 
     # ------------------------------------------------------------------
     # Availability check
