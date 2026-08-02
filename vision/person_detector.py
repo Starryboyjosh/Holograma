@@ -68,6 +68,7 @@ from vision.image_signals import (
     match_orb,
     match_template_multiscale,
 )
+from vision.person_signature import person_signature
 from vision.scoring import fuse_logo_channels
 from vision.tracking import LabelHysteresis
 
@@ -260,6 +261,9 @@ class YoloPersonDetector:
         # Señal cooperativa de parada: al activarla, run_continuous sale del bucle
         # y el context manager de Camera libera el dispositivo (apagar = liberar).
         self._stop_event = threading.Event()
+        # I5: descriptores de persona (máscaras) del último predict; separados
+        # de `analysis` para no difundirlos por WebSocket. Vacio por defecto.
+        self._last_person_signatures: list[dict] = []
         # Histéresis M-of-N (I4) para los eventos de custom objects.
         self._label_tracker = LabelHysteresis(
             confirm_cycles=_env_int("YOLO_CUSTOM_CONFIRM_CYCLES", 2),
@@ -1293,13 +1297,43 @@ class YoloPersonDetector:
         if not results:
             return []
         scale_back = _compute_scale_back(frame, prepared) if frame is not None else 1.0
+        # I5: descriptor de persona desde las máscaras. Solo cuando está activo,
+        # y se guarda aparte (nunca entra en `analysis` ni en el feed MJPEG).
+        sig_enabled = _env("YOLO_PERSON_SIGNATURES", "0").lower() in ("1", "true", "yes")
+        hsv_small = None
+        sig_masks = None
+        if sig_enabled and prepared is not None:
+            try:
+                import cv2 as _cv2
+                import numpy as _np
+                hsv_full = _cv2.cvtColor(prepared, _cv2.COLOR_BGR2HSV)
+            except Exception:
+                hsv_full = None
+            if hsv_full is not None:
+                masks = None
+                for result in results:
+                    m = getattr(result, "masks", None)
+                    if m is not None and getattr(m, "data", None) is not None:
+                        masks = m
+                        break
+                if masks is not None:
+                    try:
+                        data = masks.data
+                        if data is not None and data.shape[0] > 0:
+                            hm, wm = data.shape[1], data.shape[2]
+                            hsv_small = _cv2.resize(hsv_full, (wm, hm))
+                            sig_masks = _np.asarray(data)
+                    except Exception:
+                        hsv_small = None
+                        sig_masks = None
         out: list[tuple[str, float, tuple]] = []
+        self._last_person_signatures = []
         for result in results:
             names = getattr(result, "names", None) or {}
             boxes = getattr(result, "boxes", None)
             if boxes is None:
                 continue
-            for box in boxes:
+            for i, box in enumerate(boxes):
                 confidence = float(box.conf[0])
                 if confidence < conf:
                     continue
@@ -1312,7 +1346,26 @@ class YoloPersonDetector:
                     except Exception:
                         raw_name = str(cls_id)
                 x1, y1, x2, y2 = _scale_box(_xyxy_tuple(box.xyxy[0]), scale_back)
-                out.append((raw_name, confidence, (x1, y1, x2, y2)))
+                entry = (raw_name, confidence, (x1, y1, x2, y2))
+                out.append(entry)
+                if (
+                    sig_enabled
+                    and sig_masks is not None
+                    and self._is_person_label(raw_name)
+                    and i < sig_masks.shape[0]
+                    and hsv_small is not None
+                ):
+                    try:
+                        sig = person_signature(
+                            _np.asarray(sig_masks[i]),
+                            hsv_small,
+                        )
+                        if sig is not None:
+                            self._last_person_signatures.append(
+                                {"box": (x1, y1, x2, y2), "signature": sig}
+                            )
+                    except Exception:
+                        pass
         return out
 
     def _is_person_label(self, raw_name: str) -> bool:
