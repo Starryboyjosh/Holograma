@@ -778,6 +778,29 @@ Archivo: `vision/image_signals.py`
     colapsa `(L, None)`. Verificada la puerta de regresión: ambos fallan si se
     revierte solo `person_detector.py`.
 
+### Sesión 8: WAVE-13 — fusión ponderada por calidad de logos (I3)
+
+31. **Módulo nuevo puro `vision/scoring.py`** (solo numpy, sin cv2): implementa
+    `score = Σ(w_c·q_c_eff·s_c) / Σ(w_c·q_c_eff)` sobre los canales
+    template / ORB / HSV. Cada canal tiene peso (`CHANNEL_WEIGHTS` = 0.5 / 0.3
+    / 0.2) y piso de calidad (`CHANNEL_FLOORS` = 0.40 / 0.50 / 0.30). Un canal
+    **sin evidencia** (`s_c is None`) se elimina del numerador Y del
+    denominador — el arreglo estructural de la clase de bug que I1 corrige
+    puntualmente (un 1.0 silencioso por "no sé" inflaba la fusión como un
+    match real). `channel_quality_eff` expone la calidad efectiva por canal.
+32. **`_match_logo_in_gray` usa la fusión detrás de `YOLO_LOGO_FUSION=1`**: la
+    escalera `if/elif` (template → orb+template → orb) sigue siendo el default
+    hasta recalibrar el umbral contra una sesión grabada, como pide el §13 I3.
+    En la rama de fusión, el canal ORB se marca sin evidencia si no hay
+    descriptores, el HSV siempre aporta (`color_score` ya inerte en I1) y la
+    localización la sigue dando el template (o el centro del ROI sin él).
+33. Tests nuevos: `tests/test_vision_scoring.py` (media ponderada, canal sin
+    evidencia excluido del denominador, evidencia bajo el piso pesa menos,
+    pesos suman 1.0) y `test_logo_ref_fusion_path_via_env_flag` en
+    `test_custom_object_interval.py` (match de template aceptado con
+    `YOLO_LOGO_FUSION=1`). Puerta de regresión verificada: ambos fallan sin
+    `vision/scoring.py` ni el cambio en `person_detector.py`.
+
 ---
 
 ## 12. Razonamiento parte por parte de `vision/`
