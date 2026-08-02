@@ -852,6 +852,40 @@ Archivo: `vision/image_signals.py`
     correcto, `analysis` sin `signatures`). Puerta de regresión verificada: los
     tests fallan sin `vision/person_signature.py` ni el cambio del detector.
 
+### Sesión 11: WAVE-16 — asociación de personas REID (I6) + overlay (I7)
+
+40. **`PersonAssociator` en `vision/tracking.py`** (módulo puro, scipy perezoso):
+    cuatro piezas de REMIND, independientes de DINOv3 — (a) *locks* antes de
+    Hungarian: comprometer de una vez cuando `s1≥0.90` y el margen sobre el
+    segundo mejor es amplio (`lock_margin=0.05`); (b) Hungarian con columnas
+    dummy para "crear identidad nueva" (`linear_sum_assignment` si scipy está,
+    fallback greedy si no); (c) **dummy adaptativo a la confianza** —
+    `dummy = clamp(0.05 + 0.20·(1−confianza), 0, 0.72)` (cuanto menos confiado
+    el match, más atractivo crear identidad nueva); (d) **veto de empate** —
+    si mejor y segundo mejor quedan a menos de `tie_epsilon=0.05`, no se
+    compromete nada y la detección se arrastra (`_pending`) al siguiente ciclo.
+    Estados NEW→TENTATIVE→CONFIRMED→INACTIVE→FORGOTTEN (confirm_cycles=2,
+    forget_seconds=10, retain_seconds=60). Sin descriptor (`signature=None`) la
+    apariencia se descarta y la asociación queda solo con geometría (IoU ×0.5 +
+    apariencia ×0.5 si ambas hay), convergiendo al comportamiento actual.
+41. **`_reid_track` / `_person_detections_from_analysis` en `person_detector.py`**:
+    overlay de tracks detrás de `YOLO_REID=0` (apagado por defecto). La máquina
+    `was_present`/`present_since`/`absent_since` de `run_continuous` queda
+    intacta; solo cuando el conjunto de tracks confirmados cambia por completo
+    sin que `person_count` llegue a 0 se emite `person_left` + `person_entered`
+    en vez de continuar la misma presencia en silencio. Los descriptores I5 se
+    adjuntan a cada persona por IoU de caja (≥0.5). No se activa el default
+    hasta medir en producción la frecuencia del veto de empate.
+42. Tests nuevos en `tests/test_person_associator.py` (12): crear/confirmar un
+    track, sin reconfirmar con descriptor distinto, olvido por ausencia, dos
+    personas→dos tracks, **veto de empate con cajas idénticas** (no se
+    compromete nada, `_pending` arrastra), lock con signatures, rango del dummy
+    adaptativo, baja confianza→identidad nueva, solo geometría sin descriptor,
+    pending reintroducidas al siguiente ciclo, fallback greedy con scipy roto.
+    Los 7 tests de `test_person_presence.py` pasan **sin modificarse** (puerta
+    I7). Smoke manual con `YOLO_REID=1`: cambio completo de tracks {A}→{B}
+    emite `person_left` + `person_entered`. 463 passed, 1 xfailed.
+
 ---
 
 ## 12. Razonamiento parte por parte de `vision/`
