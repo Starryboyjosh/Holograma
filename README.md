@@ -51,7 +51,7 @@ Cada intento sigue una sonda cacheada de Ollama (`OLLAMA_READY_TTL_SECONDS`, fue
 | `app/tools/` | Herramientas del LLM (function calling): navegación web con Lightpanda |
 | `llm_backend.py` | Streaming/fallback multi-proveedor, CoT en terminal, timeouts unificados, caché de readiness |
 | `metrics.py` | Métrica por turno: una línea estructurada en stderr, un solo punto de emisión |
-| `provider_config.py` | Contrato de 8 proveedores (`LLM_PROVIDER`, keys, modelos, detección automática) |
+| `provider_config.py` | Contrato de 9 proveedores (`LLM_PROVIDER`, keys, modelos, detección automática) |
 | `camera_context.py` | Contexto de cámara neutro (desacoplado de CLI ↔ LLM) |
 | `vision/` | Cámara OpenCV + YOLOE open-vocab (`yoloe-26n-seg`), detector de personas, análisis facial; `geometry.py` e `image_signals.py` son funciones puras testeables sin cargar el modelo |
 | `stt/` | Faster-Whisper + sounddevice, wakeword |
@@ -78,6 +78,7 @@ Cada intento sigue una sonda cacheada de Ollama (`OLLAMA_READY_TTL_SECONDS`, fue
 | `claude_native` | nube | `ANTHROPIC_API_KEY` | fija |
 | `nvidia` | nube | `NVIDIA_API_KEY` | configurable |
 | `groq` | nube | `GROQ_API_KEY` (compartida con STT cloud) | configurable |
+| `opencode_zen` | nube | `OPENCODE_API_KEY` | configurable |
 | `custom_openai` | nube/proxy | `OPENAI_COMPAT_API_KEY` | obligatoria |
 | `ollama` | local | — | configurable |
 | `local_only` | local | — | — |

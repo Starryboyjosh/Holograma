@@ -46,6 +46,34 @@ def test_autodetect_picks_groq_when_only_groq_key():
     assert pc.select_backend({"GROQ_API_KEY": "gsk-x"}) == "groq"
 
 
+def test_autodetect_picks_opencode_zen_when_only_zen_key():
+    env = {"OPENCODE_API_KEY": "zen-test"}
+    assert pc.select_backend(env) == "opencode_zen"
+
+
+def test_opencode_zen_resolves_key_model_and_base_url():
+    env = {
+        "OPENCODE_API_KEY": "zen-test",
+        "OPENCODE_ZEN_MODEL": "gemini-3-flash",
+    }
+    assert pc.resolve_api_key("opencode_zen", env) == "zen-test"
+    assert pc.resolve_model("opencode_zen", env) == "gemini-3-flash"
+    assert pc.resolve_model("opencode_zen", {}) == "glm-4.7-free"
+    assert pc.resolve_base_url("opencode_zen", {}) == "https://opencode.ai/zen/v1"
+    info = {p["id"]: p for p in pc.all_providers_public_info(env)}
+    assert info["opencode_zen"]["key_configured"] is True
+    assert info["opencode_zen"]["requires_key"] is True
+    assert info["opencode_zen"]["kind"] == "cloud"
+    assert info["opencode_zen"]["supports_discovery"] is True
+    assert pc.PROVIDERS["opencode_zen"].openai_compatible is True
+
+
+def test_opencode_zen_rejects_namespaced_generic_model():
+    """El id genérico de OpenRouter (con barra) no debe derramarse a Zen."""
+    env = {"OPENCODE_API_KEY": "x", "LLM_MODEL": "meta-llama/llama-3.3-70b-instruct"}
+    assert pc.resolve_model("opencode_zen", env) == "glm-4.7-free"
+
+
 def test_groq_resolves_key_model_and_base_url():
     env = {
         "GROQ_API_KEY": "gsk-test",

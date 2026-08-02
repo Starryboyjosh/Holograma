@@ -127,6 +127,23 @@ PROVIDERS: dict[str, Provider] = {
         supports_discovery=True,
         model_id_style="bare",
     ),
+    "opencode_zen": Provider(
+        id="opencode_zen",
+        label="OpenCode Zen",
+        description=(
+            "Gateway pay-per-use de OpenCode con modelos GPT/Claude/Gemini y "
+            "modelos gratis (un solo API key). Requiere OPENCODE_API_KEY."
+        ),
+        kind="cloud",
+        key_env="OPENCODE_API_KEY",
+        model_env="OPENCODE_ZEN_MODEL",
+        default_model="glm-4.7-free",
+        base_url_env="OPENCODE_ZEN_BASE_URL",
+        default_base_url="https://opencode.ai/zen/v1",
+        openai_compatible=True,
+        supports_discovery=True,
+        model_id_style="bare",
+    ),
     "custom_openai": Provider(
         id="custom_openai",
         label="Endpoint compatible con OpenAI",
@@ -177,6 +194,7 @@ AUTODETECT_ORDER: tuple[str, ...] = (
     "openai",
     "groq",
     "claude_native",
+    "opencode_zen",
 )
 
 # Alias históricos aceptados en LLM_PROVIDER / LLM_BACKEND.

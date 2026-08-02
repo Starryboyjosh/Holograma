@@ -30,7 +30,7 @@ Cómo usar este documento:
 | V-3 | Recalibrar la fusión I3 y sus umbrales | Visión | ⛔ requiere sesión grabada |
 | V-4 | Cerrar el fallback cruzado multi-escuela | Visión | ✅ ya resuelto (WAVE-11) |
 | V-5 | Evaluar `imgsz` 416 → 640 | Visión | ✅ medido (mantener 416) |
-| P-1 | Añadir OpenCode Zen como proveedor LLM | Proveedores | ⬜ lista para ejecutar |
+| P-1 | Añadir OpenCode Zen como proveedor LLM | Proveedores | ✅ ejecutada |
 | X-1 | Memoria de sesión (WAVE-06 del plan) | Otras | ⬜ lista para ejecutar |
 | X-2 | Revisar payloads pesados por WebSocket | Otras | ⬜ propuesta |
 
@@ -312,9 +312,9 @@ gratis, con un solo API key (`OPENCODE_API_KEY`). Base URL verificada:
     description="Gateway pay-per-use con modelos GPT/Claude/Gemini y modelos gratis.",
     kind="cloud",
     key_env="OPENCODE_API_KEY",
-    model_env="OPENDCODE_ZEN_MODEL",
-    default_model="gemini-3-flash",   # verificar en el catálogo vigente
-    base_url_env="OPENDCODE_ZEN_BASE_URL",
+    model_env="OPENCODE_ZEN_MODEL",
+    default_model="glm-4.7-free",   # verificar en el catálogo vigente
+    base_url_env="OPENCODE_ZEN_BASE_URL",
     default_base_url="https://opencode.ai/zen/v1",
     openai_compatible=True,
     supports_discovery=True,          # GET /v1/models
@@ -327,6 +327,16 @@ es genérica (`ProviderConfigCard`, `useProviders`, `/api/providers`), así que
 basta con el registro. (4) Tests en `tests/test_provider_config.py` (autodetección
 por `OPENCODE_API_KEY`, resolución de key/model/base-url). (5) Tabla de
 proveedores en `README.md`.
+
+> ✅ **Hecho (WAVE P-1):** `opencode_zen` registrado con `default_model
+> "glm-4.7-free"` (modelo gratis OpenAI-compatible verificado en el catálogo
+> público de Zen; el endpoint `/v1/models` devuelve 403 sin key, así que el
+> default se eligió contra el catálogo documentado). Añadido a
+> `AUTODETECT_ORDER`; la UI y el fallback multi-proveedor lo toman solos.
+> Tests: 3 nuevos (autodetección, resolución key/model/url, rechazo del id
+> genérico namespaced). README actualizado (9 proveedores). Suite 480 passed.
+> `OPENCODE_API_KEY` debe definirse en `.env` para que aparezca en la
+> auto-detección.
 
 **Nota de alcance.** Zen sirve modelos Anthropic/Gemini por sus propios endpoints
 (`/v1/messages`, `/v1beta`), pero `llm_backend` habla **solo OpenAI-compatible**:
