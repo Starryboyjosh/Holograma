@@ -65,6 +65,7 @@ Cada intento sigue una sonda cacheada de Ollama (`OLLAMA_READY_TTL_SECONDS`, fue
 | `static/` | Frontend compilado (SPA React) servido por FastAPI |
 | `frontend/` | UI React + shell Tauri (fuente, no compilado) |
 | `docs/plans/` | Plan de arquitectura de contexto/modelo y su runbook de ejecución por WAVEs |
+| `mejoras.md` | Catálogo de mejoras propuestas por área (datos, optimización, frontend, visión, proveedores), escritas como WAVEs listas para ejecutar |
 | `graphify-out/` | Grafo de conocimiento del repo — **generado, no versionado** (ver abajo) |
 | `tests/` | Pytest (contratos de proveedor, unificación LLM, servicios, cámara, holograma, seguridad, STT, TTS, navegación web) |
 
