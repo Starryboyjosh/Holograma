@@ -62,6 +62,7 @@ from vision.geometry import (
     xyxy_tuple as _xyxy_tuple,
 )
 from vision.image_signals import (
+    ROI_MIN_STDDEV,
     compare_hsv_signature,
     compute_hsv_hist,
     is_white_light_or_glare,
@@ -685,7 +686,30 @@ class YoloPersonDetector:
         if x2 - x1 < 8 or y2 - y1 < 8:
             return img
         crop = img[y1:y2, x1:x2]
-        return crop if crop.size else img
+        if not crop.size:
+            return img
+        # WAVE-18 (I8): fallback defensivo — una caja en píxeles absolutos
+        # (>1.5) que produce un recorte sin textura es casi seguro un box en
+        # píxeles CSS display guardado por una UI vieja (EntrenarSection antes
+        # de normalizar). No podemos reconstruir el scale del display desde el
+        # backend, así que solo lo registramos bajo HOLOGRAM_YOLO_DEBUG y
+        # devolvemos el crop: el matcher lo rechazará por textura en vez de
+        # fallar en silencio con una región plana.
+        if x > 1.5 and _yolo_debug():
+            import cv2 as _cv2
+
+            roi = crop
+            if len(roi.shape) == 3:
+                roi = _cv2.cvtColor(roi, _cv2.COLOR_BGR2GRAY)
+            std = float(_cv2.meanStdDev(roi)[1][0][0])
+            if std < ROI_MIN_STDDEV:
+                print(
+                    f"[YOLO] I8: caja en píxeles absolutos ({x:.1f},{y:.1f},"
+                    f"{bw:.1f}x{bh:.1f}) sobre imagen {w}x{h} -> crop plano "
+                    f"(std={std:.2f}). ¿Box en píxeles CSS display? Re-importar "
+                    f"la foto con la UI normalizada (WAVE-18)."
+                )
+        return crop
 
     def _rebuild_logo_templates(self, base_dir=None) -> None:
         """Indexa fotos de Entrenar como plantillas grises + descriptores ORB.

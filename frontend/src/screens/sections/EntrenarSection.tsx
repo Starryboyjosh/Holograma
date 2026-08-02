@@ -115,11 +115,27 @@ export function EntrenarSection() {
       showToast('Dibuja un cuadro sobre el objeto primero.');
       return;
     }
+    // WAVE-18 (I8): normalizar la caja a fracciones de la imagen natural antes
+    // de enviarla. La caja se dibuja en píxeles CSS del recorte mostrado
+    // (max-h-[350px] object-contain), pero el backend (_crop_training_roi)
+    // interpreta x,y,w,h como fracciones (<=1.5) o píxeles de la imagen
+    // natural (>1.5). Sin normalizar, una foto grande guardada en píxeles CSS
+    // display produce un crop plano -> el logo deja de detectarse.
+    const rect = canvasRef.current?.getBoundingClientRect();
+    const dw = rect?.width || 1;
+    const dh = rect?.height || 1;
+    const normalizedBoxes = boundingBoxes.map((b) => ({
+      ...b,
+      x: b.x / dw,
+      y: b.y / dh,
+      w: b.w / dw,
+      h: b.h / dh,
+    }));
     try {
       const res = await apiFetch('/api/train/image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: uploadedImage, boundingBoxes }),
+        body: JSON.stringify({ image: uploadedImage, boundingBoxes: normalizedBoxes }),
       });
       if (res.ok) {
         const data = await res.json();

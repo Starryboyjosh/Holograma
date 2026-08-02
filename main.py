@@ -789,7 +789,13 @@ def train_image(payload: TrainImagePayload):
             # `key` de React).
             new_id = int(time.time() * 1000) + idx
             bx, by, bw, bh = box.x, box.y, box.w, box.h
-            if scale_boxes != 1.0:
+            # WAVE-18 (I8): si la caja ya viaja como fracción (0–1, la UI la
+            # normaliza contra la imagen natural), NO reescalarla con
+            # `scale_boxes`: el resize del JPEG cambia los píxeles absolutos
+            # pero una fracción es invariante a la resolución. Reescalar solo
+            # cajas en píxeles absolutos legacy (>1.5).
+            is_fraction_box = 0 < bw <= 1.5 and 0 < bh <= 1.5
+            if scale_boxes != 1.0 and not is_fraction_box:
                 bx, by, bw, bh = (
                     bx * scale_boxes,
                     by * scale_boxes,
