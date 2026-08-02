@@ -828,6 +828,30 @@ Archivo: `vision/image_signals.py`
     los archivos de test fallan sin `vision/tracking.py` ni el cambio del
     detector.
 
+### Sesión 10: WAVE-15 — descriptor de persona desde las máscaras (I5)
+
+37. **Módulo nuevo puro `vision/person_signature.py`** (solo numpy): describe
+    a una persona con histogramas HSV agrupados en 3 bandas horizontales
+    (cabeza/torso/piernas), L2-normalizados por banda. `person_signature(mask,
+    hsv)` recibe la máscara binaria y el frame HSV a la MISMA resolución y
+    devuelve el vector concatenado (3×16 bins); `signature_distance(a, b)` da
+    la distancia 1−coseno (1.0 si falta algún descriptor). Sin ORB: los
+    keypoints de una persona son inestables entre ciclos y ante cambio de pose.
+38. **`_predict_boxes` captura las máscaras** (`person_detector.py`): detrás de
+    `YOLO_PERSON_SIGNATURES=1`, baja el frame BGR→HSV, lo redimensiona a la
+    resolución de `masks.data` (protos, sin `retina_masks`) y rellena
+    `self._last_person_signatures` (lista `{box, signature}` solo de personas).
+    Los descriptores NO entran en `analysis` — se guardan en un atributo del
+    detector para no difundir arrays por WebSocket (main.py). Desactivado por
+    defecto; se computa solo en el predict de detección (1/s), nunca en el
+    camino del feed MJPEG.
+39. Tests nuevos en `tests/test_person_signature.py`: unidad (forma y norma por
+    banda, None sin píxeles / shape mismatch / None, distancia de idénticos y
+    de colores distintos, helper de banda) e integración con un modelo falso
+    que devuelve `masks.data` (descriptores poblados solo con la flag, box
+    correcto, `analysis` sin `signatures`). Puerta de regresión verificada: los
+    tests fallan sin `vision/person_signature.py` ni el cambio del detector.
+
 ---
 
 ## 12. Razonamiento parte por parte de `vision/`
