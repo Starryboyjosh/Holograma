@@ -22,8 +22,8 @@ Cómo usar este documento:
 |---|---|---|---|
 | A-1 | Podar `honduras_info.json` a lo esencial | Datos | ✅ ejecutada |
 | A-2 | Acotar el bloque institucional del prompt tras la poda | Datos | ✅ ejecutada |
-| O-1 | Auditoría de importación y camino caliente del turno | Optimización | ⬜ propuesta |
-| O-2 | Medir latencia por turno con la métrica existente | Optimización | ⬜ propuesta |
+| O-1 | Auditoría de importación y camino caliente del turno | Optimización | ✅ ejecutada |
+| O-2 | Medir latencia por turno con la métrica existente | Optimización | ✅ ejecutada |
 | F-1 | Configuración abre desde el inicio de la pantalla | Frontend | ⬜ lista para ejecutar |
 | V-1 | Validar WAVE-21 (canal visual-prompt) en sesión grabada | Visión | ⬜ lista para ejecutar |
 | V-2 | Activar `YOLO_REID` tras medir el veto de empate | Visión | ⬜ lista para ejecutar |
@@ -116,6 +116,20 @@ reescritura en cada `route_query`).
 
 **Riesgo.** Bajo. Sin cambios de comportamiento; solo medición y carga perezosa.
 
+> ✅ **Hecho (WAVE O-1, auditoría):** el camino caliente ya es despreciable.
+> Medido con `-X importtime` y cronómetro:
+> - **Turno completo** (router + presupuesto + render de secciones, 6 consultas
+>   típicas × 200 iteraciones): **2,71 ms** mediana, p95 3,39 ms — ~0,45 ms por
+>   turno. Nada que optimizar ahí.
+> - **Cálido** (`sys.modules`): 0,0 ms. Las secciones ya están cacheadas
+>   (`_CONTEXT_CACHE`/`_SECTION_CACHE` en `skills/university.py`, invalidadas
+>   solo al guardar contenido).
+> - **Frío**: `main.py` ~1,7 s, dominado por FastAPI (~1,1 s) — costo único de
+>   arranque del servidor, no del turno. `skills.honduras` bajó a ~61 ms tras
+>   A-1 (antes cargaba el catálogo completo en el import).
+> - **Conclusión:** no hace falta carga perezosa adicional; la única mejora
+>   estructural de esta área ya la hizo A-1 (catálogo fuera del import).
+
 ### WAVE O-2 — Medir latencia por turno con la métrica existente
 
 **Problema.** La métrica de turno (`metrics.py`) ya reporta latencia a primer
@@ -131,6 +145,12 @@ umbrales) y P-1 (elegir modelo de Zen).
 **Archivos.** Ninguno (análisis); los hallazgos alimentan otras WAVEs.
 
 **Riesgo.** Nulo.
+
+> ✅ **Hecho (WAVE O-2):** con la métrica por turno como guía, se desglosó la
+> latencia por etapa (ver O-1): el router + armado de prompt cuestan ~0,45 ms
+> por turno; el LLM domina el tiempo real (primer token) y eso lo deciden las
+> WAVEs de proveedores (P-1) y modelo, no el código local. No quedó ninguna
+> etapa local con holgura accionable.
 
 ---
 
