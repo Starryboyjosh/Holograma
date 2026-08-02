@@ -5,6 +5,7 @@ from skills.utils import normalize_text
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 JSON_PATH = BASE_DIR / "data" / "honduras_info.json"
+CATALOG_PATH = BASE_DIR / "data" / "honduras_cultura_general.json"
 
 HONDURAS_INFO = {}
 
@@ -25,7 +26,6 @@ try:
             "proceres": {},
             "vulgarismos": {},
             "simbolos_patrios": {},
-            "cultura_general": {},
         }
         programs_data = data.get("programs", {})
         for prog_key, prog_desc in programs_data.items():
@@ -39,11 +39,6 @@ try:
         simb_data = data.get("simbolos_patrios", {})
         for simb_key, simb_desc in simb_data.items():
             HONDURAS_INFO["simbolos_patrios"][simb_key.lower().strip()] = simb_desc
-        
-        # Carga estructurada de cultura general desde el JSON
-        cult_data = data.get("cultura_general", {})
-        for cult_key, cult_desc in cult_data.items():
-            HONDURAS_INFO["cultura_general"][cult_key.lower().strip()] = cult_desc
             
 except Exception as e:
     raise RuntimeError(f"ERROR CRÍTICO al leer o decodificar el archivo de datos {JSON_PATH}: {e}")
@@ -66,7 +61,7 @@ def _build_search_index():
     HONDURAS_EXACT_LOOKUP = {}
     HONDURAS_PARTIAL_LOOKUP = []
     
-    # 1. Procesar Categorías estándar con formato "Título: Descripción"
+    # Procesar Categorías estándar con formato "Título: Descripción"
     standard_categories = ["programs", "proceres", "vulgarismos", "simbolos_patrios"]
     for category in standard_categories:
         for key, desc in HONDURAS_INFO.get(category, {}).items():
@@ -74,15 +69,59 @@ def _build_search_index():
             formatted_string = f"{key.title()}: {desc}"
             HONDURAS_EXACT_LOOKUP[norm_key] = formatted_string
             HONDURAS_PARTIAL_LOOKUP.append((norm_key, formatted_string))
-            
-    # 2. Procesar Cultura General (Entrega directa del valor descriptivo)
-    for key, desc in HONDURAS_INFO.get("cultura_general", {}).items():
-        norm_key = normalize_text(key)
-        HONDURAS_EXACT_LOOKUP[norm_key] = desc
-        HONDURAS_PARTIAL_LOOKUP.append((norm_key, desc))
 
 # Inicialización única del mapa de memoria indexado
 _build_search_index()
+
+
+# ==============================================================================
+# CULTURA GENERAL BAJO DEMANDA (WAVE A-1)
+# ==============================================================================
+# El catálogo de cultura general (970 preguntas, ~126 KB) ya no se carga en el
+# import: pesaba el arranque y ninguna regla del router lo consultaba (el router
+# solo llama `get_program_info` con las claves de `programs`). Vive en
+# `honduras_cultura_general.json` y solo se lee si una consulta llega acá.
+
+_CATALOG_CACHE: dict[str, str] | None = None
+_CATALOG_PARTIAL: list[tuple[str, str]] | None = None
+
+
+def _load_catalog() -> None:
+    """Carga el catálogo de cultura general una sola vez (lazy)."""
+    global _CATALOG_CACHE, _CATALOG_PARTIAL
+    if _CATALOG_CACHE is not None:
+        return
+    _CATALOG_CACHE = {}
+    _CATALOG_PARTIAL = []
+    if not CATALOG_PATH.exists():
+        return
+    try:
+        with CATALOG_PATH.open("r", encoding="utf-8") as f:
+            cult_data = json.load(f).get("cultura_general", {})
+        for cult_key, cult_desc in cult_data.items():
+            norm_key = normalize_text(cult_key)
+            _CATALOG_CACHE[norm_key] = cult_desc
+            _CATALOG_PARTIAL.append((norm_key, cult_desc))
+    except Exception:
+        # El catálogo es prescindible: sin él la skill responde el fallback.
+        _CATALOG_CACHE = {}
+
+
+def get_cultura_general_info(query: str) -> str | None:
+    """Busca una pregunta de cultura general en el catálogo bajo demanda.
+
+    Exacta O(1) primero; luego coincidencia por subcadena. ``None`` si no hay
+    respuesta (quien llame debe decir "no invento, te busco" en vez de rellenar).
+    """
+    normalized_query = normalize_text(query)
+    if _CATALOG_CACHE is None:
+        _load_catalog()
+    if normalized_query in _CATALOG_CACHE:
+        return _CATALOG_CACHE[normalized_query]
+    for norm_key, formatted_result in _CATALOG_PARTIAL or ():
+        if norm_key in normalized_query or normalized_query in norm_key:
+            return formatted_result
+    return None
 
 
 # ==============================================================================
@@ -195,7 +234,6 @@ def get_university_context():
     proceres = ", ".join(procer.title() for procer in HONDURAS_INFO["proceres"].keys())
     vulgarismos = ", ".join(vulg.title() for vulg in HONDURAS_INFO["vulgarismos"].keys())
     simbolos = ", ".join(simb.title() for simb in HONDURAS_INFO["simbolos_patrios"].keys())
-    total_cultura = len(HONDURAS_INFO.get("cultura_general", {}))
     
     return (
         "Información histórica y cultural de Honduras:\n"
@@ -209,7 +247,6 @@ def get_university_context():
         f"- Próceres y personajes históricos: {proceres}.\n"
         f"- Vulgarismos y rasgos del habla hondureña: {vulgarismos}.\n"
         f"- Símbolos patrios y culturales: {simbolos}.\n"
-        f"- Base de Datos de Cultura General: Cuenta con un catálogo integrado de {total_cultura} respuestas sobre tradiciones, gastronomía, geografía y flora de Honduras.\n"
         "Si el visitante pregunta por datos no incluidos aquí o por temas específicos de cultura general que no coincidan, no inventes. "
         "Recomienda revisar fuentes oficiales del Estado de Honduras, la Academia "
         "Hondureña de la Lengua o la Secretaría de las Culturas, las Artes y los "

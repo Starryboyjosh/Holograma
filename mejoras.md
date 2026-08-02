@@ -20,7 +20,7 @@ Cómo usar este documento:
 
 | WAVE | Título | Área | Estado |
 |---|---|---|---|
-| A-1 | Podar `honduras_info.json` a lo esencial | Datos | ⬜ propuesta |
+| A-1 | Podar `honduras_info.json` a lo esencial | Datos | ✅ ejecutada |
 | A-2 | Acotar el bloque institucional del prompt tras la poda | Datos | ⬜ propuesta |
 | O-1 | Auditoría de importación y camino caliente del turno | Optimización | ⬜ propuesta |
 | O-2 | Medir latencia por turno con la métrica existente | Optimización | ⬜ propuesta |
@@ -50,15 +50,14 @@ no aporta a la consulta promedio.
 
 **Qué cambiar.**
 
-1. Dejar en `honduras_info.json` solo lo esencial para una conversación promedio:
-   los 10 Pueblos Indígenas y Afrohondureños (PIAH), próceres, vulgarismos,
-   símbolos patrios, hitos (Convenio 169), periodos históricos y direcciones —
-   todo lo que hoy alimenta las reglas del router `honduras.*` (`skills/router.py`
-   L252–320).
-2. **No borrar el catálogo**: extraerlo a un archivo aparte
-   (`data/honduras_cultura_general.json`) que **no** se cargue en el import; solo
-   se consulta si la pregunta entra por la búsqueda directa (`get_program_info` /
-   lookups), o directamente eliminarlo.
+1. ✅ **Hecho (WAVE A-1):** `cultura_general` (970 entradas, ~126 KB) salió a
+   `data/honduras_cultura_general.json`, que **no** se carga en el import de
+   `skills/honduras.py` (el lookup del import pasó de 1006 a 19 claves). Se
+   consulta bajo demanda con `get_cultura_general_info()` (exacta O(1), luego
+   subcadena; `None` si no hay respuesta). `honduras_info.json` quedó en 6.6 KB.
+   `get_university_context()` ya no anuncia el conteo del catálogo.
+2. **No borrar el catálogo**: el archivo extraído se conserva completo para la
+   búsqueda directa bajo demanda.
 3. El kiosko **ya tiene navegación web** (`browse_web_page`, Lightpanda,
    `app/tools/schema.py`): para lo no incluido, la respuesta correcta es
    "no invento, te busco" — el guardarraíl anti-invención ya cubre el caso.
@@ -69,11 +68,10 @@ se toca**: es la fuente editable de la pantalla Contenido.
 
 **Archivos.** `data/honduras_info.json`, `data/honduras_cultura_general.json`
 (nuevo), `skills/honduras.py`, `skills/router.py` (si cambia la ruta del catálogo),
-`tests/test_unev_content.py` / `tests/test_context_sections.py` (ajustar si
-contaban entradas).
+`tests/test_honduras_catalog.py` (nuevo), `tests/test_unev_content.py` /
+`tests/test_context_sections.py` (ajustar si contaban entradas).
 
-**Riesgo.** Bajo. Depende de que la poda respete las claves que usan las reglas
-del router (los `program`, `primary` y `support` del §router).
+**Riesgo.** Bajo. ✅ Suite completa verde (473 passed, 1 xfailed) tras la poda.
 
 ### WAVE A-2 — Acotar el bloque institucional del prompt tras la poda
 
