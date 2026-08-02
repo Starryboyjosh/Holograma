@@ -57,9 +57,10 @@ __all__ = [
 MAX_SECTION_CHARS = 3000
 
 # Tope **total** del bloque institucional. Con la selección típica el bloque
-# ronda los 350–2.800 chars, muy por debajo; el tope es el techo duro que impide
-# volver a los 15.516 chars de la línea base por acumulación.
-MAX_CONTEXT_CHARS = 6000
+# ronda los 337–2.600 chars (tras la poda de WAVE A-1 la sección más grande,
+# `honduras`, bajó a 2.290); el tope es el techo duro que impide volver a los
+# 15.516 chars de la línea base por acumulación.
+MAX_CONTEXT_CHARS = 4000
 
 # Coherencia del presupuesto: si el tope por sección superase al total, el tope
 # por sección no acotaría nada.

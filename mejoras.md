@@ -21,7 +21,7 @@ Cómo usar este documento:
 | WAVE | Título | Área | Estado |
 |---|---|---|---|
 | A-1 | Podar `honduras_info.json` a lo esencial | Datos | ✅ ejecutada |
-| A-2 | Acotar el bloque institucional del prompt tras la poda | Datos | ⬜ propuesta |
+| A-2 | Acotar el bloque institucional del prompt tras la poda | Datos | ✅ ejecutada |
 | O-1 | Auditoría de importación y camino caliente del turno | Optimización | ⬜ propuesta |
 | O-2 | Medir latencia por turno con la métrica existente | Optimización | ⬜ propuesta |
 | F-1 | Configuración abre desde el inicio de la pantalla | Frontend | ⬜ lista para ejecutar |
@@ -83,6 +83,11 @@ institucional sigue entrando en cada turno.
 (`HOLOGRAM_METRICS=1`, campo `context_chars`) y decidir si los topes bajan
 (objetivo: bloque institucional típico < 4 KB). No bajar los guardarraíles
 UNEV≠UNED y anti-invención, que son inviolables por diseño.
+
+> ✅ **Hecho (WAVE A-2):** medido, los bloques típicos van de 337 a 2.627 chars.
+> `MAX_CONTEXT_CHARS` bajó de 6000 a **4000** (techo duro por encima del caso
+> más grande), `MAX_SECTION_CHARS` se mantiene en 3000 (la sección `honduras`
+> quedó en 2.290 tras la poda). Guardarraíles intactos. Suite verde (477 passed).
 
 **Archivos.** `prompt_package.py` (constantes `MAX_SECTION_CHARS` /
 `MAX_CONTEXT_CHARS`), `tests/test_prompt_package.py`.
