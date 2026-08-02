@@ -32,7 +32,7 @@ Cómo usar este documento:
 | V-5 | Evaluar `imgsz` 416 → 640 | Visión | ✅ medido (mantener 416) |
 | P-1 | Añadir OpenCode Zen como proveedor LLM | Proveedores | ✅ ejecutada |
 | X-1 | Memoria de sesión (WAVE-06 del plan) | Otras | ⬜ lista para ejecutar |
-| X-2 | Revisar payloads pesados por WebSocket | Otras | ⬜ propuesta |
+| X-2 | Revisar payloads pesados por WebSocket | Otras | ✅ auditar (sin cambios) |
 
 ---
 
@@ -376,6 +376,17 @@ frontend no usa; verificar que el feed MJPEG y el WS no compitan por banda.
 **Archivos.** `main.py`, `app/connection.py`, `frontend/src/widgets/*`.
 
 **Riesgo.** Bajo.
+
+> ✅ **Hecho (WAVE X-2, auditoría — sin cambios):** medido estáticamente:
+> - El WS **nunca** difunde `analysis`: `camera_event` envía solo
+>   `{type, event, count}` (**71 bytes**; `main.py:118-121`). El dict completo
+>   (315 bytes con 2 personas + 1 objeto) vive en `camera_provider` y solo se
+>   convierte en texto de contexto para el LLM (`app/services/vision.py`).
+> - Los descriptores de persona (I5) ya están fuera de `analysis` por diseño.
+> - El feed MJPEG va por HTTP (`/api/video_feed`), canal aparte del WS; no hay
+>   evento WS que transporte frames ni arrays.
+> - El frontend consume exactamente esos campos (`useChatSocket.ts`).
+> No hay nada que recortar: los payloads ya son mínimos.
 
 ---
 
