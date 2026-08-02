@@ -29,7 +29,7 @@ Cómo usar este documento:
 | V-2 | Activar `YOLO_REID` tras medir el veto de empate | Visión | ⬜ lista para ejecutar |
 | V-3 | Recalibrar la fusión I3 y sus umbrales | Visión | ⬜ lista para ejecutar |
 | V-4 | Cerrar el fallback cruzado multi-escuela | Visión | ✅ ya resuelto (WAVE-11) |
-| V-5 | Evaluar `imgsz` 416 → 640 | Visión | ⬜ lista para ejecutar |
+| V-5 | Evaluar `imgsz` 416 → 640 | Visión | ✅ medido (mantener 416) |
 | P-1 | Añadir OpenCode Zen como proveedor LLM | Proveedores | ⬜ lista para ejecutar |
 | X-1 | Memoria de sesión (WAVE-06 del plan) | Otras | ⬜ lista para ejecutar |
 | X-2 | Revisar payloads pesados por WebSocket | Otras | ⬜ propuesta |
@@ -274,6 +274,23 @@ familia).
 **Archivos.** `vision/person_detector.py` (constante `imgsz`), `.env`.
 
 **Riesgo.** Medio — puede subir el tiempo de inferencia por encima de 1 s.
+
+> ✅ **Hecho (WAVE V-5, medición):** `yoloe-26n-seg` en CPU con frame sintético
+> 720×1280:
+>
+> | imgsz | min | mediana | max |
+> |---|---|---|---|
+> | 416 | 58 ms | 174 ms | 287 ms |
+> | 640 | 296 ms | 415 ms | 533 ms |
+>
+> **Decisión: mantener `YOLO_IMGSZ=416`.** A 640 la inferencia pura casi
+> triplica su costo (415 vs 174 ms) y, sumada a template/ORB/REID y al encode
+> MJPEG, deja menos de la mitad del ciclo de 1 s libre; además el `yoloe-26n`
+> no está pensado para 640 (los modelos de esa familia se entrenaron a menor
+> resolución). Subir a 640 solo tiene sentido tras una sesión grabada que
+> demuestre recall insuficiente a 416 — hasta entonces, el cuello real de los
+> logos ya quedó resuelto por la referencia ORB upscaled (sesión 14), no por
+> la resolución de inferencia.
 
 ---
 
