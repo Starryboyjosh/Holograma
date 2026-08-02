@@ -190,25 +190,38 @@ def match_template_multiscale(gray_roi, templates: list) -> tuple[float, tuple |
     return best_score, best_box
 
 
-def match_orb(gray_roi, ref_descriptors: list) -> float:
-    """Score 0–1 por coincidencias ORB contra descriptores de Entrenar."""
+def match_orb(gray_roi, ref_descriptors: list) -> float | None:
+    """Score 0–1 por coincidencias ORB contra descriptores de Entrenar.
+
+    WAVE-19 (I9): devuelve ``None`` cuando **no hay evidencia** de ORB (ROI
+    vacío, sin descriptores de referencia, o ROI sin suficientes keypoints)
+    en vez de ``0.0``. La fusión (§13 I3) elimina del denominador los canales
+    con ``None``; un ``0.0`` aquí arrastraba el score combinado (la rama
+    ``0.75·tmpl + 0.25·orb`` exigía ``tmpl≥0.56`` y el self-match de un logo
+    liso quedaba bajo el umbral). ``0.0`` se reserva para el caso con
+    **evidencia**: hay keypoints en ambos lados pero ninguna coincidencia
+    buena.
+    """
     if cv2 is None or gray_roi is None or getattr(gray_roi, "size", 0) == 0:
-        return 0.0
+        return None
     if not ref_descriptors:
-        return 0.0
+        return None
+    usable = [d for d in ref_descriptors if d is not None and len(d) >= 4]
+    if not usable:
+        return None
 
     gray_roi = _equalized(gray_roi)
     try:
         orb = cv2.ORB_create(ORB_FEATURES)
         _kp, des = orb.detectAndCompute(gray_roi, None)
     except cv2.error:
-        return 0.0
+        return None
     if des is None or len(des) < 6:
-        return 0.0
+        return None
 
     matcher = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=False)
     best_good = 0
-    for ref_des in ref_descriptors:
+    for ref_des in usable:
         if ref_des is None or len(ref_des) < 4:
             continue
         try:

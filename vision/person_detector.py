@@ -1075,8 +1075,8 @@ class YoloPersonDetector:
         """Mejor score TM_CCOEFF_NORMED sobre la pirámide multi-escala."""
         return match_template_multiscale(gray_roi, templates)
 
-    def _match_orb_in_roi(self, gray_roi, des_list: list) -> float:
-        """Score 0–1 por coincidencias ORB con descriptores de Entrenar."""
+    def _match_orb_in_roi(self, gray_roi, des_list: list) -> float | None:
+        """Score 0–1 por ORB, o ``None`` sin evidencia (WAVE-19/I9)."""
         return match_orb(gray_roi, des_list)
 
     def _match_logo_in_gray(
@@ -1104,6 +1104,8 @@ class YoloPersonDetector:
         imgs = self._logo_templates_for(label)
         des_list = self._logo_orb_for(label)
         tmpl_score, tmpl_box = self._match_template_multiscale(gray_roi, imgs)
+        # WAVE-19 (I9): None = ORB sin evidencia (ROI liso / sin keypoints /
+        # sin descriptores de referencia), NO evidencia negativa.
         orb_score = self._match_orb_in_roi(gray_roi, des_list)
 
         # I3 (§13): fusión ponderada por calidad detrás de YOLO_LOGO_FUSION=1.
@@ -1114,7 +1116,7 @@ class YoloPersonDetector:
             conf = fuse_logo_channels(
                 {
                     "template": None if tmpl_box is None else tmpl_score,
-                    "orb": None if not des_list else orb_score,
+                    "orb": orb_score,
                     "hsv": color_score,
                 }
             )
@@ -1135,14 +1137,16 @@ class YoloPersonDetector:
         # el conf combinado se evalúa después contra _TMPL_MATCH_MIN.
         tmpl_min_internal = _env_float("YOLO_LOGO_TMPL_MIN", _TMPL_MATCH_MIN)
         if tmpl_box is not None and tmpl_score >= tmpl_min_internal * 0.85:
-            conf = min(0.98, 0.75 * tmpl_score + 0.25 * orb_score)
+            # I9: con ORB sin evidencia (None) el conf es solo template; el
+            # umbral efectivo vuelve a 0.42 (no 0.56 = 0.42/0.75 con orb=0).
+            conf = min(0.98, tmpl_score if orb_score is None else 0.75 * tmpl_score + 0.25 * orb_score)
             self._log_logo_color(label, conf, color_score)
             return conf, tmpl_box, "template"
-        if orb_score >= 0.85 and tmpl_box is not None:
+        if orb_score is not None and orb_score >= 0.85 and tmpl_box is not None:
             conf = min(0.95, 0.55 * tmpl_score + 0.45 * orb_score)
             self._log_logo_color(label, conf, color_score)
             return conf, tmpl_box, "orb+template"
-        if orb_score >= 0.95:
+        if orb_score is not None and orb_score >= 0.95:
             # Solo ORB fuerte: caja = centro del ROI (sin localización fina).
             rh, rw = gray_roi.shape[:2]
             s = min(rw, rh) * 0.35
