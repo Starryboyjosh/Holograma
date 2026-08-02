@@ -394,7 +394,13 @@ def _chat_with_backend(backend, messages):
     raise LLMBackendError(f"Backend no soportado: {backend}")
 
 
-def _build_messages(user_input, system_prompt, university_context, camera_context=None):
+def _build_messages(
+    user_input,
+    system_prompt,
+    university_context,
+    camera_context=None,
+    history=None,
+):
     """Los mensajes del turno, en el orden en que los ve el modelo.
 
     El *contenido* de los mensajes de sistema lo define `PromptPackage`, no esta
@@ -410,8 +416,14 @@ def _build_messages(user_input, system_prompt, university_context, camera_contex
     bloques "system" sueltos tumbaban siempre el backend local. Se colapsan en
     uno solo antes de añadir el mensaje del usuario.
 
-    La firma no cambia —`tests/test_metrics.py` la llama por posición— y la
-    salida es carácter por carácter la de antes.
+    La firma no cambia para los llamadores existentes —`tests/test_metrics.py` la
+    llama por posición— y la salida es carácter por carácter la de antes cuando
+    no se pasa historial.
+
+    ``history`` (WAVE-06) es la lista de mensajes ``user``/``assistant`` de
+    turnos anteriores; se inserta **entre** el bloque de sistema y la pregunta
+    actual, en el orden cronológico. Opcional y con default vacío para no
+    romper llamadores ni los dobles de los tests.
     """
     package = PromptPackage(
         user_input=user_input,
@@ -423,6 +435,8 @@ def _build_messages(user_input, system_prompt, university_context, camera_contex
         part["content"] for part in package.system_messages() if part.get("content")
     )
     messages = [{"role": "system", "content": system_content}] if system_content else []
+    if history:
+        messages.extend(history)
     # Reforzar idioma español en el mensaje del usuario para modelos débiles
     messages.append({
         "role": "user",
@@ -1027,6 +1041,7 @@ def iter_reply_tokens(
     university_context,
     camera_context=None,
     event_mode=None,
+    history=None,
 ):
     """Genera deltas de texto del LLM en cuanto llegan (síncrono).
 
@@ -1036,8 +1051,12 @@ def iter_reply_tokens(
     ``event_mode`` sólo se usa para la métrica del turno: el modo ya viene
     aplicado dentro de ``system_prompt``, pero desde acá no se puede deducir
     cuál era.
+
+    ``history`` (WAVE-06): turnos anteriores enhebrados al prompt, opcional.
     """
-    messages = _build_messages(user_input, system_prompt, university_context, camera_context)
+    messages = _build_messages(
+        user_input, system_prompt, university_context, camera_context, history
+    )
 
     # La métrica se cierra en el `finally`: cubre el retorno normal, la caída al
     # fallback local y el consumidor que abandona el generador a media respuesta.
@@ -1096,11 +1115,17 @@ def generate_reply(
     university_context,
     camera_context=None,
     event_mode=None,
+    history=None,
 ):
     """Respuesta completa (bloqueante). Internamente reutiliza el stream de tokens."""
     parts: list[str] = []
     for token in iter_reply_tokens(
-        user_input, system_prompt, university_context, camera_context, event_mode
+        user_input,
+        system_prompt,
+        university_context,
+        camera_context,
+        event_mode,
+        history,
     ):
         parts.append(token)
     return _postprocess_reply("".join(parts))
@@ -1476,7 +1501,7 @@ def _web_context_block(
 
 
 async def stream_llm_response(
-    prompt: str, camera_context: str | None = None
+    prompt: str, camera_context: str | None = None, history: list[dict] | None = None
 ) -> AsyncGenerator[str, None]:
     """Generador asíncrono para transmitir la respuesta del LLM en tiempo real.
 
@@ -1484,6 +1509,8 @@ async def stream_llm_response(
     ``ConversationService`` vía ``CameraContextProvider``). No se recurre a
     ``call``: inyectarlo rompe el ciclo ``call ↔ llm_backend`` y evita que la
     capa de LLM dependa del estado global de la CLI.
+
+    ``history`` (WAVE-06): turnos anteriores, enhebrados al prompt; opcional.
     """
     # Mismo ensamblador que la ruta de voz: esta ruta ya no decide por su cuenta
     # qué contexto institucional entra. Antes pedía el bloque completo acá
@@ -1496,7 +1523,9 @@ async def stream_llm_response(
         system_prompt = "Eres un asistente de la UNEV."
         university_context = ""
 
-    messages = _build_messages(prompt, system_prompt, university_context, camera_context)
+    messages = _build_messages(
+        prompt, system_prompt, university_context, camera_context, history
+    )
 
     # Fase de navegación web (Lightpanda). Va antes del stream para que la
     # respuesta que oye el usuario se siga generando token a token y el TTS

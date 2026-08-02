@@ -28,6 +28,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from app.services.session_memory import get_session
+
 # Contexto de cámara: lógica neutra compartida (rompe el ciclo call↔llm_backend).
 from camera_context import build_camera_context as _build_camera_context
 from hologram_controller import create_hologram_manager
@@ -1073,20 +1075,29 @@ def _camera_context_for_prompt(user_input: str) -> str | None:
 def ask_ai(user_input, mode=None):
     mode = mode or CURRENT_MODE
 
+    # WAVE-06: resolución de referencias contra la entidad activa ANTES de
+    # enrutar, y observación del turno después. El historial viaja en el prompt.
+    session = get_session()
+    resolved = session.resolve(user_input)
+
     if get_selected_backend() == "local_only":
-        local_response = route_local_skill(user_input)
+        local_response = route_local_skill(resolved)
         if local_response:
+            session.observe(resolved, local_response)
             return local_response
 
-    return generate_reply(
-        user_input=user_input,
+    reply = generate_reply(
+        user_input=resolved,
         system_prompt=get_system_prompt(mode),
         # Sólo las secciones que la pregunta necesita, decididas en el único
         # ensamblador (`prompt_package`), igual que en la ruta web.
-        university_context=build_university_context(user_input, event_mode=mode),
-        camera_context=_camera_context_for_prompt(user_input),
+        university_context=build_university_context(resolved, event_mode=mode),
+        camera_context=_camera_context_for_prompt(resolved),
         event_mode=mode,
+        history=session.history(),
     )
+    session.observe(resolved, reply)
+    return reply
 
 
 _hologram_turn_orchestrator = None
@@ -1110,34 +1121,43 @@ def ask_ai_and_speak(user_input, mode=None) -> str:
     """Stream LLM + TTS por cláusulas (menor latencia a primera voz)."""
     mode = mode or CURRENT_MODE
 
+    # WAVE-06: igual que `ask_ai` — resolver antes de enrutar, observar al
+    # final. Ambas rutas comparten el estado único del proceso (kiosco).
+    session = get_session()
+    resolved = session.resolve(user_input)
+
     orchestrator = _get_hologram_turn_orchestrator()
     context_id = None
     if orchestrator is not None:
-        context_id = orchestrator.start_turn(user_input, mode=mode)
+        context_id = orchestrator.start_turn(resolved, mode=mode)
     try:
         if get_selected_backend() == "local_only":
-            local_response = route_local_skill(user_input)
+            local_response = route_local_skill(resolved)
             if local_response:
                 if orchestrator is not None:
                     orchestrator.observe_response_text(local_response, context_id)
                     orchestrator.mark_speaking()
                 speak(local_response)
+                session.observe(resolved, local_response)
                 return local_response
 
         tokens = iter_reply_tokens(
-            user_input=user_input,
+            user_input=resolved,
             system_prompt=get_system_prompt(mode),
-            university_context=build_university_context(user_input, event_mode=mode),
-            camera_context=_camera_context_for_prompt(user_input),
+            university_context=build_university_context(resolved, event_mode=mode),
+            camera_context=_camera_context_for_prompt(resolved),
             # El modo ya está dentro del system_prompt; se pasa aparte sólo para
             # que la métrica del turno pueda registrarlo.
             event_mode=mode,
+            history=session.history(),
         )
-        return speak_streaming_from_llm(
+        reply = speak_streaming_from_llm(
             tokens,
             on_text=(lambda text: orchestrator.observe_response_text(text, context_id)) if orchestrator else None,
             on_speaking=orchestrator.mark_speaking if orchestrator else None,
         )
+        session.observe(resolved, reply)
+        return reply
     except Exception as error:
         if orchestrator is not None:
             orchestrator.fail_turn(error, context_id)

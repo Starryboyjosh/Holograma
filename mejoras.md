@@ -31,7 +31,7 @@ Cómo usar este documento:
 | V-4 | Cerrar el fallback cruzado multi-escuela | Visión | ✅ ya resuelto (WAVE-11) |
 | V-5 | Evaluar `imgsz` 416 → 640 | Visión | ✅ medido (mantener 416) |
 | P-1 | Añadir OpenCode Zen como proveedor LLM | Proveedores | ✅ ejecutada |
-| X-1 | Memoria de sesión (WAVE-06 del plan) | Otras | ⬜ lista para ejecutar |
+| X-1 | Memoria de sesión (WAVE-06 del plan) | Otras | ✅ ejecutada (12 tests; 11/11) |
 | X-2 | Revisar payloads pesados por WebSocket | Otras | ✅ auditar (sin cambios) |
 
 ---
@@ -351,9 +351,9 @@ Anthropic/Gemini de Zen sería una WAVE aparte con un cliente nuevo.
 
 ## Área Otras
 
-### WAVE X-1 — Memoria de sesión (WAVE-06 del plan) *(lista para ejecutar)*
+### WAVE X-1 — Memoria de sesión (WAVE-06 del plan) *✅ ejecutada (2026-08-02)*
 
-**Problema.** `docs/plans/execution/PROGRESS.md` la marca como la siguiente wave
+**Problema.** `docs/plans/execution/PROGRESS.md` la marcaba como la siguiente wave
 pendiente del plan de contexto/modelo: desbloquea la pregunta 5 (xfail estricto ya
 puesto en `tests/test_router_confidence.py`).
 
@@ -362,6 +362,19 @@ puesto en `tests/test_router_confidence.py`).
 **Archivos.** Según el plan; `tests/test_router_confidence.py` (quitar xfail).
 
 **Riesgo.** Medio (cambia qué sabe el modelo entre turnos).
+
+> ✅ **Hecho (WAVE X-1, ejecución completa del runbook):** módulo nuevo
+> `app/services/session_memory.py` (entidad activa + últimos N=3 turnos, TTL=180 s
+> inyectable, reset explícito, ámbito de proceso/kiosco, flag de rollback
+> `HOLOGRAM_SESSION_MEMORY=0`); `history` enhebrado por las seis firmas del camino
+> LLM (default vacío, `FakeLLM` intacto); `ask_ai`/`ask_ai_and_speak`/
+> `ConversationService` resuelven referencias antes de enrutar y observan al final.
+> `tests/test_session_memory.py` (12 tests: aceptación en ambas rutas, cambio de
+> tema, expiración con reloj inyectado, reset, no-por-socket, N turnos, coste del
+> historial, firmas retrocompatibles, rollback). Pregunta 5 desbloqueada: 11/11.
+> Coste del historial: ~1.260 chars de peor caso (prompt total ~6.660 < 18.439
+> pre-WAVE-05). Las 4 pruebas manuales del runbook → P06-1…P06-4 en
+> `PRUEBAS-MANUALES-PENDIENTES.md`.
 
 ### WAVE X-2 — Revisar payloads pesados por WebSocket
 

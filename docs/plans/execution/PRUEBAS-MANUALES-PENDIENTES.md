@@ -79,3 +79,22 @@ recortado de más no se ve como un error, se ve como una respuesta inventada.
   `data/unev_info.json`. Eso es una regla del router que falta, no un fallo del
   modelo: va a `PROGRESS.md` con la pregunta textual. *Percepción humana; es el
   único modo de encontrar los huecos que las 11 preguntas no cubren.*
+
+## WAVE-06 — Memoria de sesión (commit pendiente)
+
+Las 4 pruebas manuales obligatorias del runbook. Esta WAVE se rompe de formas
+que los tests no ven (estado compartido, TTL, oído del usuario).
+
+- [ ] **P06-1 · Follow-up encadenado por voz.** «Háblame de Programación Web» →
+  «¿Y cuánto dura?» → «¿Y cuánto cuesta?»: las tres respuestas deben hablar de
+  Programación Web (2 años, y el costo de la carrera), sin repetir la pregunta
+  completa. *Requiere micrófono + llamada de pago.*
+- [ ] **P06-2 · Cambio de tema en caliente.** «¿Y Enfermería?» → «¿Cuánto dura?»:
+  debe hablar de Enfermería, no arrastrar Programación Web. *Idem.*
+- [ ] **P06-3 · Dos visitantes (el importante).** Conversar, esperar **más de 3
+  minutos** (TTL) y preguntar «¿y cuánto dura?» en frío: **no debe recordar
+  nada**. Es la prueba de privacidad del kiosco. *Idem; anotar el resultado en
+  `PROGRESS.md`.*
+- [ ] **P06-4 · Dos pestañas abiertas.** Las dos deben seguir la misma
+  conversación (la memoria es de dispositivo, no de socket). *Requiere el
+  frontend levantado.*

@@ -174,27 +174,31 @@ def test_router_bajo_1ms():
 
 @pytest.mark.parametrize(
     ("pregunta", "esperado"),
-    [
-        pytest.param(
-            pregunta,
-            esperado,
-            marks=pytest.mark.xfail(
-                reason="WAVE-06: requiere memoria conversacional; sin el turno previo "
-                "«¿Y cuánto dura?» no tiene sujeto y ninguna regla puede resolverlo.",
-                strict=True,
-            )
-            if pregunta == "¿Y cuánto dura?"
-            else (),
-        )
-        for pregunta, esperado in PREGUNTAS_OBLIGATORIAS
-    ],
+    PREGUNTAS_OBLIGATORIAS,
 )
 def test_las_11_preguntas_obligatorias(pregunta, esperado):
     """El dataset mínimo de la auditoría, pregunta por pregunta.
 
     Es el marcador de la WAVE: la línea base acertaba 4 de 7 preguntas
-    institucionales. El caso de «¿Y cuánto dura?» está marcado ``xfail`` estricto
-    —no ``skip``— para que el día que WAVE-06 traiga memoria conversacional, el
-    test falle por pasar y obligue a quitar la marca.
+    institucionales. El caso de «¿Y cuánto dura?» lo resuelve WAVE-06: la
+    memoria de sesión expande la referencia con la entidad activa **antes** de
+    enrutar (ver `app/services/session_memory` y
+    `tests/test_session_memory.py`); acá se simula el estado que deja el turno
+    anterior y el router ve la consulta completa.
     """
+    if pregunta == "¿Y cuánto dura?":
+        from app.services.session_memory import SessionMemory
+
+        sesion = SessionMemory()
+        sesion.observe(
+            "Háblame de Programación Web",
+            "Programación Web tiene una duración de 2 años.",
+        )
+        resuelta = sesion.resolve(pregunta)
+        assert resuelta != pregunta
+        # La expansión nombra la carrera, y la regla del programa puntúa más
+        # (frase + primario + apoyo) que la de duración sola. Es el destino
+        # correcto: su respuesta local trae la duración exacta ("2 años").
+        assert route_query(resuelta).topic == "unev.programa_web"
+        return
     assert route_query(pregunta).topic == esperado

@@ -29,6 +29,8 @@ import os
 from collections.abc import AsyncIterator, Callable
 from typing import Protocol
 
+from app.services.llm import supports_history
+from app.services.session_memory import get_session
 from utils import pop_ready_speech
 
 
@@ -46,7 +48,16 @@ class _LLM(Protocol):
         self,
         prompt: str,
         camera_context: str | None = None,
+        history: list[dict] | None = None,
     ) -> AsyncIterator[str]: ...
+
+
+class _Session(Protocol):
+    def resolve(self, user_input: str) -> str: ...
+
+    def observe(self, user_input: str, reply: str) -> None: ...
+
+    def history(self) -> list[dict[str, str]]: ...
 
 
 class _Connection(Protocol):
@@ -92,6 +103,7 @@ class ConversationService:
         speak: Callable[[str], None] | None = None,
         tts_done: Callable[[], None] | None = None,
         hologram_orchestrator: _HologramOrchestrator | None = None,
+        session: _Session | None = None,
     ) -> None:
         self._llm = llm
         self._conn = connection
@@ -104,6 +116,13 @@ class ConversationService:
         # Cierre de turno TTS (p. ej. holograma → idle). Opcional.
         self._tts_done = tts_done
         self._hologram_orchestrator = hologram_orchestrator
+
+        # Memoria de sesión (WAVE-06). Por defecto, el estado único del
+        # proceso: hay un solo ConversationService a nivel de módulo que
+        # difunde a todos los clientes, y la memoria debe ser de
+        # dispositivo/sesión, no por conexión. Los tests pueden inyectar
+        # una instancia propia.
+        self._session = session if session is not None else get_session()
 
     async def _hologram_call(self, method: str, *args, **kwargs):
         """Ejecuta una operación del holograma sin romper la conversación."""
@@ -144,6 +163,12 @@ class ConversationService:
         Una vez iniciado el contexto holográfico, `finish_turn()` se ejecuta
         siempre mediante el bloque `finally`, incluso si falla el stream,
         un broadcast, el TTS o la tarea es cancelada.
+
+        Desde WAVE-06 el turno pasa por la memoria de sesión: las referencias
+        sin antecedente («¿y cuánto dura?») se resuelven contra la entidad
+        activa **antes** de llegar al LLM, el historial de los últimos N turnos
+        viaja en el prompt y, al terminar, la respuesta se observa para el
+        turno siguiente.
         """
         await self._conn.broadcast(
             {
@@ -152,17 +177,22 @@ class ConversationService:
             }
         )
 
+        resolved = self._session.resolve(prompt)
+
         camera_context = (
-            self._camera.build_context(prompt)
+            self._camera.build_context(resolved)
             if self._camera is not None
             else None
         )
 
         context_id = await self._hologram_call(
             "start_turn",
-            prompt,
+            resolved,
             context=camera_context,
         )
+
+        history = self._session.history()
+        stream_history = {"history": history} if supports_history(self._llm.stream) else {}
 
         chunks: list[str] = []
         speech_buf = ""
@@ -173,8 +203,9 @@ class ConversationService:
         try:
             try:
                 async for chunk in self._llm.stream(
-                    prompt,
+                    resolved,
                     camera_context=camera_context,
+                    **stream_history,
                 ):
                     chunks.append(chunk)
 
@@ -237,6 +268,8 @@ class ConversationService:
                 return ""
 
             full_text = "".join(chunks)
+
+            self._session.observe(resolved, full_text)
 
             await self._conn.broadcast({"type": "text_done"})
 

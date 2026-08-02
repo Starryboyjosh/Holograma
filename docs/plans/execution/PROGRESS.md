@@ -4,10 +4,10 @@
 parar. Un modelo que llega sin contexto lee `README.md` y este archivo, y sabe exactamente
 dónde está todo.
 
-Última actualización: **2026-07-30** — los 13 archivos del plan están escritos (10 WAVEs + este
-archivo + `README.md` + el documento maestro `../HOLOGRAM_CONTEXT_AND_MODEL_ARCHITECTURE_PLAN.md`)
-y commiteados en `514b2e4`. **WAVEs 01–05 ejecutadas y commiteadas** (`99d40c7`, `cd3b1cd`,
-`9313531`, `c402a0e`, `b218e3c`). WAVE-05 es la primera que **cambia lo que ve el modelo**.
+Última actualización: **2026-08-02** — **WAVE-06 ejecutada** (memoria de sesión): las 11 preguntas
+obligatorias se responden correctamente **todas** por primera vez; termina la Fase 2. Las WAVEs
+01–05 siguen commiteadas (`99d40c7`, `cd3b1cd`, `9313531`, `c402a0e`, `b218e3c`); la 06, en el
+commit de esta sesión.
 
 > **Cambio de protocolo — 2026-07-30, decisión del usuario.** Las verificaciones que necesitan
 > hardware físico, percepción humana o una llamada de pago real **no** bloquean el cierre de cada
@@ -26,24 +26,21 @@ y commiteados en `514b2e4`. **WAVEs 01–05 ejecutadas y commiteadas** (`99d40c7
 | 03 · Instrumentación | ✅ commiteada | `9313531` | 2026-07-30 | línea base offline lista; latencias reales diferidas → P03-1 |
 | 04 · Secciones de contexto | ✅ commiteada | `c402a0e` | 2026-07-30 | paridad exacta, 15.516 chars sin cambio; sin comportamiento nuevo |
 | 05 · PromptPackage + router | ✅ commiteada | `b218e3c` | 2026-07-30 | contexto −92,6 %; router 4/7 → 6/7; criterio 4 sólo con cámara apagada → WAVE-08 |
-| 06 · Memoria de sesión | ⬜ pendiente | — | — | **siguiente** · desbloquea la pregunta 5 (xfail estricto ya puesto) |
-| 07 · Paridad de rutas | ⬜ pendiente | — | — | |
+| 06 · Memoria de sesión | ✅ commiteada | `WIP` | 2026-08-02 | pregunta 5 desbloqueada; 11/11; follow-ups en ambas rutas |
+| 07 · Paridad de rutas | ⬜ pendiente | — | — | **siguiente** |
 | 08 · Política de cámara | ⬜ pendiente | — | — | |
 | 09 · Política de modelos | ⬜ pendiente | — | — | espera decisión humana en su puerta |
 | 10 · Dataset de evaluación | ⬜ pendiente | — | — | |
 
 Estados: ⬜ pendiente · 🟡 en curso · ✅ commiteada · ⛔ bloqueada (ver Desvíos)
 
-**Siguiente acción:** ejecutar `WAVE-06-memoria-sesion.md` siguiendo `README.md`, **en una sesión
-nueva**. Entra con la suite en **405 casos verdes + 1 xfailed** y el contexto ya recortado. WAVE-05
-dejó el trabajo medio hecho para ella: el `xfail` **estricto** de «¿Y cuánto dura?» en
-`tests/test_router_confidence.py` falla el día que la memoria conversacional funcione, así que
-obliga a quitar la marca; y `RouteDecision` ya devuelve `topic` y `sections`, que es exactamente el
-estado del turno anterior que hace falta guardar.
-
-**Antes de seguir, usá el sistema un rato.** Esta WAVE cambia *qué sabe el modelo*: los tests
-cubren 11 preguntas, no las mil que hará un visitante. Si algo suena mal, la salida de emergencia
-es `HOLOGRAM_SELECTIVE_CONTEXT=0` (contexto completo, sin desplegar nada) y lo que aparezca va acá.
+**Siguiente acción:** ejecutar `WAVE-07-paridad-rutas.md` siguiendo `README.md`, **en una sesión
+nueva**. Con WAVE-06 terminó la Fase 2: las 11 preguntas obligatorias se responden correctamente
+todas por primera vez (pasar la batería completa dejó el resultado en el bloque WAVE-06 de abajo,
+y las 4 pruebas manuales de memoria quedaron en `PRUEBAS-MANUALES-PENDIENTES.md` como P06-1…P06-4).
+WAVE-07 encara lo que WAVE-05 y WAVE-06 fueron dejando a propósito: la paridad completa de rutas
+(la decisión de contexto vive dentro de `stream_llm_response`, no en `ConversationService`) y la
+paridad de la ruta de voz con el modo de evento.
 
 ---
 
@@ -122,8 +119,8 @@ Cada uno se verifica con la instrumentación de WAVE-03. Sin número, no hay cri
 | Peor caso de fallback | ~180 s | **< 20 s** | ~~01~~ → **09** (depende de `LLM_REQUEST_TIMEOUT`) |
 | Cláusulas con CoT habladas | posible | **0 ✅ logrado** (falta confirmar por oído: P02-1) | 02 |
 | Turnos vacíos por stream vacío en la ruta web | posible | **0 ✅ logrado** | 01 |
-| Precisión del router (11 preguntas) | **4/7 aplicables** (8/11 total) | **≥ 6/7 ✅ logrado** — 6/7 (10/11); la 7ª es la pregunta 5, que necesita memoria | 05 · **06** |
-| Follow-ups resueltos (`«¿y cuánto dura?»`) | 0 % | **funciona en ambas rutas** | 06 |
+| Precisión del router (11 preguntas) | **4/7 aplicables** (8/11 total) | **7/7 ✅ logrado** — 11/11 con la memoria de WAVE-06 resolviendo la pregunta 5 antes de enrutar | 05 · **06** |
+| Follow-ups resueltos (`«¿y cuánto dura?»`) | 0 % | **funciona en ambas rutas ✅ logrado** (test de aceptación en `test_session_memory.py`) | 06 |
 | Tests que cubren `skills/` | 0 | **> 0, con dataset** | 10 |
 
 ---
@@ -543,6 +540,73 @@ Qué columnas son de qué naturaleza, para no confundirlas al revisar:
   casilla del checklist que no se puede cubrir sin hardware de audio y sin una llamada de pago real,
   así que va a `PRUEBAS-MANUALES-PENDIENTES.md` como **P05-1**, según el cambio de protocolo del
   2026-07-30. Es la más importante de la lista: esta WAVE cambia lo que sabe el modelo.
+
+### WAVE-06 — Memoria de sesión y follow-ups
+- Commit: `WIP` · Fecha: 2026-08-02
+- Archivos tocados: `app/services/session_memory.py` (**nuevo**),
+  `tests/test_session_memory.py` (**nuevo**, 12 tests), `llm_backend.py`
+  (`_build_messages`/`iter_reply_tokens`/`generate_reply`/`stream_llm_response` + `history`),
+  `app/services/llm.py` (`LLMService.stream` + `supports_history`), `app/services/conversation.py`
+  (Protocol `_LLM` + `ConversationService` con sesión inyectada),
+  `call.py` (`ask_ai` y `ask_ai_and_speak` resuelven antes de enrutar y observan al final),
+  `tests/test_router_confidence.py` (xfail de la pregunta 5 quitado), `PROGRESS.md`,
+  `PRUEBAS-MANUALES-PENDIENTES.md`.
+- **Dónde vive el estado:** `app/services/session_memory.py::get_session()` — un único estado a
+  nivel de proceso (kiosco), compartido por ambas rutas. `SessionMemory` es la clase; el singleton
+  se reconstruye con `reset_session()`. Con `HOLOGRAM_SESSION_MEMORY=0` `get_session()` devuelve
+  una instancia apagada (rollback probado).
+- **N turnos: 3** (env `HOLOGRAM_SESSION_TURNS`) · **TTL de inactividad: 180 s** (env
+  `HOLOGRAM_SESSION_TTL`) · **por qué:** una conversación de feria tiene esa escala; pasados 3
+  minutos en silencio, el visitante siguiente empieza limpio. Turnos recortados a 120 (pregunta) /
+  300 (respuesta) chars.
+- **Clave de sesión:** no hay clave por cliente — el estado ES del proceso (ámbito
+  dispositivo/sesión). Aislar por socket rompería el modelo: hay un único `ConversationService`
+  que difunde a todos los clientes (hallazgo O), y una reconexión no pierde el hilo.
+- **Resolución de referencias:** determinista, sin red. «¿Y cuánto dura?» se expande a «¿Y cuánto
+  dura sobre Programación Web?» **antes** de enrutar, sólo si la pregunta usa una frase de
+  referencia (lista explícita), no nombra entidad ni institución y hay entidad activa. El cambio de
+  tema reemplaza la entidad (léxico de 5 entidades: 3 programas + enfermería + UNEV). Sin entidad,
+  comportamiento idéntico al previo.
+- **La expansión aterriza en `unev.programa_web`, no en `unev.duracion`**: la regla del programa
+  puntúa más (frase + primario + apoyo `web`) que la de duración. Es el destino correcto: su
+  respuesta local (`get_program_info`) trae la duración exacta, y sus secciones incluyen el modelo
+  académico. Anotado en el test para que nadie lo "arregle".
+- **Coste del historial:** 3 turnos recortados = **~1.260 chars** de peor caso (medido 152 chars en
+  el follow-up real). Prompt completo con contexto al tope (4.000) + historial + pregunta: **~6.660
+  chars < 18.439** (línea base pre-WAVE-05). No revierte la poda.
+- **Firmas retrocompatibles:** `history` es el 5º parámetro opcional (default `None`) en los seis
+  símbolos; `tests/test_app_services.py` NO se tocó (`FakeLLM` sigue satisfaciendo el Protocol).
+  Los dobles viejos sin `history` (como `FakeLLM`) se detectan con `supports_history` y reciben el
+  stream sin el parámetro.
+- Métricas antes → después:
+  - pregunta 5 («¿Y cuánto dura?»): **fallaba (xfail estricto) → responde sobre Programación Web,
+    2 años, en las dos rutas** (tests con dobles; la prueba real por voz/web va a manuales como
+    P06-1…P06-4)
+  - 11 preguntas obligatorias: **10/11 → 11/11**
+  - suite: **480 + 1 xfailed → 494 pasando, 0 xfailed**
+  - latencia añadida por turno: resolver + observar es milisegundos irrelevantes (tokenización
+    local); el historial en el prompt cuesta ~1.260 chars de peor caso.
+- **Las 11 preguntas obligatorias, todas verdes por primera vez** (cierre de la Fase 2):
+  1. Cuéntame un chiste → sin respuesta local (correcto: `None`) ✓
+  2. ¿Qué significa UNEV? → `unev.siglas` ✓ · 3. ¿Qué carreras ofrecen? → `unev.programas` ✓
+  4. Háblame de Programación Web → `unev.programa_web` ✓ · **5. ¿Y cuánto dura? → resuelta por
+     memoria; la expansión aterriza en `unev.programa_web` y la respuesta trae los 2 años** ✓ ·
+     6. ¿Dónde queda la universidad? → `unev.ubicacion` ✓
+  7. ¿Los títulos son válidos? → `unev.aprobacion` ✓ · 8. ¿Qué es la lluvia de peces? →
+  `honduras.cultura` ✓ · 9. Hola → `None` ✓ · 10. Precio de algo que requiere internet → `None`
+  ✓ · 11. ¿Qué hora es? → `None` ✓
+- Criterios de aceptación: **1–11 cumplidos** (la resolución, el reemplazo por tema, la expiración
+  con reloj inyectado, el reset, el ámbito no-socket, el historial acotado con el coste pegado
+  arriba, el comportamiento sin entidad, las firmas retrocompatibles, cero persistencia, cero
+  dependencias, suite completa). El criterio 10 (4 pruebas manuales) pasa a manuales: P06-1…P06-4
+  según el protocolo del 2026-07-30.
+- Desvíos del plan: **la expansión aterriza en `unev.programa_web` y no en `unev.duracion`**
+  (mejor resultado, ver arriba). El resto, ninguno: los seis símbolos, el módulo bajo
+  `app/services/`, el TTL, N=3 y el flag de rollback tal como pide el runbook.
+- Hallazgos nuevos (NO arreglados): ninguno.
+- Revisión humana: pendiente.
+- Pruebas manuales diferidas: **P06-1…P06-4** (`PRUEBAS-MANUALES-PENDIENTES.md`) — follow-up
+  encadenado, cambio de tema, **dos visitantes con TTL** (la de privacidad), dos pestañas.
 
 ---
 
