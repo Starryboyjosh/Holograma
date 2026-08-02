@@ -25,9 +25,9 @@ Cómo usar este documento:
 | O-1 | Auditoría de importación y camino caliente del turno | Optimización | ✅ ejecutada |
 | O-2 | Medir latencia por turno con la métrica existente | Optimización | ✅ ejecutada |
 | F-1 | Configuración abre desde el inicio de la pantalla | Frontend | ✅ ejecutada |
-| V-1 | Validar WAVE-21 (canal visual-prompt) en sesión grabada | Visión | ⬜ lista para ejecutar |
-| V-2 | Activar `YOLO_REID` tras medir el veto de empate | Visión | ⬜ lista para ejecutar |
-| V-3 | Recalibrar la fusión I3 y sus umbrales | Visión | ⬜ lista para ejecutar |
+| V-1 | Validar WAVE-21 (canal visual-prompt) en sesión grabada | Visión | ⛔ requiere hardware |
+| V-2 | Activar `YOLO_REID` tras medir el veto de empate | Visión | ⛔ requiere producción |
+| V-3 | Recalibrar la fusión I3 y sus umbrales | Visión | ⛔ requiere sesión grabada |
 | V-4 | Cerrar el fallback cruzado multi-escuela | Visión | ✅ ya resuelto (WAVE-11) |
 | V-5 | Evaluar `imgsz` 416 → 640 | Visión | ✅ medido (mantener 416) |
 | P-1 | Añadir OpenCode Zen como proveedor LLM | Proveedores | ⬜ lista para ejecutar |
