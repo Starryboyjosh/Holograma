@@ -894,6 +894,28 @@ class YoloPersonDetector:
         key = str(label or "").strip().lower()
         return "uniforme" in key or "itee" in key or "uniform" in key
 
+    def _person_index_for_box(self, box, persons: list[dict]) -> int | None:
+        """Índice de la persona dueña de ``box`` en ``persons`` (0-based).
+
+        Reutiliza ``best_person_for_box`` (misma heurística de contención → más
+        cercana) y devuelve la posición en la lista, no la caja. ``None`` si no
+        hay personas o ninguna se puede atribuir (§13 I2).
+        """
+        if not box or not persons:
+            return None
+        best = _best_person_for_box_fn(box, persons)
+        if best is None:
+            return None
+        best_key = tuple(round(float(v), 3) for v in best)
+        for i, person in enumerate(persons):
+            pb = person.get("box")
+            if not pb or len(pb) < 4:
+                continue
+            key = tuple(round(float(v), 3) for v in pb[:4])
+            if key == best_key:
+                return i
+        return None
+
     def _is_logo_trained_label(self, label: str) -> bool:
         """True si hay imágenes de Entrenar (plantilla/ORB) para esta etiqueta."""
         if not label:
@@ -1122,6 +1144,13 @@ class YoloPersonDetector:
 
         No usa color (amarillo/azul). Sirve para ITEE y futuros colegios:
         cada etiqueta con fotos en ``training_metadata`` se busca en el ROI pecho.
+
+        I2 (§13): los bucles van **por ROI primero** (``for roi: for label:``)
+        y cada ROI emite **su** mejor etiqueta, con el ``person_index`` de la
+        persona dueña. Antes era ``for label: for roi:`` y el "mejor global" por
+        etiqueta colapsaba a **una** instancia aunque hubiera varias personas
+        con el mismo uniforme. Con ``(label, person_index)`` en ``_dedupe_custom``
+        el mismo uniforme de dos estudiantes genera dos objetos.
         """
         if frame is None:
             return []
@@ -1143,12 +1172,13 @@ class YoloPersonDetector:
         debug = os.getenv("HOLOGRAM_YOLO_DEBUG", "0").lower() in ("1", "true", "yes")
         labels = set(self._logo_images) | set(self._logo_templates)
 
-        for label in labels:
+        for crop, (ox1, oy1, _ox2, _oy2), person_box in rois:
             best_conf = 0.0
             best_box_frame = None
+            best_label = None
             best_detail = ""
 
-            for crop, (ox1, oy1, _ox2, _oy2), person_box in rois:
+            for label in labels:
                 score, rel_box, method = self._match_logo_in_gray(crop, label)
                 if rel_box is None or score < tmpl_min:
                     continue
@@ -1167,22 +1197,30 @@ class YoloPersonDetector:
                     continue
                 best_conf = conf
                 best_box_frame = self._snap_box_to_logo_zone((fx1, fy1, fx2, fy2), person_box)
+                best_label = label
                 best_detail = f"{method} score={score:.2f}"
 
-            accept = best_conf >= tmpl_min and best_box_frame is not None
+            accept = (
+                best_conf >= tmpl_min
+                and best_box_frame is not None
+                and best_label is not None
+            )
             if debug and (accept or best_conf >= 0.45):
                 print(
-                    f"[YOLO] Logo ref «{label}» conf={best_conf:.2f} "
+                    f"[YOLO] Logo ref «{best_label}» conf={best_conf:.2f} "
                     f"({best_detail}) accept={accept}"
                 )
             if not accept:
                 continue
             found.append(
                 {
-                    "label": label,
+                    "label": best_label,
                     "confidence": float(best_conf),
                     "box": best_box_frame,
                     "source": "logo_ref",
+                    "person_index": self._person_index_for_box(
+                        best_box_frame, persons
+                    ),
                 }
             )
         return found
@@ -1431,11 +1469,16 @@ class YoloPersonDetector:
 
     @staticmethod
     def _dedupe_custom(custom_objects: list[dict]) -> list[dict]:
-        """Una entrada por label: primero por fuente, luego por confianza.
+        """Una entrada por ``(label, person_index)``: fuente, luego confianza.
 
         Las fuentes verificadas contra la foto de Entrenar (``logo_ref``,
         ``logo_ref_verified``, ``logo_chest``) ganan SIEMPRE a una detección
         open-vocab del mismo label, aunque el texto traiga más confianza.
+
+        I2 (§13): la clave es ``(label, person_index)`` y no solo ``label`` —
+        dos personas con el mismo uniforme entrenado producen **dos** objetos,
+        no uno. Sin ``person_index`` (tests, objetos open-vocab genéricos) la
+        clave degenera a ``(label, None)`` y el colapso es idéntico al previo.
 
         Antes se ordenaba solo por confianza aquí, y la preferencia por fuente
         se aplicaba después, en ``_detect_all`` — sobre una lista que ya tenía
@@ -1443,16 +1486,16 @@ class YoloPersonDetector:
         era el contrario al documentado: el open-vocab (semánticamente amplio y
         propenso a falsos positivos) desplazaba al match por plantilla.
         """
-        best: dict[str, dict] = {}
+        best: dict[tuple, dict] = {}
         for obj in custom_objects:
-            lab = obj["label"]
-            prev = best.get(lab)
+            key = (obj["label"], obj.get("person_index"))
+            prev = best.get(key)
             if prev is None or _source_rank(obj) > _source_rank(prev):
-                best[lab] = obj
+                best[key] = obj
             elif _source_rank(obj) == _source_rank(prev) and float(
                 obj.get("confidence") or 0.0
             ) > float(prev.get("confidence") or 0.0):
-                best[lab] = obj
+                best[key] = obj
         return list(best.values())
 
     def _predict_floor_conf(self) -> float:
@@ -1489,6 +1532,7 @@ class YoloPersonDetector:
                     "confidence": hit["confidence"],
                     "box": hit["box"],
                     "source": hit.get("source", "logo_chest"),
+                    "person_index": hit.get("person_index"),
                 }
             )
 

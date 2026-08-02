@@ -342,3 +342,82 @@ def test_open_vocab_uniform_checked_against_db_logo_images(monkeypatch):
     _, custom = det._detect_all(frame=frame_blank)
     assert custom == [], "Debe descartarse por no coincidir con la imagen guardada en la base de datos"
 
+
+def test_logo_templates_multi_instance_same_label(monkeypatch):
+    """I2: dos personas con el MISMO uniforme entrenado producen dos objetos.
+
+    Antes la escalera ``for label: for roi:`` colapsaba el "mejor global" por
+    etiqueta en UNA caja aunque hubiera varios estudiantes idénticos. Ahora los
+    bucles van por ROI y cada persona emite su detección con ``person_index``.
+    """
+    import numpy as np
+    import cv2
+
+    det = pd.YoloPersonDetector()
+    monkeypatch.setattr(det, "_load_training_data", lambda: None)
+    monkeypatch.setattr(det, "_maybe_reload_training", lambda: None)
+    monkeypatch.setattr(det, "_rebuild_logo_templates", lambda: None)
+    det._custom_classes = ["Logo Colegio X"]
+    det._custom_vocabulary = []
+    det._prompt_key = None
+    det.model = None
+
+    tmpl = np.zeros((48, 48), dtype=np.uint8)
+    tmpl[10:38, 10:38] = 200
+    tmpl[18:30, 18:30] = 40
+    det._logo_images = {"Logo Colegio X": [tmpl]}
+    det._logo_templates = {}
+
+    frame = np.zeros((200, 360, 3), dtype=np.uint8)
+    # Dos estudiantes separados, misma caja de persona.
+    persons = [
+        {"box": (10, 10, 150, 190), "confidence": 0.9},
+        {"box": (200, 10, 340, 190), "confidence": 0.9},
+    ]
+    rois = det._person_chest_rois(frame, persons)
+    assert len(rois) == 2, "debe haber un ROI pecho por persona"
+    for _crop, (ox1, oy1, ox2, oy2), _pb in rois:
+        ch, cw = _crop.shape[:2]
+        sw, sh = max(24, cw // 3), max(24, ch // 3)
+        patch = cv2.resize(tmpl, (sw, sh), interpolation=cv2.INTER_AREA)
+        y0 = max(0, (ch - sh) // 2)
+        x0 = max(0, (cw - sw) // 2)
+        frame[oy1 + y0 : oy1 + y0 + sh, ox1 + x0 : ox1 + x0 + sw] = cv2.cvtColor(
+            patch, cv2.COLOR_GRAY2BGR
+        )
+
+    hits = det._detect_logo_templates(frame, persons=persons)
+    assert len(hits) == 2, f"dos estudiantes idénticos -> dos objetos, got {hits}"
+    labels = {h["label"] for h in hits}
+    assert labels == {"Logo Colegio X"}
+    idxs = {h.get("person_index") for h in hits}
+    assert idxs == {0, 1}, f"cada objeto atribuye a su persona, got {idxs}"
+
+
+def test_dedupe_custom_keys_by_person_index(monkeypatch):
+    """I2: _dedupe_custom conserva (label, person_index) como clave única."""
+    det = pd.YoloPersonDetector()
+    monkeypatch.setattr(det, "_load_training_data", lambda: None)
+    monkeypatch.setattr(det, "_maybe_reload_training", lambda: None)
+    monkeypatch.setattr(det, "_rebuild_logo_templates", lambda: None)
+    out = det._dedupe_custom(
+        [
+            {"label": "L", "confidence": 0.7, "box": (0, 0, 10, 10),
+             "source": "logo_ref", "person_index": 0},
+            {"label": "L", "confidence": 0.6, "box": (20, 20, 30, 30),
+             "source": "logo_ref", "person_index": 1},
+        ]
+    )
+    assert len(out) == 2, "mismo label con distinta persona no se colapsa"
+
+    # Sin person_index la clave degenera a (label, None) -> colapso previo.
+    out2 = det._dedupe_custom(
+        [
+            {"label": "L", "confidence": 0.7, "box": (0, 0, 10, 10),
+             "source": "logo_ref"},
+            {"label": "L", "confidence": 0.6, "box": (20, 20, 30, 30),
+             "source": "logo_ref"},
+        ]
+    )
+    assert len(out2) == 1
+
