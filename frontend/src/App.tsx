@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { SessionProvider } from './context/SessionContext';
 import { AppShell } from './components/AppShell';
+import { ScrollToTop } from './components/ScrollToTop';
 import { LandingScreen } from './screens/LandingScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { CameraWidget } from './widgets/CameraWidget';
@@ -32,6 +33,7 @@ export default function App() {
       <Route path="/widget/transcript" element={<TranscriptWidget />} />
 
       <Route path="/" element={<ShellLayout />}>
+        <ScrollToTop />
         <Route index element={<LandingScreen />} />
         <Route path="settings" element={<SettingsScreen />} />
         <Route path="*" element={<Navigate to="/" replace />} />

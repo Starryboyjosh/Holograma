@@ -24,7 +24,7 @@ Cómo usar este documento:
 | A-2 | Acotar el bloque institucional del prompt tras la poda | Datos | ✅ ejecutada |
 | O-1 | Auditoría de importación y camino caliente del turno | Optimización | ✅ ejecutada |
 | O-2 | Medir latencia por turno con la métrica existente | Optimización | ✅ ejecutada |
-| F-1 | Configuración abre desde el inicio de la pantalla | Frontend | ⬜ lista para ejecutar |
+| F-1 | Configuración abre desde el inicio de la pantalla | Frontend | ✅ ejecutada |
 | V-1 | Validar WAVE-21 (canal visual-prompt) en sesión grabada | Visión | ⬜ lista para ejecutar |
 | V-2 | Activar `YOLO_REID` tras medir el veto de empate | Visión | ⬜ lista para ejecutar |
 | V-3 | Recalibrar la fusión I3 y sus umbrales | Visión | ⬜ lista para ejecutar |
@@ -175,6 +175,13 @@ si se añade (`frontend/src/test/`).
 
 **Riesgo.** Bajo. No afecta anclas: `navigate({ pathname: '/', hash: '#hablar' })`
 sigue navegando a `/` y el hash lo resuelve `LandingScreen`.
+
+> ✅ **Hecho (WAVE F-1):** componente nuevo `ScrollToTop`
+> (`frontend/src/components/ScrollToTop.tsx`) montado dentro de `ShellLayout`
+> (ruta `/`): hace `window.scrollTo(0, 0)` solo en cambios de **pathname**; los
+> cambios de hash dentro de `/` no lo disparan (los resuelve la landing con
+> `scrollIntoView`). Tests: 3 nuevos (ruta nueva → scroll, hash → sin scroll,
+> montaje). Suite frontend 24 passed, `tsc -b` limpio.
 
 ---
 
