@@ -163,7 +163,8 @@ _TMPL_MATCH_MIN = 0.42
 # Versión del formato de ``data/logo_index.npz``. Se incrementa cuando cambia
 # el esquema de la caché: el npz actual en disco (sin ``by_hsv``, sin esta
 # clave) debe rechazarse y reconstruirse en vez de cargarse a medias (§13 I1).
-_LOGO_CACHE_VERSION = 2
+# v3 (WAVE-20/I10): ``meta_sig`` incluye el estado de cada imagen referenciada.
+_LOGO_CACHE_VERSION = 3
 
 
 def _yolo_debug() -> bool:
@@ -743,10 +744,31 @@ class YoloPersonDetector:
         if not isinstance(data, list):
             return
 
-        meta_sig = f"{meta_path.stat().st_mtime_ns}:{meta_path.stat().st_size}"
-        # Caché: si el metadata y la versión del esquema no cambiaron, cargar
-        # arrays ya preparados. Sin la clave `cache_version` (npz escrito por
-        # versiones viejas, sin `by_hsv`) se descarta y se reconstruye.
+        # WAVE-20 (I10): la firma incluye el estado de CADA imagen referenciada
+        # (mtime_ns + size), no solo del metadata. Borrar y re-importar fotos en
+        # Entrenar sin tocar el metadata (o tocar solo el JPEG) ya no puede
+        # servir un npz stale: si cualquier imagen cambia o falta, se reconstruye.
+        img_parts: list[str] = []
+        for entry in data:
+            if not isinstance(entry, dict):
+                continue
+            img_path = self._resolve_training_image(entry.get("thumbnail") or "")
+            if img_path is None:
+                img_parts.append("missing")
+                continue
+            try:
+                st = img_path.stat()
+                img_parts.append(f"{img_path.name}:{st.st_mtime_ns}:{st.st_size}")
+            except OSError:
+                img_parts.append(f"{img_path.name}:missing")
+        meta_sig = (
+            f"{meta_path.stat().st_mtime_ns}:{meta_path.stat().st_size}|"
+            f"{','.join(sorted(img_parts))}"
+        )
+        # Caché: si el metadata, las imágenes y la versión del esquema no
+        # cambiaron, cargar arrays ya preparados. Sin la clave `cache_version`
+        # (npz escrito por versiones viejas, sin `by_hsv` o con `meta_sig`
+        # sin imágenes) se descarta y se reconstruye.
         try:
             if cache_path.is_file():
                 cached = np.load(str(cache_path), allow_pickle=True)

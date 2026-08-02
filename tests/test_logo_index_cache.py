@@ -160,3 +160,59 @@ def test_non_uniform_label_never_uses_cross_fallback():
     det._logo_templates = {}
     det._logo_hsv_hists = {}
     assert det._logo_templates_for("botella") == []
+
+
+def test_cache_invalidated_when_image_changes_without_metadata(tmp_path):
+    """WAVE-20 (I10): borrar/re-importar la foto sin tocar el metadata invalida.
+
+    La firma de la caché incluye el estado de CADA imagen referenciada
+    (mtime_ns + size), no solo del metadata. Si solo cambia el JPEG, el npz
+    debe reconstruirse en vez de servir el stale.
+    """
+    _write_metadata(tmp_path, ["Logo ITEE"])
+    det = _make_detector()
+    det._rebuild_logo_templates(base_dir=tmp_path)
+    cache_path = tmp_path / "data" / "logo_index.npz"
+    assert cache_path.is_file()
+    cached = np.load(str(cache_path), allow_pickle=True)
+    sig_before = str(cached["meta_sig"].item())
+
+    # Reescribir el PNG (mismo nombre y metadata, contenido/size/mtime nuevos).
+    image_path = tmp_path / "images" / "logo_0.png"
+    import cv2
+
+    img = np.zeros((90, 90, 3), dtype=np.uint8)
+    img[:, :, 0] = 90
+    img[:, :, 1] = 90
+    img[:, :, 2] = 220
+    cv2.imwrite(str(image_path), img)
+
+    det2 = _make_detector()
+    det2._rebuild_logo_templates(base_dir=tmp_path)
+    cached2 = np.load(str(cache_path), allow_pickle=True)
+    sig_after = str(cached2["meta_sig"].item())
+    assert sig_after != sig_before
+    # Reconstruyó en vez de servir el npz stale.
+    assert set(det2._logo_hsv_hists) == {"Logo ITEE"}
+    assert len(det2._logo_hsv_hists["Logo ITEE"]) >= 1
+    assert len(det2._logo_images["Logo ITEE"]) == 1
+
+
+def test_cache_invalidated_when_image_missing(tmp_path):
+    """WAVE-20 (I10): si una imagen referenciada falta, no sirve el npz stale."""
+    _write_metadata(tmp_path, ["Logo ITEE"])
+    det = _make_detector()
+    det._rebuild_logo_templates(base_dir=tmp_path)
+    cache_path = tmp_path / "data" / "logo_index.npz"
+    assert cache_path.is_file()
+
+    image_path = tmp_path / "images" / "logo_0.png"
+    image_path.unlink()
+
+    det2 = _make_detector()
+    det2._rebuild_logo_templates(base_dir=tmp_path)
+    # Imagen inexistente: la etiqueta queda sin plantillas/HSV (no carga lo
+    # que quedó del npz stale).
+    assert set(det2._logo_hsv_hists) == set()
+    assert set(det2._logo_images) == set()
+    assert set(det2._logo_templates) == set()
