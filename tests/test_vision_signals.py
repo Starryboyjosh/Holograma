@@ -192,3 +192,65 @@ def test_match_logo_ladder_uses_template_only_when_orb_is_none(monkeypatch):
     score2, rel_box2, _method2 = det._match_logo_in_gray(flat, "Logo ITEE")
     assert rel_box2 is not None
     assert abs(score2 - 0.75 * 0.60) < 1e-6
+
+
+def test_match_logo_rejects_marginal_template_without_orb(monkeypatch):
+    """Sesión 14: un template en banda marginal (0.42–0.55) sin evidencia ORB
+    se rechaza — era el falso positivo del «bolsillo oscuro» (tmpl=0.473).
+
+    Antes del gate, con ORB=None el conf efectivo era solo template a 0.42 y
+    el bolsillo pasaba. Ahora la banda marginal exige ORB (>= 0.3).
+    """
+    import vision.person_detector as pd
+
+    det = pd.YoloPersonDetector()
+    det._load_training_data = lambda: None
+    det._maybe_reload_training = lambda: None
+    det._logo_templates = {"Logo ITEE": [np.ones((16, 16), dtype=np.uint8)]}
+    det._logo_images = {"Logo ITEE": [np.ones((16, 16), dtype=np.uint8)]}
+    det._logo_hsv_hists = {}
+
+    monkeypatch.setattr(pd, "match_orb", lambda *a, **k: None)
+    monkeypatch.setattr(
+        pd,
+        "match_template_multiscale",
+        lambda *a, **k: (0.473, (2.0, 2.0, 14.0, 14.0)),
+    )
+
+    flat = np.full((80, 80, 3), 200, dtype=np.uint8)
+    score, rel_box, method = det._match_logo_in_gray(flat, "Logo ITEE")
+    assert rel_box is None
+    assert score == 0.0
+    assert method == "no_corroboration"
+
+    # Con ORB fuerte el mismo template marginal sí pasa (logo real lejano).
+    monkeypatch.setattr(pd, "match_orb", lambda *a, **k: 1.0)
+    score2, rel_box2, _method2 = det._match_logo_in_gray(flat, "Logo ITEE")
+    assert rel_box2 is not None
+    assert score2 > 0.42
+
+
+def test_match_logo_accepts_strong_template_without_orb(monkeypatch):
+    """Sesión 14: template FUERTE (>= 0.55) se acepta incluso sin ORB — no
+    rompe la rama template-only documentada en WAVE-19 (I9)."""
+    import vision.person_detector as pd
+
+    det = pd.YoloPersonDetector()
+    det._load_training_data = lambda: None
+    det._maybe_reload_training = lambda: None
+    det._logo_templates = {"Logo ITEE": [np.ones((16, 16), dtype=np.uint8)]}
+    det._logo_images = {"Logo ITEE": [np.ones((16, 16), dtype=np.uint8)]}
+    det._logo_hsv_hists = {}
+
+    monkeypatch.setattr(pd, "match_orb", lambda *a, **k: None)
+    monkeypatch.setattr(
+        pd,
+        "match_template_multiscale",
+        lambda *a, **k: (0.60, (2.0, 2.0, 14.0, 14.0)),
+    )
+
+    flat = np.full((80, 80, 3), 200, dtype=np.uint8)
+    score, rel_box, method = det._match_logo_in_gray(flat, "Logo ITEE")
+    assert rel_box is not None
+    assert abs(score - 0.60) < 1e-6
+    assert method == "template"

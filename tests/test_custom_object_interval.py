@@ -486,3 +486,72 @@ def test_detect_logo_visual_source_rank():
 
     assert pd._SOURCE_PRIORITY["logo_visual"] == pd._SOURCE_PRIORITY["logo_ref"]
 
+
+def test_detect_logo_templates_rejects_dark_pocket(monkeypatch):
+    """Sesión 14: un «bolsillo oscuro» sobre tela azul ya no produce logo_ref.
+
+    El template del kiosko (crop 91×69 ≈ toda la foto) marca 0.473 en un
+    bolsillo oscuro — sobre 0.42. Sin evidencia ORB, el gate de corroboración
+    lo rechaza (method ``no_corroboration``) y ``_detect_logo_templates`` no
+    emite ninguna caja.
+    """
+    import numpy as np
+    import cv2
+
+    det = pd.YoloPersonDetector()
+    monkeypatch.setattr(det, "_load_training_data", lambda: None)
+    monkeypatch.setattr(det, "_maybe_reload_training", lambda: None)
+    monkeypatch.setattr(det, "_rebuild_logo_templates", lambda: None)
+    det._logo_images = {"Logo ITEE": [np.ones((16, 16), dtype=np.uint8)]}
+    det._logo_templates = {}
+    det._logo_hsv_hists = {}
+
+    frame = np.zeros((200, 160, 3), dtype=np.uint8)
+    frame[:] = (195, 167, 57)  # tela azul del uniforme
+    frame[80:120, 90:130] = (60, 60, 30)  # bolsillo oscuro
+    persons = [{"box": (10, 10, 150, 190), "confidence": 0.9}]
+
+    # ORB sin evidencia (ROI sin keypoints de referencia → None) + template
+    # en banda marginal: el gate debe rechazar sin emitir box.
+    import vision.person_detector as pd_mod
+
+    monkeypatch.setattr(pd_mod, "match_orb", lambda *a, **k: None)
+
+    hits = det._detect_logo_templates(frame, persons=persons)
+    assert hits == []
+
+
+def test_detect_logo_templates_accepts_with_orb_evidence(monkeypatch):
+    """Sesión 14: con evidencia ORB, el mismo template marginal sí pasa.
+
+    Complemento del rechazo del bolsillo: la puerta no castiga a los logos
+    reales cuando ORB confirma (genuino lejano → orb≈1.0).
+    """
+    import numpy as np
+
+    det = pd.YoloPersonDetector()
+    monkeypatch.setattr(det, "_load_training_data", lambda: None)
+    monkeypatch.setattr(det, "_maybe_reload_training", lambda: None)
+    monkeypatch.setattr(det, "_rebuild_logo_templates", lambda: None)
+    det._logo_images = {"Logo ITEE": [np.ones((16, 16), dtype=np.uint8)]}
+    det._logo_templates = {}
+    det._logo_hsv_hists = {}
+
+    frame = np.zeros((200, 160, 3), dtype=np.uint8)
+    frame[:] = (195, 167, 57)
+    frame[80:120, 90:130] = (60, 60, 30)
+    persons = [{"box": (10, 10, 150, 190), "confidence": 0.9}]
+
+    import vision.person_detector as pd_mod
+
+    monkeypatch.setattr(pd_mod, "match_orb", lambda *a, **k: 1.0)
+    monkeypatch.setattr(
+        pd_mod,
+        "match_template_multiscale",
+        lambda *a, **k: (0.473, (2.0, 2.0, 14.0, 14.0)),
+    )
+
+    hits = det._detect_logo_templates(frame, persons=persons)
+    assert hits, "con ORB=1.0 el template marginal debe emitir logo_ref"
+    assert hits[0]["source"] == "logo_ref"
+

@@ -139,6 +139,57 @@ def test_cross_label_fallback_only_with_single_label():
     assert len(det._logo_orb_for("Uniforme ITEE")) == 0  # sin ORB para esa label
 
 
+def test_orb_reference_upscaled_for_small_crop(tmp_path):
+    """Sesión 14: la referencia ORB de un crop pequeño se escala hacia arriba.
+
+    Antes se construía ORB sobre el crop crudo (91×69 → ~15 keypoints) y el
+    canal quedaba sin evidencia → el conf efectivo era solo template a 0.42 y
+    un bolsillo oscuro (0.473) pasaba. Con el lado mínimo (ORB_REF_MIN) el
+    descriptor gana cientos de keypoints y separa genuino (1.0) de falso (0.0).
+    """
+    import cv2
+
+    images = tmp_path / "images"
+    images.mkdir(parents=True, exist_ok=True)
+    rng = np.random.default_rng(7)
+    img = np.zeros((69, 91, 3), dtype=np.uint8)
+    img[:, :, 0] = 195
+    img[:, :, 1] = 167
+    img[:, :, 2] = 57
+    # Textura (pliegues/texto del logo) para que ORB tenga keypoints.
+    cv2.rectangle(img, (10, 10), (70, 55), (200, 200, 200), -1)
+    cv2.putText(img, "ITEE", (18, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (40, 40, 90), 3)
+    img = np.clip(img.astype(int) + rng.integers(-14, 15, img.shape), 0, 255).astype(np.uint8)
+    path = images / "logo_small.png"
+    cv2.imwrite(str(path), img)
+    (tmp_path / "data").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "data" / "training_metadata.json").write_text(
+        json.dumps(
+            [
+                {
+                    "id": 1785600000000,
+                    "label": "Logo ITEE",
+                    "desc": "small crop",
+                    "x": 0,
+                    "y": 0,
+                    "w": 91,
+                    "h": 69,
+                    "thumbnail": f"/{path.absolute()}",
+                }
+            ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    det = _make_detector()
+    det._rebuild_logo_templates(base_dir=tmp_path)
+    des_list = det._logo_orb_for("Logo ITEE")
+    assert des_list, "debe haber descriptores ORB de la referencia"
+    n_kp = sum(len(d) for d in des_list if d is not None)
+    assert n_kp >= 100, f"referencia ORB con pocos keypoints: {n_kp}"
+
+
 def test_no_cross_label_fallback_with_two_labels():
     """Con dos escuelas entrenadas, la etiqueta X no casa contra la Y."""
     det = _make_detector()

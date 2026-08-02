@@ -389,9 +389,12 @@ no ayudaba porque:
 | `YOLO_COLLAR_Y_MAX` | `0.25` | Por encima = cuello (descartar), clamp 0.10–0.45 |
 | `YOLO_LOGO_MIRROR` | `0` | Invierte X del ROI |
 | `YOLO_LOGO_TMPL_MIN` | `0.42` | Score template mínimo (`_TMPL_MATCH_MIN`) |
+| `YOLO_LOGO_ORB_MIN` | `0.30` | Sesión 14: evidencia ORB mínima exigida en la banda marginal (template < `TMPL_STRONG_MIN`) |
+| `YOLO_LOGO_TMPL_STRONG_MIN` | `0.55` | Sesión 14: template fuerte; por encima se acepta sin ORB |
 | `YOLO_LOGO_HSV_MIN` | `0.18` | Correlación HSV mínima — canal activo desde WAVE-11 (`by_hsv` en caché); sigue siendo *fail-open* por diseño en `compare_hsv_signature` |
 | `YOLO_LOGO_TMPL_MAX_SIDE` | `128` | Lado máx. de la plantilla gris cacheada, clamp 64–192 |
 | `YOLO_LOGO_ORB_MAX_SIDE` | `160` | Lado máx. de la miniatura para ORB, clamp `tmpl_max`–256 |
+| `YOLO_LOGO_ORB_REF_MIN` | `256` | Sesión 14: lado mín. de la referencia ORB (upscale de crops pequeños), clamp 64–320 |
 | `HOLOGRAM_YOLO_DEBUG` | `0` | Logs `[YOLO] Descartado…` / ciclo |
 
 ### Presencia
@@ -1035,6 +1038,41 @@ Archivo: `vision/image_signals.py`
 50. **Suite completa verde:** 468 passed, 1 xfailed (463 + 5 nuevos), 7 tests de
     `test_person_presence.py` sin tocar; `npx tsc -b` limpio.
 
+### Sesión 14: falsos positivos de logo eliminados (corroboración ORB)
+
+51. **Hallazgo: el canal ORB estaba muerto.** El crop de Entrenar es 91×69 y
+    `orb_max=160`; al no superar el máximo, el código **nunca escalaba hacia
+    arriba** y construía los descriptores sobre el crop crudo → **15 keypoints**.
+    `match_orb` devolvía `None` (sin evidencia) en casi todo ROI real, y
+    `_match_logo_in_gray` caía a `conf = tmpl_score` con umbral **0.42**. Medido
+    con probes: un **bolsillo oscuro sobre tela azul marca tmpl=0.473 ≥ 0.42**
+    → falso positivo "Logo ITEE", con la caja puesta encima del bolsillo
+    (`_snap_box_to_logo_zone` lo agranda al mínimo de 45px/25% del pecho).
+52. **Fix (a): referencia ORB escalada.** `_rebuild_logo_templates` ahora
+    **escala hacia arriba** crops menores que `YOLO_LOGO_ORB_REF_MIN` (default
+    `256`, clamp 64–320, INTER_CUBIC) antes de `detectAndCompute`. Con 3× la
+    referencia pasa de 15 a **447 keypoints** y separa limpiamente: logo genuino
+    → `orb=1.0`, bolsillo/texto/ruido → `orb=0.0–0.07`. `_LOGO_CACHE_VERSION=4`
+    (el npz viejo con descriptores del crop crudo se reconstruye).
+53. **Fix (b): puerta de corroboración en `_match_logo_in_gray`.** En la banda
+    marginal (`tmpl < YOLO_LOGO_TMPL_STRONG_MIN`, default **0.55**) el match se
+    acepta **solo si** ORB aporta evidencia (`orb ≥ YOLO_LOGO_ORB_MIN`, default
+    **0.3**); si no, devuelve `0.0, None, "no_corroboration"` sin caja. Un
+    template fuerte (≥0.55) sigue pasando sin ORB (rama I9 intacta). Aplica a
+    la escalera **y** a la fusión (`YOLO_LOGO_FUSION=1`). Decisión de diseño
+    tomada con el operador: **precisión sobre recall** — un logo lejano sin
+    textura ORB en banda 0.42–0.55 ya no se detecta.
+54. **Fix (c): el cuadro del logo sale de la localización del template.** El
+    `rel_box` del template match define la caja (rama template / orb+template);
+    la rama orb-only (caja = centro del ROI) solo aplica con `orb≥0.95` sin
+    template, caso raro que el upscaled ref casi nunca produce para el logo
+    real. `_snap_box_to_logo_zone` preserva la posición detectada.
+55. **Verificación end-to-end con datos reales:** frame sintético persona con
+    uniforme azul + bolsillo oscuro → **0 detecciones**; con el logo real de
+    Entrenar pegado al pecho → **1 detección `logo_ref` conf 0.52**. Suite
+    completa **473 passed, 1 xfailed** (468 + 5 nuevos: 2 marginal-band, 1
+    upscaled-ORB, 2 end-to-end pocket reject/accept).
+
 ---
 
 ## 12. Razonamiento parte por parte de `vision/`
@@ -1362,6 +1400,14 @@ descriptores de referencia no alcanzan el mínimo de keypoints, no `0.0`;
 umbral efectivo era 0.56, con ORB `None` vuelve a ser 0.42. Además, re-evaluar
 `YOLO_IMGSZ` (416 hoy vs 640 recomendado) y `YOLO_MAX_SIDE` (960): un ROI de
 pecho a 416 es ~un tercio de la resolución que el template espera.
+
+> **Sesión 14:** la recalibración se resolvió por otro lado. El problema no era
+> el umbral en sí sino que el canal ORB estaba muerto (refs del crop crudo,
+> ~15 kp). Con la referencia upscaled (`YOLO_LOGO_ORB_REF_MIN`, §4.9) ORB es
+> discriminante (genuino=1.0, bolsillo=0.0) y se añadió la puerta de
+> corroboración: en la banda marginal el match exige `orb ≥ YOLO_LOGO_ORB_MIN`
+> (0.3); solo un template fuerte (`≥ YOLO_LOGO_TMPL_STRONG_MIN`, 0.55) pasa sin
+> ORB. `YOLO_LOGO_TMPL_MIN` sigue en 0.42.
 
 **I10 — Caché `logo_index.npz` keyed por contenido de las imágenes.**
 Hoy `meta_sig` (`person_detector.py:722`) es `f"{mtime_ns}:{size}"` del

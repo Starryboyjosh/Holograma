@@ -160,11 +160,22 @@ _LOGO_OPEN_VOCAB_MIN_CONF = 0.45
 # Umbral 0.42 acepta matches reales sin tragarse ruido.
 _TMPL_MATCH_MIN = 0.42
 
+# Sesión 14: corroboración del match de logo. Con ORB sin evidencia (None) el
+# conf vuelve a ser solo el template y el umbral efectivo es 0.42 — un bolsillo
+# oscuro sobre tela azul marca 0.473 y pasa. La puerta: en la banda marginal
+# (tmpl < TMPL_STRONG_MIN) el match solo se acepta si ORB aporta evidencia
+# (orb >= ORB_MIN). El logo real con referencia ORB upscaled da orb≈1.0.
+_LOGO_ORB_MIN = 0.3
+_LOGO_TMPL_STRONG_MIN = 0.55
+
 # Versión del formato de ``data/logo_index.npz``. Se incrementa cuando cambia
 # el esquema de la caché: el npz actual en disco (sin ``by_hsv``, sin esta
 # clave) debe rechazarse y reconstruirse en vez de cargarse a medias (§13 I1).
 # v3 (WAVE-20/I10): ``meta_sig`` incluye el estado de cada imagen referenciada.
-_LOGO_CACHE_VERSION = 3
+# v4 (Sesión 14): la referencia ORB se construye escalando el crop a un lado
+# mínimo (ORB_REF_MIN_SIDE) — el npz viejo (descriptores del crop crudo, ~15 kp)
+# debe reconstruirse o el canal ORB vuelve a quedar sin evidencia.
+_LOGO_CACHE_VERSION = 4
 
 
 def _yolo_debug() -> bool:
@@ -807,6 +818,12 @@ class YoloPersonDetector:
         # Max lado de la plantilla en RAM (uint8 gris). Suficiente para logos.
         tmpl_max = max(64, min(192, _env_int("YOLO_LOGO_TMPL_MAX_SIDE", 128)))
         orb_max = max(tmpl_max, min(256, _env_int("YOLO_LOGO_ORB_MAX_SIDE", 160)))
+        # Sesión 14: lado mínimo para la referencia ORB. El crop crudo (91×69
+        # p. ej.) da ~15 keypoints → ORB sin evidencia → el conf queda solo en
+        # template (0.42) y un bolsillo oscuro (0.473) pasa. Escalar a un lado
+        # mínimo (~256px) produce cientos de keypoints y separa genuino (1.0)
+        # de falso (0.0). Solo escala hacia arriba; no agranda ya-grandes.
+        orb_ref_min = max(tmpl_max, min(320, _env_int("YOLO_LOGO_ORB_REF_MIN", 256)))
 
         by_des: dict[str, list] = {}
         by_img: dict[str, list] = {}
@@ -847,11 +864,21 @@ class YoloPersonDetector:
             by_img.setdefault(label, []).append(np.ascontiguousarray(gray))
 
             # --- ORB sobre miniatura un poco mayor ---
-            scale_o = orb_max / float(max(h, w)) if max(h, w) > orb_max else 1.0
+            # Sesión 14: si el crop es menor que orb_ref_min se ESCALA HACIA
+            # ARRIBA (INTER_CUBIC) para tener keypoints suficientes; antes solo
+            # se agrandaba si superaba orb_max, así que crops pequeños quedaban
+            # con ~15 keypoints y el canal ORB era inerte.
+            longest = max(h, w)
+            if longest < orb_ref_min:
+                scale_o = orb_ref_min / float(longest)
+            elif longest > orb_max:
+                scale_o = orb_max / float(longest)
+            else:
+                scale_o = 1.0
             orb_img = cv2.resize(
                 img,
                 (max(12, int(w * scale_o)), max(12, int(h * scale_o))),
-                interpolation=cv2.INTER_AREA,
+                interpolation=cv2.INTER_CUBIC,
             )
             gray_o = cv2.cvtColor(orb_img, cv2.COLOR_BGR2GRAY)
             try:
@@ -1131,11 +1158,26 @@ class YoloPersonDetector:
         # sin descriptores de referencia), NO evidencia negativa.
         orb_score = self._match_orb_in_roi(gray_roi, des_list)
 
+        # Sesión 14: puerta de corroboración. Sin ORB (None) el conf efectivo
+        # es solo template a 0.42 — un bolsillo oscuro (0.473) pasaba. Solo se
+        # acepta sin ORB un template FUERTE (>= TMPL_STRONG_MIN); en la banda
+        # marginal se exige evidencia ORB. Aplica a la escalera y a la fusión.
+        # Ver yolo_instructions.md §13.
+        orb_min = _env_float("YOLO_LOGO_ORB_MIN", _LOGO_ORB_MIN)
+        tmpl_strong_min = _env_float("YOLO_LOGO_TMPL_STRONG_MIN", _LOGO_TMPL_STRONG_MIN)
+        _no_corroboration = (
+            tmpl_box is not None
+            and tmpl_score < tmpl_strong_min
+            and (orb_score is None or orb_score < orb_min)
+        )
+
         # I3 (§13): fusión ponderada por calidad detrás de YOLO_LOGO_FUSION=1.
         # score = Σ(w_c·q_c_eff·s_c) / Σ(w_c·q_c_eff). Un canal sin evidencia
         # (None) no aporta al numerador ni al denominador. Hasta recalibrar el
         # umbral contra una sesión grabada, el default sigue siendo la escalera.
         if _env("YOLO_LOGO_FUSION", "0").lower() in ("1", "true", "yes"):
+            if _no_corroboration:
+                return 0.0, None, "no_corroboration"
             conf = fuse_logo_channels(
                 {
                     "template": None if tmpl_box is None else tmpl_score,
@@ -1159,6 +1201,8 @@ class YoloPersonDetector:
         # Gate relajado: tmpl_score real >= 0.40 es suficiente para pasar;
         # el conf combinado se evalúa después contra _TMPL_MATCH_MIN.
         tmpl_min_internal = _env_float("YOLO_LOGO_TMPL_MIN", _TMPL_MATCH_MIN)
+        if _no_corroboration:
+            return 0.0, None, "no_corroboration"
         if tmpl_box is not None and tmpl_score >= tmpl_min_internal * 0.85:
             # I9: con ORB sin evidencia (None) el conf es solo template; el
             # umbral efectivo vuelve a 0.42 (no 0.56 = 0.42/0.75 con orb=0).
