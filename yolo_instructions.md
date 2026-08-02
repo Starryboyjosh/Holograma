@@ -801,6 +801,33 @@ Archivo: `vision/image_signals.py`
     `YOLO_LOGO_FUSION=1`). Puerta de regresión verificada: ambos fallan sin
     `vision/scoring.py` ni el cambio en `person_detector.py`.
 
+### Sesión 9: WAVE-14 — histéresis M-of-N de custom objects (I4)
+
+34. **Módulo nuevo puro `vision/tracking.py`**: máquina `NEW→TENTATIVE→
+    CONFIRMED→INACTIVE` sobre el conjunto de etiquetas (`LabelHysteresis`).
+    Un label arranca en `TENTATIVE` con 1 avistamiento y solo pasa a
+    `CONFIRMED` tras `confirm_cycles` avistamientos **consecutivos** (default
+    2), emitiendo `"detected"` exactamente una vez. Un `CONFIRMED` que deja de
+    verse durante `forget_seconds` (default 10 s) pasa a `INACTIVE` y emite
+    `"forgotten"`. Un `TENTATIVE` que se pierde un ciclo vuelve a `NEW` (el
+    parpadeo no cuenta como evidencia) y al reaparecer debe volver a acumular
+    ciclos. Los `INACTIVE` se purgan tras `retain_seconds` (default 60 s).
+    Recibe `now` por parámetro: puro, determinista, sin time real.
+35. **`run_continuous` usa el tracker** (`person_detector.py`): el diff de sets
+    `current - last` (prone a re-disparar por un parpadeo) se reemplaza por
+    `self._label_tracker.update(...)`; `custom_object_detected` solo se emite
+    con labels que **concluyen** su confirmación. Parámetros por env:
+    `YOLO_CUSTOM_CONFIRM_CYCLES` (2), `YOLO_CUSTOM_FORGET_SECONDS` (10),
+    `YOLO_CUSTOM_RETAIN_SECONDS` (60).
+36. Tests nuevos: `tests/test_tracking.py` (unidad: parpadeo de un ciclo no
+    confirma, confirmación exacta una vez, olvido por ausencia, reinicio de
+    progreso, purga de INACTIVE, independencia multi-label, `confirm_cycles=1`)
+    y `tests/test_custom_hysteresis.py` (integración en `run_continuous`:
+    parpadeo sin re-disparo, label único nunca detectado, sostenido se detecta
+    una vez, vuelta tras olvido re-confirma). Puerta de regresión verificada:
+    los archivos de test fallan sin `vision/tracking.py` ni el cambio del
+    detector.
+
 ---
 
 ## 12. Razonamiento parte por parte de `vision/`
