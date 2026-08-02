@@ -758,6 +758,26 @@ Archivo: `vision/image_signals.py`
     ahora también limpia `_logo_hsv_hists`, que la caché corregida empezaba a
     poblar y rompía dos tests de open-vocab.
 
+### Sesión 7: WAVE-12 — logos multi-instancia, un logo por persona (I2)
+
+28. **Bucles invertidos en `_detect_logo_templates`** (`person_detector.py`):
+    ahora es `for roi: for label:` en vez de `for label: for roi:`. Antes el
+    "mejor global" por etiqueta colapsaba a **una** caja aunque hubiera varios
+    estudiantes con el mismo uniforme entrenado; ahora cada ROI de pecho emite
+    **su** mejor etiqueta y dos personas idénticas generan dos objetos. Cada
+    detección lleva `person_index` (índice 0-based en `persons`, vía
+    `best_person_for_box`).
+29. **`_dedupe_custom` cambia su clave**: antes `label`, ahora `(label,
+    person_index)`. Dos personas con el mismo uniforme ya no se colapsan. Sin
+    `person_index` (open-vocab, tests) la clave degenera a `(label, None)` y el
+    comportamiento es idéntico al previo. `_detect_all` propaga el
+    `person_index` de cada hit de `logo_ref` al objeto final.
+30. Tests nuevos en `test_custom_object_interval.py`: dos estudiantes con el
+    mismo logo producen dos hits con `person_index` `{0, 1}`, y
+    `_dedupe_custom` mantiene dos entradas para `(L, 0)` / `(L, 1)` pero
+    colapsa `(L, None)`. Verificada la puerta de regresión: ambos fallan si se
+    revierte solo `person_detector.py`.
+
 ---
 
 ## 12. Razonamiento parte por parte de `vision/`
